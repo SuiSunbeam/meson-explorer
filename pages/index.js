@@ -1,6 +1,8 @@
+import React from 'react'
+import classnames from 'classnames'
 import Link from 'next/link'
 import { ethers } from 'ethers'
-import { parseNetworkAndToken, abbreviate } from '../lib/swap'
+import { parseNetworkAndToken, abbreviate, badgeClassnames, getSwapDuration } from '../lib/swap'
 
 function SwapRow({ swap }) {
   const from = parseNetworkAndToken(swap.inChain, swap.inToken)
@@ -9,17 +11,28 @@ function SwapRow({ swap }) {
     return null
   }
 
+  React.useEffect(() => {
+    // socket.subscribe(swapId)
+    return () => {}
+  }, [swap._id])
+
   return (
     <tr>
       <td className='px-3 py-4 whitespace-nowrap'>
         <Link href={`/swap/${swap._id}`}>
           <a className='text-indigo-600 hover:text-indigo-500 hover:underline'>
-            {abbreviate(swap._id, 6)}
+            {abbreviate(swap._id, 8, 8)}
           </a>
         </Link>
+        <div className="text-sm text-gray-500">
+          {new Date(swap.created).toLocaleString()}
+        </div>
       </td>
       <td className='px-3 py-4 whitespace-nowrap'>
-        <span className='px-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-emerald-100 text-emerald-800'>
+        <span className={classnames(
+          'px-2 inline-flex text-sm leading-5 font-semibold rounded-full',
+          badgeClassnames(swap.status)
+        )}>
           {swap.status}
         </span>
       </td>
@@ -40,7 +53,7 @@ function SwapRow({ swap }) {
         <div className="text-sm text-gray-500">{to.networkName}</div>
       </td>
       <td className='px-3 py-4 whitespace-nowrap'>
-        <span className='text-gray-900'>
+        <div className='text-gray-900'>
           {ethers.utils.formatUnits(swap.amount, 6)}{' '}
           <a
             className='text-sm text-gray-900 hover:text-indigo-500 hover:underline'
@@ -59,12 +72,12 @@ function SwapRow({ swap }) {
           >
             {to.token.symbol}
           </a>
-        </span>
+        </div>
+        <div className="text-sm text-gray-500">Fee: {ethers.utils.formatUnits(swap.fee, 6)} {from.token.symbol}</div>
       </td>
       <td className='px-3 py-4 whitespace-nowrap'>
         <span className='text-gray-900'>
-          {ethers.utils.formatUnits(swap.fee, 6)}{' '}
-          <span className='text-sm'>{from.token.symbol}</span>
+          {getSwapDuration(swap)}
         </span>
       </td>
     </tr>
@@ -92,12 +105,12 @@ export default function SwapList({ swaps, error }) {
             <table className='min-w-full divide-y divide-gray-200'>
               <thead className='bg-gray-50'>
                 <tr>
-                  <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>id</th>
+                  <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>swap id / time</th>
                   <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>status</th>
                   <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>from</th>
                   <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>to</th>
                   <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>amount</th>
-                  <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>fee</th>
+                  <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>duration</th>
                 </tr>
               </thead>
               <tbody className='bg-white divide-y divide-gray-200'>
