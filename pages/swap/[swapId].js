@@ -46,7 +46,7 @@ export default function Swap({ swapId, swap, error }) {
       <div className='px-4 py-5 sm:px-6'>
         <h3 className='text-lg leading-6 font-medium text-gray-900'>Swap</h3>
         <p className='mt-1 max-w-2xl text-sm text-gray-500'>{swap._id}</p>
-        <span className='mt-1 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-emerald-100 text-emerald-800'>
+        <span className='mt-2 px-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-emerald-100 text-emerald-800'>
           {swap.status}
         </span>
       </div>
@@ -54,51 +54,59 @@ export default function Swap({ swapId, swap, error }) {
         <dl>
           <div className='bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
             <dt className='text-sm font-medium text-gray-500'>From</dt>
-            <dd className='mt-1 text-sm text-indigo-600 hover:text-indigo-500 hover:underline sm:mt-0 sm:col-span-2'>
-              <a href={`${from.explorer}/token/${from.token.addr}`} target='_blank' rel='noreferrer'>
-                {from.networkName} {from.token.symbol}
-              </a>
+            <dd className='mt-1 sm:mt-0 sm:col-span-2'>
+              <div className="text-indigo-600 hover:text-indigo-500 hover:underline">
+                <a href={`${from.explorer}/address/${swap.initiator}`} target='_blank' rel='noreferrer'>
+                  {swap.initiator}
+                </a>
+              </div>
+              <div className="text-sm text-gray-500">{from.networkName}</div>
             </dd>
           </div>
           <div className='bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
             <dt className='text-sm font-medium text-gray-500'>To</dt>
-            <dd className='mt-1 text-sm text-indigo-600 hover:text-indigo-500 hover:underline sm:mt-0 sm:col-span-2'>
-              <a href={`${to.explorer}/token/${to.token.addr}`} target='_blank' rel='noreferrer'>
-                {to.networkName} {to.token.symbol}
-              </a>
+            <dd className='mt-1 sm:mt-0 sm:col-span-2'>
+              <div className="text-indigo-600 hover:text-indigo-500 hover:underline">
+                <a href={`${to.explorer}/address/${swap.recipient}`} target='_blank' rel='noreferrer'>
+                  {swap.recipient}
+                </a>
+              </div>
+              <div className="text-sm text-gray-500">{to.networkName}</div>
             </dd>
           </div>
           <div className='bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
             <dt className='text-sm font-medium text-gray-500'>Amount</dt>
-            <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
-              {ethers.utils.formatUnits(swap.amount, 6)} {from.token.symbol}
+            <dd className='mt-1 text-gray-900 sm:mt-0 sm:col-span-2'>
+              {ethers.utils.formatUnits(swap.amount, 6)}{' '}
+              <a
+                className='text-sm hover:text-indigo-500 hover:underline '
+                href={`${from.explorer}/token/${from.token.addr}`}
+                target='_blank'
+                rel='noreferrer'
+              >
+                {from.token.symbol}
+              </a>
+              <span className='text-sm text-gray-500'>{' -> '}</span>
+              <a
+                className='text-sm hover:text-indigo-500 hover:underline '
+                href={`${to.explorer}/token/${to.token.addr}`}
+                target='_blank'
+                rel='noreferrer'
+              >
+                {to.token.symbol}
+              </a>
             </dd>
           </div>
           <div className='bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
             <dt className='text-sm font-medium text-gray-500'>Fee</dt>
-            <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
-              {ethers.utils.formatUnits(swap.fee, 6)} {from.token.symbol}
-            </dd>
-          </div>
-          <div className='bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
-            <dt className='text-sm font-medium text-gray-500'>Initiator</dt>
-            <dd className='mt-1 text-sm text-indigo-600 hover:text-indigo-500 hover:underline sm:mt-0 sm:col-span-2'>
-              <a href={`${from.explorer}/address/${swap.initiator}`} target='_blank' rel='noreferrer'>
-                {swap.initiator}
-              </a>
-            </dd>
-          </div>
-          <div className='bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
-            <dt className='text-sm font-medium text-gray-500'>Recipient</dt>
-            <dd className='mt-1 text-sm text-indigo-600 hover:text-indigo-500 hover:underline sm:mt-0 sm:col-span-2'>
-              <a href={`${to.explorer}/address/${swap.recipient}`} target='_blank' rel='noreferrer'>
-                {swap.recipient}
-              </a>
+            <dd className='mt-1 text-gray-900 sm:mt-0 sm:col-span-2'>
+              {ethers.utils.formatUnits(swap.fee, 6)}{' '}
+              <span className='text-sm'>{from.token.symbol}</span>
             </dd>
           </div>
           <div className='bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
             <dt className='text-sm font-medium text-gray-500'>Expire</dt>
-            <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
+            <dd className='mt-1 text-gray-900 sm:mt-0 sm:col-span-2'>
               {swap.expireTs}
             </dd>
           </div>

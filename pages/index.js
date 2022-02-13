@@ -13,56 +13,58 @@ function SwapRow({ swap }) {
     <tr>
       <td className='px-3 py-4 whitespace-nowrap'>
         <Link href={`/swap/${swap._id}`}>
-          <a className='text-sm text-indigo-600 hover:text-indigo-500 hover:underline'>
+          <a className='text-indigo-600 hover:text-indigo-500 hover:underline'>
             {abbreviate(swap._id, 6)}
           </a>
         </Link>
       </td>
       <td className='px-3 py-4 whitespace-nowrap'>
-        <span className='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-emerald-100 text-emerald-800'>
+        <span className='px-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-emerald-100 text-emerald-800'>
           {swap.status}
         </span>
       </td>
       <td className='px-3 py-4 whitespace-nowrap'>
-        <span className='text-sm text-gray-900'>
-          {ethers.utils.formatUnits(swap.amount, 6)}
-          {' '}
+        <div className="text-indigo-600 hover:text-indigo-500 hover:underline">
+          <a href={`${from.explorer}/address/${swap.initiator}`} target='_blank' rel='noreferrer'>
+            {abbreviate(swap.initiator)}
+          </a>
+        </div>
+        <div className="text-sm text-gray-500">{from.networkName}</div>
+      </td>
+      <td className='px-3 py-4 whitespace-nowrap'>
+        <div className='text-indigo-600 hover:text-indigo-500 hover:underline'>
+          <a href={`${to.explorer}/address/${swap.recipient}`} target='_blank' rel='noreferrer'>
+            {abbreviate(swap.recipient)}
+          </a>
+        </div>
+        <div className="text-sm text-gray-500">{to.networkName}</div>
+      </td>
+      <td className='px-3 py-4 whitespace-nowrap'>
+        <span className='text-gray-900'>
+          {ethers.utils.formatUnits(swap.amount, 6)}{' '}
           <a
             className='text-sm text-gray-900 hover:text-indigo-500 hover:underline'
             href={`${from.explorer}/token/${from.token.addr}`}
             target='_blank'
             rel='noreferrer'
           >
-            {from.networkAlias} {from.token.symbol}
+            {from.token.symbol}
           </a>
-          {' -> '}
+          <span className='text-sm text-gray-500'>{' -> '}</span>
           <a
             className='text-sm text-gray-900 hover:text-indigo-500 hover:underline'
             href={`${to.explorer}/token/${to.token.addr}`}
             target='_blank'
             rel='noreferrer'
           >
-            {to.networkAlias} {to.token.symbol}
+            {to.token.symbol}
           </a>
         </span>
       </td>
       <td className='px-3 py-4 whitespace-nowrap'>
-        <span className='text-sm text-gray-900'>
-          {ethers.utils.formatUnits(swap.fee, 6)} {from.token.symbol}
-        </span>
-      </td>
-      <td className='px-3 py-4 whitespace-nowrap'>
-        <span className='text-sm text-indigo-600 hover:text-indigo-500 hover:underline'>
-          <a href={`${from.explorer}/address/${swap.initiator}`} target='_blank' rel='noreferrer'>
-            {abbreviate(swap.initiator)}
-          </a>
-        </span>
-      </td>
-      <td className='px-3 py-4 whitespace-nowrap'>
-        <span className='text-sm text-indigo-600 hover:text-indigo-500 hover:underline'>
-          <a href={`${to.explorer}/address/${swap.recipient}`} target='_blank' rel='noreferrer'>
-            {abbreviate(swap.recipient)}
-          </a>
+        <span className='text-gray-900'>
+          {ethers.utils.formatUnits(swap.fee, 6)}{' '}
+          <span className='text-sm'>{from.token.symbol}</span>
         </span>
       </td>
     </tr>
@@ -92,10 +94,10 @@ export default function SwapList({ swaps, error }) {
                 <tr>
                   <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>id</th>
                   <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>status</th>
-                  <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>swap</th>
+                  <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>from</th>
+                  <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>to</th>
+                  <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>amount</th>
                   <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>fee</th>
-                  <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>initiator</th>
-                  <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>recipient</th>
                 </tr>
               </thead>
               <tbody className='bg-white divide-y divide-gray-200'>
