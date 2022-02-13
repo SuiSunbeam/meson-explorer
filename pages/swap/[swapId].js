@@ -1,18 +1,48 @@
+import { ethers } from 'ethers'
+import { parseNetworkAndToken } from '../../lib/swap'
+
 export default function Swap({ swap, error }) {
   if (error) {
     return <p>{error}</p>
   } else if (!swap) {
     return 'loading...'
   }
+
+  const from = parseNetworkAndToken(swap.inChain, swap.inToken)
+  const to = parseNetworkAndToken(swap.outChain, swap.outToken)
+  if (!from || !to) {
+    return null
+  }
+
   return (
     <div>
-      <p>id {swap._id}</p>
+      <p><b>swap id:</b> {swap._id}</p>
       <p>{swap.status}</p>
-      <p>from {swap.inChain} {swap.inToken} {swap.initiator}</p>
-      <p>to {swap.outChain} {swap.outToken} {swap.recipient}</p>
-      <p>amount: {swap.amount}</p>
-      <p>fee: {swap.fee}</p>
-      <p>expire: {swap.expireTs}</p>
+      <p><b>from:</b> {from.networkName}{' '}
+        <a href={`${from.explorer}/token/${from.token.addr}`} target='_blank'>
+          {from.token.symbol}
+        </a>
+      </p>
+      <p>
+        <b>initiator:</b>
+        <a href={`${from.explorer}/address/${swap.initiator}`} target='_blank'>
+          {swap.initiator}
+        </a>
+      </p>
+      <p><b>to:</b> {to.networkName}{' '}
+        <a href={`${to.explorer}/token/${to.token.addr}`} target='_blank'>
+          {to.token.symbol}
+        </a>
+      </p>
+      <p>
+        <b>recipient:</b>
+        <a href={`${to.explorer}/address/${swap.recipient}`} target='_blank'>
+          {swap.recipient}
+        </a>
+      </p>
+      <p><b>amount:</b> {ethers.utils.formatUnits(swap.amount, 6)}</p>
+      <p><b>fee:</b> {ethers.utils.formatUnits(swap.fee, 6)}</p>
+      <p><b>expire:</b> {swap.expireTs}</p>
     </div>
   )
 }
