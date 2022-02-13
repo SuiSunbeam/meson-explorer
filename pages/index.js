@@ -5,16 +5,16 @@ import { ethers } from 'ethers'
 import { parseNetworkAndToken, abbreviate, badgeClassnames, getSwapDuration } from '../lib/swap'
 
 function SwapRow({ swap }) {
+  React.useEffect(() => {
+    // socket.subscribe(swapId)
+    return () => {}
+  }, [swap._id])
+
   const from = parseNetworkAndToken(swap.inChain, swap.inToken)
   const to = parseNetworkAndToken(swap.outChain, swap.outToken)
   if (!from || !to) {
     return null
   }
-
-  React.useEffect(() => {
-    // socket.subscribe(swapId)
-    return () => {}
-  }, [swap._id])
 
   return (
     <tr>
