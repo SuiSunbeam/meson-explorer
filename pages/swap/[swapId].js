@@ -175,7 +175,7 @@ export async function getStaticProps({ params }) {
   const props = { swapId: params.swapId }
   if (params.swapId) {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/swap/${params.swapId}`)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/swap/${params.swapId}`)
       if (res.status >= 400) {
         props.error = 'Swap not found'
       } else {

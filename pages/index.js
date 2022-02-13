@@ -127,7 +127,7 @@ export default function SwapList({ swaps, error }) {
 export async function getStaticProps() {
   const props = {}
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/swap`)
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/swap`)
     if (res.status >= 400) {
       props.error = 'Bad request'
     } else {
