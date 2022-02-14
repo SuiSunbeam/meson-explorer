@@ -102,7 +102,7 @@ function SwapRow({ swap }) {
   )
 }
 
-export default function SwapList({ swaps, error }) {
+export default function SwapList({ total, swaps, error }) {
   if (error) {
     return <p>{error}</p>
   } else if (!swaps) {
@@ -145,7 +145,8 @@ export async function getStaticProps() {
     } else {
       const json = await res.json()
       if (json.result) {
-        props.swaps = json.result
+        props.total = json.result.total
+        props.swaps = json.result.list
       } else {
         props.error = json.error.message
       }
