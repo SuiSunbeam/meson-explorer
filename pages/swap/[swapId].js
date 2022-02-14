@@ -1,11 +1,40 @@
 import React from 'react'
 import classnames from 'classnames'
+import { useRouter } from 'next/router'
+import useSWR from 'swr'
 import { ethers } from 'ethers'
 
 import socket from '../../lib/socket'
 import { parseNetworkAndToken, badgeClassnames, getSwapDuration } from '../../lib/swap'
 
-export default function Swap({ swapId, swap, error }) {
+const fetcher = (...args) => fetch(...args)
+  .then(res => {
+    if (res.status >= 400) {
+      throw new Error('Swap not found')
+    }
+    return res.json()
+  })
+  .then(json => {
+    if (json.result) {
+      return json.result
+    } else {
+      throw new Error(json.error.message)
+    }
+  })
+
+export default function Swap() {
+  const router = useRouter()
+  const swapId = router.query.swapId
+
+  let swap, error
+  if (swapId) {
+    const result = useSWR(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/swap/${swapId}`, fetcher)
+    swap = result.data
+    error = result.error?.message
+  } else {
+    error = 'No swap id'
+  }
+
   if (error) {
     return (
       <div className='shadow overflow-hidden border-b border-gray-200 rounded-lg'>
@@ -167,31 +196,3 @@ function ListRow({ bg, title, children }) {
   )
 }
 
-export async function getStaticProps({ params }) {
-  const props = { swapId: params.swapId }
-  if (params.swapId) {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/swap/${params.swapId}`)
-      if (res.status >= 400) {
-        props.error = 'Swap not found'
-      } else {
-        const json = await res.json()
-        if (json.result) {
-          props.swap = json.result
-        } else {
-          props.error = json.error.message
-        }
-      }
-    } catch (e) {
-      console.warn(e)
-      props.error = e.message
-    }
-  } else {
-    props.error = 'No swap id'
-  }
-  return { props, revalidate: 10 }
-}
-
-export async function getStaticPaths() {
-  return { paths: [], fallback: true }
-}
