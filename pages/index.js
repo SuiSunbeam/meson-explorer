@@ -5,6 +5,7 @@ import { ethers } from 'ethers'
 
 import socket from '../lib/socket'
 import { parseNetworkAndToken, abbreviate, badgeClassnames, getSwapDuration } from '../lib/swap'
+import Pagination from '../components/Pagination'
 
 function SwapRow({ swap }) {
   const [status, setStatus] = React.useState(swap.status)
@@ -103,6 +104,8 @@ function SwapRow({ swap }) {
 }
 
 export default function SwapList({ total, swaps, error }) {
+  const [page, setPage] = React.useState(0)
+
   if (error) {
     return <p>{error}</p>
   } else if (!swaps) {
@@ -132,6 +135,7 @@ export default function SwapList({ total, swaps, error }) {
           {swaps.map(swap => <SwapRow key={swap._id} swap={swap} />)}
         </tbody>
       </table>
+      <Pagination size={10} page={page} total={total} onPageChange={setPage} />
     </div>
   )
 }
@@ -139,7 +143,7 @@ export default function SwapList({ total, swaps, error }) {
 export async function getStaticProps() {
   const props = {}
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/swap`)
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/swap?size=10`)
     if (res.status >= 400) {
       props.error = 'Bad request'
     } else {
