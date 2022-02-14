@@ -17,7 +17,11 @@ const fetcher = async pageStr => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/swap?page=${page}`)
   const json = await res.json()
   if (json.result) {
-    return { page, ...json.result }
+    const { total, list } = json.result
+    if (page * 10 > total) {
+      throw new Error()
+    }
+    return { page, total, list }
   } else {
     throw new Error(json.error.message)
   }
