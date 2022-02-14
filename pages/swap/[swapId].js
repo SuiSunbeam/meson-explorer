@@ -7,33 +7,26 @@ import { ethers } from 'ethers'
 import socket from '../../lib/socket'
 import { parseNetworkAndToken, badgeClassnames, getSwapDuration } from '../../lib/swap'
 
-const fetcher = (...args) => fetch(...args)
-  .then(res => {
-    if (res.status >= 400) {
-      throw new Error('Swap not found')
-    }
-    return res.json()
-  })
-  .then(json => {
-    if (json.result) {
-      return json.result
-    } else {
-      throw new Error(json.error.message)
-    }
-  })
+const fetcher = async swapId => {
+  if (!swapId) {
+    throw new Error('No swap id')
+  }
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/swap/${swapId}`)
+  if (res.status >= 400) {
+    throw new Error('Swap not found')
+  }
+  const json = await res.json()
+  if (json.result) {
+    return json.result
+  } else {
+    throw new Error(json.error.message)
+  }
+}
 
 export default function Swap() {
   const router = useRouter()
   const swapId = router.query.swapId
-
-  let swap, error
-  if (swapId) {
-    const result = useSWR(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/swap/${swapId}`, fetcher)
-    swap = result.data
-    error = result.error?.message
-  } else {
-    error = 'No swap id'
-  }
+  const { data, error } = useSWR(swapId, fetcher)
 
   if (error) {
     return (
@@ -50,13 +43,13 @@ export default function Swap() {
         <div className='border-t border-gray-200'>
           <dl>
             <ListRow bg title='Reason'>
-              {error}
+              {error.message}
             </ListRow>
           </dl>
         </div>
       </div>
     )
-  } else if (!swap) {
+  } else if (!data) {
     return (
       <div className='flex items-center justify-center mt-6'>
         <svg className='animate-spin h-5 w-5 text-gray-500' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'>
@@ -66,7 +59,7 @@ export default function Swap() {
       </div>
     )
   }
-  return <CorrectSwap swapId={swapId} swap={swap} />
+  return <CorrectSwap swapId={swapId} swap={data} />
 }
 
 function CorrectSwap({ swapId, swap }) {

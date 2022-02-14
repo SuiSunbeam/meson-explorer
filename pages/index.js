@@ -9,35 +9,32 @@ import socket from '../lib/socket'
 import { parseNetworkAndToken, abbreviate, badgeClassnames, getSwapDuration } from '../lib/swap'
 import Pagination from '../components/Pagination'
 
-const fetcher = (...args) => fetch(...args)
-  .then(res => res.json())
-  .then(json => {
-    if (json.result) {
-      return json.result
-    } else {
-      throw new Error(json.error.message)
-    }
-  })
+const fetcher = async pageStr => {
+  const page = Number(pageStr || 1) - 1
+  if (Number.isNaN(page) || !Number.isInteger(page) || page < 0) {
+    throw new Error()
+  }
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/swap?page=${page}`)
+  const json = await res.json()
+  if (json.result) {
+    return { page, ...json.result }
+  } else {
+    throw new Error(json.error.message)
+  }
+}
 
 export default function SwapList() {
   const router = useRouter()
-  const page = Number(router.query.page || 1) - 1
-
+  const { data, error } = useSWR(router.query.page || '1', fetcher)
   React.useEffect(() => {
-    if (Number.isNaN(page) || !Number.isInteger(page) || page < 0) {
+    if (error) {
       router.replace('/')
     }
-  }, [page])
-  if (Number.isNaN(page) || !Number.isInteger(page) || page < 0) {
-    return null
-  }
-
-  const { data, error } = useSWR(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/swap?page=${page}`, fetcher)
+  }, [error])
 
   if (error) {
-    return <p>{error.message}</p>
-  }
-  if (!data) {
+    return null
+  } else if (!data) {
     return (
       <div className='flex items-center justify-center mt-6'>
         <svg className='animate-spin h-5 w-5 text-gray-500' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'>
@@ -48,7 +45,7 @@ export default function SwapList() {
     )
   }
 
-  const { total, list } = data
+  const { page, total, list } = data
   const onPageChange = page => {
     router.push(`/?page=${page+1}`)
   }
