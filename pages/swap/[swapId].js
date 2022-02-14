@@ -46,6 +46,10 @@ function CorrectSwap({ swapId, swap }) {
   const [recipient, setRecipient] = React.useState(swap.recipient)
 
   React.useEffect(() => {
+    if (swap.status === 'DONE') {
+      return
+    }
+
     const swapUpdateListener = updates => {
       if (updates.status) {
         setStatus(updates.status)

@@ -2,16 +2,40 @@ import React from 'react'
 import classnames from 'classnames'
 import Link from 'next/link'
 import { ethers } from 'ethers'
+
+import socket from '../lib/socket'
 import { parseNetworkAndToken, abbreviate, badgeClassnames, getSwapDuration } from '../lib/swap'
 
 function SwapRow({ swap }) {
-  React.useEffect(() => {
-    // socket.subscribe(swapId)
-    return () => {}
-  }, [swap._id])
+  const [status, setStatus] = React.useState(swap.status)
+  const [recipient, setRecipient] = React.useState(swap.recipient)
 
   const from = parseNetworkAndToken(swap.inChain, swap.inToken)
   const to = parseNetworkAndToken(swap.outChain, swap.outToken)
+
+  React.useEffect(() => {
+    if (!from || !to || swap.status === 'DONE') {
+      return
+    }
+
+    const swapUpdateListener = updates => {
+      if (updates.status) {
+        setStatus(updates.status)
+      }
+      if (updates.recipient) {
+        setRecipient(updates.recipient)
+      }
+    }
+
+    socket.subscribe(swap._id)
+    socket.onSwapUpdated(swapUpdateListener)
+
+    return () => {
+      socket.offSwapUpdated(swapUpdateListener)
+      socket.unsubscribe(swap._id)
+    }
+  }, [swap._id])
+
   if (!from || !to) {
     return null
   }
@@ -31,9 +55,9 @@ function SwapRow({ swap }) {
       <td className='px-3 py-4 whitespace-nowrap'>
         <span className={classnames(
           'px-2 inline-flex text-sm leading-5 font-semibold rounded-full',
-          badgeClassnames(swap.status)
+          badgeClassnames(status)
         )}>
-          {swap.status}
+          {status}
         </span>
       </td>
       <td className='px-3 py-4 whitespace-nowrap'>
@@ -46,8 +70,8 @@ function SwapRow({ swap }) {
       </td>
       <td className='px-3 py-4 whitespace-nowrap'>
         <div className='text-indigo-600 hover:text-indigo-500 hover:underline'>
-          <a href={`${to.explorer}/address/${swap.recipient}`} target='_blank' rel='noreferrer'>
-            {abbreviate(swap.recipient)}
+          <a href={`${to.explorer}/address/${recipient}`} target='_blank' rel='noreferrer'>
+            {abbreviate(recipient)}
           </a>
         </div>
         <div className="text-sm text-gray-500">{to.networkName}</div>
