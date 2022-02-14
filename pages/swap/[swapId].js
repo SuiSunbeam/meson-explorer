@@ -58,13 +58,7 @@ function CorrectSwap({ swapId, swap }) {
       }
     }
 
-    socket.subscribe(swapId)
-    socket.onSwapUpdated(swapUpdateListener)
-
-    return () => {
-      socket.offSwapUpdated(swapUpdateListener)
-      socket.unsubscribe(swapId)
-    }
+    return socket.subscribe(swapId, swapUpdateListener)
   }, [swapId])
 
   const from = parseNetworkAndToken(swap.inChain, swap.inToken)

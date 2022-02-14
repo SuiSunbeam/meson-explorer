@@ -27,13 +27,7 @@ function SwapRow({ swap }) {
       }
     }
 
-    socket.subscribe(swap._id)
-    socket.onSwapUpdated(swapUpdateListener)
-
-    return () => {
-      socket.offSwapUpdated(swapUpdateListener)
-      socket.unsubscribe(swap._id)
-    }
+    return socket.subscribe(swap._id, swapUpdateListener)
   }, [swap._id])
 
   if (!from || !to) {
