@@ -71,7 +71,7 @@ function SwapRow({ swap }) {
       <td className='px-3 py-4 whitespace-nowrap'>
         <div className='text-indigo-600 hover:text-indigo-500 hover:underline'>
           <a href={`${to.explorer}/address/${recipient}`} target='_blank' rel='noreferrer'>
-            {abbreviate(recipient)}
+            {recipient ? abbreviate(recipient) : ''}
           </a>
         </div>
         <div className="text-sm text-gray-500">{to.networkName}</div>
