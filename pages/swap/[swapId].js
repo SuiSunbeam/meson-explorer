@@ -1,7 +1,9 @@
 import React from 'react'
 import classnames from 'classnames'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import useSWR from 'swr'
+import { ExternalLinkIcon } from '@heroicons/react/outline'
 import { ethers } from 'ethers'
 
 import socket from '../../lib/socket'
@@ -64,7 +66,7 @@ export default function Swap() {
 
 function CorrectSwap({ swapId, swap }) {
   const [status, setStatus] = React.useState(swap.status)
-  const [recipient, setRecipient] = React.useState(swap.recipient)
+  const [recipient, setRecipient] = React.useState(swap.recipient || '')
 
   React.useEffect(() => {
     if (swap.status === 'DONE') {
@@ -105,26 +107,36 @@ function CorrectSwap({ swapId, swap }) {
       </div>
       <div className='border-t border-gray-200'>
         <dl>
-          <ListRow bg title='Requested'>
-            {new Date(swap.created).toLocaleString()}
-          </ListRow>
-          <ListRow title='From'>
+          <ListRow bg title='From'>
             <div className="text-indigo-600 hover:text-indigo-500 hover:underline">
-              <a href={`${from.explorer}/address/${swap.initiator}`} target='_blank' rel='noreferrer'>
+              <Link href={`/address/${swap.initiator}`}>
                 {swap.initiator}
+              </Link>
+            </div>
+            <div className="text-sm text-gray-500">
+              {from.networkName}
+              <a href={`${from.explorer}/address/${swap.initiator}`} target='_blank' rel='noreferrer'>
+                <ExternalLinkIcon className='inline-block ml-1 w-4 hover:text-indigo-500' aria-hidden='true' />
               </a>
             </div>
-            <div className="text-sm text-gray-500">{from.networkName}</div>
           </ListRow>
-          <ListRow bg title='To'>
+          <ListRow title='To'>
             <div className="text-indigo-600 hover:text-indigo-500 hover:underline">
-              <a href={`${to.explorer}/address/${recipient}`} target='_blank' rel='noreferrer'>
+              <Link href={`/address/${swap.initiator}`}>
                 {recipient}
-              </a>
+              </Link>
             </div>
-            <div className="text-sm text-gray-500">{to.networkName}</div>
+            <div className="text-sm text-gray-500">
+              {to.networkName}
+              {
+                recipient &&
+                <a href={`${to.explorer}/address/${recipient}`} target='_blank' rel='noreferrer'>
+                  <ExternalLinkIcon className='inline-block ml-1 w-4 hover:text-indigo-500' aria-hidden='true' />
+                </a>
+              }
+            </div>
           </ListRow>
-          <ListRow title='Amount'>
+          <ListRow bg title='Amount'>
             {ethers.utils.formatUnits(swap.amount, 6)}{' '}
             <a
               className='text-sm hover:text-indigo-500 hover:underline '
@@ -144,9 +156,12 @@ function CorrectSwap({ swapId, swap }) {
               {to.token.symbol}
             </a>
           </ListRow>
-          <ListRow bg title='Fee'>
+          <ListRow title='Fee'>
             {ethers.utils.formatUnits(swap.fee, 6)}{' '}
             <span className='text-sm'>{from.token.symbol}</span>
+          </ListRow>
+          <ListRow bg title='Requested'>
+            {new Date(swap.created).toLocaleString()}
           </ListRow>
           <SwapTimes status={status} swap={swap} />
         </dl>
