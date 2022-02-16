@@ -7,7 +7,9 @@ import { ExternalLinkIcon } from '@heroicons/react/outline'
 import { ethers } from 'ethers'
 
 import socket from '../../lib/socket'
-import { parseNetworkAndToken, badgeClassnames, getSwapDuration } from '../../lib/swap'
+import { parseNetworkAndToken, badgeType, getSwapDuration } from '../../lib/swap'
+
+import Badge from '../../components/Badge'
 
 const fetcher = async swapId => {
   if (!swapId) {
@@ -36,9 +38,7 @@ export default function Swap() {
         <div className='px-4 py-5 bg-white sm:px-6'>
           <div className='flex items-center'>
             <span className='text-xl font-medium leading-6 text-gray-900'>Swap</span>
-            <span className='inline-flex px-2 ml-2 text-sm font-semibold leading-5 text-red-600 bg-red-100 rounded-full'>
-              ERROR
-            </span>
+            <Badge type='error' className='ml-2'>ERROR</Badge>
           </div>
           <p className='max-w-2xl mt-1 text-gray-500'>{swapId}</p>
         </div>
@@ -96,12 +96,7 @@ function CorrectSwap({ swapId, swap }) {
       <div className='px-4 py-5 bg-white sm:px-6'>
         <div className='flex items-center'>
           <span className='text-xl font-medium leading-6 text-gray-900'>Swap</span>
-          <span className={classnames(
-            'ml-2 px-2 inline-flex text-sm leading-5 font-semibold rounded-full',
-            badgeClassnames(status)
-          )}>
-            {status}
-          </span>
+          <Badge type={badgeType(status)} className='ml-2'>{status}</Badge>
         </div>
         <p className='max-w-2xl mt-1 text-gray-500'>{swapId}</p>
       </div>

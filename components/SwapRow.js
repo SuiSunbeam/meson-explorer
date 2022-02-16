@@ -5,7 +5,8 @@ import { ethers } from 'ethers'
 import { ExternalLinkIcon } from '@heroicons/react/outline'
 
 import socket from '../lib/socket'
-import { parseNetworkAndToken, abbreviate, badgeClassnames, getSwapDuration } from '../lib/swap'
+import { parseNetworkAndToken, abbreviate, badgeType, getSwapDuration } from '../lib/swap'
+import Badge from './Badge'
 
 export default function SwapRow({ swap }) {
   const [status, setStatus] = React.useState(swap.status)
@@ -46,12 +47,7 @@ export default function SwapRow({ swap }) {
         </div>
       </td>
       <td className='px-3 py-4 whitespace-nowrap'>
-        <span className={classnames(
-          'px-2 inline-flex text-sm leading-5 rounded-full',
-          badgeClassnames(status)
-        )}>
-          {status}
-        </span>
+        <Badge type={badgeType(status)}>{status}</Badge>
       </td>
       <td className='px-3 py-4 whitespace-nowrap'>
         <div className="text-primary hover:underline">
