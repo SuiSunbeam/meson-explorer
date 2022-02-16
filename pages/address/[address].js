@@ -30,8 +30,8 @@ const fetcher = async param => {
 
 export default function AddressSwapList() {
   const router = useRouter()
-  const { address, pageStr = '1' } = router.query
-  const { data, error } = useSWR(`${address}:${pageStr}`, fetcher)
+  const { address, page = '1' } = router.query
+  const { data, error } = useSWR(`${address}:${page}`, fetcher)
   React.useEffect(() => {
     if (error) {
       router.replace('/')
@@ -44,8 +44,10 @@ export default function AddressSwapList() {
     return <LoadingScreen />
   }
 
-  const { page, total, list } = data
-  const onPageChange = page => router.push(`/?page=${page+1}`)
+  const { total, list } = data
+  const onPageChange = page => router.push({
+    query: { address, page: page + 1 }
+  })
   return (
     <Card>
       <CardTitle
@@ -56,7 +58,7 @@ export default function AddressSwapList() {
         <Table headers={['swap id / time', 'status', 'from', 'to', 'amount', 'duration']}>
           {list.map(swap => <SwapRow key={swap._id} swap={swap} />)}
         </Table>
-        <Pagination size={10} page={page} total={total} onPageChange={onPageChange} />
+        <Pagination size={10} page={data.page} total={total} onPageChange={onPageChange} />
       </CardBody>
     </Card>
   )
