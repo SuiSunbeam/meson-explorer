@@ -3,7 +3,6 @@ import classnames from 'classnames'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import useSWR from 'swr'
-import { ExternalLinkIcon } from '@heroicons/react/outline'
 import { ethers } from 'ethers'
 
 import socket from '../../lib/socket'
@@ -11,6 +10,7 @@ import { parseNetworkAndToken, badgeType, getSwapDuration } from '../../lib/swap
 
 import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody } from '../../components/Card'
+import { ExternalIcon, ExternalToken } from '../../components/ExternalLink'
 
 const fetcher = async swapId => {
   if (!swapId) {
@@ -35,21 +35,21 @@ export default function Swap() {
 
   if (error) {
     return (
-      <div className='overflow-hidden border-b border-gray-200 rounded-lg shadow'>
+      <Card>
         <CardTitle
           title='Swap'
           badge='ERROR'
           badgeType='error'
           subtitle={swapId}
         />
-        <div className='border-t border-gray-200'>
+        <CardBody>
           <dl>
             <ListRow bg title='Reason'>
               {error.message}
             </ListRow>
           </dl>
-        </div>
-      </div>
+        </CardBody>
+      </Card>
     )
   } else if (!data) {
     return <LoadingScreen />
@@ -95,57 +95,32 @@ function CorrectSwap({ swapId, swap }) {
       <CardBody>
         <dl>
           <ListRow bg title='From'>
-            <div className="text-primary hover:underline">
-              <Link href={`/address/${swap.initiator}`}>
-                {swap.initiator}
-              </Link>
+            <div className='text-primary hover:underline'>
+              <Link href={`/address/${swap.initiator}`}>{swap.initiator}</Link>
             </div>
-            <div className="text-sm text-gray-500">
+            <div className='flex items-center text-sm text-gray-500'>
               {from.networkName}
-              <a href={`${from.explorer}/address/${swap.initiator}`} target='_blank' rel='noreferrer'>
-                <ExternalLinkIcon className='inline-block w-4 ml-1 hover:text-primary' aria-hidden='true' />
-              </a>
+              <ExternalIcon href={`${from.explorer}/address/${swap.initiator}`} />
             </div>
           </ListRow>
           <ListRow title='To'>
-            <div className="text-primary hover:underline">
-              <Link href={`/address/${swap.initiator}`}>
-                {recipient}
-              </Link>
+            <div className='text-primary hover:underline'>
+              <Link href={`/address/${swap.initiator}`}>{recipient}</Link>
             </div>
-            <div className="text-sm text-gray-500">
+            <div className='flex items-center text-sm text-gray-500'>
               {to.networkName}
-              {
-                recipient &&
-                <a href={`${to.explorer}/address/${recipient}`} target='_blank' rel='noreferrer'>
-                  <ExternalLinkIcon className='inline-block w-4 ml-1 hover:text-primary' aria-hidden='true' />
-                </a>
-              }
+              {recipient && <ExternalIcon href={`${to.explorer}/address/${recipient}`} />}
             </div>
           </ListRow>
           <ListRow bg title='Amount'>
             {ethers.utils.formatUnits(swap.amount, 6)}{' '}
-            <a
-              className='text-sm hover:text-primary hover:underline '
-              href={`${from.explorer}/token/${from.token.addr}`}
-              target='_blank'
-              rel='noreferrer'
-            >
-              {from.token.symbol}
-            </a>
+            <ExternalToken name={from.token.symbol} href={`${from.explorer}/token/${from.token.addr}`} />
             <span className='text-sm text-gray-500'>{' -> '}</span>
-            <a
-              className='text-sm hover:text-primary hover:underline '
-              href={`${to.explorer}/token/${to.token.addr}`}
-              target='_blank'
-              rel='noreferrer'
-            >
-              {to.token.symbol}
-            </a>
+            <ExternalToken name={to.token.symbol} href={`${to.explorer}/token/${to.token.addr}`} />
           </ListRow>
           <ListRow title='Fee'>
             {ethers.utils.formatUnits(swap.fee, 6)}{' '}
-            <span className='text-sm'>{from.token.symbol}</span>
+            <ExternalToken name={from.token.symbol} href={`${from.explorer}/token/${from.token.addr}`} />
           </ListRow>
           <ListRow bg title='Requested'>
             {new Date(swap.created).toLocaleString()}
@@ -161,19 +136,13 @@ function SwapTimes({ status, swap }) {
   if (status === 'DONE') {
     return (
       <>
-        <ListRow title='Finished'>
-          {new Date(swap.done).toLocaleString()}
-        </ListRow>
-        <ListRow bg title='Duration'>
-          {getSwapDuration(swap)}
-        </ListRow>
+        <ListRow title='Finished'>{new Date(swap.done).toLocaleString()}</ListRow>
+        <ListRow bg title='Duration'>{getSwapDuration(swap)}</ListRow>
       </>
     )
   }
   return (
-    <ListRow title='Will expire'>
-      {new Date(swap.expireTs).toLocaleString()}
-    </ListRow>
+    <ListRow title='Will expire'>{new Date(swap.expireTs).toLocaleString()}</ListRow>
   )
 }
 

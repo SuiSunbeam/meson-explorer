@@ -28,3 +28,11 @@ export function Th({ className, children }) {
     >{children}</th>
   )
 }
+
+export function Td({ className, children }) {
+  return (
+    <td className={classnames('px-3 py-4 whitespace-nowrap', className )}>
+      {children}
+    </td>
+  )
+}
