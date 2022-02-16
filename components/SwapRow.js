@@ -1,5 +1,4 @@
 import React from 'react'
-import classnames from 'classnames'
 import Link from 'next/link'
 import { ethers } from 'ethers'
 import { ExternalLinkIcon } from '@heroicons/react/outline'

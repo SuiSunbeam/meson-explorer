@@ -9,7 +9,7 @@ import { ethers } from 'ethers'
 import socket from '../../lib/socket'
 import { parseNetworkAndToken, badgeType, getSwapDuration } from '../../lib/swap'
 
-import Badge from '../../components/Badge'
+import CardTitle from '../../components/CardTitle'
 
 const fetcher = async swapId => {
   if (!swapId) {
@@ -35,13 +35,12 @@ export default function Swap() {
   if (error) {
     return (
       <div className='overflow-hidden border-b border-gray-200 rounded-lg shadow'>
-        <div className='px-4 py-5 bg-white sm:px-6'>
-          <div className='flex items-center'>
-            <span className='text-xl font-medium leading-6 text-gray-900'>Swap</span>
-            <Badge type='error' className='ml-2'>ERROR</Badge>
-          </div>
-          <p className='max-w-2xl mt-1 text-gray-500'>{swapId}</p>
-        </div>
+        <CardTitle
+          title='Swap'
+          badge='ERROR'
+          badgeType='error'
+          subtitle={swapId}
+        />
         <div className='border-t border-gray-200'>
           <dl>
             <ListRow bg title='Reason'>
@@ -93,13 +92,12 @@ function CorrectSwap({ swapId, swap }) {
 
   return (
     <div className='overflow-hidden border-b border-gray-200 rounded-lg shadow'>
-      <div className='px-4 py-5 bg-white sm:px-6'>
-        <div className='flex items-center'>
-          <span className='text-xl font-medium leading-6 text-gray-900'>Swap</span>
-          <Badge type={badgeType(status)} className='ml-2'>{status}</Badge>
-        </div>
-        <p className='max-w-2xl mt-1 text-gray-500'>{swapId}</p>
-      </div>
+      <CardTitle
+        title='Swap'
+        badge={status}
+        badgeType={badgeType(status)}
+        subtitle={swapId}
+      />
       <div className='border-t border-gray-200'>
         <dl>
           <ListRow bg title='From'>

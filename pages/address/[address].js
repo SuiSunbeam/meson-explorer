@@ -2,7 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 
-import { parseNetworkAndToken, abbreviate, badgeClassnames, getSwapDuration } from '../../lib/swap'
+import CardTitle from '../../components/CardTitle'
 import SwapRow from '../../components/SwapRow'
 import Pagination from '../../components/Pagination'
 
@@ -55,12 +55,10 @@ export default function AddressSwapList() {
   }
   return (
     <div className='shadow overflow-hidden border-b border-gray-200 rounded-lg'>
-      <div className='bg-white px-4 py-5 sm:px-6'>
-        <div className='flex items-center'>
-          <span className='text-xl leading-6 font-medium text-gray-900'>Address</span>
-        </div>
-        <p className='mt-1 max-w-2xl text-gray-500'>{address}</p>
-      </div>
+      <CardTitle
+        title='Address'
+        subtitle={address}
+      />
       <div className='border-t border-gray-200'>
         <table className='min-w-full divide-y divide-gray-200'>
           <thead className='bg-gray-50'>
