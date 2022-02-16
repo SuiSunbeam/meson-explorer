@@ -50,7 +50,7 @@ export default function SwapRow({ swap }) {
       </Td>
       <Td><SwapStatusBadge status={status} expired={expired} /></Td>
       <Td>
-        <div className='text-primary hover:underline'>
+        <div className='text-black hover:underline hover:text-primary'>
           <Link href={`/address/${swap.initiator}`}>{abbreviate(swap.initiator)}</Link>
         </div>
         <div className='flex items-center text-xs text-gray-500'>
@@ -59,7 +59,7 @@ export default function SwapRow({ swap }) {
         </div>
       </Td>
       <Td>
-        <div className='text-primary hover:underline'>
+        <div className='text-black hover:underline hover:text-primary'>
           <Link href={`/address/${recipient}`}>{recipient ? abbreviate(recipient) : ''}</Link>
         </div>
         <div className='flex items-center text-xs text-gray-500'>
@@ -76,7 +76,7 @@ export default function SwapRow({ swap }) {
         </div>
         <div className='text-xs text-gray-500'>Fee: {ethers.utils.formatUnits(swap.fee, 6)} {from.token.symbol}</div>
       </Td>
-      <Td>{getSwapDuration(swap)}</Td>
+      <Td><span className='text-gray-500'>{getSwapDuration(swap)}</span></Td>
     </tr>
   )
 }
