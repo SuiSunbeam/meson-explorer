@@ -35,8 +35,8 @@ export default function Navbar() {
                   <div className='text-lg font-medium text-white'>
                     <Link href='/'>
                       <a className='flex items-center font-semibold'>
-                        <Image width={40} className='mr-2' src='/logo.svg' alt='' />
-                        Meson Swaps
+                        <Image width={40} height={20} src='/logo.svg' alt='' />
+                        <div className='inline-block ml-2'>Meson Swaps</div>
                       </a>
                     </Link>
                   </div>
