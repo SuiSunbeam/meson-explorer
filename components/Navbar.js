@@ -34,8 +34,8 @@ export default function Navbar() {
                   <div className='text-lg font-medium text-white'>
                     <Link href='/'>
                       <a className='flex items-center font-semibold opacity-90 hover:opacity-100'>
-                        <img width={30} height={15} className='opacity-50' src='/logo.svg' alt='' />
-                        <div className='inline-block ml-2'>Meson Swaps</div>
+                        <img width={28} height={14} className='opacity-50' src='/logo.svg' alt='' />
+                        <div className='inline-block ml-2 mb-1 text-2xl' style={{ fontFamily: `'Nunito', sans-serif` }}>meson swaps</div>
                       </a>
                     </Link>
                   </div>
