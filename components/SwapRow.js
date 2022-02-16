@@ -18,7 +18,7 @@ export default function SwapRow({ swap }) {
   const expired = new Date(swap.expireTs) < Date.now()
 
   React.useEffect(() => {
-    if (!from || !to || swap.status === 'DONE') {
+    if (!from || !to || ['DONE', 'CANCELLED'].includes(swap.status) || (expired && swap.status === 'REQUESTING')) {
       return
     }
 
@@ -32,7 +32,7 @@ export default function SwapRow({ swap }) {
     }
 
     return socket.subscribe(swap._id, swapUpdateListener)
-  }, [swap._id, from, to, swap.status])
+  }, [swap._id, from, to, swap.status, expired])
 
   if (!from || !to) {
     return null
