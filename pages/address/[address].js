@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import useSWR from 'swr'
 
 import CardTitle from '../../components/CardTitle'
+import { Th } from '../../components/Table'
 import SwapRow from '../../components/SwapRow'
 import Pagination from '../../components/Pagination'
 
@@ -63,12 +64,12 @@ export default function AddressSwapList() {
         <table className='min-w-full divide-y divide-gray-200'>
           <thead className='bg-gray-50'>
             <tr>
-              <th scope='col' className='p-3 pl-4 sm:pl-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>swap id / time</th>
-              <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>status</th>
-              <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>from</th>
-              <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>to</th>
-              <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>amount</th>
-              <th scope='col' className='p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>duration</th>
+              <Th className='pl-4 sm:pl-6'>swap id / time</Th>
+              <Th>status</Th>
+              <Th>from</Th>
+              <Th>to</Th>
+              <Th>amount</Th>
+              <Th>duration</Th>
             </tr>
           </thead>
           <tbody className='bg-white divide-y divide-gray-200'>

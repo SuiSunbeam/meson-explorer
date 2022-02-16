@@ -2,6 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 
+import { Th } from '../components/Table'
 import SwapRow from '../components/SwapRow'
 import Pagination from '../components/Pagination'
 
@@ -54,12 +55,12 @@ export default function SwapList() {
       <table className='min-w-full divide-y divide-gray-200'>
         <thead className='bg-gray-50'>
           <tr>
-            <th scope='col' className='p-3 pl-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase sm:pl-6'>swap id / time</th>
-            <th scope='col' className='p-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase'>status</th>
-            <th scope='col' className='p-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase'>from</th>
-            <th scope='col' className='p-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase'>to</th>
-            <th scope='col' className='p-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase'>amount</th>
-            <th scope='col' className='p-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase'>duration</th>
+            <Th className='pl-4 sm:pl-6'>swap id / time</Th>
+            <Th>status</Th>
+            <Th>from</Th>
+            <Th>to</Th>
+            <Th>amount</Th>
+            <Th>duration</Th>
           </tr>
         </thead>
         <tbody className='bg-white divide-y divide-gray-200'>
