@@ -4,7 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid'
 import Button from './Button'
 
 export default function Pagination({ size = 10, page, total, onPageChange }) {
-  const pages = Math.floor(total / size) + 1
+  const pages = Math.ceil(total / size)
   return (
     <div className='flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 sm:px-6'>
       <SmPagination page={page} pages={pages} onPageChange={onPageChange} />
