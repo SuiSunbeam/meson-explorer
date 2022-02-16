@@ -1,5 +1,4 @@
 import { Fragment } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
@@ -35,7 +34,7 @@ export default function Navbar() {
                   <div className='text-lg font-medium text-white'>
                     <Link href='/'>
                       <a className='flex items-center font-semibold'>
-                        <Image width={40} height={20} src='/logo.svg' alt='' />
+                        <img width={40} height={20} src='/logo.svg' alt='' />
                         <div className='inline-block ml-2'>Meson Swaps</div>
                       </a>
                     </Link>
