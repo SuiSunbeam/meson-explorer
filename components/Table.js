@@ -1,5 +1,22 @@
 import classnames from 'classnames'
 
+export default function Table ({ headers, children }) {
+  return (
+    <table className='min-w-full divide-y divide-gray-200'>
+      <thead className='bg-gray-50'>
+        <tr>
+          {headers.map((item, index) => (
+            <Th className={!index && 'pl-4 sm:pl-6'}>{item}</Th>
+          ))}
+        </tr>
+      </thead>
+      <tbody className='bg-white divide-y divide-gray-200'>
+        {children}
+      </tbody>
+    </table>
+  )
+}
+
 export function Th({ className, children }) {
   return (
     <th

@@ -10,7 +10,7 @@ import socket from '../../lib/socket'
 import { parseNetworkAndToken, badgeType, getSwapDuration } from '../../lib/swap'
 
 import LoadingScreen from '../../components/LoadingScreen'
-import CardTitle from '../../components/CardTitle'
+import Card, { CardTitle, CardBody } from '../../components/Card'
 
 const fetcher = async swapId => {
   if (!swapId) {
@@ -85,14 +85,14 @@ function CorrectSwap({ swapId, swap }) {
   }
 
   return (
-    <div className='overflow-hidden border-b border-gray-200 rounded-lg shadow'>
+    <Card>
       <CardTitle
         title='Swap'
         badge={status}
         badgeType={badgeType(status)}
         subtitle={swapId}
       />
-      <div className='border-t border-gray-200'>
+      <CardBody>
         <dl>
           <ListRow bg title='From'>
             <div className="text-primary hover:underline">
@@ -152,8 +152,8 @@ function CorrectSwap({ swapId, swap }) {
           </ListRow>
           <SwapTimes status={status} swap={swap} />
         </dl>
-      </div>
-    </div>
+      </CardBody>
+    </Card>
   )
 }
 
