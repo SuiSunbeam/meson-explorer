@@ -6,10 +6,11 @@ import useSWR from 'swr'
 import { ethers } from 'ethers'
 
 import socket from '../../lib/socket'
-import { parseNetworkAndToken, badgeType, getSwapDuration } from '../../lib/swap'
+import { parseNetworkAndToken, getSwapDuration } from '../../lib/swap'
 
 import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody } from '../../components/Card'
+import SwapStatusBadge from '../../components/SwapStatusBadge'
 import { ExternalIcon, ExternalToken } from '../../components/ExternalLink'
 
 const fetcher = async swapId => {
@@ -83,13 +84,13 @@ function CorrectSwap({ swapId, swap }) {
   if (!from || !to) {
     return null
   }
+  const expired = new Date(swap.expireTs) < Date.now()
 
   return (
     <Card>
       <CardTitle
         title='Swap'
-        badge={status}
-        badgeType={badgeType(status)}
+        badge={<SwapStatusBadge status={status} expired={expired} />}
         subtitle={swapId}
       />
       <CardBody>
@@ -122,27 +123,29 @@ function CorrectSwap({ swapId, swap }) {
             {ethers.utils.formatUnits(swap.fee, 6)}{' '}
             <ExternalToken name={from.token.symbol} href={`${from.explorer}/token/${from.token.addr}`} />
           </ListRow>
-          <ListRow bg title='Requested'>
+          <ListRow bg title='Requested at'>
             {new Date(swap.created).toLocaleString()}
           </ListRow>
-          <SwapTimes status={status} swap={swap} />
+          <SwapTimes status={status} expired={expired} swap={swap} />
         </dl>
       </CardBody>
     </Card>
   )
 }
 
-function SwapTimes({ status, swap }) {
+function SwapTimes({ status, expired, swap }) {
   if (status === 'DONE') {
     return (
       <>
-        <ListRow title='Finished'>{new Date(swap.done).toLocaleString()}</ListRow>
+        <ListRow title='Finished at'>{new Date(swap.done).toLocaleString()}</ListRow>
         <ListRow bg title='Duration'>{getSwapDuration(swap)}</ListRow>
       </>
     )
   }
   return (
-    <ListRow title='Will expire'>{new Date(swap.expireTs).toLocaleString()}</ListRow>
+    <ListRow title={expired ? 'Expired at' : 'Will expire at'}>
+      {new Date(swap.expireTs).toLocaleString()}
+    </ListRow>
   )
 }
 

@@ -3,10 +3,10 @@ import Link from 'next/link'
 import { ethers } from 'ethers'
 
 import socket from '../lib/socket'
-import { parseNetworkAndToken, abbreviate, badgeType, getSwapDuration } from '../lib/swap'
+import { parseNetworkAndToken, abbreviate, getSwapDuration } from '../lib/swap'
 
 import { Td } from './Table'
-import Badge from './Badge'
+import SwapStatusBadge from './SwapStatusBadge'
 import { ExternalIcon, ExternalToken } from './ExternalLink'
 
 export default function SwapRow({ swap }) {
@@ -15,6 +15,7 @@ export default function SwapRow({ swap }) {
 
   const from = parseNetworkAndToken(swap.inChain, swap.inToken)
   const to = parseNetworkAndToken(swap.outChain, swap.outToken)
+  const expired = new Date(swap.expireTs) < Date.now()
 
   React.useEffect(() => {
     if (!from || !to || swap.status === 'DONE') {
@@ -47,9 +48,7 @@ export default function SwapRow({ swap }) {
           {new Date(swap.created).toLocaleString()}
         </div>
       </Td>
-      <Td>
-        <Badge type={badgeType(status)}>{status}</Badge>
-      </Td>
+      <Td><SwapStatusBadge status={status} expired={expired} /></Td>
       <Td>
         <div className='text-primary hover:underline'>
           <Link href={`/address/${swap.initiator}`}>{abbreviate(swap.initiator)}</Link>
