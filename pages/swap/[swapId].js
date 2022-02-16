@@ -76,7 +76,7 @@ function CorrectSwap({ swapId, swap }) {
     }
 
     return socket.subscribe(swapId, swapUpdateListener)
-  }, [swapId])
+  }, [swapId, swap.status])
 
   const from = parseNetworkAndToken(swap.inChain, swap.inToken)
   const to = parseNetworkAndToken(swap.outChain, swap.outToken)

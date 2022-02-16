@@ -36,7 +36,7 @@ export default function AddressSwapList() {
     if (error) {
       router.replace('/')
     }
-  }, [error])
+  }, [router, error])
 
   if (error) {
     return null

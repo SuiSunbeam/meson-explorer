@@ -31,7 +31,7 @@ export default function SwapRow({ swap }) {
     }
 
     return socket.subscribe(swap._id, swapUpdateListener)
-  }, [swap._id])
+  }, [swap._id, from, to, swap.status])
 
   if (!from || !to) {
     return null

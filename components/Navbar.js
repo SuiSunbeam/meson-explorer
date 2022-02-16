@@ -1,5 +1,6 @@
-import Link from 'next/link'
 import { Fragment } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 
@@ -32,7 +33,12 @@ export default function Navbar() {
               <div className='flex items-center justify-center flex-1 sm:items-stretch sm:justify-start'>
                 <div className='flex items-center flex-shrink-0'>
                   <div className='text-lg font-medium text-white'>
-                    <Link href='/'><a className='flex items-center font-semibold'><img width='40px' className='mr-2' src='/logo.svg'/>Meson Swaps</a></Link>
+                    <Link href='/'>
+                      <a className='flex items-center font-semibold'>
+                        <Image width={40} className='mr-2' src='/logo.svg' alt='' />
+                        Meson Swaps
+                      </a>
+                    </Link>
                   </div>
                   {/* <img
                     className='block w-auto h-8 lg:hidden'

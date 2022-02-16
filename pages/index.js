@@ -33,7 +33,7 @@ export default function SwapList() {
     if (error) {
       router.replace('/')
     }
-  }, [error])
+  }, [router, error])
 
   if (error) {
     return null
