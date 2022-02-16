@@ -11,7 +11,7 @@ export function ExternalIcon({ href }) {
 export function ExternalToken({ href, name }) {
   return (
     <a
-      className='text-sm text-black hover:text-indigo-500 hover:underline'
+      className='text-sm text-black hover:text-primary hover:underline'
       href={href}
       target='_blank'
       rel='noreferrer'
