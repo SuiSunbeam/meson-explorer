@@ -91,7 +91,7 @@ function CorrectSwap({ swapId, swap }) {
       <CardTitle
         title='Swap'
         badge={<SwapStatusBadge status={status} expired={expired} />}
-        subtitle={swapId}
+        subtitle={<><div>{swapId}</div><div>{swap.encoded}</div></>}
       />
       <CardBody>
         <dl>
