@@ -14,7 +14,7 @@ export default function SwapStatusBadge({ status, expired }) {
 function badgeType(status) {
   if (status === 'DONE') {
     return 'success'
-  } else if (status === 'EXPIRED') {
+  } else if (['ERROR, EXPIRED'].includes(status)) {
     return 'error'
   } else if (['LOCKED', 'RELEASING'].includes(status)) {
     return 'info'

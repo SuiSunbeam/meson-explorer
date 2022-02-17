@@ -39,8 +39,7 @@ export default function Swap() {
       <Card>
         <CardTitle
           title='Swap'
-          badge='ERROR'
-          badgeType='error'
+          badge={<SwapStatusBadge status='ERROR' />}
           subtitle={swapId}
         />
         <CardBody>
