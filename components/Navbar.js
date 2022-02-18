@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 
+const testnetMode = Boolean(process.env.NEXT_PUBLIC_TESTNET)
+
 const navigation = [
   // { name: 'Swaps', href: '#', current: true },
 ]
@@ -35,7 +37,9 @@ export default function Navbar() {
                     <Link href='/'>
                       <a className='flex items-center font-semibold opacity-90 hover:opacity-100'>
                         <img width={28} height={14} className='opacity-50' src='/logo.svg' alt='' />
-                        <div className='inline-block ml-2 mb-1 text-2xl' style={{ fontFamily: `'Nunito', sans-serif` }}>meson swaps</div>
+                        <div className='inline-block ml-2 mb-1 text-2xl' style={{ fontFamily: `'Nunito', sans-serif` }}>
+                          meson {testnetMode && 'testnet '}swaps
+                        </div>
                       </a>
                     </Link>
                   </div>
