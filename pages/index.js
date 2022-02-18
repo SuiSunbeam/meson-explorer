@@ -45,7 +45,11 @@ export default function SwapList() {
   const onPageChange = page => router.push(`/?page=${page+1}`)
   return (
     <Card>
-      <Table headers={['swap id / time', 'status', 'from', 'to', 'amount', 'duration']}>
+      <Table headers={[
+        { name: 'swap id / time', className: 'pl-4 sm:pl-6' },
+        { name: 'status' }, { name: 'from' }, { name: 'to' }, { name: 'amount' },
+        { name: 'duration', className: 'hidden md:table-cell' }
+      ]}>
         {list.map(swap => <SwapRow key={swap._id} swap={swap} />)}
       </Table>
       <Pagination size={10} page={page} total={total} onPageChange={onPageChange} />

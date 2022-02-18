@@ -99,7 +99,7 @@ function CorrectSwap({ swapId, swap }) {
             <div className='truncate'>{swap.encoded}</div>
           </ListRow>
           <ListRow title='From'>
-            <div className='text-primary hover:underline'>
+            <div className='text-normal hover:underline hover:text-primary'>
               <Link href={`/address/${swap.initiator}`}>{swap.initiator}</Link>
             </div>
             <div className='flex items-center text-sm text-gray-500'>
@@ -108,7 +108,7 @@ function CorrectSwap({ swapId, swap }) {
             </div>
           </ListRow>
           <ListRow bg title='To'>
-            <div className='text-primary hover:underline'>
+            <div className='text-normal hover:underline hover:text-primary'>
               <Link href={`/address/${swap.initiator}`}>{recipient}</Link>
             </div>
             <div className='flex items-center text-sm text-gray-500'>

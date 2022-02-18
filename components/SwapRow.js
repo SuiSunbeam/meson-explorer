@@ -42,8 +42,11 @@ export default function SwapRow({ swap }) {
   return (
     <tr>
       <Td className='pl-4 pr-3 sm:pl-6'>
-        <div className='text-primary hover:underline'>
+        <div className='text-primary hover:underline hidden lg:block'>
           <Link href={`/swap/${swap._id}`}>{abbreviate(swap._id, 8, 8)}</Link>
+        </div>
+        <div className='text-primary hover:underline lg:hidden'>
+          <Link href={`/swap/${swap._id}`}>{abbreviate(swap._id, 6, 6)}</Link>
         </div>
         <div className='text-xs text-gray-500'>
           {new Date(swap.created).toLocaleString()}
@@ -51,8 +54,11 @@ export default function SwapRow({ swap }) {
       </Td>
       <Td><SwapStatusBadge status={status} expired={expired} /></Td>
       <Td>
-        <div className='text-black hover:underline hover:text-primary'>
+        <div className='text-normal hover:underline hover:text-primary hidden lg:block'>
           <Link href={`/address/${swap.initiator}`}>{abbreviate(swap.initiator)}</Link>
+        </div>
+        <div className='text-normal hover:underline hover:text-primary lg:hidden'>
+          <Link href={`/address/${swap.initiator}`}>{abbreviate(swap.initiator, 6, 4)}</Link>
         </div>
         <div className='flex items-center text-xs text-gray-500'>
           {from.networkName}
@@ -60,8 +66,11 @@ export default function SwapRow({ swap }) {
         </div>
       </Td>
       <Td>
-        <div className='text-black hover:underline hover:text-primary'>
+        <div className='text-normal hover:underline hover:text-primary hidden lg:block'>
           <Link href={`/address/${recipient}`}>{recipient ? abbreviate(recipient) : ''}</Link>
+        </div>
+        <div className='text-normal hover:underline hover:text-primary lg:hidden'>
+          <Link href={`/address/${recipient}`}>{recipient ? abbreviate(recipient, 6, 4) : ''}</Link>
         </div>
         <div className='flex items-center text-xs text-gray-500'>
           {to.networkName}
@@ -69,15 +78,19 @@ export default function SwapRow({ swap }) {
         </div>
       </Td>
       <Td>
-        <div className='text-black'>
+        <div className='text-normal'>
           {ethers.utils.formatUnits(swap.amount, 6)}{' '}
           <ExternalLink href={`${from.explorer}/token/${from.token.addr}`}>{from.token.symbol}</ExternalLink>
-          <span className='text-sm text-gray-500'>{' -> '}</span>
-          <ExternalLink href={`${to.explorer}/token/${to.token.addr}`}>{to.token.symbol}</ExternalLink>
+          <span className='hidden md:inline'>
+            <span className='text-sm text-gray-500'>{' -> '}</span>
+            <ExternalLink href={`${to.explorer}/token/${to.token.addr}`}>{to.token.symbol}</ExternalLink>
+          </span>
         </div>
         <div className='text-xs text-gray-500'>Fee: {ethers.utils.formatUnits(swap.fee, 6)} {from.token.symbol}</div>
       </Td>
-      <Td><span className='text-gray-500'>{getSwapDuration(swap)}</span></Td>
+      <Td className='hidden md:table-cell'>
+        <span className='text-gray-500'>{getSwapDuration(swap)}</span>
+      </Td>
     </tr>
   )
 }

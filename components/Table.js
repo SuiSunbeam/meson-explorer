@@ -6,7 +6,7 @@ export default function Table ({ headers, children }) {
       <thead className='bg-gray-50'>
         <tr>
           {headers.map((item, index) => (
-            <Th key={`th-${index}`} className={!index && 'pl-4 sm:pl-6'}>{item}</Th>
+            <Th key={`th-${index}`} className={item.className}>{item.name}</Th>
           ))}
         </tr>
       </thead>
