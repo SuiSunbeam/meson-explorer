@@ -7,7 +7,7 @@ import { parseNetworkAndToken, abbreviate, getSwapStatus, getSwapDuration } from
 
 import { Td } from './Table'
 import SwapStatusBadge from './SwapStatusBadge'
-import { ExternalIcon, ExternalLinkXs } from './ExternalLink'
+import ExternalLink, { ExternalIcon } from './ExternalLink'
 
 export default function SwapRow({ swap }) {
   const statusFromEvents = getSwapStatus(swap.events)
@@ -71,9 +71,9 @@ export default function SwapRow({ swap }) {
       <Td>
         <div className='text-black'>
           {ethers.utils.formatUnits(swap.amount, 6)}{' '}
-          <ExternalLinkXs href={`${from.explorer}/token/${from.token.addr}`}>{from.token.symbol}</ExternalLinkXs>
+          <ExternalLink href={`${from.explorer}/token/${from.token.addr}`}>{from.token.symbol}</ExternalLink>
           <span className='text-sm text-gray-500'>{' -> '}</span>
-          <ExternalLinkXs href={`${to.explorer}/token/${to.token.addr}`}>{to.token.symbol}</ExternalLinkXs>
+          <ExternalLink href={`${to.explorer}/token/${to.token.addr}`}>{to.token.symbol}</ExternalLink>
         </div>
         <div className='text-xs text-gray-500'>Fee: {ethers.utils.formatUnits(swap.fee, 6)} {from.token.symbol}</div>
       </Td>

@@ -11,7 +11,7 @@ import { parseNetworkAndToken, getSwapStatus, sortEvents, getSwapDuration } from
 import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody } from '../../components/Card'
 import SwapStatusBadge from '../../components/SwapStatusBadge'
-import { ExternalIcon, ExternalLinkXs } from '../../components/ExternalLink'
+import ExternalLink, { ExternalIcon } from '../../components/ExternalLink'
 
 const fetcher = async swapId => {
   if (!swapId) {
@@ -96,7 +96,7 @@ function CorrectSwap({ swapId, swap }) {
       <CardBody>
         <dl>
           <ListRow bg title='Encoded As'>
-            {swap.encoded}
+            <div className='truncate'>{swap.encoded}</div>
           </ListRow>
           <ListRow title='From'>
             <div className='text-primary hover:underline'>
@@ -118,13 +118,13 @@ function CorrectSwap({ swapId, swap }) {
           </ListRow>
           <ListRow title='Amount'>
             {ethers.utils.formatUnits(swap.amount, 6)}{' '}
-            <ExternalLinkXs href={`${from.explorer}/token/${from.token.addr}`}>{from.token.symbol}</ExternalLinkXs>
+            <ExternalLink href={`${from.explorer}/token/${from.token.addr}`}>{from.token.symbol}</ExternalLink>
             <span className='text-sm text-gray-500'>{' -> '}</span>
-            <ExternalLinkXs href={`${to.explorer}/token/${to.token.addr}`}>{to.token.symbol}</ExternalLinkXs>
+            <ExternalLink href={`${to.explorer}/token/${to.token.addr}`}>{to.token.symbol}</ExternalLink>
           </ListRow>
           <ListRow bg title='Fee'>
             {ethers.utils.formatUnits(swap.fee, 6)}{' '}
-            <ExternalLinkXs href={`${from.explorer}/token/${from.token.addr}`}>{from.token.symbol}</ExternalLinkXs>
+            <ExternalLink href={`${from.explorer}/token/${from.token.addr}`}>{from.token.symbol}</ExternalLink>
           </ListRow>
           <ListRow title='Requested at'>
             {new Date(swap.created).toLocaleString()}
@@ -134,12 +134,14 @@ function CorrectSwap({ swapId, swap }) {
           <ListRow bg={status === 'RELEASED'} title='Process'>
             <ul role='list' className='border border-gray-200 rounded-md divide-y divide-gray-200 bg-white'>
               {sortEvents(swap.events).map((e, index) => (
-                <li key={`process-${index}`} className='pl-3 pr-4 py-3 flex items-center justify-between'>
-                  <div className='w-0 flex-1 flex items-center'>
-                    <span className='ml-2 flex-1 w-0 text-sm capitalize truncate'>{e.name.toLowerCase()}</span>
-                  </div>
-                  <div className='ml-4 flex-shrink-0'>
-                    <ExternalLinkXs href={`${e.index === 3 || e.index === 5 ? to.explorer : from.explorer}/tx/${e.hash}`}>{e.hash}</ExternalLinkXs>
+                <li key={`process-${index}`}>
+                  <div className='lg:grid lg:grid-cols-4 sm:px-4 sm:py-3 px-3 py-2 text-sm'>
+                    <div><SwapStepName {...e} /></div>
+                    <div className='lg:col-span-3 lg:flex lg:flex-row lg:justify-end'>
+                      <div className='max-w-full truncate text-gray-500'>
+                        <SwapStepInfo {...e} initiator={swap.initiator} from={from} to={to} />
+                      </div>
+                    </div>
                   </div>
                 </li>
               ))}
@@ -148,6 +150,27 @@ function CorrectSwap({ swapId, swap }) {
         </dl>
       </CardBody>
     </Card>
+  )
+}
+
+function SwapStepName({ index, name }) {
+  if (index === 0) {
+    return 'Requesting by'
+  } else if (index === 4) {
+    return 'Releasing to'
+  } else {
+    return <span className='capitalize'>{name.toLowerCase()}</span>
+  }
+}
+
+function SwapStepInfo({ index, hash, recipient, initiator, from, to }) {
+  if (index === 0) {
+    return <ExternalLink size='sm' href={`${from.explorer}/address/${initiator}`}>{initiator}</ExternalLink>
+  } else if (index === 4) {
+    return <ExternalLink size='sm' href={`${to.explorer}/address/${recipient}`}>{recipient}</ExternalLink>
+  }
+  return (
+    <ExternalLink size='sm' href={`${index === 3 || index === 5 ? to.explorer : from.explorer}/tx/${hash}`}>{hash}</ExternalLink>
   )
 }
 

@@ -1,4 +1,5 @@
 import { ExternalLinkIcon } from '@heroicons/react/outline'
+import classNames from 'classnames'
 
 export function ExternalIcon({ href }) {
   return (
@@ -8,10 +9,10 @@ export function ExternalIcon({ href }) {
   )
 }
 
-export function ExternalLinkXs({ href, children }) {
+export default function ExternalLink({ size = 'xs', href, className, children }) {
   return (
     <a
-      className='text-xs text-gray-500 hover:text-primary hover:underline'
+      className={classNames('text-gray-500 hover:text-primary hover:underline cursor-pointer', `text-${size}`, className)}
       href={href}
       target='_blank'
       rel='noreferrer'
