@@ -155,9 +155,9 @@ function CorrectSwap({ swapId, swap }) {
 
 function SwapStepName({ index, name }) {
   if (index === 0) {
-    return 'Requesting by'
+    return 'Request by'
   } else if (index === 4) {
-    return 'Releasing to'
+    return 'Release to'
   } else {
     return <span className='capitalize'>{name.toLowerCase()}</span>
   }
