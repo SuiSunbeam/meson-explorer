@@ -8,7 +8,7 @@ export function ExternalIcon({ href }) {
   )
 }
 
-export function ExternalToken({ href, name }) {
+export function ExternalLinkXs({ href, children }) {
   return (
     <a
       className='text-xs text-gray-500 hover:text-primary hover:underline'
@@ -16,7 +16,7 @@ export function ExternalToken({ href, name }) {
       target='_blank'
       rel='noreferrer'
     >
-      {name}
+      {children}
     </a>
   )
 }

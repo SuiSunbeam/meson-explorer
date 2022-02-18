@@ -3,14 +3,15 @@ import Link from 'next/link'
 import { ethers } from 'ethers'
 
 import socket from '../lib/socket'
-import { parseNetworkAndToken, abbreviate, getSwapDuration } from '../lib/swap'
+import { parseNetworkAndToken, abbreviate, getSwapStatus, getSwapDuration } from '../lib/swap'
 
 import { Td } from './Table'
 import SwapStatusBadge from './SwapStatusBadge'
-import { ExternalIcon, ExternalToken } from './ExternalLink'
+import { ExternalIcon, ExternalLinkXs } from './ExternalLink'
 
 export default function SwapRow({ swap }) {
-  const [status, setStatus] = React.useState(swap.status)
+  const statusFromEvents = getSwapStatus(swap.events)
+  const [status, setStatus] = React.useState(statusFromEvents)
   const [recipient, setRecipient] = React.useState(swap.recipient)
 
   const from = parseNetworkAndToken(swap.inChain, swap.inToken)
@@ -18,7 +19,7 @@ export default function SwapRow({ swap }) {
   const expired = new Date(swap.expireTs) < Date.now()
 
   React.useEffect(() => {
-    if (!from || !to || ['DONE', 'CANCELLED'].includes(swap.status) || (expired && swap.status === 'REQUESTING')) {
+    if (!from || !to || ['RELEASED', 'CANCELLED'].includes(statusFromEvents) || (expired && statusFromEvents === 'REQUESTING')) {
       return
     }
 
@@ -32,7 +33,7 @@ export default function SwapRow({ swap }) {
     }
 
     return socket.subscribe(swap._id, swapUpdateListener)
-  }, [swap._id, from, to, swap.status, expired])
+  }, [swap._id, from, to, statusFromEvents, expired])
 
   if (!from || !to) {
     return null
@@ -70,9 +71,9 @@ export default function SwapRow({ swap }) {
       <Td>
         <div className='text-black'>
           {ethers.utils.formatUnits(swap.amount, 6)}{' '}
-          <ExternalToken name={from.token.symbol} href={`${from.explorer}/token/${from.token.addr}`} />
+          <ExternalLinkXs href={`${from.explorer}/token/${from.token.addr}`}>{from.token.symbol}</ExternalLinkXs>
           <span className='text-sm text-gray-500'>{' -> '}</span>
-          <ExternalToken name={to.token.symbol} href={`${to.explorer}/token/${to.token.addr}`} />
+          <ExternalLinkXs href={`${to.explorer}/token/${to.token.addr}`}>{to.token.symbol}</ExternalLinkXs>
         </div>
         <div className='text-xs text-gray-500'>Fee: {ethers.utils.formatUnits(swap.fee, 6)} {from.token.symbol}</div>
       </Td>

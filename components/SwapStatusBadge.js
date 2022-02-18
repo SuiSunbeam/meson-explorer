@@ -4,9 +4,12 @@ export default function SwapStatusBadge({ status, expired }) {
   if (expired) {
     if (status === 'REQUESTING') {
       status = 'DROPPED'
-    } else if (!['DONE', 'CANCELLED'].includes(status)) {
+    } else if (!['RELEASED', 'CANCELLED'].includes(status)) {
       status = 'EXPIRED'
     }
+  }
+  if (status === 'RELEASED') {
+    status = 'DONE'
   }
   return <Badge type={badgeType(status)}>{status}</Badge>
 }

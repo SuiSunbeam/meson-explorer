@@ -6,12 +6,12 @@ import useSWR from 'swr'
 import { ethers } from 'ethers'
 
 import socket from '../../lib/socket'
-import { parseNetworkAndToken, getSwapDuration } from '../../lib/swap'
+import { parseNetworkAndToken, getSwapStatus, sortEvents, getSwapDuration } from '../../lib/swap'
 
 import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody } from '../../components/Card'
 import SwapStatusBadge from '../../components/SwapStatusBadge'
-import { ExternalIcon, ExternalToken } from '../../components/ExternalLink'
+import { ExternalIcon, ExternalLinkXs } from '../../components/ExternalLink'
 
 const fetcher = async swapId => {
   if (!swapId) {
@@ -58,11 +58,12 @@ export default function Swap() {
 }
 
 function CorrectSwap({ swapId, swap }) {
-  const [status, setStatus] = React.useState(swap.status)
+  const statusFromEvents = getSwapStatus(swap.events)
+  const [status, setStatus] = React.useState(statusFromEvents)
   const [recipient, setRecipient] = React.useState(swap.recipient || '')
 
   React.useEffect(() => {
-    if (swap.status === 'DONE') {
+    if (statusFromEvents === 'RELEASED') {
       return
     }
 
@@ -76,7 +77,7 @@ function CorrectSwap({ swapId, swap }) {
     }
 
     return socket.subscribe(swapId, swapUpdateListener)
-  }, [swapId, swap.status])
+  }, [swapId, statusFromEvents])
 
   const from = parseNetworkAndToken(swap.inChain, swap.inToken)
   const to = parseNetworkAndToken(swap.outChain, swap.outToken)
@@ -90,11 +91,14 @@ function CorrectSwap({ swapId, swap }) {
       <CardTitle
         title='Swap'
         badge={<SwapStatusBadge status={status} expired={expired} />}
-        subtitle={<><div>{swapId}</div><div>{swap.encoded}</div></>}
+        subtitle={swapId}
       />
       <CardBody>
         <dl>
-          <ListRow bg title='From'>
+          <ListRow bg title='Encoded As'>
+            {swap.encoded}
+          </ListRow>
+          <ListRow title='From'>
             <div className='text-primary hover:underline'>
               <Link href={`/address/${swap.initiator}`}>{swap.initiator}</Link>
             </div>
@@ -103,7 +107,7 @@ function CorrectSwap({ swapId, swap }) {
               <ExternalIcon href={`${from.explorer}/address/${swap.initiator}`} />
             </div>
           </ListRow>
-          <ListRow title='To'>
+          <ListRow bg title='To'>
             <div className='text-primary hover:underline'>
               <Link href={`/address/${swap.initiator}`}>{recipient}</Link>
             </div>
@@ -112,20 +116,35 @@ function CorrectSwap({ swapId, swap }) {
               {recipient && <ExternalIcon href={`${to.explorer}/address/${recipient}`} />}
             </div>
           </ListRow>
-          <ListRow bg title='Amount'>
+          <ListRow title='Amount'>
             {ethers.utils.formatUnits(swap.amount, 6)}{' '}
-            <ExternalToken name={from.token.symbol} href={`${from.explorer}/token/${from.token.addr}`} />
+            <ExternalLinkXs href={`${from.explorer}/token/${from.token.addr}`}>{from.token.symbol}</ExternalLinkXs>
             <span className='text-sm text-gray-500'>{' -> '}</span>
-            <ExternalToken name={to.token.symbol} href={`${to.explorer}/token/${to.token.addr}`} />
+            <ExternalLinkXs href={`${to.explorer}/token/${to.token.addr}`}>{to.token.symbol}</ExternalLinkXs>
           </ListRow>
-          <ListRow title='Fee'>
+          <ListRow bg title='Fee'>
             {ethers.utils.formatUnits(swap.fee, 6)}{' '}
-            <ExternalToken name={from.token.symbol} href={`${from.explorer}/token/${from.token.addr}`} />
+            <ExternalLinkXs href={`${from.explorer}/token/${from.token.addr}`}>{from.token.symbol}</ExternalLinkXs>
           </ListRow>
-          <ListRow bg title='Requested at'>
+          <ListRow title='Requested at'>
             {new Date(swap.created).toLocaleString()}
           </ListRow>
           <SwapTimes status={status} expired={expired} swap={swap} />
+
+          <ListRow bg={status === 'RELEASED'} title='Process'>
+            <ul role='list' className='border border-gray-200 rounded-md divide-y divide-gray-200 bg-white'>
+              {sortEvents(swap.events).map((e, index) => (
+                <li key={`process-${index}`} className='pl-3 pr-4 py-3 flex items-center justify-between'>
+                  <div className='w-0 flex-1 flex items-center'>
+                    <span className='ml-2 flex-1 w-0 text-sm capitalize truncate'>{e.name.toLowerCase()}</span>
+                  </div>
+                  <div className='ml-4 flex-shrink-0'>
+                    <ExternalLinkXs href={`${e.index === 3 || e.index === 5 ? to.explorer : from.explorer}/tx/${e.hash}`}>{e.hash}</ExternalLinkXs>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </ListRow>
         </dl>
       </CardBody>
     </Card>
@@ -133,16 +152,16 @@ function CorrectSwap({ swapId, swap }) {
 }
 
 function SwapTimes({ status, expired, swap }) {
-  if (status === 'DONE') {
+  if (status === 'RELEASED') {
     return (
       <>
-        <ListRow title='Finished at'>{new Date(swap.done).toLocaleString()}</ListRow>
-        <ListRow bg title='Duration'>{getSwapDuration(swap)}</ListRow>
+        <ListRow bg title='Finished at'>{new Date(swap.released).toLocaleString()}</ListRow>
+        <ListRow title='Duration'>{getSwapDuration(swap)}</ListRow>
       </>
     )
   }
   return (
-    <ListRow title={expired ? 'Expired at' : 'Will expire at'}>
+    <ListRow bg title={expired ? 'Expired at' : 'Will expire at'}>
       {new Date(swap.expireTs).toLocaleString()}
     </ListRow>
   )
