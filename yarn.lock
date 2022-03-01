@@ -442,30 +442,30 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@mesonfi/contract-abis@^0.4.0":
-  version "0.4.3"
-  resolved "https://npm.pkg.github.com/download/@mesonfi/contract-abis/0.4.3/a0ff17e56cb92c16dbe31136ac5a4691b43c1873dc7ea509081aa063dc067630#6644307df08646f0160a0deebbee3b7bbc106363"
-  integrity sha512-pvWUEAYaYVkodcvxo9+Qak28gN4BOlKam0YMmdili2u/9mUKY/COmiYU2FBrkIPZ1FBEXv+/0ZeUVSb+gcp2ag==
+"@mesonfi/contract-abis@^0.5.0":
+  version "0.5.0"
+  resolved "https://npm.pkg.github.com/download/@mesonfi/contract-abis/0.5.0/f6668f55dbb22bf110262f04d4f6025b16eff3d73e9600d98c39996ac1bb810d#70b3f13bc7aa0c326673b528a302df7b254ee6f0"
+  integrity sha512-swkA4TOxQGabHdfczXANg/HGwxNUtz/OJ+1Onld3hlpy8vFg6M2mnk+8XjFWa9ql8sZ2guIWFBxHZgBc2KZLlg==
 
-"@mesonfi/contract-types@^0.4.0":
-  version "0.4.3"
-  resolved "https://npm.pkg.github.com/download/@mesonfi/contract-types/0.4.3/0c4373ec462aab40f033ece0f546a973029535cbb7de263bcc2952e260dec534#a3aafd219cfe08646c042df084442eef0e2ce241"
-  integrity sha512-9kqFLHkptELCb+8jKNZk4Qbjmc9aipxhJxqXSNhji0SeUFO4+A3Z/Wezo+iZHkqHjhDviEn1gQuvaHflvft2Pg==
+"@mesonfi/contract-types@^0.5.0":
+  version "0.5.0"
+  resolved "https://npm.pkg.github.com/download/@mesonfi/contract-types/0.5.0/e8b948d9cfa3b0ed7ccff0ff82b0e2ebe2d342fb122af807f7378a7223280334#19fba2b313b86c9271e7a9b9e709cf304cf998b2"
+  integrity sha512-phRCwvlg5ISVxHYuscJTFP+7xD5RHVZfa3s6fjeaHiPUqw9BpexvcWB0E69R/0iUxO3ILxNI7erG1hYIJJsrxg==
 
-"@mesonfi/presets@^0.4.3":
-  version "0.4.3"
-  resolved "https://npm.pkg.github.com/download/@mesonfi/presets/0.4.3/46929baa9471cabc9225679680f9ee4a411e6a29297badce7a5c86c0ab7a179b#2df578457e705ae1ecdabd16cf303173909df794"
-  integrity sha512-S6ySYDat3DM+n+MoEPTI48uwVA/LC/g0SiM/rCeWBW4JD/pRXZbPk9Jsgnd/eJwCxuOiO/MlTSk+hFsQsT3jMQ==
+"@mesonfi/presets@^0.5.0":
+  version "0.5.0"
+  resolved "https://npm.pkg.github.com/download/@mesonfi/presets/0.5.0/3464e0fb1f5f3dfeba52d9dba9a25f4c82e6292497c4ee11c0d8f1c01f03e25d#7426c4bab2c7fa2a83d86d132c7b099fb4293264"
+  integrity sha512-i5BRmTelSzWb6hIlUAnsbZxebNQI1yEKj/21D/8Q0GYBILWTkrZ4oUuRQu60OgzRdfF3OyNc4S6K0k+WEpSF8Q==
   dependencies:
     "@ethersproject/contracts" "5.5.0"
     "@ethersproject/providers" "5.5.0"
-    "@mesonfi/contract-abis" "^0.4.0"
-    "@mesonfi/sdk" "^0.4.0"
+    "@mesonfi/contract-abis" "^0.5.0"
+    "@mesonfi/sdk" "^0.5.0"
 
-"@mesonfi/sdk@^0.4.0", "@mesonfi/sdk@^0.4.3":
-  version "0.4.3"
-  resolved "https://npm.pkg.github.com/download/@mesonfi/sdk/0.4.3/8e6d3ecc6ac8b766f1c6100ad1b19ed18cabe753b8cb1c390176ef9b6b8a4cda#de4628de1bd0edae432160d71994f439664f4597"
-  integrity sha512-JFsKQUMJ/Bp7OMPCrLAlhtyndkDQ26Z1RXHu5tFjBg0yiQf546HktJ5d8CCZE6vfEsVRR1BQ/dVyP3Y7+UNFng==
+"@mesonfi/sdk@^0.5.0":
+  version "0.5.0"
+  resolved "https://npm.pkg.github.com/download/@mesonfi/sdk/0.5.0/1656ed2cd6f1516dd1752cb0e7117945b1b28900c50feefb18bfb68f3b910ad7#36bd3d37114638849a350de7ef46a7631cea8cad"
+  integrity sha512-B4cYjEnJJerSwSgGEqKIru7r1iB5Un9Rj2R4EQ/2yAVmPkZyW5qJyb1vYxudoXn8JfHYMDjr463VQVT9eLiFwA==
   dependencies:
     "@ethersproject/bignumber" "5.5.0"
     "@ethersproject/bytes" "5.5.0"
@@ -474,7 +474,7 @@
     "@ethersproject/solidity" "5.5.0"
     "@ethersproject/transactions" "5.5.0"
     "@ethersproject/wallet" "5.5.0"
-    "@mesonfi/contract-types" "^0.4.0"
+    "@mesonfi/contract-types" "^0.5.0"
 
 "@next/env@12.0.10":
   version "12.0.10"
