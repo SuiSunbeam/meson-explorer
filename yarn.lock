@@ -464,8 +464,8 @@
 
 "@mesonfi/sdk@^0.6.0":
   version "0.6.0"
-  resolved "https://npm.pkg.github.com/download/@mesonfi/sdk/0.6.0/aa407dfcdf969a5346021e98f30bafb9ecb2064df46a867dc3b7478245144fe1#e3fb1932e212cf13c258d9cd3feaa1734761ef06"
-  integrity sha512-/O/QFF9SymC05/x/VHqSLRHPokcKZ7+u/i/oqK+Xy8H0mJTkCzxRLM0CU8TQDIDi9z8CW895nSDio4owR3pTvA==
+  resolved "https://npm.pkg.github.com/download/@mesonfi/sdk/0.6.0/388ac30fe336a8fe1dfe53ee38722396629bf90b02b7657012bb86888ee847e4#aaa26c36472929c21d78723299055d789bac60f9"
+  integrity sha512-Il07hOMbrI3K8hPxEkGXxru7sX2ObFXUXEvgCMy+P68MG2mxEuN7obbQEWaPr6v3mV1RkWefThBUooIHyhWvCA==
   dependencies:
     "@ethersproject/bignumber" "5.5.0"
     "@ethersproject/bytes" "5.5.0"
