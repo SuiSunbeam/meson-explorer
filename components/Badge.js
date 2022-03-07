@@ -11,7 +11,7 @@ export default function Badge({ type, className, children }) {
   return (
     <span className={classnames(
       'px-2 inline-flex text-sm leading-5 font-semibold rounded-full',
-      badgeClassnames[type] || 'bg-gray-100 text-gray-400',
+      badgeClassnames[type] || 'bg-gray-100 text-gray-500',
       className
     )}>
       {children}

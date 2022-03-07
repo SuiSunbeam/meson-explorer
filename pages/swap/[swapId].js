@@ -11,6 +11,7 @@ import { parseNetworkAndToken, getSwapStatus, sortEvents, getSwapDuration } from
 import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody } from '../../components/Card'
 import SwapStatusBadge from '../../components/SwapStatusBadge'
+import ListRow from '../../components/ListRow'
 import ExternalLink, { ExternalIcon } from '../../components/ExternalLink'
 
 const fetcher = async swapId => {
@@ -51,16 +52,16 @@ export default function Swap() {
         </CardBody>
       </Card>
     )
-  } else if (!data) {
-    return <LoadingScreen />
   }
+  
   return <CorrectSwap swapId={swapId} swap={data} />
 }
 
 function CorrectSwap({ swapId, swap }) {
-  const statusFromEvents = getSwapStatus(swap.events)
+  const statusFromEvents = getSwapStatus(swap?.events || [])
   const [status, setStatus] = React.useState(statusFromEvents)
-  const [recipient, setRecipient] = React.useState(swap.recipient || '')
+  const [recipient, setRecipient] = React.useState(swap?.recipient || '')
+  const expired = new Date(swap?.expireTs) < Date.now()
 
   React.useEffect(() => {
     if (statusFromEvents === 'RELEASED') {
@@ -79,21 +80,16 @@ function CorrectSwap({ swapId, swap }) {
     return socket.subscribe(swapId, swapUpdateListener)
   }, [swapId, statusFromEvents])
 
-  const from = parseNetworkAndToken(swap.inChain, swap.inToken)
-  const to = parseNetworkAndToken(swap.outChain, swap.outToken)
-  if (!from || !to) {
-    return null
-  }
-  const expired = new Date(swap.expireTs) < Date.now()
-
-  return (
-    <Card>
-      <CardTitle
-        title='Swap'
-        badge={<SwapStatusBadge status={status} expired={expired} />}
-        subtitle={swapId}
-      />
-      <CardBody>
+  let body
+  if (!swap) {
+    body = <LoadingScreen />
+  } else {
+    const from = parseNetworkAndToken(swap.inChain, swap.inToken)
+    const to = parseNetworkAndToken(swap.outChain, swap.outToken)
+    if (!from || !to) {
+      body = ''
+    } else {
+      body = (
         <dl>
           <ListRow bg title='Encoded As'>
             <div className='truncate'>{swap.encoded}</div>
@@ -148,6 +144,19 @@ function CorrectSwap({ swapId, swap }) {
             </ul>
           </ListRow>
         </dl>
+      )
+    }
+  }
+
+  return (
+    <Card>
+      <CardTitle
+        title='Swap'
+        badge={<SwapStatusBadge status={status} expired={expired} />}
+        subtitle={swapId}
+      />
+      <CardBody border={!swap}>
+        {body}
       </CardBody>
     </Card>
   )
@@ -189,18 +198,3 @@ function SwapTimes({ status, expired, swap }) {
     </ListRow>
   )
 }
-
-function ListRow({ bg, title, children }) {
-  return (
-    <div className={classnames(
-      'px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6',
-      bg ? 'bg-gray-50' : 'bg-white'
-    )}>
-      <dt className='text-sm font-medium text-gray-500 uppercase'>{title}</dt>
-      <dd className='mt-1 text-gray-900 sm:mt-0 sm:col-span-2'>
-        {children}
-      </dd>
-    </div>
-  )
-}
-

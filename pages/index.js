@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import useSWR from 'swr'
 
 import LoadingScreen from '../components/LoadingScreen'
-import Card from '../components/Card'
+import Card, { StatCard } from '../components/Card'
 import Table from '../components/Table'
 import SwapRow from '../components/SwapRow'
 import Pagination from '../components/Pagination'
@@ -35,24 +35,31 @@ export default function SwapList() {
     }
   }, [router, error])
 
+  let body
   if (error) {
-    return null
+    body = <div className='py-6 px-4 sm:px-6 text-red-400'>{error.message}</div>
   } else if (!data) {
-    return <LoadingScreen />
+    body = <LoadingScreen />
+  } else {
+    const { page, total, list } = data
+    const onPageChange = page => router.push(`/?page=${page+1}`)
+    body = (
+      <>
+        <Table headers={[
+          { name: 'swap id / time', className: 'pl-4 sm:pl-6' },
+          { name: 'status' }, { name: 'from' }, { name: 'to' }, { name: 'amount' },
+          { name: 'duration', className: 'hidden md:table-cell' }
+        ]}>
+          {list.map(swap => <SwapRow key={swap._id} swap={swap} />)}
+        </Table>
+        <Pagination size={10} page={page} total={total} onPageChange={onPageChange} />
+      </>
+    )
   }
 
-  const { page, total, list } = data
-  const onPageChange = page => router.push(`/?page=${page+1}`)
   return (
     <Card>
-      <Table headers={[
-        { name: 'swap id / time', className: 'pl-4 sm:pl-6' },
-        { name: 'status' }, { name: 'from' }, { name: 'to' }, { name: 'amount' },
-        { name: 'duration', className: 'hidden md:table-cell' }
-      ]}>
-        {list.map(swap => <SwapRow key={swap._id} swap={swap} />)}
-      </Table>
-      <Pagination size={10} page={page} total={total} onPageChange={onPageChange} />
+      {body}
     </Card>
   )
 }

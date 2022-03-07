@@ -38,23 +38,18 @@ export default function AddressSwapList() {
     }
   }, [router, error])
 
+  let body = null
   if (error) {
-    return null
+    body = <div className='py-6 px-4 sm:px-6 text-red-400'>{error.message}</div>
   } else if (!data) {
-    return <LoadingScreen />
-  }
-
-  const { total, list } = data
-  const onPageChange = page => router.push({
-    query: { address, page: page + 1 }
-  })
-  return (
-    <Card>
-      <CardTitle
-        title='Address'
-        subtitle={address}
-      />
-      <CardBody>
+    body = <LoadingScreen />
+  } else {
+    const { total, list } = data
+    const onPageChange = page => router.push({
+      query: { address, page: page + 1 }
+    })
+    body = (
+      <>
         <Table headers={[
           { name: 'swap id / time', className: 'pl-4 sm:pl-6' },
           { name: 'status' }, { name: 'from' }, { name: 'to' }, { name: 'amount' },
@@ -63,6 +58,18 @@ export default function AddressSwapList() {
           {list.map(swap => <SwapRow key={swap._id} swap={swap} />)}
         </Table>
         <Pagination size={10} page={data.page} total={total} onPageChange={onPageChange} />
+      </>
+    )
+  }
+
+  return (
+    <Card>
+      <CardTitle
+        title='Address'
+        subtitle={address}
+      />
+      <CardBody>
+        {body}
       </CardBody>
     </Card>
   )
