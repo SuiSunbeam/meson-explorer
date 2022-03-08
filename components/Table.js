@@ -6,7 +6,7 @@ export default function Table ({ headers, size = 'md', children }) {
       <thead className='bg-gray-50'>
         <tr>
           {headers.map((item, index) => (
-            <Th key={`th-${index}`} size={size} className={item.className}>{item.name}</Th>
+            <Th key={`th-${index}`} size={size} width={item.width} className={item.className}>{item.name}</Th>
           ))}
         </tr>
       </thead>
@@ -17,10 +17,11 @@ export default function Table ({ headers, size = 'md', children }) {
   )
 }
 
-export function Th({ size = 'md', className, children }) {
+export function Th({ size = 'md', width, className, children }) {
   return (
     <th
       scope='col'
+      width={width}
       className={classnames(
         'text-left text-xs font-medium text-gray-500 uppercase tracking-wider',
         size === 'md' && 'p-3',
