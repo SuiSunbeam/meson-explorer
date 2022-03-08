@@ -13,7 +13,7 @@ const fetcher = async chain => {
   if (chain === '0x') {
     chain = ''
   }
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/stats/${chain}`)
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/stats?from=${chain}`)
   const json = await res.json()
   if (json.result) {
     return json.result
