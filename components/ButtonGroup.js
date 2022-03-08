@@ -9,6 +9,7 @@ export default function ButtonGroup ({ size, active, buttons, onChange }) {
     {
       buttons.map((btn, index) => (
         <Button
+          key={`group-btn-${index}`}
           active={btn.key === active}
           size={size}
           className={classnames(

@@ -38,7 +38,7 @@ export default function StatsByChain() {
     } else if (from && to) {
       router.replace(`/stats?from=${from}`)
     }
-  }, [router])
+  })
 
   const { data, error } = useSWR(`${type}=${shortCoinType}`, fetcher)
 
