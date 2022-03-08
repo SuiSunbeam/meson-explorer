@@ -14,7 +14,7 @@ export default function Card({ className, children }) {
 export function CardTitle({ title, subtitle, badge, tabs = [] }) {
   return (
     <div className='px-4 pt-5 bg-white sm:px-6 -mb-px'>
-      <div className='flex items-center'>
+      <div className='flex items-center h-8'>
         <span className='text-xl font-medium leading-6 text-gray-900'>{title}</span>
         <span className='ml-2'>{badge}</span>
       </div>
@@ -26,7 +26,7 @@ export function CardTitle({ title, subtitle, badge, tabs = [] }) {
           onClick={t.onClick}
           className={classnames(
             'inline-block py-2 mr-6 cursor-pointer',
-            t.active ? 'border-b-2 border-primary text-primary' : 'hover:text-gray-500'
+            t.active ? 'border-b-2 border-primary text-primary' : 'hover:border-b-2 border-gray-300'
           )}
         >{t.name}</div>
       ))}

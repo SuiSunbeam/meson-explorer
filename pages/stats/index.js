@@ -6,14 +6,12 @@ import { ethers } from 'ethers'
 import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody, StatCard } from '../../components/Card'
 import Table, { Td } from '../../components/Table'
+import ButtonGroup from '../../components/ButtonGroup'
 
 import { getAllNetworks, getDuration } from '../../lib/swap'
 
-const fetcher = async inChain => {
-  if (inChain === '0x') {
-    inChain = ''
-  }
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/stats?from=${inChain}`)
+const fetcher = async query => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/stats?${query}`)
   const json = await res.json()
   if (json.result) {
     return json.result
@@ -28,15 +26,21 @@ export default function StatsByChain() {
 
   const router = useRouter()
   const { from, to } = router.query
-  const shortCoinType = tabs.find(t => t.key === (from || 'all'))?.shortCoinType
+  const key = from || to || 'all'
+  const type = to ? 'to' : 'from'
+
+  const selected = tabs.find(t => t.key === key) || {}
+  const { name, shortCoinType } = selected
 
   React.useEffect(() => {
-    if (typeof shortCoinType === 'undefined' || from === 'all') {
+    if (typeof shortCoinType === 'undefined' || (from && key === 'all')) {
       router.replace('/stats')
+    } else if (from && to) {
+      router.replace(`/stats?from=${from}`)
     }
   }, [router])
 
-  const { data, error } = useSWR(shortCoinType || '0x', fetcher)
+  const { data, error } = useSWR(`${type}=${shortCoinType}`, fetcher)
 
   let body = null
   if (error) {
@@ -68,10 +72,18 @@ export default function StatsByChain() {
       <Card>
         <CardTitle
           title='Stats'
+          badge={shortCoinType &&
+            <ButtonGroup
+              size='sm'
+              active={type}
+              buttons={[{ key: 'from', text: `From ${name}` }, { key: 'to', text: `To ${name}` }]}
+              onChange={type => router.push(`/stats?${type}=${key}`)}
+            />
+          }
           tabs={tabs.map(t => ({
             ...t,
-            active: t.key === (from || 'all'),
-            onClick: () => router.push(t.key === 'all' ? '/stats' : `/stats?from=${t.key}`)
+            active: t.key === key,
+            onClick: () => router.push(t.key === 'all' ? '/stats' : `/stats?${type}=${t.key}`)
           }))}
         />
         <CardBody>
