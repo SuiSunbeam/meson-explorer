@@ -58,13 +58,18 @@ export default function Swap() {
 }
 
 function CorrectSwap({ swapId, swap }) {
-  const statusFromEvents = getSwapStatus(swap?.events || [])
-  const [status, setStatus] = React.useState(statusFromEvents)
-  const [recipient, setRecipient] = React.useState(swap?.recipient || '')
+  const [status, setStatus] = React.useState()
+  const [recipient, setRecipient] = React.useState('')
   const expired = new Date(swap?.expireTs) < Date.now()
 
   React.useEffect(() => {
-    if (statusFromEvents === 'RELEASED') {
+    const statusFromEvents = getSwapStatus(swap?.events || [])
+    setStatus(statusFromEvents)
+    setRecipient(swap?.recipient || '')
+  }, [swap])
+
+  React.useEffect(() => {
+    if (status === 'RELEASED') {
       return
     }
 
@@ -78,7 +83,7 @@ function CorrectSwap({ swapId, swap }) {
     }
 
     return socket.subscribe(swapId, swapUpdateListener)
-  }, [swapId, statusFromEvents])
+  }, [swapId])
 
   let body
   if (!swap) {
