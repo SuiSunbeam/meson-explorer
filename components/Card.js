@@ -15,8 +15,8 @@ export function CardTitle({ title, subtitle, badge, tabs = [] }) {
   return (
     <div className='px-4 pt-5 bg-white sm:px-6 -mb-px'>
       <div className='flex items-center h-8'>
-        <span className='text-xl font-medium leading-6 text-gray-900'>{title}</span>
-        <span className='ml-2'>{badge}</span>
+        <div className='text-xl font-medium leading-6 text-gray-900'>{title}</div>
+        <div className='ml-2 flex-1'>{badge}</div>
       </div>
       <p className='max-w-2xl mt-1 text-gray-500'>{subtitle}</p>
       <div className='text-gray-500 mt-5'>
