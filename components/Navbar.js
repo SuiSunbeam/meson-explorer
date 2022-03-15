@@ -38,8 +38,8 @@ export default function Navbar() {
                       <a className='flex items-center font-semibold opacity-90 hover:opacity-100'>
                         <img width={28} height={14} className='opacity-50' src='/logo.svg' alt='' />
                         <div className='inline-block ml-2 mb-1 text-2xl' style={{ fontFamily: `'Nunito', sans-serif` }}>
-                          <span className='font-bold'>meson</span>
-                          <span className='font-semibold'> explorer {testnetMode && ' testnet'}</span>
+                          <span className='font-extrabold'>meson</span>
+                          <span className='font-semibold opacity-90'> explorer {testnetMode && ' testnet'}</span>
                         </div>
                       </a>
                     </Link>
