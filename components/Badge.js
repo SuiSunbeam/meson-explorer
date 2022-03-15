@@ -8,17 +8,18 @@ const badgeClassnames = {
 }
 
 const tooltips = {
-  CANCELLED: 'The swap expired and the fund was withdrawn',
-  DROPPED: 'The swap is not processed before expiration',
-  EXPIRED: 'The swap expired and funds need to be withdrawn'
+  CANCELLED: 'The swap expired and the fund was withdrawn.',
+  DROPPED: 'Never processed from the beginning. Nothing happend.',
+  EXPIRED: 'The swap expired and funds need to be withdrawn.'
 }
 
 export default function Badge({ type, className, children }) {
   const tooltip = tooltips[children]
   return (
-    <div className={classnames('flex relative', tooltip && 'has-tooltip cursor-pointer')}>
+    <div className='flex relative'>
       <span className={classnames(
         'px-2 inline-flex text-sm leading-5 font-semibold rounded-full',
+        tooltip && 'has-tooltip cursor-pointer',
         badgeClassnames[type] || 'bg-gray-100 text-gray-500',
         className
       )}>
