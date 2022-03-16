@@ -1,7 +1,8 @@
 import React from 'react'
-import classnames from 'classnames'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+
+import { XCircleIcon } from '@heroicons/react/solid'
 import useSWR from 'swr'
 import { ethers } from 'ethers'
 
@@ -177,15 +178,24 @@ function SwapStepName({ index, name }) {
   }
 }
 
-function SwapStepInfo({ index, hash, recipient, initiator, from, to }) {
+function SwapStepInfo({ index, hash, recipient, failed, initiator, from, to }) {
   if (index === 0) {
     return <ExternalLink size='sm' href={`${from.explorer}/address/${initiator}`}>{initiator}</ExternalLink>
   } else if (index === 4) {
     return <ExternalLink size='sm' href={`${to.explorer}/address/${recipient}`}>{recipient}</ExternalLink>
   }
   return (
-    <ExternalLink size='sm' href={`${index === 3 || index === 5 ? to.explorer : from.explorer}/tx/${hash}`}>{hash}</ExternalLink>
+    <div className='flex items-center'>
+      {failed && <FailedIcon />}
+      <div className='truncate'>
+        <ExternalLink size='sm' href={`${index === 3 || index === 5 ? to.explorer : from.explorer}/tx/${hash}`}>{hash}</ExternalLink>
+      </div>
+    </div>
   )
+}
+
+function FailedIcon() {
+  return <div className='text-red-400 w-4 mr-1'><XCircleIcon className='w-4' aria-hidden='true' /></div>
 }
 
 function SwapTimes({ status, expired, swap }) {
