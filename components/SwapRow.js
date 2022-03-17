@@ -54,27 +54,27 @@ export default function SwapRow({ swap }) {
       </Td>
       <Td><SwapStatusBadge status={status} expired={expired} /></Td>
       <Td>
+        <div className='flex items-center text-xs text-gray-500'>
+          {from.networkName}
+          <ExternalIcon href={`${from.explorer}/address/${swap.initiator}`} />
+        </div>
         <div className='text-normal hover:underline hover:text-primary hidden lg:block'>
           <Link href={`/address/${swap.initiator}`}>{abbreviate(swap.initiator)}</Link>
         </div>
         <div className='text-normal hover:underline hover:text-primary lg:hidden'>
           <Link href={`/address/${swap.initiator}`}>{abbreviate(swap.initiator, 6, 4)}</Link>
         </div>
-        <div className='flex items-center text-xs text-gray-500'>
-          {from.networkName}
-          <ExternalIcon href={`${from.explorer}/address/${swap.initiator}`} />
-        </div>
       </Td>
       <Td>
+        <div className='flex items-center text-xs text-gray-500'>
+          {to.networkName}
+          {recipient && <ExternalIcon href={`${to.explorer}/address/${recipient}`} />}
+        </div>
         <div className='text-normal hover:underline hover:text-primary hidden lg:block'>
           <Link href={`/address/${recipient}`}>{recipient ? abbreviate(recipient) : ''}</Link>
         </div>
         <div className='text-normal hover:underline hover:text-primary lg:hidden'>
           <Link href={`/address/${recipient}`}>{recipient ? abbreviate(recipient, 6, 4) : ''}</Link>
-        </div>
-        <div className='flex items-center text-xs text-gray-500'>
-          {to.networkName}
-          {recipient && <ExternalIcon href={`${to.explorer}/address/${recipient}`} />}
         </div>
       </Td>
       <Td>
