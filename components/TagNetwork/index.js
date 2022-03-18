@@ -4,15 +4,16 @@ import { ExternalIcon } from '../ExternalLink'
 
 import eth from './eth.png'
 import bnb from './bnb.png'
-import avax from './avax.png'
-import polygon from './polygon.png'
+import ava from './ava.png'
+import matic from './matic.png'
 import ftm from './ftm.png'
 import one from './one.png'
+import cfx from './cfx.png'
 
-const logos = { ropsten: eth, eth, bnb, avax, polygon, ftm, one }
+const logos = { eth, bnb, ava, matic, ftm, one, cfx }
 
 export default function TagNetwork ({ network, address }) {
-  const logo = logos[network.networkId.split('-')[0]]
+  const logo = logos[network.alias.toLowerCase()]
   return (
     <div className='flex items-center text-xs text-gray-500'>
       <div className='flex itmes-center w-4 h-4 mr-1'>
