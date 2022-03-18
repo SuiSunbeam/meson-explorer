@@ -13,7 +13,7 @@ import cfx from './cfx.png'
 const logos = { eth, bnb, ava, matic, ftm, one, cfx }
 
 export default function TagNetwork ({ network, address }) {
-  const logo = logos[network.alias?.toLowerCase()]
+  const logo = logos[network.networkAlias?.toLowerCase()]
   return (
     <div className='flex items-center text-xs text-gray-500'>
       <div className='flex itmes-center w-4 h-4 mr-1'>
