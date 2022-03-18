@@ -13,8 +13,9 @@ import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody } from '../../components/Card'
 import SwapStatusBadge from '../../components/SwapStatusBadge'
 import ListRow from '../../components/ListRow'
-import ExternalLink, { ExternalIcon } from '../../components/ExternalLink'
+import ExternalLink from '../../components/ExternalLink'
 import TagNetwork from '../../components/TagNetwork'
+import TagNetworkToken from '../../components/TagNetworkToken'
 
 const fetcher = async swapId => {
   if (!swapId) {
@@ -115,14 +116,18 @@ function CorrectSwap({ swapId, swap }) {
             </div>
           </ListRow>
           <ListRow title='Amount'>
-            {ethers.utils.formatUnits(swap.amount, 6)}{' '}
-            <ExternalLink href={`${from.explorer}/token/${from.token.addr}`}>{from.token.symbol}</ExternalLink>
-            <span className='text-sm text-gray-500'>{' -> '}</span>
-            <ExternalLink href={`${to.explorer}/token/${to.token.addr}`}>{to.token.symbol}</ExternalLink>
+            <div className='flex items-center'>
+              <div className='mr-1'>{ethers.utils.formatUnits(swap.amount, 6)}</div>
+              <TagNetworkToken explorer={from.explorer} token={from.token} />
+              <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
+              <TagNetworkToken explorer={to.explorer} token={to.token} />
+            </div>
           </ListRow>
           <ListRow bg title='Fee'>
-            {ethers.utils.formatUnits(swap.fee, 6)}{' '}
-            <ExternalLink href={`${from.explorer}/token/${from.token.addr}`}>{from.token.symbol}</ExternalLink>
+            <div className='flex items-center'>
+              <div className='mr-1'>{ethers.utils.formatUnits(swap.fee, 6)}</div>
+              <TagNetworkToken explorer={from.explorer} token={from.token} />
+            </div>
           </ListRow>
           <ListRow title='Requested at'>
             {new Date(swap.created).toLocaleString()}

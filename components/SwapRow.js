@@ -7,9 +7,9 @@ import { parseNetworkAndToken, abbreviate, getSwapStatus, getSwapDuration } from
 
 import { Td } from './Table'
 import SwapStatusBadge from './SwapStatusBadge'
-import ExternalLink from './ExternalLink'
 
 import TagNetwork from './TagNetwork'
+import TagNetworkToken from './TagNetworkToken'
 
 export default function SwapRow({ swap }) {
   const statusFromEvents = getSwapStatus(swap.events)
@@ -74,15 +74,17 @@ export default function SwapRow({ swap }) {
         </div>
       </Td>
       <Td>
-        <div className='text-normal'>
-          {ethers.utils.formatUnits(swap.amount, 6)}{' '}
-          <ExternalLink href={`${from.explorer}/token/${from.token.addr}`}>{from.token.symbol}</ExternalLink>
-          <span className='hidden md:inline'>
-            <span className='text-sm text-gray-500'>{' -> '}</span>
-            <ExternalLink href={`${to.explorer}/token/${to.token.addr}`}>{to.token.symbol}</ExternalLink>
-          </span>
+        <div className='flex items-center text-normal'>
+          <div className='mr-1'>{ethers.utils.formatUnits(swap.amount, 6)}</div>
+          <TagNetworkToken explorer={from.explorer} token={from.token} />
+          <div className='hidden md:flex'>
+            <div className='text-gray-500 mx-1'>{'->'}</div>
+            <TagNetworkToken explorer={to.explorer} token={to.token} />
+          </div>
         </div>
-        <div className='text-xs text-gray-500'>Fee: {ethers.utils.formatUnits(swap.fee, 6)} {from.token.symbol}</div>
+        <div className='text-xs text-gray-500'>
+          Fee: {ethers.utils.formatUnits(swap.fee, 6)} {from.token.symbol}
+        </div>
       </Td>
       <Td className='hidden md:table-cell'>
         <span className='text-gray-500'>{getSwapDuration(swap)}</span>

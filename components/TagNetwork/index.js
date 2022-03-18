@@ -15,7 +15,7 @@ export default function TagNetwork ({ network, address }) {
   const logo = logos[network.networkId.split('-')[0]]
   return (
     <div className='flex items-center text-xs text-gray-500'>
-      <div className='w-4 h-4 mr-1'>
+      <div className='flex itmes-center w-4 h-4 mr-1'>
         {logo && <Image src={logo} alt='' />}
       </div>
       {network.networkName}
