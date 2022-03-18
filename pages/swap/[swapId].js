@@ -14,6 +14,7 @@ import Card, { CardTitle, CardBody } from '../../components/Card'
 import SwapStatusBadge from '../../components/SwapStatusBadge'
 import ListRow from '../../components/ListRow'
 import ExternalLink, { ExternalIcon } from '../../components/ExternalLink'
+import TagNetwork from '../../components/TagNetwork'
 
 const fetcher = async swapId => {
   if (!swapId) {
@@ -84,6 +85,7 @@ function CorrectSwap({ swapId, swap }) {
     }
 
     return socket.subscribe(swapId, swapUpdateListener)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [swapId])
 
   let body
@@ -101,19 +103,13 @@ function CorrectSwap({ swapId, swap }) {
             <div className='truncate'>{swap.encoded}</div>
           </ListRow>
           <ListRow title='From'>
-            <div className='flex items-center text-sm text-gray-500'>
-              {from.networkName}
-              <ExternalIcon href={`${from.explorer}/address/${swap.initiator}`} />
-            </div>
+            <TagNetwork network={from} address={swap.initiator} />
             <div className='text-normal hover:underline hover:text-primary'>
               <Link href={`/address/${swap.initiator}`}>{swap.initiator}</Link>
             </div>
           </ListRow>
           <ListRow bg title='To'>
-            <div className='flex items-center text-sm text-gray-500'>
-              {to.networkName}
-              {recipient && <ExternalIcon href={`${to.explorer}/address/${recipient}`} />}
-            </div>
+            <TagNetwork network={to} address={recipient} />
             <div className='text-normal hover:underline hover:text-primary'>
               <Link href={`/address/${swap.initiator}`}>{recipient}</Link>
             </div>

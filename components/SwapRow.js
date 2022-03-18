@@ -7,7 +7,9 @@ import { parseNetworkAndToken, abbreviate, getSwapStatus, getSwapDuration } from
 
 import { Td } from './Table'
 import SwapStatusBadge from './SwapStatusBadge'
-import ExternalLink, { ExternalIcon } from './ExternalLink'
+import ExternalLink from './ExternalLink'
+
+import TagNetwork from './TagNetwork'
 
 export default function SwapRow({ swap }) {
   const statusFromEvents = getSwapStatus(swap.events)
@@ -54,10 +56,7 @@ export default function SwapRow({ swap }) {
       </Td>
       <Td><SwapStatusBadge status={status} expired={expired} /></Td>
       <Td>
-        <div className='flex items-center text-xs text-gray-500'>
-          {from.networkName}
-          <ExternalIcon href={`${from.explorer}/address/${swap.initiator}`} />
-        </div>
+        <TagNetwork network={from} address={swap.initiator} />
         <div className='text-normal hover:underline hover:text-primary hidden lg:block'>
           <Link href={`/address/${swap.initiator}`}>{abbreviate(swap.initiator)}</Link>
         </div>
@@ -66,10 +65,7 @@ export default function SwapRow({ swap }) {
         </div>
       </Td>
       <Td>
-        <div className='flex items-center text-xs text-gray-500'>
-          {to.networkName}
-          {recipient && <ExternalIcon href={`${to.explorer}/address/${recipient}`} />}
-        </div>
+        <TagNetwork network={to} address={recipient} />
         <div className='text-normal hover:underline hover:text-primary hidden lg:block'>
           <Link href={`/address/${recipient}`}>{recipient ? abbreviate(recipient) : ''}</Link>
         </div>
