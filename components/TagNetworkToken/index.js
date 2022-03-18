@@ -6,7 +6,6 @@ import usdc from './usdc.png'
 import usdt from './usdt.png'
 
 function getTokenLogo(symbol) {
-  console.log(symbol)
   if (symbol.indexOf('USDC') > -1) {
     return usdc
   } else if (symbol.indexOf('USDT') > -1) {
