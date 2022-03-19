@@ -11,6 +11,9 @@ export default function SwapStatusBadge({ status, expired }) {
   if (status === 'RELEASED') {
     status = 'DONE'
   }
+  if (status === 'EXECUTED') {
+    status = 'RELEASING'
+  }
   return <Badge type={badgeType(status)}>{status}</Badge>
 }
 
