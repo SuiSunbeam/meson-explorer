@@ -189,7 +189,7 @@ function SwapStepInfo({ index, hash, recipient, failed, initiator, from, to }) {
     <div className='flex items-center'>
       {failed && <FailedIcon />}
       <div className='truncate'>
-        <ExternalLink size='sm' href={`${index === 3 || index === 5 ? to.explorer : from.explorer}/tx/${hash}`}>{hash}</ExternalLink>
+        <ExternalLink size='sm' href={`${index === 3 || index === 6 ? to.explorer : from.explorer}/tx/${hash}`}>{hash}</ExternalLink>
       </div>
     </div>
   )
