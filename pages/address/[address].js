@@ -51,9 +51,13 @@ export default function AddressSwapList() {
     body = (
       <>
         <Table headers={[
-          { name: 'swap id / time', className: 'pl-4 sm:pl-6' },
-          { name: 'status' }, { name: 'from' }, { name: 'to' }, { name: 'amount' }, { name: 'fee' },
-          { name: 'duration', className: 'hidden md:table-cell' }
+          { name: 'swap id / time', width: '18%', className: 'pl-4 sm:pl-6' },
+          { name: 'status', width: '10%' },
+          { name: 'from', width: '18%' },
+          { name: 'to', width: '18%' },
+          { name: 'amount', width: '18%' },
+          { name: 'fee', width: '9%' },
+          { name: 'duration', width: '9%', className: 'hidden md:table-cell' }
         ]}>
           {list.map(swap => <SwapRow key={swap._id} swap={swap} />)}
         </Table>
