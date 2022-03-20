@@ -75,7 +75,7 @@ export default function SwapRow({ swap }) {
       </Td>
       <Td>
         <div className='flex md:flex-col'>
-          <div className='font-medium mr-1'>
+          <div className='mr-1'>
             {ethers.utils.formatUnits(swap.amount, 6)}
           </div>
           <div className='flex items-center'>
@@ -89,7 +89,7 @@ export default function SwapRow({ swap }) {
       </Td>
       <Td>
         <div className='flex items-center md:flex-col md:items-start'>
-          <div className='font-medium mr-1'>{ethers.utils.formatUnits(swap.fee, 6)}</div>
+          <div className='mr-1'>{ethers.utils.formatUnits(swap.fee, 6)}</div>
           <TagNetworkToken explorer={from.explorer} token={from.token} />
         </div>
       </Td>
