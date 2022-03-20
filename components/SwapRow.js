@@ -74,16 +74,23 @@ export default function SwapRow({ swap }) {
         </div>
       </Td>
       <Td>
-        <div className='flex items-center text-normal'>
-          <div className='mr-1'>{ethers.utils.formatUnits(swap.amount, 6)}</div>
-          <TagNetworkToken explorer={from.explorer} token={from.token} />
-          <div className='hidden md:flex'>
-            <div className='text-gray-500 mx-1'>{'->'}</div>
-            <TagNetworkToken explorer={to.explorer} token={to.token} />
+        <div className='flex md:flex-col'>
+          <div className='font-medium mr-1'>
+            {ethers.utils.formatUnits(swap.amount, 6)}
+          </div>
+          <div className='flex items-center'>
+            <TagNetworkToken explorer={from.explorer} token={from.token} />
+            <div className='hidden md:flex'>
+              <div className='text-gray-500 mx-1 text-xs'>{'->'}</div>
+              <TagNetworkToken explorer={to.explorer} token={to.token} />
+            </div>
           </div>
         </div>
-        <div className='text-xs text-gray-500'>
-          Fee: {ethers.utils.formatUnits(swap.fee, 6)} {from.token.symbol}
+      </Td>
+      <Td>
+        <div className='flex items-center md:flex-col md:items-start'>
+          <div className='font-medium mr-1'>{ethers.utils.formatUnits(swap.fee, 6)}</div>
+          <TagNetworkToken explorer={from.explorer} token={from.token} />
         </div>
       </Td>
       <Td className='hidden md:table-cell'>
