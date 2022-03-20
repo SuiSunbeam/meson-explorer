@@ -71,7 +71,7 @@ function CorrectSwap({ swapId, swap }) {
   }, [swap])
 
   React.useEffect(() => {
-    if (events.find(e => !e.failed && e.name === 'RELEASED')) {
+    if (events.find(e => e.name === 'RELEASED')) {
       return
     }
 
@@ -175,11 +175,11 @@ function SwapStepName({ index, name }) {
   } else if (index === 4) {
     return 'Release to'
   } else {
-    return <span className='capitalize'>{name.toLowerCase()}</span>
+    return <span className='capitalize'>{name.split(':')[0].toLowerCase()}</span>
   }
 }
 
-function SwapStepInfo({ index, hash, recipient, failed, initiator, from, to }) {
+function SwapStepInfo({ index, hash, recipient, name, initiator, from, to }) {
   if (index === 0) {
     return <ExternalLink size='sm' href={`${from.explorer}/address/${initiator}`}>{initiator}</ExternalLink>
   } else if (index === 4) {
@@ -187,7 +187,7 @@ function SwapStepInfo({ index, hash, recipient, failed, initiator, from, to }) {
   }
   return (
     <div className='flex items-center'>
-      {failed && <FailedIcon />}
+      {name.endsWith(':FAILED') && <FailedIcon />}
       <div className='truncate'>
         <ExternalLink size='sm' href={`${index === 3 || index === 6 ? to.explorer : from.explorer}/tx/${hash}`}>{hash}</ExternalLink>
       </div>

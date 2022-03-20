@@ -7,7 +7,7 @@ export default function SwapStatusBadge({ error, events, expired }) {
   if (error) {
     status === 'ERROR'
   } else if (maxEvent === 'RELEASED') {
-    if (!events.find(e => !e.failed && e.name === 'EXECUTED')) {
+    if (!events.find(e => e.name === 'EXECUTED')) {
       status = 'RELEASED'
     } else {
       status = 'DONE'

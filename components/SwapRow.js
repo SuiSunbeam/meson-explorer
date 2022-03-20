@@ -20,7 +20,7 @@ export default function SwapRow({ swap }) {
   const expired = new Date(swap.expireTs) < Date.now()
 
   React.useEffect(() => {
-    if (!from || !to || events.filter(e => !e.failed).find(e =>
+    if (!from || !to || events.filter(e => !e.name.endsWith(':FAILED')).find(e =>
       ['RELEASED', 'CANCELLED'].includes(e.name) || (expired && e.name === 'REQUESTING')
     )) {
       return
