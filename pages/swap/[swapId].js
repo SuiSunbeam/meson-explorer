@@ -7,7 +7,7 @@ import useSWR from 'swr'
 import { ethers } from 'ethers'
 
 import socket from '../../lib/socket'
-import { parseNetworkAndToken, getSwapStatus, sortEvents, getSwapDuration } from '../../lib/swap'
+import { parseNetworkAndToken, sortEvents, getSwapDuration } from '../../lib/swap'
 
 import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody } from '../../components/Card'
@@ -43,7 +43,7 @@ export default function Swap() {
       <Card>
         <CardTitle
           title='Swap'
-          badge={<SwapStatusBadge status='ERROR' />}
+          badge={<SwapStatusBadge error />}
           subtitle={swapId}
         />
         <CardBody>
@@ -61,24 +61,24 @@ export default function Swap() {
 }
 
 function CorrectSwap({ swapId, swap }) {
-  const [status, setStatus] = React.useState()
+  const [events, setEvents] = React.useState(swap?.events || [])
   const [recipient, setRecipient] = React.useState('')
   const expired = new Date(swap?.expireTs) < Date.now()
 
   React.useEffect(() => {
-    const statusFromEvents = getSwapStatus(swap?.events || [])
-    setStatus(statusFromEvents)
     setRecipient(swap?.recipient || '')
+    setEvents(swap?.events || [])
   }, [swap])
 
   React.useEffect(() => {
-    if (status === 'RELEASED') {
+    if (events.find(e => !e.failed && e.name === 'RELEASED')) {
       return
     }
 
     const swapUpdateListener = updates => {
       if (updates.status) {
-        setStatus(updates.status)
+        // setStatus(updates.status)
+        // TODO
       }
       if (updates.recipient) {
         setRecipient(updates.recipient)
@@ -132,11 +132,11 @@ function CorrectSwap({ swapId, swap }) {
           <ListRow title='Requested at'>
             {new Date(swap.created).toLocaleString()}
           </ListRow>
-          <SwapTimes status={status} expired={expired} swap={swap} />
+          <SwapTimes swap={swap} expired={expired} />
 
-          <ListRow bg={status === 'RELEASED'} title='Process'>
+          <ListRow bg={swap.released} title='Process'>
             <ul role='list' className='border border-gray-200 rounded-md divide-y divide-gray-200 bg-white'>
-              {sortEvents(swap.events).map((e, index) => (
+              {sortEvents(events).map((e, index) => (
                 <li key={`process-${index}`}>
                   <div className='lg:grid lg:grid-cols-4 sm:px-4 sm:py-3 px-3 py-2 text-sm'>
                     <div><SwapStepName {...e} /></div>
@@ -159,7 +159,7 @@ function CorrectSwap({ swapId, swap }) {
     <Card>
       <CardTitle
         title='Swap'
-        badge={<SwapStatusBadge status={status} expired={expired} />}
+        badge={<SwapStatusBadge events={events} expired={expired} />}
         subtitle={swapId}
       />
       <CardBody border={!swap}>
@@ -199,8 +199,8 @@ function FailedIcon() {
   return <div className='text-red-400 w-4 mr-1'><XCircleIcon className='w-4' aria-hidden='true' /></div>
 }
 
-function SwapTimes({ status, expired, swap }) {
-  if (status === 'RELEASED') {
+function SwapTimes({ swap, expired }) {
+  if (swap.released) {
     return (
       <>
         <ListRow bg title='Finished at'>{new Date(swap.released).toLocaleString()}</ListRow>

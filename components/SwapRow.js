@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ethers } from 'ethers'
 
 import socket from '../lib/socket'
-import { parseNetworkAndToken, abbreviate, getSwapStatus, getSwapDuration } from '../lib/swap'
+import { parseNetworkAndToken, abbreviate, getSwapDuration } from '../lib/swap'
 
 import { Td } from './Table'
 import SwapStatusBadge from './SwapStatusBadge'
@@ -12,22 +12,24 @@ import TagNetwork from './TagNetwork'
 import TagNetworkToken from './TagNetworkToken'
 
 export default function SwapRow({ swap }) {
-  const statusFromEvents = getSwapStatus(swap.events)
-  const [status, setStatus] = React.useState(statusFromEvents)
-  const [recipient, setRecipient] = React.useState(swap.recipient)
+  const [events, setEvents] = React.useState(swap?.events || [])
+  const [recipient, setRecipient] = React.useState(swap?.recipient)
 
   const from = parseNetworkAndToken(swap.inChain, swap.inToken)
   const to = parseNetworkAndToken(swap.outChain, swap.outToken)
   const expired = new Date(swap.expireTs) < Date.now()
 
   React.useEffect(() => {
-    if (!from || !to || ['RELEASED', 'CANCELLED'].includes(statusFromEvents) || (expired && statusFromEvents === 'REQUESTING')) {
+    if (!from || !to || events.filter(e => !e.failed).find(e =>
+      ['RELEASED', 'CANCELLED'].includes(e.name) || (expired && e.name === 'REQUESTING')
+    )) {
       return
     }
 
     const swapUpdateListener = updates => {
       if (updates.status) {
-        setStatus(updates.status)
+        // setStatus(updates.status)
+        // TODO
       }
       if (updates.recipient) {
         setRecipient(updates.recipient)
@@ -35,7 +37,7 @@ export default function SwapRow({ swap }) {
     }
 
     return socket.subscribe(swap._id, swapUpdateListener)
-  }, [swap._id, from, to, statusFromEvents, expired])
+  }, [swap._id, from, to, events, expired])
 
   if (!from || !to) {
     return null
@@ -54,7 +56,7 @@ export default function SwapRow({ swap }) {
           {new Date(swap.created).toLocaleString()}
         </div>
       </Td>
-      <Td><SwapStatusBadge status={status} expired={expired} /></Td>
+      <Td><SwapStatusBadge events={events} expired={expired} /></Td>
       <Td>
         <TagNetwork network={from} address={swap.initiator} />
         <div className='text-normal hover:underline hover:text-primary hidden lg:block'>
