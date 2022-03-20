@@ -17,15 +17,13 @@ export default function TagNetworkToken ({ explorer, token }) {
   const logo = getTokenLogo(token.symbol)
   const href = `${explorer}/token/${token.addr}`
   return (
-    <div className='flex items-center'>
-      <a href={href} className='flex itmes-center w-4 h-4 mr-1' target='_blank' rel='noreferrer'>
+    <a href={href} className='flex items-center text-gray-500 hover:text-primary hover:underline cursor-pointer' target='_blank' rel='noreferrer'>
+      <div className='flex itmes-center w-4 h-4 mr-1'>
         {logo && <Image src={logo} alt='' />}
-      </a>
-      <div className='hidden md:flex'>
-        <ExternalLink href={href}>
-          {token.symbol}
-        </ExternalLink>
       </div>
-    </div>
+      <div className='hidden md:flex text-xs'>
+        {token.symbol}
+      </div>
+    </a>
   )
 }
