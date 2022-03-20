@@ -63,7 +63,10 @@ export default function BondedSwapList() {
 
   return (
     <Card>
-      <CardTitle title='Bonded Swaps' />
+      <CardTitle
+        title='Bonded Swaps'
+        subtitle='Swaps that were bonded but not executed or cancelled'
+      />
       <CardBody>
         {body}
       </CardBody>

@@ -63,7 +63,10 @@ export default function LockedSwapList() {
 
   return (
     <Card>
-      <CardTitle title='Locked Swaps' />
+      <CardTitle
+        title='Locked Swaps'
+        subtitle='Swaps that were locked but released'
+      />
       <CardBody>
         {body}
       </CardBody>
