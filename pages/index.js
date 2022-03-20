@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import useSWR from 'swr'
 
 import LoadingScreen from '../components/LoadingScreen'
-import Card, { StatCard } from '../components/Card'
+import Card from '../components/Card'
 import Table from '../components/Table'
 import SwapRow from '../components/SwapRow'
 import Pagination from '../components/Pagination'
@@ -54,7 +54,7 @@ export default function SwapList() {
           { name: 'fee', width: '9%' },
           { name: 'duration', width: '9%', className: 'hidden md:table-cell' }
         ]}>
-          {list.map(swap => <SwapRow key={swap._id} swap={swap} />)}
+          {list.map(row => <SwapRow key={row._id} {...row} />)}
         </Table>
         <Pagination size={10} page={page} total={total} onPageChange={onPageChange} />
       </>

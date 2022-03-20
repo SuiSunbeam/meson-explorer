@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { XCircleIcon } from '@heroicons/react/solid'
 import useSWR from 'swr'
 import { ethers } from 'ethers'
+import { Swap } from '@mesonfi/sdk'
 
 import socket from '../../lib/socket'
 import { parseNetworkAndToken, sortEvents, getSwapDuration } from '../../lib/swap'
@@ -33,7 +34,7 @@ const fetcher = async swapId => {
   }
 }
 
-export default function Swap() {
+export default function SwapDetail() {
   const router = useRouter()
   const swapId = router.query.swapId
   const { data, error } = useSWR(swapId, fetcher)
@@ -57,18 +58,17 @@ export default function Swap() {
     )
   }
   
-  return <CorrectSwap swapId={swapId} swap={data} />
+  return <CorrectSwap swapId={swapId} data={data} />
 }
 
-function CorrectSwap({ swapId, swap }) {
-  const [events, setEvents] = React.useState(swap?.events || [])
+function CorrectSwap({ swapId, data }) {
+  const [events, setEvents] = React.useState(data?.events || [])
   const [recipient, setRecipient] = React.useState('')
-  const expired = new Date(swap?.expireTs) < Date.now()
 
   React.useEffect(() => {
-    setRecipient(swap?.recipient || '')
-    setEvents(swap?.events || [])
-  }, [swap])
+    setRecipient(data?.recipient || '')
+    setEvents(data?.events || [])
+  }, [data])
 
   React.useEffect(() => {
     if (events.find(e => e.name === 'RELEASED')) {
@@ -90,29 +90,35 @@ function CorrectSwap({ swapId, swap }) {
   }, [swapId])
 
   let body
-  if (!swap) {
+  let swap
+  if (!data) {
     body = <LoadingScreen />
   } else {
-    const from = parseNetworkAndToken(swap.inChain, swap.inToken)
-    const to = parseNetworkAndToken(swap.outChain, swap.outToken)
+    try {
+      swap = Swap.decode(data.encoded)
+    } catch {}
+
+    const from = parseNetworkAndToken(swap?.inChain, swap?.inToken)
+    const to = parseNetworkAndToken(swap?.outChain, swap?.outToken)
+
     if (!from || !to) {
       body = ''
     } else {
       body = (
         <dl>
           <ListRow bg title='Encoded As'>
-            <div className='truncate'>{swap.encoded}</div>
+            <div className='truncate'>{data.encoded}</div>
           </ListRow>
           <ListRow title='From'>
-            <TagNetwork network={from} address={swap.initiator} />
+            <TagNetwork network={from} address={data.initiator} />
             <div className='text-normal hover:underline hover:text-primary'>
-              <Link href={`/address/${swap.initiator}`}>{swap.initiator}</Link>
+              <Link href={`/address/${data.initiator}`}>{data.initiator}</Link>
             </div>
           </ListRow>
           <ListRow bg title='To'>
             <TagNetwork network={to} address={recipient} />
             <div className='text-normal hover:underline hover:text-primary'>
-              <Link href={`/address/${swap.initiator}`}>{recipient}</Link>
+              <Link href={`/address/${data.initiator}`}>{recipient}</Link>
             </div>
           </ListRow>
           <ListRow title='Amount'>
@@ -130,11 +136,11 @@ function CorrectSwap({ swapId, swap }) {
             </div>
           </ListRow>
           <ListRow title='Requested at'>
-            {new Date(swap.created).toLocaleString()}
+            {new Date(data.created).toLocaleString()}
           </ListRow>
-          <SwapTimes swap={swap} expired={expired} />
+          <SwapTimes data={data} expired={expired} expireTs={swap.expireTs} />
 
-          <ListRow bg={swap.released} title='Process'>
+          <ListRow bg={data.released} title='Process'>
             <ul role='list' className='border border-gray-200 rounded-md divide-y divide-gray-200 bg-white'>
               {sortEvents(events).map((e, index) => (
                 <li key={`process-${index}`}>
@@ -142,7 +148,7 @@ function CorrectSwap({ swapId, swap }) {
                     <div><SwapStepName {...e} /></div>
                     <div className='lg:col-span-3 lg:flex lg:flex-row lg:justify-end'>
                       <div className='max-w-full truncate text-gray-500'>
-                        <SwapStepInfo {...e} initiator={swap.initiator} from={from} to={to} />
+                        <SwapStepInfo {...e} initiator={data.initiator} from={from} to={to} />
                       </div>
                     </div>
                   </div>
@@ -155,6 +161,7 @@ function CorrectSwap({ swapId, swap }) {
     }
   }
 
+  const expired = swap?.expireTs < Date.now() / 1000
   return (
     <Card>
       <CardTitle
@@ -162,7 +169,7 @@ function CorrectSwap({ swapId, swap }) {
         badge={<SwapStatusBadge events={events} expired={expired} />}
         subtitle={swapId}
       />
-      <CardBody border={!swap}>
+      <CardBody border={!data}>
         {body}
       </CardBody>
     </Card>
@@ -199,18 +206,18 @@ function FailedIcon() {
   return <div className='text-red-400 w-4 mr-1'><XCircleIcon className='w-4' aria-hidden='true' /></div>
 }
 
-function SwapTimes({ swap, expired }) {
-  if (swap.released) {
+function SwapTimes({ data, expired, expireTs }) {
+  if (data.released) {
     return (
       <>
-        <ListRow bg title='Finished at'>{new Date(swap.released).toLocaleString()}</ListRow>
-        <ListRow title='Duration'>{getSwapDuration(swap)}</ListRow>
+        <ListRow bg title='Finished at'>{new Date(data.released).toLocaleString()}</ListRow>
+        <ListRow title='Duration'>{getSwapDuration(data)}</ListRow>
       </>
     )
   }
   return (
     <ListRow bg title={expired ? 'Expired at' : 'Will expire at'}>
-      {new Date(swap.expireTs).toLocaleString()}
+      {new Date(expireTs * 1000).toLocaleString()}
     </ListRow>
   )
 }

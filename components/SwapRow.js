@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { ethers } from 'ethers'
+import { Swap } from '@mesonfi/sdk'
 
 import socket from '../lib/socket'
 import { parseNetworkAndToken, abbreviate, getSwapDuration } from '../lib/swap'
@@ -11,13 +12,17 @@ import SwapStatusBadge from './SwapStatusBadge'
 import TagNetwork from './TagNetwork'
 import TagNetworkToken from './TagNetworkToken'
 
-export default function SwapRow({ swap }) {
-  const [events, setEvents] = React.useState(swap?.events || [])
-  const [recipient, setRecipient] = React.useState(swap?.recipient)
+export default function SwapRow(props) {
+  const [events, setEvents] = React.useState(props.events || [])
+  const [recipient, setRecipient] = React.useState(props.recipient)
 
-  const from = parseNetworkAndToken(swap.inChain, swap.inToken)
-  const to = parseNetworkAndToken(swap.outChain, swap.outToken)
-  const expired = new Date(swap.expireTs) < Date.now()
+  let swap
+  try {
+    swap = Swap.decode(props.encoded)
+  } catch {}
+  const from = parseNetworkAndToken(swap?.inChain, swap?.inToken)
+  const to = parseNetworkAndToken(swap?.outChain, swap?.outToken)
+  const expired = swap?.expireTs < Date.now() / 1000
 
   React.useEffect(() => {
     if (!from || !to || events.filter(e => !e.name.endsWith(':FAILED')).find(e =>
@@ -36,8 +41,8 @@ export default function SwapRow({ swap }) {
       }
     }
 
-    return socket.subscribe(swap._id, swapUpdateListener)
-  }, [swap._id, from, to, events, expired])
+    return socket.subscribe(props._id, swapUpdateListener)
+  }, [props._id, from, to, events, expired])
 
   if (!from || !to) {
     return null
@@ -47,23 +52,23 @@ export default function SwapRow({ swap }) {
     <tr>
       <Td className='pl-4 pr-3 sm:pl-6'>
         <div className='text-primary hover:underline hidden lg:block'>
-          <Link href={`/swap/${swap._id}`}>{abbreviate(swap._id, 8, 8)}</Link>
+          <Link href={`/swap/${props._id}`}>{abbreviate(props._id, 8, 8)}</Link>
         </div>
         <div className='text-primary hover:underline lg:hidden'>
-          <Link href={`/swap/${swap._id}`}>{abbreviate(swap._id, 6, 6)}</Link>
+          <Link href={`/swap/${props._id}`}>{abbreviate(props._id, 6, 6)}</Link>
         </div>
         <div className='text-xs text-gray-500'>
-          {new Date(swap.created).toLocaleString()}
+          {new Date(props.created).toLocaleString()}
         </div>
       </Td>
       <Td><SwapStatusBadge events={events} expired={expired} /></Td>
       <Td>
-        <TagNetwork network={from} address={swap.initiator} />
+        <TagNetwork network={from} address={props.initiator} />
         <div className='text-normal hover:underline hover:text-primary hidden lg:block'>
-          <Link href={`/address/${swap.initiator}`}>{abbreviate(swap.initiator)}</Link>
+          <Link href={`/address/${props.initiator}`}>{abbreviate(props.initiator)}</Link>
         </div>
         <div className='text-normal hover:underline hover:text-primary lg:hidden'>
-          <Link href={`/address/${swap.initiator}`}>{abbreviate(swap.initiator, 6, 4)}</Link>
+          <Link href={`/address/${props.initiator}`}>{abbreviate(props.initiator, 6, 4)}</Link>
         </div>
       </Td>
       <Td>
@@ -96,7 +101,7 @@ export default function SwapRow({ swap }) {
         </div>
       </Td>
       <Td className='hidden md:table-cell'>
-        <span className='text-gray-500'>{getSwapDuration(swap)}</span>
+        <span className='text-gray-500'>{getSwapDuration(props)}</span>
       </Td>
     </tr>
   )
