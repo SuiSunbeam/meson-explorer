@@ -12,8 +12,14 @@ export default function SwapStatusBadge({ error, events, expired }) {
     } else {
       status = 'DONE'
     }
+  } else if (maxEvent === 'CANCELLED') {
+    if (events.find(e => e.name === 'LOCKED') && !events.find(e => e.name === 'UNLOCKED')) {
+      status = 'CANCELLED*'
+    } else {
+      status = 'CANCELLED'
+    }
   } else if (maxEvent === 'EXECUTED') {
-    status = 'RELEASING.'
+    status = 'RELEASING*'
   } else if (expired) {
     if (maxEvent === 'REQUESTING') {
       status = 'DROPPED'

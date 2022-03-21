@@ -179,7 +179,7 @@ function CorrectSwap({ swapId, data }) {
 function SwapStepName({ index, name }) {
   if (index === 0) {
     return 'Request by'
-  } else if (index === 4) {
+  } else if (index === 5) {
     return 'Release to'
   } else {
     return <span className='capitalize'>{name.split(':')[0].toLowerCase()}</span>
@@ -189,14 +189,14 @@ function SwapStepName({ index, name }) {
 function SwapStepInfo({ index, hash, recipient, name, initiator, from, to }) {
   if (index === 0) {
     return <ExternalLink size='sm' href={`${from.explorer}/address/${initiator}`}>{initiator}</ExternalLink>
-  } else if (index === 4) {
+  } else if (index === 5) {
     return <ExternalLink size='sm' href={`${to.explorer}/address/${recipient}`}>{recipient}</ExternalLink>
   }
   return (
     <div className='flex items-center'>
       {name.endsWith(':FAILED') && <FailedIcon />}
       <div className='truncate'>
-        <ExternalLink size='sm' href={`${index === 3 || index === 6 ? to.explorer : from.explorer}/tx/${hash}`}>{hash}</ExternalLink>
+        <ExternalLink size='sm' href={`${[3, 4, 7].includes(index) ? to.explorer : from.explorer}/tx/${hash}`}>{hash}</ExternalLink>
       </div>
     </div>
   )
