@@ -49,7 +49,7 @@ export default function SwapRow(props) {
   }
 
   return (
-    <tr>
+    <tr className='odd:bg-white even:bg-gray-50'>
       <Td className='pl-4 pr-3 sm:pl-6'>
         <div className='text-primary hover:underline hidden lg:block'>
           <Link href={`/swap/${props._id}`}>{abbreviate(props._id, 8, 8)}</Link>

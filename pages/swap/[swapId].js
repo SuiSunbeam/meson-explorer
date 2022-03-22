@@ -49,7 +49,7 @@ export default function SwapDetail() {
         />
         <CardBody>
           <dl>
-            <ListRow bg title='Reason'>
+            <ListRow title='Reason'>
               {error.message}
             </ListRow>
           </dl>
@@ -106,7 +106,7 @@ function CorrectSwap({ swapId, data }) {
     } else {
       body = (
         <dl>
-          <ListRow bg title='Encoded As'>
+          <ListRow title='Encoded As'>
             <div className='truncate'>{data.encoded}</div>
           </ListRow>
           <ListRow title='From'>
@@ -115,7 +115,7 @@ function CorrectSwap({ swapId, data }) {
               <Link href={`/address/${data.initiator}`}>{data.initiator}</Link>
             </div>
           </ListRow>
-          <ListRow bg title='To'>
+          <ListRow title='To'>
             <TagNetwork network={to} address={recipient} />
             <div className='text-normal hover:underline hover:text-primary'>
               <Link href={`/address/${data.initiator}`}>{recipient}</Link>
@@ -129,7 +129,7 @@ function CorrectSwap({ swapId, data }) {
               <TagNetworkToken explorer={to.explorer} token={to.token} />
             </div>
           </ListRow>
-          <ListRow bg title='Fee'>
+          <ListRow title='Fee'>
             <div className='flex items-center'>
               <div className='mr-1'>{ethers.utils.formatUnits(swap.fee, 6)}</div>
               <TagNetworkToken explorer={from.explorer} token={from.token} />
@@ -138,9 +138,10 @@ function CorrectSwap({ swapId, data }) {
           <ListRow title='Requested at'>
             {new Date(data.created).toLocaleString()}
           </ListRow>
+          {data.provider && <ListRow title='Provider'>{data.provider}</ListRow>}
           <SwapTimes data={data} expired={expired} expireTs={swap.expireTs} />
 
-          <ListRow bg={data.released} title='Process'>
+          <ListRow title='Process'>
             <ul role='list' className='border border-gray-200 rounded-md divide-y divide-gray-200 bg-white'>
               {sortEvents(events).map((e, index) => (
                 <li key={`process-${index}`}>
@@ -210,13 +211,13 @@ function SwapTimes({ data, expired, expireTs }) {
   if (data.released) {
     return (
       <>
-        <ListRow bg title='Finished at'>{new Date(data.released).toLocaleString()}</ListRow>
+        <ListRow title='Finished at'>{new Date(data.released).toLocaleString()}</ListRow>
         <ListRow title='Duration'>{getSwapDuration(data)}</ListRow>
       </>
     )
   }
   return (
-    <ListRow bg title={expired ? 'Expired at' : 'Will expire at'}>
+    <ListRow title={expired ? 'Expired at' : 'Will expire at'}>
       {new Date(expireTs * 1000).toLocaleString()}
     </ListRow>
   )

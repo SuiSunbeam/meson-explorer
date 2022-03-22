@@ -96,7 +96,7 @@ export default function StatsByChain() {
 
 function StatTableRow({ _id: date, count, volume, success, duration }) {
   return (
-    <tr>
+    <tr className='odd:bg-white even:bg-gray-50'>
       <Td  className='pl-4 pr-3 sm:pl-6'>{date}</Td>
       <Td>{count}</Td>
       <Td>${ethers.utils.formatUnits(volume, 6)}</Td>
