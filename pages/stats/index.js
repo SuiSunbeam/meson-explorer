@@ -8,7 +8,7 @@ import Card, { CardTitle, CardBody, StatCard } from '../../components/Card'
 import Table, { Td } from '../../components/Table'
 import ButtonGroup from '../../components/ButtonGroup'
 
-import { getAllNetworks, getDuration } from '../../lib/swap'
+import { getAllNetworks, formatDuration } from '../../lib/swap'
 
 const fetcher = async query => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/stats?${query}`)
@@ -97,11 +97,11 @@ export default function StatsByChain() {
 function StatTableRow({ _id: date, count, volume, success, duration }) {
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
-      <Td  className='pl-4 pr-3 sm:pl-6'>{date}</Td>
+      <Td className='pl-4 pr-3 sm:pl-6'>{date}</Td>
       <Td>{count}</Td>
       <Td>${ethers.utils.formatUnits(volume, 6)}</Td>
       <Td>{success} <span className='text-gray-500 text-sm'>({Math.floor(success / count * 1000) / 10}%)</span></Td>
-      <Td>{getDuration(duration * 1000)}</Td>
+      <Td>{formatDuration(duration * 1000)}</Td>
     </tr>
   )
 }

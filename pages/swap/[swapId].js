@@ -8,7 +8,7 @@ import { ethers } from 'ethers'
 import { Swap } from '@mesonfi/sdk'
 
 import socket from '../../lib/socket'
-import { parseNetworkAndToken, sortEvents, getSwapDuration } from '../../lib/swap'
+import { parseNetworkAndToken, sortEvents, getDuration } from '../../lib/swap'
 
 import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody } from '../../components/Card'
@@ -61,33 +61,42 @@ export default function SwapDetail() {
   return <CorrectSwap swapId={swapId} data={data} />
 }
 
-function CorrectSwap({ swapId, data }) {
-  const [events, setEvents] = React.useState(data?.events || [])
-  const [recipient, setRecipient] = React.useState('')
+function CorrectSwap({ swapId, data: raw }) {
+  const [data, setData] = React.useState(raw)
+  React.useEffect(() => { setData(raw) }, [raw])
 
-  React.useEffect(() => {
-    setRecipient(data?.recipient || '')
-    setEvents(data?.events || [])
-  }, [data])
+  const swapUpdateListener = ({ status, data } = {}) => {
+    setData(prev => {
+      const updates = {}
+      if (!data.hash || !prev.events.find(e => e.hash === data.hash)) {
+        updates.events = [...prev.events, { name: status, ...data }]
+      }
+      if (!data.failed) {
+        if (status === 'RELEASED') {
+          updates.released = data.ts * 1000
+        } else if (status === 'EXECUTED') {
+          updates.executed = data.ts * 1000
+        }
+        if (data.provider) {
+          updates.provider = data.provider
+        } else if (data.provider) {
+          updates.recipient = data.recipient
+        }
+      }
+      if (Object.keys(updates).length) {
+        return { ...prev, ...updates }
+      }
+      return prev
+    })
+  }
 
+  const noSubscribe = !data || (data.released && data.executed)
   React.useEffect(() => {
-    if (events.find(e => e.name === 'RELEASED')) {
+    if (noSubscribe) {
       return
     }
-
-    const swapUpdateListener = updates => {
-      if (updates.status) {
-        // setStatus(updates.status)
-        // TODO
-      }
-      if (updates.recipient) {
-        setRecipient(updates.recipient)
-      }
-    }
-
     return socket.subscribe(swapId, swapUpdateListener)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [swapId])
+  }, [swapId, noSubscribe])
 
   let body
   let swap
@@ -116,9 +125,9 @@ function CorrectSwap({ swapId, data }) {
             </div>
           </ListRow>
           <ListRow title='To'>
-            <TagNetwork network={to} address={recipient} />
+            <TagNetwork network={to} address={data.recipient || ''} />
             <div className='text-normal hover:underline hover:text-primary'>
-              <Link href={`/address/${data.initiator}`}>{recipient}</Link>
+              <Link href={`/address/${data.initiator}`}>{data.recipient || ''}</Link>
             </div>
           </ListRow>
           <ListRow title='Amount'>
@@ -143,7 +152,7 @@ function CorrectSwap({ swapId, data }) {
 
           <ListRow title='Process'>
             <ul role='list' className='border border-gray-200 rounded-md divide-y divide-gray-200 bg-white'>
-              {sortEvents(events).map((e, index) => (
+              {sortEvents(data?.events).map((e, index) => (
                 <li key={`process-${index}`}>
                   <div className='lg:grid lg:grid-cols-4 sm:px-4 sm:py-3 px-3 py-2 text-sm'>
                     <div><SwapStepName {...e} /></div>
@@ -167,7 +176,7 @@ function CorrectSwap({ swapId, data }) {
     <Card>
       <CardTitle
         title='Swap'
-        badge={<SwapStatusBadge events={events} expired={expired} />}
+        badge={<SwapStatusBadge events={data?.events || []} expired={expired} />}
         subtitle={swapId}
       />
       <CardBody border={!data}>
@@ -212,7 +221,7 @@ function SwapTimes({ data, expired, expireTs }) {
     return (
       <>
         <ListRow title='Finished at'>{new Date(data.released).toLocaleString()}</ListRow>
-        <ListRow title='Duration'>{getSwapDuration(data)}</ListRow>
+        <ListRow title='Duration'>{getDuration(data.created, data.released)}</ListRow>
       </>
     )
   }

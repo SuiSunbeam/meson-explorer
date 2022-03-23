@@ -4,7 +4,7 @@ import { ethers } from 'ethers'
 import { Swap } from '@mesonfi/sdk'
 
 import socket from '../lib/socket'
-import { parseNetworkAndToken, abbreviate, getSwapDuration } from '../lib/swap'
+import { parseNetworkAndToken, abbreviate, getDuration } from '../lib/swap'
 
 import { Td } from './Table'
 import SwapStatusBadge from './SwapStatusBadge'
@@ -12,37 +12,51 @@ import SwapStatusBadge from './SwapStatusBadge'
 import TagNetwork from './TagNetwork'
 import TagNetworkToken from './TagNetworkToken'
 
-export default function SwapRow(props) {
-  const [events, setEvents] = React.useState(props.events || [])
-  const [recipient, setRecipient] = React.useState(props.recipient)
+export default function SwapRow({ data: raw }) {
+  const [data, setData] = React.useState(raw)
+  React.useEffect(() => { setData(raw) }, [raw])
 
   let swap
   try {
-    swap = Swap.decode(props.encoded)
+    swap = Swap.decode(data.encoded)
   } catch {}
   const from = parseNetworkAndToken(swap?.inChain, swap?.inToken)
   const to = parseNetworkAndToken(swap?.outChain, swap?.outToken)
   const expired = swap?.expireTs < Date.now() / 1000
 
+  const swapUpdateListener = ({ status, data } = {}) => {
+    setData(prev => {
+      const updates = {}
+      if (!data.hash || !prev.events.find(e => e.hash === data.hash)) {
+        updates.events = [...prev.events, { name: status, ...data }]
+      }
+      if (!data.failed) {
+        if (status === 'RELEASED') {
+          updates.released = data.ts * 1000
+        } else if (status === 'EXECUTED') {
+          updates.executed = data.ts * 1000
+        }
+        if (data.provider) {
+          updates.provider = data.provider
+        } else if (data.provider) {
+          updates.recipient = data.recipient
+        }
+      }
+      if (Object.keys(updates).length) {
+        return { ...prev, ...updates }
+      }
+      return prev
+    })
+  }
+
+  const swapId = data?._id
+  const noSubscribe = !from || !to || (data.released && data.executed)
   React.useEffect(() => {
-    if (!from || !to || events.filter(e => !e.name.endsWith(':FAILED')).find(e =>
-      ['RELEASED', 'CANCELLED'].includes(e.name) || (expired && e.name === 'REQUESTING')
-    )) {
+    if (!swapId || noSubscribe) {
       return
     }
-
-    const swapUpdateListener = updates => {
-      if (updates.status) {
-        // setStatus(updates.status)
-        // TODO
-      }
-      if (updates.recipient) {
-        setRecipient(updates.recipient)
-      }
-    }
-
-    return socket.subscribe(props._id, swapUpdateListener)
-  }, [props._id, from, to, events, expired])
+    return socket.subscribe(swapId, swapUpdateListener)
+  }, [swapId, noSubscribe])
 
   if (!from || !to) {
     return null
@@ -52,32 +66,32 @@ export default function SwapRow(props) {
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td className='pl-4 pr-3 sm:pl-6'>
         <div className='text-primary hover:underline hidden lg:block'>
-          <Link href={`/swap/${props._id}`}>{abbreviate(props._id, 8, 8)}</Link>
+          <Link href={`/swap/${swapId}`}>{abbreviate(swapId, 8, 8)}</Link>
         </div>
         <div className='text-primary hover:underline lg:hidden'>
-          <Link href={`/swap/${props._id}`}>{abbreviate(props._id, 6, 6)}</Link>
+          <Link href={`/swap/${swapId}`}>{abbreviate(swapId, 6, 6)}</Link>
         </div>
         <div className='text-xs text-gray-500'>
-          {new Date(props.created).toLocaleString()}
+          {new Date(data.created).toLocaleString()}
         </div>
       </Td>
-      <Td><SwapStatusBadge events={events} expired={expired} /></Td>
+      <Td><SwapStatusBadge events={data.events} expired={expired} /></Td>
       <Td>
-        <TagNetwork network={from} address={props.initiator} />
+        <TagNetwork network={from} address={data.initiator} />
         <div className='text-normal hover:underline hover:text-primary hidden lg:block'>
-          <Link href={`/address/${props.initiator}`}>{abbreviate(props.initiator)}</Link>
+          <Link href={`/address/${data.initiator}`}>{abbreviate(data.initiator)}</Link>
         </div>
         <div className='text-normal hover:underline hover:text-primary lg:hidden'>
-          <Link href={`/address/${props.initiator}`}>{abbreviate(props.initiator, 6, 4)}</Link>
+          <Link href={`/address/${data.initiator}`}>{abbreviate(data.initiator, 6, 4)}</Link>
         </div>
       </Td>
       <Td>
-        <TagNetwork network={to} address={recipient} />
+        <TagNetwork network={to} address={data.recipient} />
         <div className='text-normal hover:underline hover:text-primary hidden lg:block'>
-          <Link href={`/address/${recipient}`}>{recipient ? abbreviate(recipient) : ''}</Link>
+          <Link href={`/address/${data.recipient}`}>{abbreviate(data.recipient)}</Link>
         </div>
         <div className='text-normal hover:underline hover:text-primary lg:hidden'>
-          <Link href={`/address/${recipient}`}>{recipient ? abbreviate(recipient, 6, 4) : ''}</Link>
+          <Link href={`/address/${data.recipient}`}>{abbreviate(data.recipient, 6, 4)}</Link>
         </div>
       </Td>
       <Td>
@@ -101,7 +115,9 @@ export default function SwapRow(props) {
         </div>
       </Td>
       <Td className='hidden md:table-cell'>
-        <span className='text-gray-500'>{getSwapDuration(props)}</span>
+        <span className='text-gray-500'>
+          {getDuration(data.created, data.released)}
+        </span>
       </Td>
     </tr>
   )

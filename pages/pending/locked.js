@@ -54,7 +54,7 @@ export default function LockedSwapList() {
           { name: 'fee', width: '9%' },
           { name: 'duration', width: '9%', className: 'hidden md:table-cell' }
         ]}>
-          {list.map(row => <SwapRow key={row._id} {...row} />)}
+          {list.map(row => <SwapRow key={row._id} data={row} />)}
         </Table>
         <Pagination size={10} page={page} total={total} onPageChange={onPageChange} />
       </>
