@@ -50,7 +50,7 @@ export default function SwapRow({ data: raw }) {
   }
 
   const swapId = data?._id
-  const noSubscribe = !from || !to || (data.released && data.executed)
+  const noSubscribe = !from || !to || (data.released && data.events.find(e => e.name === 'EXECUTED'))
   React.useEffect(() => {
     if (!swapId || noSubscribe) {
       return
