@@ -7,11 +7,14 @@ import useSWR from 'swr'
 import { ethers } from 'ethers'
 import { Swap } from '@mesonfi/sdk'
 
+import AppContext from '../../lib/context'
 import socket from '../../lib/socket'
-import { parseNetworkAndToken, sortEvents, getDuration } from '../../lib/swap'
+import { parseNetworkAndToken, sortEvents, getStatusFromEvents, getDuration } from '../../lib/swap'
+import extensions from '../../lib/extensions'
 
 import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody } from '../../components/Card'
+import Button from '../../components/Button'
 import SwapStatusBadge from '../../components/SwapStatusBadge'
 import ListRow from '../../components/ListRow'
 import ExternalLink from '../../components/ExternalLink'
@@ -178,12 +181,35 @@ function CorrectSwap({ swapId, data: raw }) {
         title='Swap'
         badge={<SwapStatusBadge events={data?.events || []} expired={expired} />}
         subtitle={swapId}
+        right={<SwapActionButton data={data} swap={swap} />}
       />
       <CardBody border={!data}>
         {body}
       </CardBody>
     </Card>
   )
+}
+
+function SwapActionButton({ data, swap }) {
+  const globalState = React.useContext(AppContext)
+  const connectedAddress = globalState.browserExt?.currentAccount?.hex
+
+  if (!connectedAddress || !data || (data.released && data.executed)) {
+    return null
+  }
+
+  const expired = swap?.expireTs < Date.now() / 1000
+  const status = getStatusFromEvents(data.events || [], expired)
+
+  switch (status) {
+    case 'CANCELLED*':
+      return <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, data.initiator)}>Unlock</Button>
+    case 'EXPIRED':
+      return <Button size='sm' color='info' rounded onClick={() => extensions.withdraw(swap)}>Withdraw</Button>
+    case 'RELEASED':
+      return <Button size='sm' color='info' rounded onClick={() => extensions.execute(swap, data.releaseSignature, data.recipient)}>Execute</Button>
+  }
+  return null
 }
 
 function SwapStepName({ index, name }) {

@@ -1,36 +1,8 @@
 import Badge from './Badge'
-import { getMaxEvent } from '../lib/swap'
+import { getStatusFromEvents } from '../lib/swap'
 
-export default function SwapStatusBadge({ error, events, expired }) {
-  const maxEvent = getMaxEvent(events)
-  let status
-  if (error) {
-    status === 'ERROR'
-  } else if (maxEvent === 'RELEASED') {
-    if (!events.find(e => e.name === 'EXECUTED')) {
-      status = 'RELEASED'
-    } else {
-      status = 'DONE'
-    }
-  } else if (maxEvent === 'CANCELLED') {
-    if (events.find(e => e.name === 'LOCKED') && !events.find(e => e.name === 'UNLOCKED')) {
-      status = 'CANCELLED*'
-    } else {
-      status = 'CANCELLED'
-    }
-  } else if (maxEvent === 'EXECUTED') {
-    status = 'RELEASING*'
-  } else if (expired) {
-    if (maxEvent === 'REQUESTING') {
-      status = 'DROPPED'
-    } else if (!['RELEASED', 'CANCELLED'].includes(maxEvent)) {
-      status = 'EXPIRED'
-    } else {
-      status = maxEvent
-    }
-  } else {
-    status = maxEvent
-  }
+export default function SwapStatusBadge({ events, expired, error }) {
+  const status = error ? 'ERROR' : getStatusFromEvents(events, expired)
   return <Badge type={badgeType(status)}>{status}</Badge>
 }
 
