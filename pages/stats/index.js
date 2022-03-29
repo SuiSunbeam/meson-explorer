@@ -10,6 +10,16 @@ import ButtonGroup from '../../components/ButtonGroup'
 
 import { getAllNetworks, formatDuration } from '../../lib/swap'
 
+const generalFetcher = async () => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/general`)
+  const json = await res.json()
+  if (json.result) {
+    return json.result
+  } else {
+    throw new Error(json.error.message)
+  }
+}
+
 const fetcher = async query => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/stats?${query}`)
   const json = await res.json()
@@ -40,6 +50,7 @@ export default function StatsByChain() {
     }
   })
 
+  const { data: generalData } = useSWR(`general`, generalFetcher)
   const { data, error } = useSWR(`${type}=${shortCoinType}`, fetcher)
 
   let body = null
@@ -61,12 +72,14 @@ export default function StatsByChain() {
     )
   }
 
+  const { count, volume, duration } = generalData || {}
+  const fmt = Intl.NumberFormat()
   return (
     <>
       <div className='grid grid-cols-3 md:gap-5 gap-3 md:mb-5 mb-3'>
-        <StatCard title='Swap Count' value='N/A' />
-        <StatCard title='Swap Amounts' value='N/A' />
-        <StatCard title='Avg. Duration' value='N/A' />
+        <StatCard title='Total Count' value={count ? fmt.format(count) : 'N/A'} />
+        <StatCard title='Total Volume' value={volume ? `$${fmt.format(ethers.utils.formatUnits(volume, 6))}` : 'N/A'} />
+        <StatCard title='Avg. Duration' value={duration ? formatDuration(duration * 1000) : 'N/A'} />
       </div>
 
       <Card>
