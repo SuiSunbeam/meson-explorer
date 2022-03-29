@@ -208,6 +208,8 @@ function SwapActionButton({ data, swap }) {
       return <Button size='sm' color='info' rounded onClick={() => extensions.withdraw(swap)}>Withdraw</Button>
     case 'RELEASED':
       return <Button size='sm' color='info' rounded onClick={() => extensions.execute(swap, data.releaseSignature, data.recipient)}>Execute</Button>
+    case 'RELEASING*':
+      return <Button size='sm' color='info' rounded onClick={() => extensions.release(swap, data.releaseSignature, data.initiator, data.recipient)}>Release</Button>
   }
   return null
 }
