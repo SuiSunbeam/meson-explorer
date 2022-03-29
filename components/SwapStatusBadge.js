@@ -44,7 +44,7 @@ function badgeType(status) {
       return 'error'
     case 'LOCKED':
     case 'RELEASING':
-    case 'RELEASING.':
+    case 'RELEASING*':
       return 'info'
     case 'REQUESTING':
     case 'POSTED':
