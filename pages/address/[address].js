@@ -9,7 +9,7 @@ import SwapRow from '../../components/SwapRow'
 import Pagination from '../../components/Pagination'
 
 const fetcher = async param => {
-  const [address, pageStr] = param.split(':') 
+  const [address, pageStr] = param.split(':')
 
   const page = Number(pageStr || 1) - 1
   if (Number.isNaN(page) || !Number.isInteger(page) || page < 0) {
