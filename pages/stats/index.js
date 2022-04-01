@@ -65,7 +65,7 @@ export default function StatsByChain() {
         { name: 'Count', width: '15%' },
         { name: 'Volume', width: '20%' },
         { name: 'Success', width: '20%' },
-        { name: 'Duration', width: '20%' }
+        { name: 'Avg. Duration', width: '20%' }
       ]}>
         {data.map((row, index) => <StatTableRow key={`stat-table-row-${index}`} {...row} />)}
       </Table>
