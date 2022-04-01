@@ -62,6 +62,7 @@ export default function SwapRow({ data: raw }) {
     return null
   }
 
+  const fromAddress = data.fromAddress || data.initiator
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td className='pl-4 pr-3 sm:pl-6'>
@@ -77,12 +78,12 @@ export default function SwapRow({ data: raw }) {
       </Td>
       <Td><SwapStatusBadge events={data.events} expired={expired} /></Td>
       <Td>
-        <TagNetwork network={from} address={data.initiator} />
+        <TagNetwork network={from} address={fromAddress} />
         <div className='text-normal hover:underline hover:text-primary hidden lg:block'>
-          <Link href={`/address/${data.initiator}`}>{abbreviate(data.initiator)}</Link>
+          <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress)}</Link>
         </div>
         <div className='text-normal hover:underline hover:text-primary lg:hidden'>
-          <Link href={`/address/${data.initiator}`}>{abbreviate(data.initiator, 6, 4)}</Link>
+          <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress, 6, 4)}</Link>
         </div>
       </Td>
       <Td>

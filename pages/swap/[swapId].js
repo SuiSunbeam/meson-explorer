@@ -116,21 +116,22 @@ function CorrectSwap({ swapId, data: raw }) {
     if (!from || !to) {
       body = ''
     } else {
+      const fromAddress = data.fromAddress || data.initiator
       body = (
         <dl>
           <ListRow title='Encoded As'>
             <div className='truncate'>{data.encoded}</div>
           </ListRow>
           <ListRow title='From'>
-            <TagNetwork network={from} address={data.initiator} />
+            <TagNetwork network={from} address={fromAddress} />
             <div className='text-normal hover:underline hover:text-primary'>
-              <Link href={`/address/${data.initiator}`}>{data.initiator}</Link>
+              <Link href={`/address/${fromAddress}`}>{fromAddress}</Link>
             </div>
           </ListRow>
           <ListRow title='To'>
             <TagNetwork network={to} address={data.recipient || ''} />
             <div className='text-normal hover:underline hover:text-primary'>
-              <Link href={`/address/${data.initiator}`}>{data.recipient || ''}</Link>
+              <Link href={`/address/${data.recipient}`}>{data.recipient || ''}</Link>
             </div>
           </ListRow>
           <ListRow title='Amount'>
@@ -161,7 +162,7 @@ function CorrectSwap({ swapId, data: raw }) {
                     <div><SwapStepName {...e} /></div>
                     <div className='lg:col-span-3 lg:flex lg:flex-row lg:justify-end'>
                       <div className='max-w-full truncate text-gray-500'>
-                        <SwapStepInfo {...e} initiator={data.initiator} from={from} to={to} />
+                        <SwapStepInfo {...e} fromAddress={fromAddress} from={from} to={to} />
                       </div>
                     </div>
                   </div>
@@ -224,9 +225,9 @@ function SwapStepName({ index, name }) {
   }
 }
 
-function SwapStepInfo({ index, hash, recipient, name, initiator, from, to }) {
+function SwapStepInfo({ index, hash, recipient, name, fromAddress, from, to }) {
   if (index === 0) {
-    return <ExternalLink size='sm' href={`${from.explorer}/address/${initiator}`}>{initiator}</ExternalLink>
+    return <ExternalLink size='sm' href={`${from.explorer}/address/${fromAddress}`}>{fromAddress}</ExternalLink>
   } else if (index === 5) {
     return <ExternalLink size='sm' href={`${to.explorer}/address/${recipient}`}>{recipient}</ExternalLink>
   }
