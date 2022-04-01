@@ -15,7 +15,7 @@ function getTokenLogo(symbol) {
 
 export default function TagNetworkToken ({ explorer, token }) {
   const logo = getTokenLogo(token.symbol)
-  const href = `${explorer}/token/${token.addr}`
+  const href = `${explorer}/${token.link || `token/${token.addr}`}`
   return (
     <a href={href} className='flex items-center text-gray-500 hover:text-primary hover:underline cursor-pointer' target='_blank' rel='noreferrer'>
       <div className='flex itmes-center w-4 h-4 mr-1'>
