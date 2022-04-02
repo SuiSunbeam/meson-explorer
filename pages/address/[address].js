@@ -67,7 +67,7 @@ export default function AddressSwapList() {
   }
 
   return (
-    <Card>
+    <Card overflow>
       <CardTitle
         title='Address'
         subtitle={address}

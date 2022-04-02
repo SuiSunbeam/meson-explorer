@@ -62,7 +62,7 @@ export default function SwapList() {
   }
 
   return (
-    <Card>
+    <Card overflow>
       {body}
     </Card>
   )

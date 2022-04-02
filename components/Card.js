@@ -1,8 +1,8 @@
 import classnames from 'classnames'
 import Button from './Button'
 
-export default function Card({ className, children }) {
-  return (
+export default function Card({ overflow, className, children }) {
+  const card = (
     <div className={classnames(
       'overflow-hidden border-b border-gray-200 rounded-lg shadow bg-white',
       className
@@ -10,6 +10,14 @@ export default function Card({ className, children }) {
       {children}
     </div>
   )
+  if (overflow) {
+    return (
+      <div className='inline-block min-w-full align-middle mr-2 sm:mr-4 lg:mr-8'>
+        {card}
+      </div>
+    )
+  }
+  return card
 }
 
 export function CardTitle({ title, subtitle, badge, right = [], tabs = [] }) {
@@ -20,7 +28,7 @@ export function CardTitle({ title, subtitle, badge, right = [], tabs = [] }) {
         <div className='ml-2 flex-1'>{badge}</div>
         <div>{right}</div>
       </div>
-      <p className='max-w-2xl mt-1 text-gray-500'>{subtitle}</p>
+      <p className='max-w-2xl mt-1 text-gray-500 break-all'>{subtitle}</p>
       <div className='text-gray-500 mt-5'>
       {tabs.map((t, index) => (
         <div
