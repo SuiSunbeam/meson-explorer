@@ -1,6 +1,8 @@
 import { Fragment } from 'react'
 import Link from 'next/link'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
+import { LinkIcon, CreditCardIcon } from '@heroicons/react/outline'
+
 import extensions from '../lib/extensions'
 import { abbreviate } from '../lib/swap'
 
@@ -76,11 +78,14 @@ export default function Navbar({ browserExt, setGlobalState }) {
                 </div>
               </div>
 
-              <div className='absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0'>
+              <div className='absolute inset-y-0 right-0 flex items-center sm:static sm:inset-auto sm:ml-6 sm:pr-0'>
                 <Menu as='div' className='relative'>
                   <div>
-                    <Menu.Button className='px-3 py-1 text-white hover:bg-primary rounded-md opacity-90 hover:opacity-100'>
-                      {connectedAddress ? abbreviate(connectedAddress) : 'Connect Wallet'}
+                    <Menu.Button className='text-white hover:bg-primary rounded-md opacity-90 hover:opacity-100 px-2 py-1 sm:px-3'>
+                      <div className='hidden sm:block'>{connectedAddress ? abbreviate(connectedAddress) : 'Connect Wallet'}</div>
+                      <div className='block sm:hidden'>
+                        {connectedAddress ? <CreditCardIcon className='w-5' /> : <LinkIcon className='w-5' />}
+                      </div>
                     </Menu.Button>
                   </div>
                   <Transition
