@@ -21,11 +21,11 @@ import ExternalLink from '../../components/ExternalLink'
 import TagNetwork from '../../components/TagNetwork'
 import TagNetworkToken from '../../components/TagNetworkToken'
 
-const fetcher = async swapId => {
-  if (!swapId) {
+const fetcher = async idOrEncoded => {
+  if (!idOrEncoded) {
     throw new Error('No swap id')
   }
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/swap/${swapId}`)
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/swap/${idOrEncoded}`)
   if (res.status >= 400) {
     throw new Error('Swap not found')
   }
@@ -39,8 +39,8 @@ const fetcher = async swapId => {
 
 export default function SwapDetail() {
   const router = useRouter()
-  const swapId = router.query.swapId
-  const { data, error } = useSWR(swapId, fetcher)
+  const idOrEncoded = router.query.idOrEncoded
+  const { data, error } = useSWR(idOrEncoded, fetcher)
 
   if (error) {
     return (
@@ -48,7 +48,7 @@ export default function SwapDetail() {
         <CardTitle
           title='Swap'
           badge={<SwapStatusBadge error />}
-          subtitle={swapId}
+          subtitle={idOrEncoded}
         />
         <CardBody>
           <dl>
@@ -60,11 +60,11 @@ export default function SwapDetail() {
       </Card>
     )
   }
-  
-  return <CorrectSwap swapId={swapId} data={data} />
+
+  return <CorrectSwap data={data} />
 }
 
-function CorrectSwap({ swapId, data: raw }) {
+function CorrectSwap({ data: raw }) {
   const [data, setData] = React.useState(raw)
   React.useEffect(() => { setData(raw) }, [raw])
 
@@ -98,8 +98,8 @@ function CorrectSwap({ swapId, data: raw }) {
     if (noSubscribe) {
       return
     }
-    return socket.subscribe(swapId, swapUpdateListener)
-  }, [swapId, noSubscribe])
+    return socket.subscribe(data._id, swapUpdateListener)
+  }, [data?._id, noSubscribe])
 
   let body
   let swap
@@ -120,17 +120,17 @@ function CorrectSwap({ swapId, data: raw }) {
       body = (
         <dl>
           <ListRow title='Encoded As'>
-            <div className='truncate'>{data.encoded}</div>
+            <div className='break-all'>{data.encoded}</div>
           </ListRow>
           <ListRow title='From'>
             <TagNetwork network={from} address={fromAddress} />
-            <div className='text-normal hover:underline hover:text-primary'>
+            <div className='text-normal truncate hover:underline hover:text-primary'>
               <Link href={`/address/${fromAddress}`}>{fromAddress}</Link>
             </div>
           </ListRow>
           <ListRow title='To'>
             <TagNetwork network={to} address={data.recipient || ''} />
-            <div className='text-normal hover:underline hover:text-primary'>
+            <div className='text-normal truncate hover:underline hover:text-primary'>
               <Link href={`/address/${data.recipient}`}>{data.recipient || ''}</Link>
             </div>
           </ListRow>
@@ -151,7 +151,7 @@ function CorrectSwap({ swapId, data: raw }) {
           <ListRow title='Requested at'>
             {new Date(data.created).toLocaleString()}
           </ListRow>
-          {data.provider && <ListRow title='Provider'>{data.provider}</ListRow>}
+          {data.provider && <ListRow title='Provider'><div className='truncate'>{data.provider}</div></ListRow>}
           <SwapTimes data={data} expired={expired} expireTs={swap.expireTs} />
 
           <ListRow title='Process'>
@@ -181,7 +181,7 @@ function CorrectSwap({ swapId, data: raw }) {
       <CardTitle
         title='Swap'
         badge={<SwapStatusBadge events={data?.events || []} expired={expired} />}
-        subtitle={swapId}
+        subtitle={data?._id}
         right={<SwapActionButton data={data} swap={swap} />}
       />
       <CardBody border={!data}>
