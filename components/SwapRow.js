@@ -1,6 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import debounce from 'lodash/debounce'
 import { ethers } from 'ethers'
 import { Swap } from '@mesonfi/sdk'
 
@@ -17,6 +18,17 @@ export default function SwapRow({ data: raw }) {
   const router = useRouter()
   const [data, setData] = React.useState(raw)
   React.useEffect(() => { setData(raw) }, [raw])
+
+  const mouseJustDown = React.useRef(false)
+  const handleMouse = React.useMemo(() => debounce(evt => {
+    if (evt.detail > 1 || evt.type !== 'mouseup' || !mouseJustDown.current) {
+      return
+    }
+    const tag = evt?.target?.tagName?.toLowerCase()
+    if (!['a', 'img', 'svg', 'path'].includes(tag)) {
+      router.push(`/swap/${swapId}`)
+    }
+  }, 250), [router, swapId])
 
   let swap
   try {
@@ -68,12 +80,12 @@ export default function SwapRow({ data: raw }) {
   return (
     <tr
       className='odd:bg-white even:bg-gray-50 hover:bg-primary-100'
-      onClick={evt => {
-        const tag = evt?.target?.tagName?.toLowerCase()
-        if (!['a', 'img', 'svg', 'path'].includes(tag)) {
-          router.push(`/swap/${swapId}`)
-        }
+      onMouseDown={evt => {
+        mouseJustDown.current = true
+        setTimeout(() => { mouseJustDown.current = false }, 500)
+        handleMouse(evt)
       }}
+      onMouseUp={handleMouse}
     >
       <Td className='pl-3 md:pl-4'>
         <div className='text-primary hover:underline hidden lg:block'>
