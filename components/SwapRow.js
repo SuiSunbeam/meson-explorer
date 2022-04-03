@@ -69,8 +69,8 @@ export default function SwapRow({ data: raw }) {
     <tr
       className='odd:bg-white even:bg-gray-50 hover:bg-primary-100'
       onClick={evt => {
-        const tag = evt?.target?.tagName
-        if (tag !== 'A') {
+        const tag = evt?.target?.tagName?.toLowerCase()
+        if (!['a', 'img', 'svg', 'path'].includes(tag)) {
           router.push(`/swap/${swapId}`)
         }
       }}
