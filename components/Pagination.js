@@ -18,7 +18,7 @@ export default function Pagination({ size = 10, page, total, onPageChange }) {
 
 function SmPagination ({ page, pages, onPageChange }) {
   return (
-    <div className='flex justify-between flex-1 sm:hidden'>
+    <div className='flex-1 flex justify-between items-center sm:hidden'>
       <Button
         rounded
         disabled={page === 0}
@@ -26,6 +26,7 @@ function SmPagination ({ page, pages, onPageChange }) {
       >
         Previous
       </Button>
+      <div className='text-sm text-gray-500'>{page+1}/{pages}</div>
       <Button
         rounded
         disabled={page === pages - 1}
