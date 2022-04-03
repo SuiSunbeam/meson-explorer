@@ -5,7 +5,7 @@ import Button from './Button'
 export default function ButtonGroup ({ size, active, buttons, onChange }) {
   const len = buttons.length
   return (
-    <div className='relative z-0 inline-flex -space-x-px rounded-md shadow-sm'>
+    <div className='relative z-0 flex -space-x-px rounded-md shadow-sm'>
     {
       buttons.map((btn, index) => (
         <Button

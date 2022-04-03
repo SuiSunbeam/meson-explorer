@@ -29,13 +29,13 @@ export function CardTitle({ title, subtitle, badge, right = [], tabs = [] }) {
         <div>{right}</div>
       </div>
       <p className='max-w-2xl mt-1 text-gray-500 break-all'>{subtitle}</p>
-      <div className='text-gray-500 mt-5'>
+      <div className='max-w-screen text-gray-500 mt-5 flex overflow-auto'>
       {tabs.map((t, index) => (
         <div
           key={`tab-${index}`}
           onClick={t.onClick}
           className={classnames(
-            'inline-block py-2 mr-6 cursor-pointer',
+            'py-2 mr-6 cursor-pointer whitespace-nowrap',
             t.active ? 'border-b-2 border-primary text-primary' : 'hover:border-b-2 border-gray-300'
           )}
         >{t.name}</div>

@@ -8,7 +8,6 @@ import Card from '../components/Card'
 import Table from '../components/Table'
 import SwapRow from '../components/SwapRow'
 import Pagination from '../components/Pagination'
-import Button from '../components/Button'
 
 const fetcher = async pageStr => {
   const page = Number(pageStr || 1) - 1
@@ -95,7 +94,7 @@ export default function SwapList() {
           </form>
         </div>
       </div>
-      <Card overflow>
+      <Card>
         {body}
       </Card>
     </div>

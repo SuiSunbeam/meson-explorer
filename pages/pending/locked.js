@@ -63,7 +63,7 @@ export default function LockedSwapList() {
   }
 
   return (
-    <Card overflow>
+    <Card>
       <CardTitle
         title='Locked Swaps'
         subtitle='Swaps that were locked but released'

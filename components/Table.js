@@ -2,18 +2,20 @@ import classnames from 'classnames'
 
 export default function Table ({ headers, size = 'md', children }) {
   return (
-    <table className='min-w-full divide-y divide-gray-200'>
-      <thead className='bg-gray-50'>
-        <tr>
-          {headers.map((item, index) => (
-            <Th key={`th-${index}`} size={size} width={item.width} className={item.className}>{item.name}</Th>
-          ))}
-        </tr>
-      </thead>
-      <tbody className='bg-white divide-y divide-gray-200'>
-        {children}
-      </tbody>
-    </table>
+    <div className='overflow-auto'>
+      <table className='min-w-full divide-y divide-gray-200'>
+        <thead className='bg-gray-50'>
+          <tr>
+            {headers.map((item, index) => (
+              <Th key={`th-${index}`} size={size} width={item.width} className={item.className}>{item.name}</Th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className='bg-white divide-y divide-gray-200'>
+          {children}
+        </tbody>
+      </table>
+    </div>
   )
 }
 

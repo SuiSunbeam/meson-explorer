@@ -82,7 +82,7 @@ export default function StatsByChain() {
         <StatCard title='Avg. Duration' value={duration ? formatDuration(duration * 1000) : 'N/A'} />
       </div>
 
-      <Card overflow>
+      <Card>
         <CardTitle
           title='Stats'
           badge={shortCoinType &&
