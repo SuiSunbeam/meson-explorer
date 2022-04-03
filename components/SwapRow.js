@@ -70,7 +70,7 @@ export default function SwapRow({ data: raw }) {
       className='odd:bg-white even:bg-gray-50 hover:bg-primary-100'
       onClick={evt => {
         const tag = evt?.target?.tagName
-        if (tag === 'A') {
+        if (tag !== 'A') {
           router.push(`/swap/${swapId}`)
         }
       }}
