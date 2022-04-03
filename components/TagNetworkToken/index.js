@@ -1,6 +1,5 @@
+import classnames from 'classnames'
 import Image from 'next/image'
-
-import ExternalLink from '../ExternalLink'
 
 import usdc from './usdc.png'
 import usdt from './usdt.png'
@@ -13,7 +12,7 @@ function getTokenLogo(symbol) {
   }
 }
 
-export default function TagNetworkToken ({ explorer, token }) {
+export default function TagNetworkToken ({ responsive, explorer, token }) {
   const logo = getTokenLogo(token.symbol)
   const href = `${explorer}/${token.link || `token/${token.addr}`}`
   return (
@@ -21,7 +20,7 @@ export default function TagNetworkToken ({ explorer, token }) {
       <div className='flex itmes-center w-4 h-4 mr-1'>
         {logo && <Image src={logo} alt='' />}
       </div>
-      <div className='hidden md:flex text-xs'>
+      <div className={classnames('text-xs', responsive ? 'hidden lg:flex' : 'flex')}>
         {token.symbol}
       </div>
     </a>

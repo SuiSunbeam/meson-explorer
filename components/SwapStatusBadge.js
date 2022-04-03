@@ -1,9 +1,9 @@
 import Badge from './Badge'
 import { getStatusFromEvents } from '../lib/swap'
 
-export default function SwapStatusBadge({ events, expired, error }) {
+export default function SwapStatusBadge({ events, expired, error, className }) {
   const status = error ? 'ERROR' : getStatusFromEvents(events, expired)
-  return <Badge type={badgeType(status)}>{status}</Badge>
+  return <Badge type={badgeType(status)} className={className}>{status}</Badge>
 }
 
 function badgeType(status) {

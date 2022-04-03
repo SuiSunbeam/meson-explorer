@@ -83,7 +83,7 @@ export default function Navbar({ browserExt, setGlobalState }) {
                   <div>
                     <Menu.Button className='text-white hover:bg-primary rounded-md opacity-90 hover:opacity-100 px-2 py-1 sm:px-3'>
                       <div className='hidden sm:block'>{connectedAddress ? abbreviate(connectedAddress) : 'Connect Wallet'}</div>
-                      <div className='block sm:hidden'>
+                      <div className='sm:hidden'>
                         {connectedAddress ? <CreditCardIcon className='w-5' /> : <LinkIcon className='w-5' />}
                       </div>
                     </Menu.Button>

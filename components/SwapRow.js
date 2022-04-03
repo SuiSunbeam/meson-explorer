@@ -65,57 +65,71 @@ export default function SwapRow({ data: raw }) {
   const fromAddress = data.fromAddress || data.initiator
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
-      <Td className='pl-4 pr-3 sm:pl-6'>
+      <Td className='pl-3 md:pl-4'>
         <div className='text-primary hover:underline hidden lg:block'>
-          <Link href={`/swap/${swapId}`}>{abbreviate(swapId, 8, 8)}</Link>
+          <Link href={`/swap/${swapId}`}>{abbreviate(swapId)}</Link>
         </div>
-        <div className='text-primary hover:underline lg:hidden'>
-          <Link href={`/swap/${swapId}`}>{abbreviate(swapId, 6, 6)}</Link>
+        <div className='text-primary hover:underline hidden sm:block lg:hidden'>
+          <Link href={`/swap/${swapId}`}>{abbreviate(swapId, 6, 4)}</Link>
         </div>
-        <div className='text-xs text-gray-500'>
+        <div className='text-primary hover:underline sm:hidden'>
+          <Link href={`/swap/${swapId}`}>{abbreviate(swapId, 6, 0)}</Link>
+        </div>
+        <div className='text-xs text-gray-500 hidden sm:block'>
           {new Date(data.created).toLocaleString()}
         </div>
+        <div className='sm:hidden scale-75 origin-left'>
+          <SwapStatusBadge events={data.events} expired={expired} className='text-xs' />
+        </div>
       </Td>
-      <Td><SwapStatusBadge events={data.events} expired={expired} /></Td>
+      <Td className='hidden sm:table-cell'>
+        <SwapStatusBadge events={data.events} expired={expired} />
+      </Td>
       <Td>
-        <TagNetwork network={from} address={fromAddress} />
+        <TagNetwork responsive network={from} address={fromAddress} />
         <div className='text-normal hover:underline hover:text-primary hidden lg:block'>
           <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress)}</Link>
         </div>
-        <div className='text-normal hover:underline hover:text-primary lg:hidden'>
+        <div className='text-normal hover:underline hover:text-primary hidden sm:block lg:hidden'>
           <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress, 6, 4)}</Link>
+        </div>
+        <div className='text-normal hover:underline hover:text-primary sm:hidden'>
+          <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress, 6, 0)}</Link>
         </div>
       </Td>
       <Td>
-        <TagNetwork network={to} address={data.recipient} />
+        <TagNetwork responsive network={to} address={data.recipient} />
         <div className='text-normal hover:underline hover:text-primary hidden lg:block'>
           <Link href={`/address/${data.recipient}`}>{abbreviate(data.recipient)}</Link>
         </div>
-        <div className='text-normal hover:underline hover:text-primary lg:hidden'>
+        <div className='text-normal hover:underline hover:text-primary hidden sm:block lg:hidden'>
           <Link href={`/address/${data.recipient}`}>{abbreviate(data.recipient, 6, 4)}</Link>
+        </div>
+        <div className='text-normal hover:underline hover:text-primary sm:hidden'>
+          <Link href={`/address/${data.recipient}`}>{abbreviate(data.recipient, 6, 0)}</Link>
         </div>
       </Td>
       <Td>
-        <div className='flex md:flex-col'>
+        <div className='flex lg:flex-col'>
           <div className='mr-1'>
             {ethers.utils.formatUnits(swap.amount, 6)}
           </div>
           <div className='flex items-center'>
-            <TagNetworkToken explorer={from.explorer} token={from.token} />
+            <TagNetworkToken responsive explorer={from.explorer} token={from.token} />
             <div className='hidden md:flex'>
               <div className='text-gray-500 mx-1 text-xs'>{'->'}</div>
-              <TagNetworkToken explorer={to.explorer} token={to.token} />
+              <TagNetworkToken responsive explorer={to.explorer} token={to.token} />
             </div>
           </div>
         </div>
       </Td>
-      <Td>
-        <div className='flex items-center md:flex-col md:items-start'>
+      <Td className='hidden md:table-cell'>
+        <div className='flex items-center lg:flex-col lg:items-start'>
           <div className='mr-1'>{ethers.utils.formatUnits(swap.fee, 6)}</div>
-          <TagNetworkToken explorer={from.explorer} token={from.token} />
+          <TagNetworkToken responsive explorer={from.explorer} token={from.token} />
         </div>
       </Td>
-      <Td className='hidden md:table-cell'>
+      <Td className='hidden lg:table-cell'>
         <span className='text-gray-500'>
           {getDuration(data.created, data.released)}
         </span>

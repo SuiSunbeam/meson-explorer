@@ -1,3 +1,4 @@
+import classnames from 'classnames'
 import Image from 'next/image'
 
 import { ExternalIcon } from '../ExternalLink'
@@ -13,15 +14,17 @@ import trx from './trx.png'
 
 const logos = { eth, bnb, ava, matic, ftm, one, cfx, trx }
 
-export default function TagNetwork ({ network, address }) {
+export default function TagNetwork ({ responsive, network, address }) {
   const logo = logos[network.networkAlias?.toLowerCase()]
   return (
     <div className='flex items-center text-xs text-gray-500'>
       <div className='flex itmes-center w-4 h-4 mr-1'>
         {logo && <Image src={logo} alt='' />}
       </div>
-      {network.networkName}
-      {address && <ExternalIcon href={`${network.explorer}/address/${address}`} />}
+      <div className={classnames('items-center', responsive ? 'hidden sm:flex' : 'flex')}>
+        {network.networkName}
+        {address && <ExternalIcon href={`${network.explorer}/address/${address}`} />}
+      </div>
     </div>
   )
 }
