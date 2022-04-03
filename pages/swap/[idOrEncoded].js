@@ -124,14 +124,18 @@ function CorrectSwap({ data: raw }) {
           </ListRow>
           <ListRow title='From'>
             <TagNetwork network={from} address={fromAddress} />
-            <div className='text-normal truncate hover:underline hover:text-primary'>
-              <Link href={`/address/${fromAddress}`}>{fromAddress}</Link>
+            <div className='text-normal truncate'>
+              <span className='hover:underline hover:text-primary'>
+                <Link href={`/address/${fromAddress}`}>{fromAddress}</Link>
+              </span>
             </div>
           </ListRow>
           <ListRow title='To'>
             <TagNetwork network={to} address={data.recipient || ''} />
-            <div className='text-normal truncate hover:underline hover:text-primary'>
-              <Link href={`/address/${data.recipient}`}>{data.recipient || ''}</Link>
+            <div className='text-normal truncate'>
+              <span className='hover:underline hover:text-primary'>
+                <Link href={`/address/${data.recipient}`}>{data.recipient || ''}</Link>
+              </span>
             </div>
           </ListRow>
           <ListRow title='Amount'>

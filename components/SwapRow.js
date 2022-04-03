@@ -1,4 +1,5 @@
 import React from 'react'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { ethers } from 'ethers'
 import { Swap } from '@mesonfi/sdk'
@@ -13,6 +14,7 @@ import TagNetwork from './TagNetwork'
 import TagNetworkToken from './TagNetworkToken'
 
 export default function SwapRow({ data: raw }) {
+  const router = useRouter()
   const [data, setData] = React.useState(raw)
   React.useEffect(() => { setData(raw) }, [raw])
 
@@ -64,12 +66,15 @@ export default function SwapRow({ data: raw }) {
 
   const fromAddress = data.fromAddress || data.initiator
   return (
-    <tr className='odd:bg-white even:bg-gray-50'>
+    <tr
+      className='odd:bg-white even:bg-gray-50 hover:bg-primary-100'
+      onClick={() => router.push(`/swap/${swapId}`)}
+    >
       <Td className='pl-3 md:pl-4'>
         <div className='text-primary hover:underline hidden lg:block'>
           <Link href={`/swap/${swapId}`}>{abbreviate(swapId)}</Link>
         </div>
-        <div className='text-primary hover:underline hidden sm:block lg:hidden'>
+        <div className='text-primary hover:underline hidden sm:inline-block lg:hidden'>
           <Link href={`/swap/${swapId}`}>{abbreviate(swapId, 6, 4)}</Link>
         </div>
         <div className='text-primary hover:underline sm:hidden'>
@@ -87,10 +92,10 @@ export default function SwapRow({ data: raw }) {
       </Td>
       <Td>
         <TagNetwork responsive network={from} address={fromAddress} />
-        <div className='text-normal hover:underline hover:text-primary hidden lg:block'>
+        <div className='text-normal hover:underline hover:text-primary hidden lg:inline-block'>
           <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress)}</Link>
         </div>
-        <div className='text-normal hover:underline hover:text-primary hidden sm:block lg:hidden'>
+        <div className='text-normal hover:underline hover:text-primary hidden sm:inline-block lg:hidden'>
           <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress, 6, 4)}</Link>
         </div>
         <div className='text-normal hover:underline hover:text-primary sm:hidden'>
@@ -99,10 +104,10 @@ export default function SwapRow({ data: raw }) {
       </Td>
       <Td>
         <TagNetwork responsive network={to} address={data.recipient} />
-        <div className='text-normal hover:underline hover:text-primary hidden lg:block'>
+        <div className='text-normal hover:underline hover:text-primary hidden lg:inline-block'>
           <Link href={`/address/${data.recipient}`}>{abbreviate(data.recipient)}</Link>
         </div>
-        <div className='text-normal hover:underline hover:text-primary hidden sm:block lg:hidden'>
+        <div className='text-normal hover:underline hover:text-primary hidden sm:inline-block lg:hidden'>
           <Link href={`/address/${data.recipient}`}>{abbreviate(data.recipient, 6, 4)}</Link>
         </div>
         <div className='text-normal hover:underline hover:text-primary sm:hidden'>
