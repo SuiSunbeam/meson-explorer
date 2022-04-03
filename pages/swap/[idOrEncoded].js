@@ -50,7 +50,7 @@ export default function SwapDetail() {
           badge={<SwapStatusBadge error />}
           subtitle={idOrEncoded}
         />
-        <CardBody>
+        <CardBody border={false}>
           <dl>
             <ListRow title='Reason'>
               {error.message}
