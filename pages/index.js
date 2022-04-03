@@ -68,7 +68,7 @@ export default function SwapList() {
   return (
     <div>
       <div className='mb-2 sm:mb-3'>
-        <div className='relative rounded-md shadow-sm'>
+        <div className='relative rounded-md shadow'>
           <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
             <SearchIcon className='text-gray-500 sm:text-sm w-4'/>
           </div>
