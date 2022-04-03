@@ -1,12 +1,14 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
+import { SearchIcon } from '@heroicons/react/outline'
 
 import LoadingScreen from '../components/LoadingScreen'
 import Card from '../components/Card'
 import Table from '../components/Table'
 import SwapRow from '../components/SwapRow'
 import Pagination from '../components/Pagination'
+import Button from '../components/Button'
 
 const fetcher = async pageStr => {
   const page = Number(pageStr || 1) - 1
@@ -34,6 +36,8 @@ export default function SwapList() {
       router.replace('/')
     }
   }, [router, error])
+
+  const [search, setSearchValue] = React.useState('')
 
   let body
   if (error) {
@@ -63,8 +67,33 @@ export default function SwapList() {
   }
 
   return (
-    <Card overflow>
-      {body}
-    </Card>
+    <div>
+      <div className='mb-2 sm:mb-3'>
+        <div className='relative rounded-md shadow-sm'>
+          <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+            <SearchIcon className='text-gray-500 sm:text-sm w-4'/>
+          </div>
+          <form onSubmit={evt => {
+            evt.preventDefault()
+            if (search.length === 66) {
+              router.push(`/swap/${search}`)
+            } else {
+              router.push(`/address/${search}`)
+            }
+          }}>
+            <input
+              type='search'
+              className='focus:ring-primary-100 focus:border-primary block w-full pl-9 pr-2 sm:text-sm border-gray-200 rounded-md'
+              placeholder='Search by swap id, encoded or address'
+              value={search}
+              onChange={evt => setSearchValue(evt.target.value)}
+            />
+          </form>
+        </div>
+      </div>
+      <Card overflow>
+        {body}
+      </Card>
+    </div>
   )
 }
