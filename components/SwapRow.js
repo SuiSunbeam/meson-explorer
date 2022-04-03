@@ -68,7 +68,12 @@ export default function SwapRow({ data: raw }) {
   return (
     <tr
       className='odd:bg-white even:bg-gray-50 hover:bg-primary-100'
-      onClick={() => router.push(`/swap/${swapId}`)}
+      onClick={evt => {
+        const tag = evt?.target?.tagName
+        if (tag === 'TD') {
+          router.push(`/swap/${swapId}`)
+        }
+      }}
     >
       <Td className='pl-3 md:pl-4'>
         <div className='text-primary hover:underline hidden lg:block'>
