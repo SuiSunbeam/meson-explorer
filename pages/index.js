@@ -75,10 +75,14 @@ export default function SwapList() {
           </div>
           <form onSubmit={evt => {
             evt.preventDefault()
-            if (search.length === 66) {
-              router.push(`/swap/${search}`)
+            const searchValue = search.trim()
+            if (!searchValue) {
+              return
+            }
+            if (searchValue.length === 66) {
+              router.push(`/swap/${searchValue}`)
             } else {
-              router.push(`/address/${search}`)
+              router.push(`/address/${searchValue}`)
             }
           }}>
             <input
