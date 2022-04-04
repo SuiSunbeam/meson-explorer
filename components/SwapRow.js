@@ -13,6 +13,7 @@ import SwapStatusBadge from './SwapStatusBadge'
 
 import TagNetwork from './TagNetwork'
 import TagNetworkToken from './TagNetworkToken'
+import AmountDisplay from './AmountDisplay'
 
 export default function SwapRow({ data: raw }) {
   const router = useRouter()
@@ -134,7 +135,7 @@ export default function SwapRow({ data: raw }) {
       <Td>
         <div className='flex lg:flex-col'>
           <div className='mr-1'>
-            {ethers.utils.formatUnits(swap.amount, 6)}
+            <AmountDisplay value={swap.amount} />
           </div>
           <div className='flex items-center'>
             <TagNetworkToken responsive explorer={from.explorer} token={from.token} />
@@ -147,7 +148,7 @@ export default function SwapRow({ data: raw }) {
       </Td>
       <Td className='hidden md:table-cell'>
         <div className='flex items-center lg:flex-col lg:items-start'>
-          <div className='mr-1'>{ethers.utils.formatUnits(swap.fee, 6)}</div>
+          <div className='mr-1'><AmountDisplay value={swap.fee} /></div>
           <TagNetworkToken responsive explorer={from.explorer} token={from.token} />
         </div>
       </Td>
