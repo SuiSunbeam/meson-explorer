@@ -27,7 +27,13 @@ export default function SwapRow({ data: raw }) {
     }
     const tag = evt?.target?.tagName?.toLowerCase()
     if (!['a', 'img', 'svg', 'path'].includes(tag)) {
-      router.push(`/swap/${swapId}`)
+      if (evt.button === 0) {
+        if (!evt.shiftKey) {
+          router.push(`/swap/${swapId}`)
+        }
+      } else if (evt.button === 1) {
+        window.open(`/swap/${swapId}`, '_blank')
+      }
     }
   }, 250), [router, swapId])
 
