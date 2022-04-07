@@ -25,6 +25,4 @@ export default function ButtonGroup ({ size, active, buttons, onChange }) {
     }
     </div>
   )
-  
-  
 }
