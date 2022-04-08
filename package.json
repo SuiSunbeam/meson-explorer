@@ -10,8 +10,8 @@
   "dependencies": {
     "@headlessui/react": "^1.4.3",
     "@heroicons/react": "^1.0.5",
-    "@mesonfi/presets": "0.7.0",
-    "@mesonfi/sdk": "0.7.0",
+    "@mesonfi/presets": "0.7.1",
+    "@mesonfi/sdk": "0.7.1",
     "classnames": "^2.3.1",
     "ethers": "^5.6.1",
     "lodash": "^4.17.21",
