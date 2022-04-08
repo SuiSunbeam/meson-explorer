@@ -206,7 +206,7 @@ function SwapActionButton({ data, swap }) {
   const expired = swap?.expireTs < Date.now() / 1000
   const status = getStatusFromEvents(data.events || [], expired)
 
-  const fromAddress = data.fromAddress || data.initiator
+  const fromAddress = data.initiator || data.fromAddress
   switch (status) {
     case 'CANCELLED*':
       return <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, fromAddress)}>Unlock</Button>
