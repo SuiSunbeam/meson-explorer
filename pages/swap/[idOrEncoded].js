@@ -206,15 +206,16 @@ function SwapActionButton({ data, swap }) {
   const expired = swap?.expireTs < Date.now() / 1000
   const status = getStatusFromEvents(data.events || [], expired)
 
+  const fromAddress = data.fromAddress || data.initiator
   switch (status) {
     case 'CANCELLED*':
-      return <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, data.initiator)}>Unlock</Button>
+      return <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, fromAddress)}>Unlock</Button>
     case 'EXPIRED':
       return <Button size='sm' color='info' rounded onClick={() => extensions.withdraw(swap)}>Withdraw</Button>
     case 'RELEASED':
       return <Button size='sm' color='info' rounded onClick={() => extensions.execute(swap, data.releaseSignature, data.recipient)}>Execute</Button>
     case 'RELEASING*':
-      return <Button size='sm' color='info' rounded onClick={() => extensions.release(swap, data.releaseSignature, data.initiator, data.recipient)}>Release</Button>
+      return <Button size='sm' color='info' rounded onClick={() => extensions.release(swap, data.releaseSignature, fromAddress, data.recipient)}>Release</Button>
   }
   return null
 }
