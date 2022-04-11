@@ -65,6 +65,10 @@ export default function SwapDetail() {
 }
 
 function CorrectSwap({ data: raw }) {
+  const { globalState, setGlobalState } = React.useContext(AppContext)
+  const { currentAccount } = globalState.browserExt || {}
+  const connectedAddress = currentAccount?.hex
+
   const [data, setData] = React.useState(raw)
   React.useEffect(() => { setData(raw) }, [raw])
 
@@ -101,15 +105,16 @@ function CorrectSwap({ data: raw }) {
     return socket.subscribe(data._id, swapUpdateListener)
   }, [data?._id, noSubscribe])
 
+
   let body
   let swap
+  try {
+    swap = Swap.decode(data?.encoded)
+  } catch {}
+
   if (!data) {
     body = <LoadingScreen />
   } else {
-    try {
-      swap = Swap.decode(data.encoded)
-    } catch {}
-
     const from = parseNetworkAndToken(swap?.inChain, swap?.inToken)
     const to = parseNetworkAndToken(swap?.outChain, swap?.outToken)
 
@@ -186,7 +191,7 @@ function CorrectSwap({ data: raw }) {
         title='Swap'
         badge={<SwapStatusBadge events={data?.events || []} expired={expired} />}
         subtitle={data?._id}
-        right={<SwapActionButton data={data} swap={swap} />}
+        right={<SwapActionButton data={data} swap={swap} show={connectedAddress} setGlobalState={setGlobalState} />}
       />
       <CardBody border={!data}>
         {body}
@@ -195,16 +200,30 @@ function CorrectSwap({ data: raw }) {
   )
 }
 
-function SwapActionButton({ data, swap }) {
-  const globalState = React.useContext(AppContext)
-  const connectedAddress = globalState.browserExt?.currentAccount?.hex
-
-  if (!connectedAddress || !data || (data.released && data.executed)) {
-    return null
+function SwapActionButton({ data, swap, show, setGlobalState }) {
+  let empty
+  if (!show || !data || (data.released && data.executed)) {
+    empty = true
   }
 
   const expired = swap?.expireTs < Date.now() / 1000
-  const status = getStatusFromEvents(data.events || [], expired)
+  const status = getStatusFromEvents(data?.events || [], expired)
+
+  React.useEffect(() => {
+    if (swap?.inChain && swap?.outChain) {
+      if (status === 'CANCELLED*' || status === 'RELEASING*') {
+        setGlobalState(prev => ({ ...prev, coinType: swap?.outChain }))
+      } else if (status === 'EXPIRED' || status === 'RELEASED') {
+        setGlobalState(prev => ({ ...prev, coinType: swap?.inChain }))
+      } else {
+        setGlobalState(prev => ({ ...prev, coinType: '' }))
+      }
+    }
+  }, [setGlobalState, status, swap?.inChain, swap?.outChain])
+
+  if (empty) {
+    return null
+  }
 
   const fromAddress = data.initiator || data.fromAddress
   switch (status) {
