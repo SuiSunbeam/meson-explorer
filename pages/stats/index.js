@@ -59,6 +59,12 @@ export default function StatsByChain() {
   } else if (!data) {
     body = <LoadingScreen />
   } else {
+    const total = data.reduce(({ count, volume, success }, row) => ({
+      count: row.count + (count || 0),
+      volume: row.volume + (volume || 0),
+      success: row.success + (success || 0),
+      duration: 0
+    }), {})
     body = (
       <Table headers={[
         { name: 'Date', width: '25%', className: 'pl-4 sm:pl-6' },
@@ -67,17 +73,19 @@ export default function StatsByChain() {
         { name: 'Success', width: '20%' },
         { name: 'Avg. Duration', width: '20%' }
       ]}>
+        <StatTableRow _id='Total' {...total} />
         {data.map((row, index) => <StatTableRow key={`stat-table-row-${index}`} {...row} />)}
       </Table>
     )
   }
 
-  const { count, volume, duration } = generalData || {}
+  const { count, volume, duration, addresses } = generalData || {}
   const fmt = Intl.NumberFormat()
   return (
     <>
-      <div className='grid grid-cols-3 md:gap-5 gap-3 md:mb-5 mb-3'>
-        <StatCard title='Total Count' value={count ? fmt.format(count) : 'N/A'} />
+      <div className='grid md:grid-cols-4 grid-cols-2 md:gap-5 gap-3 md:mb-5 mb-3'>
+        <StatCard title='# of Swaps' value={count ? fmt.format(count) : 'N/A'} />
+        <StatCard title='# of Addresses' value={addresses || 'N/A'} />
         <StatCard title='Total Volume' value={volume ? `$${fmt.format(ethers.utils.formatUnits(volume, 6))}` : 'N/A'} />
         <StatCard title='Avg. Duration' value={duration ? formatDuration(duration * 1000) : 'N/A'} />
       </div>
