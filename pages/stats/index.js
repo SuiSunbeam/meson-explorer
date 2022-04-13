@@ -60,11 +60,11 @@ export default function StatsByChain() {
     body = <LoadingScreen />
   } else {
     const total = data.reduce(({ count, volume, success }, row) => ({
-      count: row.count + (count || 0),
-      volume: row.volume + (volume || 0),
-      success: row.success + (success || 0),
+      count: row.count + count,
+      volume: row.volume + volume,
+      success: row.success + success,
       duration: 0
-    }), {})
+    }), { count: 0, volume: 0, success: 0, duration: 0 })
     body = (
       <Table headers={[
         { name: 'Date', width: '25%', className: 'pl-4 sm:pl-6' },
