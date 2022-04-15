@@ -10,6 +10,8 @@ import ButtonGroup from '../../components/ButtonGroup'
 
 import { getAllNetworks, formatDuration } from '../../lib/swap'
 
+const fmt = Intl.NumberFormat()
+
 const generalFetcher = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/general`)
   const json = await res.json()
@@ -80,7 +82,6 @@ export default function StatsByChain() {
   }
 
   const { count, volume, duration, addresses } = generalData || {}
-  const fmt = Intl.NumberFormat()
   return (
     <>
       <div className='grid md:grid-cols-4 grid-cols-2 md:gap-5 gap-3 md:mb-5 mb-3'>
@@ -116,11 +117,12 @@ export default function StatsByChain() {
 }
 
 function StatTableRow({ _id: date, count, volume, success, duration }) {
+  const vol = fmt.format(Math.floor(ethers.utils.formatUnits(volume, 6)))
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td className='pl-4 pr-3 sm:pl-6'>{date}</Td>
       <Td>{count}</Td>
-      <Td>${ethers.utils.formatUnits(volume, 6)}</Td>
+      <Td>${vol}</Td>
       <Td>{success} <span className='text-gray-500 text-sm'>({Math.floor(success / count * 1000) / 10}%)</span></Td>
       <Td>{formatDuration(duration * 1000)}</Td>
     </tr>
