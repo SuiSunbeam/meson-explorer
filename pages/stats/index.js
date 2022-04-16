@@ -69,10 +69,11 @@ export default function StatsByChain() {
     }), { count: 0, volume: 0, success: 0, duration: 0 })
     body = (
       <Table headers={[
-        { name: 'Date', width: '25%', className: 'pl-4 sm:pl-6' },
-        { name: 'Count', width: '15%' },
+        { name: 'Date', width: '20%', className: 'pl-4 sm:pl-6' },
+        { name: 'Count', width: '10%' },
         { name: 'Volume', width: '20%' },
         { name: 'Success', width: '20%' },
+        { name: 'Addrs', width: '10%' },
         { name: 'Avg. Duration', width: '20%' }
       ]}>
         <StatTableRow _id='Total' {...total} />
@@ -116,7 +117,7 @@ export default function StatsByChain() {
   )
 }
 
-function StatTableRow({ _id: date, count, volume, success, duration }) {
+function StatTableRow({ _id: date, count, volume, success, addresses, duration }) {
   const vol = fmt.format(Math.floor(ethers.utils.formatUnits(volume, 6)))
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
@@ -124,6 +125,7 @@ function StatTableRow({ _id: date, count, volume, success, duration }) {
       <Td>{count}</Td>
       <Td>${vol}</Td>
       <Td>{success} <span className='text-gray-500 text-sm'>({Math.floor(success / count * 1000) / 10}%)</span></Td>
+      <Td>{addresses}</Td>
       <Td>{formatDuration(duration * 1000)}</Td>
     </tr>
   )
