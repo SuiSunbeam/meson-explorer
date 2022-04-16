@@ -141,7 +141,7 @@ export default function SwapRow({ data: raw }) {
       <Td>
         <div className='flex lg:flex-col'>
           <div className='mr-1'>
-            <AmountDisplay value={swap.amount} />
+            <AmountDisplay msn={swap.inToken === 255} value={swap.amount} />
           </div>
           <div className='flex items-center'>
             <TagNetworkToken responsive explorer={from.explorer} token={from.token} />

@@ -145,9 +145,10 @@ function CorrectSwap({ data: raw }) {
           </ListRow>
           <ListRow title='Amount'>
             <div className='flex items-center'>
-              <div className='mr-1'>{ethers.utils.formatUnits(swap.amount, 6)}</div>
+              <div className='mr-1'>{ethers.utils.formatUnits(swap.amount, swap.inToken === 255 ? 4 : 6)}</div>
               <TagNetworkToken explorer={from.explorer} token={from.token} />
               <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
+              {swap.inToken === 255 && <div className='mr-1'>{ethers.utils.formatUnits(swap.amount, 6)}</div>}
               <TagNetworkToken explorer={to.explorer} token={to.token} />
             </div>
           </ListRow>

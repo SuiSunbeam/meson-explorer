@@ -473,10 +473,10 @@
   resolved "https://npm.pkg.github.com/download/@mesonfi/contract-types/0.7.0/ea15ed2fc7a162a3d5724126a908bd5528daa8f8d469f7896a73038a08b071b7#300a7ad7db84d015e6a80086b9656a4b18c52911"
   integrity sha512-GCzSebtZScKnohvhMB5S6SAvbmZCEGcKsPoRA4gm43jMNYA6QG0ErQEWuFDiYwiMEjVeMR2OlxTKs2O9cO8R9g==
 
-"@mesonfi/presets@0.7.2":
-  version "0.7.2"
-  resolved "https://npm.pkg.github.com/download/@mesonfi/presets/0.7.2/7951928a4c8599750aca914bea731e42e0f94d1cb3a4a1164ac428d71905eb65#0689c6b99fd81166d5d393c9165ab0eafc3014aa"
-  integrity sha512-QpYYaSDE8rmgiEnZwGCotvql+4Z0yi+1enKASuW8zuYFrzoq52x1srK5VeaSmoMzRcFcxqZJejomrYJYt1JjuA==
+"@mesonfi/presets@0.8.0-rc.1":
+  version "0.8.0-rc.1"
+  resolved "https://npm.pkg.github.com/download/@mesonfi/presets/0.8.0-rc.1/969c625104627b8bc5339f8eb7422dd236beb817f3cfdc3635237a2d477b6fd9#ff215f5c668a61269a08a6d3ed7a98197693859f"
+  integrity sha512-2/mTnZA3mJtJbr/MYCWC5X9Srec2mIihe68lwEd/1izzeVGSovXIB6ccX9R/7I7CMsKBvBcjmGu9YO6ldtMHxQ==
   dependencies:
     "@ethersproject/abstract-signer" "^5.6.0"
     "@ethersproject/bignumber" "^5.6.0"
@@ -484,13 +484,13 @@
     "@ethersproject/properties" "^5.6.0"
     "@ethersproject/providers" "^5.6.0"
     "@mesonfi/contract-abis" "^0.7.0"
-    "@mesonfi/sdk" "^0.7.1"
+    "@mesonfi/sdk" "^0.8.0-rc.1"
     tronweb "^4.1.0"
 
-"@mesonfi/sdk@0.7.1", "@mesonfi/sdk@^0.7.1":
-  version "0.7.1"
-  resolved "https://npm.pkg.github.com/download/@mesonfi/sdk/0.7.1/a14c728310f0fe2f28d322fd29381bd8ef3a0e921b10226b21475493e7e5aba0#f142fc92f6d102ca8e2c4e1e43671c1ac1ecb378"
-  integrity sha512-8tLMML5tj0mWMsVjZ4NtWoH3R9GwbyAZcEVv7+jeiXBi1+gb700RAjWKqpeqUZhbY9Rd8PwdRhW1Do00BvZpqQ==
+"@mesonfi/sdk@0.8.0-rc.1", "@mesonfi/sdk@^0.8.0-rc.1":
+  version "0.8.0-rc.1"
+  resolved "https://npm.pkg.github.com/download/@mesonfi/sdk/0.8.0-rc.1/585c10c2ca3bff528447f0ad24d9f9d5f9da0be4ef3ede5e5063a5b30ea6360e#69c43d988ff720fd7688b69394ac65b115233812"
+  integrity sha512-LZlVRCrHN0npcKDvdavULpNd2fEX/rOOh8zuO13CEH46/CnHyLBl2JGUuuDZrmXMN0uHpQ5LqOw43rHJSgFtyA==
   dependencies:
     "@ethersproject/abi" "^5.6.0"
     "@ethersproject/address" "^5.6.0"
