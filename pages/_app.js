@@ -39,7 +39,7 @@ export default function App({ Component, pageProps }) {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', "${ga.GA_TRACKING_ID}", {
+            gtag('config', '${ga.GA_TRACKING_ID}', {
               page_path: window.location.pathname,
             });
           `,
