@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import Head from 'next/head'
-import Script from 'next/script'
 import '../styles/globals.css'
 import { useRouter } from 'next/router'
 import Navbar from '../components/Navbar'
@@ -28,24 +27,6 @@ export default function App({ Component, pageProps }) {
       <Head>
         <title>Meson Explorer</title>
       </Head>
-      <Script
-        strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=G-HWHFMSJDKH`}
-      />
-      <Script
-        id="gtag-init"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-HWHFMSJDKH', {
-              page_path: window.location.pathname,
-            });
-          `,
-        }}
-      />
       <Navbar globalState={globalState} setGlobalState={setGlobalState} />
       <div className='flex-1 overflow-hidden'>
         <div className='h-full overflow-auto'>
