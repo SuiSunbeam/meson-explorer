@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { SearchIcon } from '@heroicons/react/outline'
 
+import fetch from '../lib/fetch'
 import LoadingScreen from '../components/LoadingScreen'
 import Card from '../components/Card'
 import Table from '../components/Table'
@@ -12,14 +13,14 @@ import Pagination from '../components/Pagination'
 const fetcher = async pageStr => {
   const page = Number(pageStr || 1) - 1
   if (Number.isNaN(page) || !Number.isInteger(page) || page < 0) {
-    throw new Error()
+    throw new Error('reset')
   }
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/swap?page=${page}`)
+  const res = await fetch(`api/v1/swap?page=${page}`)
   const json = await res.json()
   if (json.result) {
     const { total, list } = json.result
     if (page * 10 > total) {
-      throw new Error()
+      throw new Error('reset')
     }
     return { page, total, list }
   } else {
@@ -31,7 +32,7 @@ export default function SwapList() {
   const router = useRouter()
   const { data, error } = useSWR(router.query.page || '1', fetcher)
   React.useEffect(() => {
-    if (error) {
+    if (error && error.message === 'reset') {
       router.replace('/')
     }
   }, [router, error])

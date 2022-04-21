@@ -2,6 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 
+import fetch from '../../lib/fetch'
 import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody } from '../../components/Card'
 import Table from '../../components/Table'
@@ -11,14 +12,14 @@ import Pagination from '../../components/Pagination'
 const fetcher = async pageStr => {
   const page = Number(pageStr || 1) - 1
   if (Number.isNaN(page) || !Number.isInteger(page) || page < 0) {
-    throw new Error()
+    throw new Error('reset')
   }
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/swap/locked?page=${page}`)
+  const res = await fetch(`api/v1/swap/locked?page=${page}`)
   const json = await res.json()
   if (json.result) {
     const { total, list } = json.result
     if (page * 10 > total) {
-      throw new Error()
+      throw new Error('reset')
     }
     return { page, total, list }
   } else {
@@ -30,8 +31,8 @@ export default function LockedSwapList() {
   const router = useRouter()
   const { data, error } = useSWR(router.query.page || '1', fetcher)
   React.useEffect(() => {
-    if (error) {
-      router.replace('/')
+    if (error && error.message === 'reset') {
+      router.replace('/pending/locked')
     }
   }, [router, error])
 

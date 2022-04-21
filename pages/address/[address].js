@@ -2,6 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 
+import fetch from '../../lib/fetch'
 import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody } from '../../components/Card'
 import Table from '../../components/Table'
@@ -13,14 +14,14 @@ const fetcher = async param => {
 
   const page = Number(pageStr || 1) - 1
   if (Number.isNaN(page) || !Number.isInteger(page) || page < 0) {
-    throw new Error()
+    throw new Error('reset')
   }
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/address/${address}/swap?page=${page}`)
+  const res = await fetch(`api/v1/address/${address}/swap?page=${page}`)
   const json = await res.json()
   if (json.result) {
     const { total, list } = json.result
     if (page * 10 > total) {
-      throw new Error()
+      throw new Error('reset')
     }
     return { page, total, list }
   } else {
@@ -33,10 +34,10 @@ export default function AddressSwapList() {
   const { address, page = '1' } = router.query
   const { data, error } = useSWR(`${address}:${page}`, fetcher)
   React.useEffect(() => {
-    if (error) {
-      router.replace('/')
+    if (error && error.message === 'reset') {
+      router.replace(`/address/${address}`)
     }
-  }, [router, error])
+  }, [router, address, error])
 
   let body = null
   if (error) {

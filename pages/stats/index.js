@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { ethers } from 'ethers'
 
+import fetch from '../../lib/fetch'
 import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody, StatCard } from '../../components/Card'
 import Table, { Td } from '../../components/Table'
@@ -13,7 +14,7 @@ import { getAllNetworks, formatDuration } from '../../lib/swap'
 const fmt = Intl.NumberFormat()
 
 const generalFetcher = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/general`)
+  const res = await fetch(`api/v1/general`)
   const json = await res.json()
   if (json.result) {
     return json.result
@@ -23,7 +24,7 @@ const generalFetcher = async () => {
 }
 
 const fetcher = async query => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/stats?${query}`)
+  const res = await fetch(`api/v1/stats?${query}`)
   const json = await res.json()
   if (json.result) {
     return json.result

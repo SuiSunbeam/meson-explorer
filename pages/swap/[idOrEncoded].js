@@ -8,6 +8,7 @@ import { ethers } from 'ethers'
 import { Swap } from '@mesonfi/sdk'
 
 import AppContext from '../../lib/context'
+import fetch from '../../lib/fetch'
 import socket from '../../lib/socket'
 import { parseNetworkAndToken, sortEvents, getStatusFromEvents, getDuration } from '../../lib/swap'
 import extensions from '../../lib/extensions'
@@ -25,7 +26,7 @@ const fetcher = async idOrEncoded => {
   if (!idOrEncoded) {
     throw new Error('No swap id')
   }
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/swap/${idOrEncoded}`)
+  const res = await fetch(`api/v1/swap/${idOrEncoded}`)
   if (res.status >= 400) {
     throw new Error('Swap not found')
   }
