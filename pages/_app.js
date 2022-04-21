@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react'
 import Head from 'next/head'
-import '../styles/globals.css'
+import Script from 'next/script'
 import { useRouter } from 'next/router'
-import Navbar from '../components/Navbar'
+
+import '../styles/globals.css'
+
 import AppContext from '../lib/context'
 import * as ga from '../lib/ga'
+import Navbar from '../components/Navbar'
 
 export default function App({ Component, pageProps }) {
   const [globalState, setGlobalState] = React.useState({})
@@ -27,6 +30,21 @@ export default function App({ Component, pageProps }) {
       <Head>
         <title>Meson Explorer</title>
       </Head>
+      <Script strategy='afterInteractive' src={`https://www.googletagmanager.com/gtag/js?id=${ga.GA_TRACKING_ID}`} />
+      <script
+        id='gtag-init'
+        strategy='afterInteractive'
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', "${ga.GA_TRACKING_ID}", {
+              page_path: window.location.pathname,
+            });
+          `,
+        }}
+      />
       <Navbar globalState={globalState} setGlobalState={setGlobalState} />
       <div className='flex-1 overflow-hidden'>
         <div className='h-full overflow-auto'>
