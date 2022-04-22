@@ -1,5 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
+import { useSession, signIn, signOut } from "next-auth/react"
 import useSWR from 'swr'
 import { ethers } from 'ethers'
 
@@ -11,7 +12,33 @@ import ButtonGroup from '../../components/ButtonGroup'
 
 import { getAllNetworks, formatDuration } from '../../lib/swap'
 
+const authorizedEmails = process.env.NEXT_PUBLIC_AUTHORIZED.split(';')
 const fmt = Intl.NumberFormat()
+
+export default function AuthWrapper() {
+  const { data: session } = useSession()
+
+  if (!session?.user) {
+    return <button onClick={() => signIn()}>Sign in</button>
+  }
+
+  if (!authorizedEmails.includes(session.user.email)) {
+    return (
+      <>
+        Not authorized. Signed in as {session.user.email} <br />
+        <button onClick={() => signOut()}>Sign out</button>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <StatsByChain />
+      Signed in as {session.user.email} <br />
+      <button onClick={() => signOut()}>Sign out</button>
+    </>
+  )
+}
 
 const generalFetcher = async () => {
   const res = await fetch(`api/v1/general`)
@@ -33,7 +60,7 @@ const fetcher = async query => {
   }
 }
 
-export default function StatsByChain() {
+function StatsByChain() {
   const tabs = getAllNetworks().map(n => ({ key: n.id, name: n.name, shortCoinType: n.shortSlip44 }))
   tabs.unshift({ key: 'all', name: 'All Chains', shortCoinType: '' })
 
