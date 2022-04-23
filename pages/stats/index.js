@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession } from 'next-auth/react'
 import useSWR from 'swr'
 import { ethers } from 'ethers'
 
@@ -19,25 +19,14 @@ export default function AuthWrapper() {
   const { data: session } = useSession()
 
   if (!session?.user) {
-    return <button onClick={() => signIn()}>Sign in</button>
+    return 'Need login'
   }
 
   if (!authorizedEmails.includes(session.user.email)) {
-    return (
-      <>
-        Not authorized. Signed in as {session.user.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
-      </>
-    )
+    return 'Unauthorized'
   }
 
-  return (
-    <>
-      <StatsByChain />
-      Signed in as {session.user.email} <br />
-      <button onClick={() => signOut()}>Sign out</button>
-    </>
-  )
+  return <StatsByChain />
 }
 
 const generalFetcher = async () => {

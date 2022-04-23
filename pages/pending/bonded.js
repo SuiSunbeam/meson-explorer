@@ -1,5 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 import useSWR from 'swr'
 
 import fetch from '../../lib/fetch'
@@ -8,6 +9,20 @@ import Card, { CardTitle, CardBody } from '../../components/Card'
 import Table from '../../components/Table'
 import SwapRow from '../../components/SwapRow'
 import Pagination from '../../components/Pagination'
+
+export default function AuthWrapper() {
+  const { data: session } = useSession()
+
+  if (!session?.user) {
+    return 'Need login'
+  }
+
+  if (!authorizedEmails.includes(session.user.email)) {
+    return 'Unauthorized'
+  }
+
+  return <BondedSwapList />
+}
 
 const fetcher = async pageStr => {
   const page = Number(pageStr || 1) - 1
@@ -27,7 +42,7 @@ const fetcher = async pageStr => {
   }
 }
 
-export default function BondedSwapList() {
+function BondedSwapList() {
   const router = useRouter()
   const { data, error } = useSWR(router.query.page || '1', fetcher)
   React.useEffect(() => {
