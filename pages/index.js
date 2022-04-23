@@ -1,5 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 import useSWR from 'swr'
 import { SearchIcon } from '@heroicons/react/outline'
 
@@ -28,8 +29,12 @@ const fetcher = async pageStr => {
   }
 }
 
+const authorizedEmails = process.env.NEXT_PUBLIC_AUTHORIZED.split(';')
+
 export default function SwapList() {
   const router = useRouter()
+  const { data: session } = useSession()
+
   const { data, error } = useSWR(router.query.page || '1', fetcher)
   React.useEffect(() => {
     if (error && error.message === 'reset') {
@@ -38,6 +43,8 @@ export default function SwapList() {
   }, [router, error])
 
   const [search, setSearchValue] = React.useState('')
+
+  const authorized = session?.user?.email && authorizedEmails.includes(session.user.email)
 
   let body
   if (error) {
@@ -61,7 +68,7 @@ export default function SwapList() {
         ]}>
           {list.map(row => <SwapRow key={row._id} data={row} />)}
         </Table>
-        <Pagination size={10} page={page} total={total} onPageChange={onPageChange} />
+        <Pagination size={10} page={page} total={total} maxPage={authorized ? 0 : 10} onPageChange={onPageChange} />
       </>
     )
   }
