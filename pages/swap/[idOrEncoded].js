@@ -88,7 +88,7 @@ function CorrectSwap({ data: raw }) {
         if (data.provider) {
           updates.provider = data.provider
         } else if (data.provider) {
-          updates.recipient = data.recipient
+          updates.fromTo = [prev.fromTo[0], data.recipient]
         }
       }
       if (Object.keys(updates).length) {
@@ -122,7 +122,8 @@ function CorrectSwap({ data: raw }) {
     if (!from || !to) {
       body = ''
     } else {
-      const fromAddress = data.fromAddress || data.initiator
+      const fromAddress = data.fromTo[0] || data.initiator
+      const recipient = data.fromTo[1] || ''
       body = (
         <dl>
           <ListRow title='Encoded As'>
@@ -137,10 +138,10 @@ function CorrectSwap({ data: raw }) {
             </div>
           </ListRow>
           <ListRow title='To'>
-            <TagNetwork network={to} address={data.recipient || ''} />
+            <TagNetwork network={to} address={recipient} />
             <div className='text-normal truncate'>
               <span className='hover:underline hover:text-primary'>
-                <Link href={`/address/${data.recipient}`}>{data.recipient || ''}</Link>
+                <Link href={`/address/${recipient}`}>{recipient}</Link>
               </span>
             </div>
           </ListRow>
@@ -227,16 +228,17 @@ function SwapActionButton({ data, swap, show, setGlobalState }) {
     return null
   }
 
-  const fromAddress = data.initiator || data.fromAddress
+  const initiator = data.initiator || data.fromTo[0]
+  const recipient = data.fromTo[1]
   switch (status) {
     case 'CANCELLED*':
-      return <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, fromAddress)}>Unlock</Button>
+      return <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, initiator)}>Unlock</Button>
     case 'EXPIRED':
       return <Button size='sm' color='info' rounded onClick={() => extensions.withdraw(swap)}>Withdraw</Button>
     case 'RELEASED':
-      return <Button size='sm' color='info' rounded onClick={() => extensions.execute(swap, data.releaseSignature, data.recipient)}>Execute</Button>
+      return <Button size='sm' color='info' rounded onClick={() => extensions.execute(swap, data.releaseSignature, recipient)}>Execute</Button>
     case 'RELEASING*':
-      return <Button size='sm' color='info' rounded onClick={() => extensions.release(swap, data.releaseSignature, fromAddress, data.recipient)}>Release</Button>
+      return <Button size='sm' color='info' rounded onClick={() => extensions.release(swap, data.releaseSignature, initiator, recipient)}>Release</Button>
   }
   return null
 }

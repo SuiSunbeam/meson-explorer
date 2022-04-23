@@ -60,7 +60,7 @@ export default function SwapRow({ data: raw }) {
         if (data.provider) {
           updates.provider = data.provider
         } else if (data.provider) {
-          updates.recipient = data.recipient
+          updates.fromTo = [prev.fromTo[0], data.recipient]
         }
       }
       if (Object.keys(updates).length) {
@@ -83,7 +83,8 @@ export default function SwapRow({ data: raw }) {
     return null
   }
 
-  const fromAddress = data.fromAddress || data.initiator
+  const fromAddress = data.fromTo[0] || data.initiator
+  const recipient = data.fromTo[1] || ''
   return (
     <tr
       className='odd:bg-white even:bg-gray-50 hover:bg-primary-100'
@@ -127,15 +128,15 @@ export default function SwapRow({ data: raw }) {
         </div>
       </Td>
       <Td>
-        <TagNetwork responsive network={to} address={data.recipient} />
+        <TagNetwork responsive network={to} address={recipient} />
         <div className='text-normal hover:underline hover:text-primary hidden lg:inline-block'>
-          <Link href={`/address/${data.recipient}`}>{abbreviate(data.recipient)}</Link>
+          <Link href={`/address/${recipient}`}>{abbreviate(recipient)}</Link>
         </div>
         <div className='text-normal hover:underline hover:text-primary hidden sm:inline-block lg:hidden'>
-          <Link href={`/address/${data.recipient}`}>{abbreviate(data.recipient, 6, 4)}</Link>
+          <Link href={`/address/${recipient}`}>{abbreviate(recipient, 6, 4)}</Link>
         </div>
         <div className='text-normal hover:underline hover:text-primary sm:hidden'>
-          <Link href={`/address/${data.recipient}`}>{abbreviate(data.recipient, 6, 0)}</Link>
+          <Link href={`/address/${recipient}`}>{abbreviate(recipient, 6, 0)}</Link>
         </div>
       </Td>
       <Td>
