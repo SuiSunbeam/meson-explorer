@@ -70,8 +70,7 @@ export default function Navbar({ globalState, setGlobalState }) {
               </div>
 
               <div className='absolute inset-y-0 right-0 flex items-center sm:static sm:inset-auto sm:ml-6 sm:pr-0'>
-                <ConnectWallet {...{ globalState, setGlobalState }}/>
-                <Profile />
+                <Profile {...{ globalState, setGlobalState }}/>
               </div>
             </div>
           </div>
@@ -99,8 +98,8 @@ export default function Navbar({ globalState, setGlobalState }) {
     </Disclosure>
   )
 }
-
-function ConnectWallet ({ globalState, setGlobalState }) {
+function Profile ({ globalState, setGlobalState }) {
+  const { data: session } = useSession()
   const { coinType } = globalState
   const { networkId, currentAccount} = globalState.browserExt || {}
   
@@ -136,58 +135,6 @@ function ConnectWallet ({ globalState, setGlobalState }) {
     }
   }, [coinType, networkId])
 
-  if (!coinType) {
-    return null
-  }
-
-  let btn
-  if (error) {
-    btn = (
-      <Menu.Button className='text-white bg-red-500 hover:bg-red-600 rounded-md opacity-90 hover:opacity-100 px-2 py-1 sm:px-3'>
-        {error}
-      </Menu.Button>
-    )
-  } else {
-    btn = (
-      <Menu.Button className='text-white hover:bg-primary rounded-md opacity-90 hover:opacity-100 px-2 py-1 sm:px-3'>
-        <div className='hidden sm:block'>{connectedAddress ? abbreviate(connectedAddress) : 'Connect Wallet'}</div>
-        <div className='sm:hidden'>
-          {connectedAddress ? <CreditCardIcon className='w-5' /> : <LinkIcon className='w-5' />}
-        </div>
-      </Menu.Button>
-    )
-  }
-  
-  return (
-    <Menu as='div' className='relative'>
-      <div>{btn}</div>
-      <Transition
-        as={Fragment}
-        enter='transition ease-out duration-100'
-        enterFrom='transform opacity-0 scale-95'
-        enterTo='transform opacity-100 scale-100'
-        leave='transition ease-in duration-75'
-        leaveFrom='transform opacity-100 scale-100'
-        leaveTo='transform opacity-0 scale-95'
-      >
-        <Menu.Items className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10'>
-          <Menu.Item>
-            <div
-              className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-              onClick={onClick}
-            >
-              {connectedAddress ? 'Disconnect' : extName}
-            </div>
-          </Menu.Item>
-        </Menu.Items>
-      </Transition>
-    </Menu>
-  )
-}
-
-function Profile () {
-  const { data: session } = useSession()
-
   return (
     <Menu as='div' className='ml-1 relative'>
       <div>
@@ -209,6 +156,17 @@ function Profile () {
         leaveTo='transform opacity-0 scale-95'
       >
         <Menu.Items className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-10'>
+          {
+            extName &&
+            <Menu.Item>
+              <div
+                className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                onClick={onClick}
+              >
+                {connectedAddress ? `Disconnect ${extName}` : extName}
+              </div>
+            </Menu.Item>
+          }
           {session?.user && <div className='px-4 py-2 text-xs text-gray-500'>{session?.user.email}</div>}
           <Menu.Item>
             <div
