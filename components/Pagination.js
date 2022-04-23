@@ -3,13 +3,16 @@ import classnames from 'classnames'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid'
 import Button from './Button'
 
-export default function Pagination({ size = 10, page, total, onPageChange }) {
-  const pages = Math.ceil(total / size)
+export default function Pagination({ size = 10, page, total, maxPage, onPageChange }) {
+  let pages = Math.ceil(total / size)
+  if (maxPage && pages > maxPage) {
+    pages = maxPage
+  }
   return (
     <div className='flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 sm:px-6'>
       <SmPagination page={page} pages={pages} onPageChange={onPageChange} />
       <div className='hidden sm:flex-1 sm:flex sm:items-center sm:justify-between'>
-        <PagiDescription size={size} page={page} total={total} />
+        <PagiDescription size={size} page={page} total={total} maxPage={maxPage} />
         <PagiButtonsWithChevron page={page} pages={pages} onPageChange={onPageChange} />
       </div>
     </div>
@@ -21,7 +24,7 @@ function SmPagination ({ page, pages, onPageChange }) {
     <div className='flex-1 flex justify-between items-center sm:hidden'>
       <Button
         rounded
-        disabled={page === 0}
+        disabled={page <= 0}
         onClick={() => onPageChange(page - 1)}
       >
         Previous
@@ -29,7 +32,7 @@ function SmPagination ({ page, pages, onPageChange }) {
       <div className='text-sm text-gray-500'>{page+1}/{pages}</div>
       <Button
         rounded
-        disabled={page === pages - 1}
+        disabled={page >= pages - 1}
         className='ml-3'
         onClick={() => onPageChange(page + 1)}
       >
@@ -39,12 +42,13 @@ function SmPagination ({ page, pages, onPageChange }) {
   )
 }
 
-function PagiDescription ({ size, page, total }) {
+function PagiDescription ({ size, page, total, maxPage }) {
   const start = size * page + 1
   const end = Math.min(size * page + size, total)
+  const displayTotal = (maxPage && (maxPage * size) < total) ? `${maxPage * size}+` : total
   return (
     <div className='text-sm text-gray-500'>
-      Showing <span className='font-medium'>{start}</span> to <span className='font-medium'>{end}</span> of <span className='font-medium'>{total}</span> results
+      Showing <span className='font-medium'>{start}</span> to <span className='font-medium'>{end}</span> of <span className='font-medium'>{displayTotal}</span> results
     </div>
   )
 }
@@ -55,7 +59,7 @@ function PagiButtonsWithChevron ({ page, pages, onPageChange }) {
       <nav className='relative z-0 inline-flex -space-x-px rounded-md shadow-sm' aria-label='Pagination'>
         <Button
           className='px-2 text-gray-500 rounded-l-md'
-          disabled={page === 0}
+          disabled={page <= 0}
           onClick={() => onPageChange(page - 1)}
         >
           <span className='sr-only'>Previous</span>
@@ -64,7 +68,7 @@ function PagiButtonsWithChevron ({ page, pages, onPageChange }) {
         <PagiButtons page={page} pages={pages} onPageChange={onPageChange} />
         <Button
           className='px-2 text-gray-500 rounded-r-md'
-          disabled={page === pages - 1}
+          disabled={page >= pages - 1}
           onClick={() => onPageChange(page + 1)}
         >
           <span className='sr-only'>Next</span>
