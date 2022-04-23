@@ -1,9 +1,10 @@
 import React, { Fragment } from 'react'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { LinkIcon, CreditCardIcon } from '@heroicons/react/outline'
-import { UserCircleIcon } from '@heroicons/react/solid'
+import { UserCircleIcon, LinkIcon, CreditCardIcon } from '@heroicons/react/outline'
+import { UserCircleIcon as SolidUserCircleIcon } from '@heroicons/react/solid'
 
 import extensions from '../lib/extensions'
 import { presets, getExtType, abbreviate } from '../lib/swap'
@@ -98,8 +99,15 @@ export default function Navbar({ globalState, setGlobalState }) {
     </Disclosure>
   )
 }
+
+const authorizedEmails = process.env.NEXT_PUBLIC_AUTHORIZED.split(';')
+
 function Profile ({ globalState, setGlobalState }) {
+  const router = useRouter()
   const { data: session } = useSession()
+
+  const authorized = session?.user && authorizedEmails.includes(session.user.email)
+
   const { coinType } = globalState
   const { networkId, currentAccount} = globalState.browserExt || {}
   
@@ -142,7 +150,7 @@ function Profile ({ globalState, setGlobalState }) {
           {
             session
             ? <img className='h-8 w-8 rounded-full' src={session?.user.image} alt='' />
-            : <UserCircleIcon className='h-8 w-8 rounded-full bg-gray-100 text-gray-500'/>
+            : <SolidUserCircleIcon className='h-8 w-8 rounded-full bg-gray-100 text-gray-500'/>
           }
         </Menu.Button>
       </div>
@@ -155,27 +163,74 @@ function Profile ({ globalState, setGlobalState }) {
         leaveFrom='transform opacity-100 scale-100'
         leaveTo='transform opacity-0 scale-95'
       >
-        <Menu.Items className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-10'>
+        <Menu.Items className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-200 z-10'>
           {
             extName &&
+            <div className='py-1'>
+              <div className='flex items-center px-4 pt-2 pb-1 text-xs text-gray-500'>
+                {
+                  connectedAddress 
+                  ? <><CreditCardIcon className='w-4 h-4 mr-1'/>{abbreviate(connectedAddress)}</>
+                  : <><LinkIcon className='w-4 h-4 mr-1'/>Connect Wallet</>
+                }
+              </div>
+              <Menu.Item>
+                <div
+                  className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={onClick}
+                >
+                  {connectedAddress ? `Disconnect ${extName}` : extName}
+                </div>
+              </Menu.Item>
+            </div>
+          }
+          {
+            session?.user &&
+            <div className='py-1'>
+              <div className='flex items-center px-4 pt-2 pb-1 text-xs text-gray-500'>
+                <UserCircleIcon className='w-4 h-4 mr-1'/>{session?.user.email}
+              </div>
+              {
+                authorized &&
+                <>
+                  <Menu.Item>
+                    <div
+                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                      onClick={() => router.push('/stats')}
+                    >
+                      Stats
+                    </div>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <div
+                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                      onClick={() => router.push('/pending/bonded')}
+                    >
+                      Pending Bonded
+                    </div>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <div
+                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                      onClick={() => router.push('/pending/locked')}
+                    >
+                      Pending Locked
+                    </div>
+                  </Menu.Item>
+                </>
+              }
+            </div>
+          }
+          <div className='py-1'>
             <Menu.Item>
               <div
                 className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                onClick={onClick}
+                onClick={() => { session ? signOut() : signIn() }}
               >
-                {connectedAddress ? `Disconnect ${extName}` : extName}
+                { session ? 'Sign out' : 'Sign in'}
               </div>
             </Menu.Item>
-          }
-          {session?.user && <div className='px-4 py-2 text-xs text-gray-500'>{session?.user.email}</div>}
-          <Menu.Item>
-            <div
-              className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-              onClick={() => { session ? signOut() : signIn() }}
-            >
-              { session ? 'Sign out' : 'Sign in'}
-            </div>
-          </Menu.Item>
+          </div>
         </Menu.Items>
       </Transition>
     </Menu>
