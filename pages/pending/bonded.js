@@ -10,6 +10,8 @@ import Table from '../../components/Table'
 import SwapRow from '../../components/SwapRow'
 import Pagination from '../../components/Pagination'
 
+const authorizedEmails = process.env.NEXT_PUBLIC_AUTHORIZED.split(';')
+
 export default function AuthWrapper() {
   const { data: session } = useSession()
 
