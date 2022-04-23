@@ -106,7 +106,7 @@ function Profile ({ globalState, setGlobalState }) {
   const router = useRouter()
   const { data: session } = useSession()
 
-  const authorized = session?.user && authorizedEmails.includes(session.user.email)
+  const authorized = session?.user?.email && authorizedEmails.includes(session.user.email)
 
   const { coinType } = globalState
   const { networkId, currentAccount} = globalState.browserExt || {}
