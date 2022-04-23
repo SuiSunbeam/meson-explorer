@@ -68,7 +68,7 @@ export default function SwapList() {
         ]}>
           {list.map(row => <SwapRow key={row._id} data={row} />)}
         </Table>
-        <Pagination size={10} page={page} total={session} maxPage={!authorized && 10} onPageChange={onPageChange} />
+        <Pagination size={10} page={page} total={total} maxPage={authorized ? 0 : 10} onPageChange={onPageChange} />
       </>
     )
   }
