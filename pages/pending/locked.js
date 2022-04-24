@@ -26,12 +26,13 @@ export default function AuthWrapper() {
   return <LockedSwapList />
 }
 
-const fetcher = async pageStr => {
+const fetcher = async req => {
+  const [_, pageStr] = req.split('=')
   const page = Number(pageStr || 1) - 1
   if (Number.isNaN(page) || !Number.isInteger(page) || page < 0) {
     throw new Error('reset')
   }
-  const res = await fetch(`api/v1/swap/locked?page=${page}`)
+  const res = await fetch(`api/v1/${req}`)
   const json = await res.json()
   if (json.result) {
     const { total, list } = json.result
@@ -46,7 +47,7 @@ const fetcher = async pageStr => {
 
 function LockedSwapList() {
   const router = useRouter()
-  const { data, error } = useSWR(router.query.page || '1', fetcher)
+  const { data, error } = useSWR(`swap/locked?page=${router.query.page || '1'}`, fetcher)
   React.useEffect(() => {
     if (error && error.message === 'reset') {
       router.replace('/pending/locked')

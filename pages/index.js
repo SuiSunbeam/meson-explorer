@@ -11,12 +11,13 @@ import Table from '../components/Table'
 import SwapRow from '../components/SwapRow'
 import Pagination from '../components/Pagination'
 
-const fetcher = async pageStr => {
+const fetcher = async req => {
+  const [_, pageStr] = req.split('=')
   const page = Number(pageStr || 1) - 1
   if (Number.isNaN(page) || !Number.isInteger(page) || page < 0) {
     throw new Error('reset')
   }
-  const res = await fetch(`api/v1/swap?page=${page}`)
+  const res = await fetch(`api/v1/${req}`)
   const json = await res.json()
   if (json.result) {
     const { total, list } = json.result
@@ -35,7 +36,7 @@ export default function SwapList() {
   const router = useRouter()
   const { data: session } = useSession()
 
-  const { data, error } = useSWR(router.query.page || '1', fetcher)
+  const { data, error } = useSWR(`swap?page=${router.query.page || '1'}`, fetcher)
   React.useEffect(() => {
     if (error && error.message === 'reset') {
       router.replace('/')
