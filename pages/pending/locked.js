@@ -27,19 +27,10 @@ export default function AuthWrapper() {
 }
 
 const fetcher = async req => {
-  const [_, pageStr] = req.split('=')
-  const page = Number(pageStr || 1) - 1
-  if (Number.isNaN(page) || !Number.isInteger(page) || page < 0) {
-    throw new Error('reset')
-  }
   const res = await fetch(`api/v1/${req}`)
   const json = await res.json()
   if (json.result) {
-    const { total, list } = json.result
-    if (page * 10 > total) {
-      throw new Error('reset')
-    }
-    return { page, total, list }
+    return json.result
   } else {
     throw new Error(json.error.message)
   }
@@ -47,20 +38,39 @@ const fetcher = async req => {
 
 function LockedSwapList() {
   const router = useRouter()
-  const { data, error } = useSWR(`swap/locked?page=${router.query.page || '1'}`, fetcher)
+  const page = Number(router.query.page || 1) - 1
+  const pageValid = !Number.isNaN(page) && Number.isInteger(page) && page >= 0
+  if (!pageValid) {
+    router.replace('/')
+  }
+  
   React.useEffect(() => {
-    if (error && error.message === 'reset') {
+    if (!pageValid) {
       router.replace('/pending/locked')
     }
-  }, [router, error])
+  }, [pageValid, router])
+
+  const { data, error } = useSWR(pageValid && `swap/locked?page=${page}`, fetcher)
+
+  // const { data, error } = useSWR(`swap/locked?page=${router.query.page || '1'}`, fetcher)
+  // React.useEffect(() => {
+  //   if (error && error.message === 'reset') {
+  //     router.replace('/pending/locked')
+  //   }
+  // }, [router, error])
 
   let body
-  if (error) {
+  if (!pageValid) {
+    body = <LoadingScreen />
+  } else if (error) {
     body = <div className='py-6 px-4 sm:px-6 text-red-400'>{error.message}</div>
   } else if (!data) {
     body = <LoadingScreen />
   } else {
-    const { page, total, list } = data
+    const { total, list } = data
+    if (page * 10 > total) {
+      router.replace('/pending/bonded')
+    }
     const onPageChange = page => router.push(`/pending/locked?page=${page+1}`)
     body = (
       <>

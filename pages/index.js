@@ -12,19 +12,10 @@ import SwapRow from '../components/SwapRow'
 import Pagination from '../components/Pagination'
 
 const fetcher = async req => {
-  const [_, pageStr] = req.split('=')
-  const page = Number(pageStr || 1) - 1
-  if (Number.isNaN(page) || !Number.isInteger(page) || page < 0) {
-    throw new Error('reset')
-  }
   const res = await fetch(`api/v1/${req}`)
   const json = await res.json()
   if (json.result) {
-    const { total, list } = json.result
-    if (page * 10 > total) {
-      throw new Error('reset')
-    }
-    return { page, total, list }
+    return json.result
   } else {
     throw new Error(json.error.message)
   }
@@ -33,27 +24,35 @@ const fetcher = async req => {
 const authorizedEmails = process.env.NEXT_PUBLIC_AUTHORIZED.split(';')
 
 export default function SwapList() {
-  const router = useRouter()
   const { data: session } = useSession()
+  const authorized = session?.user?.email && authorizedEmails.includes(session.user.email)
 
-  const { data, error } = useSWR(`swap?page=${router.query.page || '1'}`, fetcher)
-  React.useEffect(() => {
-    if (error && error.message === 'reset') {
-      router.replace('/')
-    }
-  }, [router, error])
+  const router = useRouter()
+  const page = Number(router.query.page || 1) - 1
+  let pageValid = !Number.isNaN(page) && Number.isInteger(page) && page >= 0
+  if (page >= 10 && !authorized) {
+    pageValid = false
+  }
+  if (!pageValid) {
+    router.replace('/')
+  }
+
+  const { data, error } = useSWR(pageValid && `swap?page=${page}`, fetcher)
 
   const [search, setSearchValue] = React.useState('')
 
-  const authorized = session?.user?.email && authorizedEmails.includes(session.user.email)
-
   let body
-  if (error) {
+  if (!pageValid) {
+    body = <LoadingScreen />
+  } else if (error) {
     body = <div className='py-6 px-4 sm:px-6 text-red-400'>{error.message}</div>
   } else if (!data) {
     body = <LoadingScreen />
   } else {
-    const { page, total, list } = data
+    const { total, list } = data
+    if (page * 10 > total) {
+      router.replace('/')
+    }
     const onPageChange = page => router.push(`/?page=${page+1}`)
     body = (
       <>
