@@ -85,14 +85,17 @@ function StatsByChain() {
       duration: 0
     }), { count: 0, volume: 0, success: 0, duration: 0 })
     body = (
-      <Table headers={[
-        { name: 'Date', width: '20%', className: 'pl-4 sm:pl-6' },
-        { name: 'Count', width: '10%' },
-        { name: 'Volume', width: '20%' },
-        { name: 'Success', width: '20%' },
-        { name: 'Addrs', width: '10%' },
-        { name: 'Avg. Duration', width: '20%' }
-      ]}>
+      <Table
+        size='lg'
+        headers={[
+          { name: 'Date', width: '20%' },
+          { name: 'Count', width: '10%' },
+          { name: 'Volume', width: '20%' },
+          { name: 'Success', width: '20%' },
+          { name: 'Addrs', width: '10%' },
+          { name: 'Avg. Duration', width: '20%' }
+        ]}
+      >
         <StatTableRow _id='Total' {...total} />
         {data.map((row, index) => <StatTableRow key={`stat-table-row-${index}`} {...row} />)}
       </Table>
@@ -138,7 +141,7 @@ function StatTableRow({ _id: date, count, volume, success, addresses, duration }
   const vol = fmt.format(Math.floor(ethers.utils.formatUnits(volume, 6)))
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
-      <Td className='pl-4 pr-3 sm:pl-6'>{date}</Td>
+      <Td size='lg'>{date}</Td>
       <Td>{count}</Td>
       <Td>${vol}</Td>
       <Td>{success} <span className='text-gray-500 text-sm'>({Math.floor(success / count * 1000) / 10}%)</span></Td>
