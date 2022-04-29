@@ -10,17 +10,11 @@ import Table from '../../components/Table'
 import SwapRow from '../../components/SwapRow'
 import Pagination from '../../components/Pagination'
 
-const authorizedEmails = process.env.NEXT_PUBLIC_AUTHORIZED.split(';')
-
 export default function AuthWrapper() {
   const { data: session } = useSession()
 
   if (!session?.user) {
     return 'Need login'
-  }
-
-  if (!authorizedEmails.includes(session.user.email)) {
-    return 'Unauthorized'
   }
 
   return <LockedSwapList />
@@ -51,13 +45,6 @@ function LockedSwapList() {
   }, [pageValid, router])
 
   const { data, error } = useSWR(pageValid && `swap/locked?page=${page}`, fetcher)
-
-  // const { data, error } = useSWR(`swap/locked?page=${router.query.page || '1'}`, fetcher)
-  // React.useEffect(() => {
-  //   if (error && error.message === 'reset') {
-  //     router.replace('/pending/locked')
-  //   }
-  // }, [router, error])
 
   let body
   if (!pageValid) {
