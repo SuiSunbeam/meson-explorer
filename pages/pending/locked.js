@@ -82,7 +82,7 @@ function LockedSwapList() {
     <Card>
       <CardTitle
         title='Locked Swaps'
-        subtitle='Swaps that were locked but released'
+        subtitle='Swaps that were locked but not released'
       />
       <CardBody>
         {body}
