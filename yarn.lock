@@ -473,10 +473,10 @@
   resolved "https://npm.pkg.github.com/download/@mesonfi/contract-types/0.7.0/ea15ed2fc7a162a3d5724126a908bd5528daa8f8d469f7896a73038a08b071b7#300a7ad7db84d015e6a80086b9656a4b18c52911"
   integrity sha512-GCzSebtZScKnohvhMB5S6SAvbmZCEGcKsPoRA4gm43jMNYA6QG0ErQEWuFDiYwiMEjVeMR2OlxTKs2O9cO8R9g==
 
-"@mesonfi/presets@0.8.0-rc.3":
-  version "0.8.0-rc.3"
-  resolved "https://npm.pkg.github.com/download/@mesonfi/presets/0.8.0-rc.3/5e0c98508e692a8f1920b275d780caa4fb42a5c5800db856e4583761e880b8a9#f9bef7623239fbc0decc79dbc9b1cd10dec999d3"
-  integrity sha512-ObNXJpwXVw0tTrsfaNWBvvzHJb8kqH7OpekX+tHSdm3ozMx7FrkDoPyP4QUhrox/RPpghBnZSK1tgXq4T2Eemg==
+"@mesonfi/presets@0.8.1":
+  version "0.8.1"
+  resolved "https://npm.pkg.github.com/download/@mesonfi/presets/0.8.1/1b412d4f6063e5d0a765b668fc837fe48d72b9e334e19d826ddae9ad7593340d#3528d5ae92614d7487408ba44a219e995e6cbea2"
+  integrity sha512-HEpI53Gsl4RTIUMqxRCpNXvZ+1oJqRt7nfQNgrsFk/u4kHxXL0CM1FaAvqa/l5gT1/clCm4kZZ0eNlMEkl0xwQ==
   dependencies:
     "@ethersproject/abstract-signer" "^5.6.0"
     "@ethersproject/bignumber" "^5.6.0"
