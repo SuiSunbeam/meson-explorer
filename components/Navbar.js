@@ -42,6 +42,7 @@ export default function Navbar({ globalState, setGlobalState }) {
                   <div className='text-lg font-medium text-white'>
                     <Link href='/'>
                       <a className='flex items-center font-semibold opacity-90 hover:opacity-100'>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img width={28} height={14} className='opacity-50' src='/logo.svg' alt='' />
                         <div className='inline-block ml-2 mb-1 text-2xl' style={{ fontFamily: `'Nunito', sans-serif` }}>
                           <span className='font-extrabold'>meson</span>
@@ -149,6 +150,7 @@ function Profile ({ globalState, setGlobalState }) {
         <Menu.Button className='max-w-xs bg-gray-300 rounded-full flex items-center text-sm focus:outline-none'>
           {
             session
+            // eslint-disable-next-line @next/next/no-img-element
             ? <img className='h-8 w-8 rounded-full' src={session?.user.image} alt='' />
             : <SolidUserCircleIcon className='h-8 w-8 rounded-full bg-gray-100 text-gray-500'/>
           }
