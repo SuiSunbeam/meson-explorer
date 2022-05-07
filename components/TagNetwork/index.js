@@ -11,9 +11,10 @@ import ftm from './ftm.png'
 import one from './one.png'
 import aurora from './aurora.png'
 import cfx from './cfx.png'
+import evmos from './evmos.png'
 import trx from './trx.png'
 
-const logos = { eth, bnb, ava, matic, ftm, one, aurora, cfx, trx }
+const logos = { eth, bnb, ava, matic, ftm, one, aurora, cfx, evmos, trx }
 
 export default function TagNetwork ({ responsive, network, address }) {
   const logo = logos[network.networkAlias?.toLowerCase()]
