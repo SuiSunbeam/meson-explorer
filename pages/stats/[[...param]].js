@@ -98,12 +98,12 @@ function StatsByChain() {
         size='lg'
         headers={[
           { name: 'Date', width: '15%' },
-          { name: 'Count', width: '10%' },
-          { name: 'Volume', width: '15%' },
-          { name: 'Fee', width: '15%' },
-          { name: 'Success', width: '15%' },
+          { name: '# success / #  total', width: '20%' },
           { name: 'Addrs', width: '10%' },
-          { name: 'Avg. Duration', width: '20%' }
+          { name: 'Volume', width: '15%' },
+          { name: 'Total Fee', width: '10%' },
+          { name: 'Avg. Swap Amount', width: '15%' },
+          { name: 'Avg. Duration', width: '15%' }
         ]}
       >
         <StatTableRow _id='Total' {...total} />
@@ -112,11 +112,15 @@ function StatsByChain() {
     )
   }
 
-  const { count, volume, duration, addresses } = generalData || {}
+  const { success, count, volume, duration, addresses } = generalData || {}
+  const nSuccess = success ? fmt.format(success) : '-'
+  const nTotal = count ? fmt.format(count) : '-'
+  const rate = (success > 1 && count > 1) ? <span className='text-gray-500 text-sm'>({Math.floor(success / count * 1000) / 10}%)</span> : ''
+
   return (
     <>
       <div className='grid md:grid-cols-4 grid-cols-2 md:gap-5 gap-3 md:mb-5 mb-3'>
-        <StatCard title='# of Swaps' value={count ? fmt.format(count) : 'N/A'} />
+        <StatCard title='# of Swaps' value={<>{nSuccess} / {nTotal} {rate}</>} />
         <StatCard title='# of Addresses' value={addresses || 'N/A'} />
         <StatCard title='Total Volume' value={volume ? `$${fmt.format(ethers.utils.formatUnits(volume, 6))}` : 'N/A'} />
         <StatCard title='Avg. Duration' value={duration ? formatDuration(duration * 1000) : 'N/A'} />
@@ -154,14 +158,15 @@ function StatsByChain() {
 function StatTableRow({ _id: date, count, volume, fee, success, addresses, duration }) {
   const vol = fmt.format(Math.floor(ethers.utils.formatUnits(volume, 6)))
   const fee2 = fmt.format(Math.floor(ethers.utils.formatUnits(fee || 0, 6)))
+  const avgSwapAmount = success ? fmt.format(Math.floor(ethers.utils.formatUnits(Math.floor(volume / success), 6))) : '-'
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td size='lg'>{date}</Td>
-      <Td>{count}</Td>
+      <Td>{success} / {count} <span className='text-gray-500 text-sm'>({Math.floor(success / count * 1000) / 10}%)</span></Td>
+      <Td>{addresses}</Td>
       <Td>${vol}</Td>
       <Td>${fee2}</Td>
-      <Td>{success} <span className='text-gray-500 text-sm'>({Math.floor(success / count * 1000) / 10}%)</span></Td>
-      <Td>{addresses}</Td>
+      <Td>${avgSwapAmount}</Td>
       <Td>{formatDuration(duration * 1000)}</Td>
     </tr>
   )
