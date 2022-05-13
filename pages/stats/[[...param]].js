@@ -39,8 +39,8 @@ const generalFetcher = async () => {
   }
 }
 
-const fetcher = async query => {
-  const res = await fetch(`api/v1/stats?${query}`)
+const fetcher = async req => {
+  const res = await fetch(`api/v1/${req}`)
   const json = await res.json()
   if (json.result) {
     return json.result
@@ -54,23 +54,31 @@ function StatsByChain() {
   tabs.unshift({ key: 'all', name: 'All Chains', shortCoinType: '' })
 
   const router = useRouter()
-  const { from, to } = router.query
-  const key = from || to || 'all'
-  const type = to ? 'to' : 'from'
+  const { param } = router.query
 
-  const selected = tabs.find(t => t.key === key) || {}
+  const chain = param ? param[0] : 'all'
+  const type = (param && param[1]) || 'both'
+
+  const selected = tabs.find(t => t.key === chain) || {}
   const { name, shortCoinType } = selected
 
   React.useEffect(() => {
-    if (typeof shortCoinType === 'undefined' || (from && key === 'all')) {
+    if (param && !shortCoinType) {
       router.replace('/stats')
-    } else if (from && to) {
-      router.replace(`/stats?from=${from}`)
+    } else if (!['from', 'to', 'both'].includes(type)) {
+      // router.replace(`/stats/${key}`)
     }
   })
 
+  let req = 'stats'
+  if (chain !== 'all') {
+    req += `/${shortCoinType}`
+    if (type !== 'both') {
+      req += `/${type}`
+    }
+  }
   const { data: generalData } = useSWR(`general`, generalFetcher)
-  const { data, error } = useSWR(`${type}=${shortCoinType}`, fetcher)
+  const { data, error } = useSWR(req, fetcher)
 
   let body = null
   if (error) {
@@ -78,20 +86,22 @@ function StatsByChain() {
   } else if (!data) {
     body = <LoadingScreen />
   } else {
-    const total = data.reduce(({ count, volume, success }, row) => ({
+    const total = data.reduce(({ count, volume, fee, success }, row) => ({
       count: row.count + count,
       volume: row.volume + volume,
+      fee: row.fee + fee,
       success: row.success + success,
       duration: 0
-    }), { count: 0, volume: 0, success: 0, duration: 0 })
+    }), { count: 0, volume: 0, fee: 0, success: 0, duration: 0 })
     body = (
       <Table
         size='lg'
         headers={[
-          { name: 'Date', width: '20%' },
+          { name: 'Date', width: '15%' },
           { name: 'Count', width: '10%' },
-          { name: 'Volume', width: '20%' },
-          { name: 'Success', width: '20%' },
+          { name: 'Volume', width: '15%' },
+          { name: 'Fee', width: '15%' },
+          { name: 'Success', width: '15%' },
           { name: 'Addrs', width: '10%' },
           { name: 'Avg. Duration', width: '20%' }
         ]}
@@ -119,14 +129,18 @@ function StatsByChain() {
             <ButtonGroup
               size='sm'
               active={type}
-              buttons={[{ key: 'from', text: `From ${name}` }, { key: 'to', text: `To ${name}` }]}
-              onChange={type => router.push(`/stats?${type}=${key}`)}
+              buttons={[
+                { key: 'both', text: `All` },
+                { key: 'from', text: `From ${name}` },
+                { key: 'to', text: `To ${name}` }
+              ]}
+              onChange={type => router.push(`/stats/${chain}${type === 'both' ? '' : `/${type}`}`)}
             />
           }
           tabs={tabs.map(t => ({
             ...t,
-            active: t.key === key,
-            onClick: () => router.push(t.key === 'all' ? '/stats' : `/stats?${type}=${t.key}`)
+            active: t.key === chain,
+            onClick: () => router.push(t.key === 'all' ? '/stats' : `/stats/${t.key}`)
           }))}
         />
         <CardBody>
@@ -137,13 +151,15 @@ function StatsByChain() {
   )
 }
 
-function StatTableRow({ _id: date, count, volume, success, addresses, duration }) {
+function StatTableRow({ _id: date, count, volume, fee, success, addresses, duration }) {
   const vol = fmt.format(Math.floor(ethers.utils.formatUnits(volume, 6)))
+  const fee2 = fmt.format(Math.floor(ethers.utils.formatUnits(fee || 0, 6)))
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td size='lg'>{date}</Td>
       <Td>{count}</Td>
       <Td>${vol}</Td>
+      <Td>${fee2}</Td>
       <Td>{success} <span className='text-gray-500 text-sm'>({Math.floor(success / count * 1000) / 10}%)</span></Td>
       <Td>{addresses}</Td>
       <Td>{formatDuration(duration * 1000)}</Td>
