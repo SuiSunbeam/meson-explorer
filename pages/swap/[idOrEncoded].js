@@ -210,7 +210,10 @@ function SwapActionButton({ data, swap, show, setGlobalState }) {
   }
 
   const expired = swap?.expireTs < Date.now() / 1000
-  const status = getStatusFromEvents(data?.events || [], expired)
+  let status = getStatusFromEvents(data?.events || [], expired)
+  if (status === 'EXPIRED' && data?.events.find(e => e.name === 'LOCKED')) {
+    status = 'CANCELLED*'
+  }
 
   React.useEffect(() => {
     if (swap?.inChain && swap?.outChain) {
