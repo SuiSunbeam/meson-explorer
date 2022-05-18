@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import useSWR from 'swr'
 import { SearchIcon } from '@heroicons/react/outline'
+import { ethers } from 'ethers'
 
 import fetch from '../lib/fetch'
 import LoadingScreen from '../components/LoadingScreen'
@@ -82,7 +83,10 @@ export default function SwapList() {
           </div>
           <form onSubmit={evt => {
             evt.preventDefault()
-            const searchValue = search.trim()
+            let searchValue = search.trim()
+            if (ethers.utils.isAddress(searchValue)) {
+              searchValue = searchValue.toLowerCase()
+            }
             if (!searchValue) {
               return
             }
