@@ -8,13 +8,15 @@ import bnb from './bnb.png'
 import ava from './ava.png'
 import matic from './matic.png'
 import ftm from './ftm.png'
+import arb from './arb.png'
+import opt from './opt.png'
 import one from './one.png'
 import aurora from './aurora.png'
 import cfx from './cfx.png'
 import evmos from './evmos.png'
 import trx from './trx.png'
 
-const logos = { eth, bnb, ava, matic, ftm, one, aurora, cfx, evmos, trx }
+const logos = { eth, bnb, ava, matic, ftm, arb, opt, one, aurora, cfx, evmos, trx }
 
 export default function TagNetwork ({ responsive, network, address }) {
   const logo = logos[network.networkAlias?.toLowerCase()]
