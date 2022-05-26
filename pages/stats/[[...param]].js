@@ -141,8 +141,8 @@ function StatsByChain() {
               active={type}
               buttons={[
                 { key: 'both', text: `All` },
-                { key: 'from', text: `From ${name}` },
-                { key: 'to', text: `To ${name}` }
+                { key: 'from', text: `From` },
+                { key: 'to', text: `To` }
               ]}
               onChange={type => router.push(`/stats/${chain}${type === 'both' ? '' : `/${type}`}`)}
             />
