@@ -18,11 +18,12 @@ import trx from './trx.png'
 
 const logos = { eth, bnb, ava, matic, ftm, arb, opt, one, aurora, cfx, evmos, trx }
 
-export default function TagNetwork ({ responsive, network, address }) {
-  const logo = logos[network.networkAlias?.toLowerCase()]
+export default function TagNetwork ({ responsive, size = 'sm', network, address, className }) {
+  const alias = network.alias?.toLowerCase() || network.networkAlias?.toLowerCase()
+  const logo = logos[alias]
   return (
-    <div className='flex items-center text-xs text-gray-500'>
-      <div className='flex itmes-center w-4 h-4 mr-1'>
+    <div className={classnames('flex items-center text-xs text-gray-500', className)}>
+      <div className={classnames('flex items-center mr-1', size === 'md' ? 'w-5 h-5' : 'w-4 h-4')}>
         {logo && <Image src={logo} alt='' />}
       </div>
       <div className={classnames('items-center', responsive ? 'hidden sm:flex' : 'flex')}>

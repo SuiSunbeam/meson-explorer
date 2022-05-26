@@ -9,6 +9,7 @@ import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody, StatCard } from '../../components/Card'
 import Table, { Td } from '../../components/Table'
 import ButtonGroup from '../../components/ButtonGroup'
+import TagNetwork from '../../components/TagNetwork'
 
 import { getAllNetworks, formatDuration } from '../../lib/swap'
 
@@ -50,7 +51,12 @@ const fetcher = async req => {
 }
 
 function StatsByChain() {
-  const tabs = getAllNetworks().map(n => ({ key: n.id, name: n.name, shortCoinType: n.shortSlip44 }))
+  const tabs = getAllNetworks().map(n => ({
+    key: n.id,
+    name: n.name,
+    display: <TagNetwork size='md' network={n} className='ml-1' />,
+    shortCoinType: n.shortSlip44
+  }))
   tabs.unshift({ key: 'all', name: 'All Chains', shortCoinType: '' })
 
   const router = useRouter()
