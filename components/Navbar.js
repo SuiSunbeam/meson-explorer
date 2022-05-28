@@ -219,6 +219,14 @@ function Profile ({ globalState, setGlobalState }) {
                       Pending Locked
                     </div>
                   </Menu.Item>
+                  <Menu.Item>
+                    <div
+                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                      onClick={() => router.push('/pending/conflict')}
+                    >
+                      Conflict
+                    </div>
+                  </Menu.Item>
                 </>
               }
             </div>
