@@ -211,13 +211,10 @@ function SwapActionButton({ data, swap, show, setGlobalState }) {
 
   const expired = swap?.expireTs < Date.now() / 1000
   let status = getStatusFromEvents(data?.events || [], expired)
-  if (status === 'EXPIRED' && data?.events.find(e => e.name === 'LOCKED')) {
-    status = 'CANCELLED*'
-  }
 
   React.useEffect(() => {
     if (swap?.inChain && swap?.outChain) {
-      if (status === 'CANCELLED*' || status === 'RELEASING*') {
+      if (status === 'EXPIRED*' || status === 'CANCELLED*' || status === 'RELEASING*') {
         setGlobalState(prev => ({ ...prev, coinType: swap?.outChain }))
       } else if (status === 'EXPIRED' || status === 'RELEASED') {
         setGlobalState(prev => ({ ...prev, coinType: swap?.inChain }))
@@ -234,6 +231,7 @@ function SwapActionButton({ data, swap, show, setGlobalState }) {
   const initiator = data.initiator || data.fromTo[0]
   const recipient = data.fromTo[1]
   switch (status) {
+    case 'EXPIRED*':
     case 'CANCELLED*':
       return <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, initiator)}>Unlock</Button>
     case 'EXPIRED':

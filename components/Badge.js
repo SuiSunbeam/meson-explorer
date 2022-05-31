@@ -11,7 +11,8 @@ const tooltips = {
   CANCELLED: 'The swap expired and the fund was withdrawn.',
   'CANCELLED*': `The swap expired and initiator's fund was withdrawn.`,
   DROPPED: 'Never processed from the beginning. Nothing happend.',
-  EXPIRED: 'The swap expired and funds need to be withdrawn.'
+  EXPIRED: 'The swap expired and funds need to be withdrawn.',
+  'EXPIRED*': 'The swap expired and funds need to be withdrawn.'
 }
 
 export default function Badge({ type, className, children }) {
