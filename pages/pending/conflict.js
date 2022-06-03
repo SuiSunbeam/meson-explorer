@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import useSWR from 'swr'
 
-import fetch from '../../lib/fetch'
+import fetcher from '../../lib/fetcher'
 import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody } from '../../components/Card'
 import Table from '../../components/Table'
@@ -18,16 +18,6 @@ export default function AuthWrapper() {
   }
 
   return <ConflictSwapList />
-}
-
-const fetcher = async req => {
-  const res = await fetch(`api/v1/${req}`)
-  const json = await res.json()
-  if (json.result) {
-    return json.result
-  } else {
-    throw new Error(json.error.message)
-  }
 }
 
 function ConflictSwapList() {

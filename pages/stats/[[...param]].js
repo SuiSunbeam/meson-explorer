@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react'
 import useSWR from 'swr'
 import { ethers } from 'ethers'
 
-import fetch from '../../lib/fetch'
+import fetcher from '../../lib/fetcher'
 import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody, StatCard } from '../../components/Card'
 import Table, { Td } from '../../components/Table'
@@ -28,26 +28,6 @@ export default function AuthWrapper() {
   }
 
   return <StatsByChain />
-}
-
-const generalFetcher = async () => {
-  const res = await fetch(`api/v1/general`)
-  const json = await res.json()
-  if (json.result) {
-    return json.result
-  } else {
-    throw new Error(json.error.message)
-  }
-}
-
-const fetcher = async req => {
-  const res = await fetch(`api/v1/${req}`)
-  const json = await res.json()
-  if (json.result) {
-    return json.result
-  } else {
-    throw new Error(json.error.message)
-  }
 }
 
 function StatsByChain() {
@@ -83,7 +63,7 @@ function StatsByChain() {
       req += `/${type}`
     }
   }
-  const { data: generalData } = useSWR(`general`, generalFetcher)
+  const { data: generalData } = useSWR(`general`, fetcher)
   const { data, error } = useSWR(req, fetcher)
 
   let body = null

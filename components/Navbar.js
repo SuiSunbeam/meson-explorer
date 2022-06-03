@@ -194,42 +194,71 @@ function Profile ({ globalState, setGlobalState }) {
               </div>
               {
                 authorized &&
-                <>
-                  <Menu.Item>
-                    <div
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                      onClick={() => router.push('/stats')}
-                    >
-                      Stats
-                    </div>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <div
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                      onClick={() => router.push('/pending/bonded')}
-                    >
-                      Pending Bonded
-                    </div>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <div
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                      onClick={() => router.push('/pending/locked')}
-                    >
-                      Pending Locked
-                    </div>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <div
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                      onClick={() => router.push('/pending/conflict')}
-                    >
-                      Conflict
-                    </div>
-                  </Menu.Item>
-                </>
+                <Menu.Item>
+                  <div
+                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                    onClick={() => router.push('/stats')}
+                  >
+                    Stats
+                  </div>
+                </Menu.Item>
               }
             </div>
+          }
+          {
+            authorized &&
+            <>
+              <div className='py-1'>
+                <div className='flex items-center px-4 pt-2 pb-1 text-xs text-gray-500'>
+                  Pendings
+                </div>
+                <Menu.Item>
+                  <div
+                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                    onClick={() => router.push('/pending/bonded')}
+                  >
+                    Bonded
+                  </div>
+                </Menu.Item>
+                <Menu.Item>
+                  <div
+                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                    onClick={() => router.push('/pending/locked')}
+                  >
+                    Locked
+                  </div>
+                </Menu.Item>
+                <Menu.Item>
+                  <div
+                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                    onClick={() => router.push('/pending/conflict')}
+                  >
+                    Conflict
+                  </div>
+                </Menu.Item>
+              </div>
+              <div className='py-1'>
+                <div className='flex items-center px-4 pt-2 pb-1 text-xs text-gray-500'>
+                  Queued
+                </div>
+                <Menu.Item>
+                  <div
+                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                    onClick={() => router.push('/queued/blocks/eth')}
+                  >
+                    Blocks
+                  </div>
+                </Menu.Item>
+                <Menu.Item>
+                  <div
+                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                    onClick={() => router.push('/queued/txs/eth')}
+                  >
+                    Transactions
+                  </div>
+                </Menu.Item>
+              </div>
+            </>
           }
           <div className='py-1'>
             <Menu.Item>

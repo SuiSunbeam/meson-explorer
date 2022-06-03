@@ -8,7 +8,7 @@ import { ethers } from 'ethers'
 import { Swap } from '@mesonfi/sdk'
 
 import AppContext from '../../lib/context'
-import fetch from '../../lib/fetch'
+import fetcher from '../../lib/fetcher'
 import socket from '../../lib/socket'
 import { parseNetworkAndToken, sortEvents, getStatusFromEvents, getDuration } from '../../lib/swap'
 import extensions from '../../lib/extensions'

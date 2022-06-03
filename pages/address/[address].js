@@ -2,7 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 
-import fetch from '../../lib/fetch'
+import fetcher from '../../lib/fetcher'
 import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody } from '../../components/Card'
 import Table from '../../components/Table'

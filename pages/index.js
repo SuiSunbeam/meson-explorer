@@ -5,22 +5,12 @@ import useSWR from 'swr'
 import { SearchIcon } from '@heroicons/react/outline'
 import { ethers } from 'ethers'
 
-import fetch from '../lib/fetch'
+import fetcher from '../lib/fetcher'
 import LoadingScreen from '../components/LoadingScreen'
 import Card from '../components/Card'
 import Table from '../components/Table'
 import SwapRow from '../components/SwapRow'
 import Pagination from '../components/Pagination'
-
-const fetcher = async req => {
-  const res = await fetch(`api/v1/${req}`)
-  const json = await res.json()
-  if (json.result) {
-    return json.result
-  } else {
-    throw new Error(json.error.message)
-  }
-}
 
 const authorizedEmails = process.env.NEXT_PUBLIC_AUTHORIZED.split(';')
 
