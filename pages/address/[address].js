@@ -2,7 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 
-import fetcher from '../../lib/fetcher'
+import { failoverFetch } from '../../lib/fetcher'
 import LoadingScreen from '../../components/LoadingScreen'
 import Card, { CardTitle, CardBody } from '../../components/Card'
 import Table from '../../components/Table'
@@ -16,7 +16,7 @@ const fetcher = async param => {
   if (Number.isNaN(page) || !Number.isInteger(page) || page < 0) {
     throw new Error('reset')
   }
-  const res = await fetch(`api/v1/address/${address}/swap?page=${page}`)
+  const res = await failoverFetch(`api/v1/address/${address}/swap?page=${page}`)
   const json = await res.json()
   if (json.result) {
     const { total, list } = json.result

@@ -83,7 +83,7 @@ function QueuedTxs() {
       })
       return () => myChart.destroy()
     }
-  }, [success, chain])
+  }, [success, chain, data])
 
   let body
   if (error) {

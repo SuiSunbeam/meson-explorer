@@ -22,26 +22,10 @@ import ExternalLink from '../../components/ExternalLink'
 import TagNetwork from '../../components/TagNetwork'
 import TagNetworkToken from '../../components/TagNetworkToken'
 
-const fetcher = async idOrEncoded => {
-  if (!idOrEncoded) {
-    throw new Error('No swap id')
-  }
-  const res = await fetch(`api/v1/swap/${idOrEncoded}`)
-  if (res.status >= 400) {
-    throw new Error('Swap not found')
-  }
-  const json = await res.json()
-  if (json.result) {
-    return json.result
-  } else {
-    throw new Error(json.error.message)
-  }
-}
-
 export default function SwapDetail() {
   const router = useRouter()
   const idOrEncoded = router.query.idOrEncoded
-  const { data, error } = useSWR(idOrEncoded, fetcher)
+  const { data, error } = useSWR(`swap/${idOrEncoded}`, fetcher)
 
   if (error) {
     return (
