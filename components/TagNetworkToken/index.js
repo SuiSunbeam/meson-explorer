@@ -4,7 +4,7 @@ import Image from 'next/image'
 import usdc from './usdc.png'
 import usdt from './usdt.png'
 import msn from './msn.png'
-import uct from './usdc.png'
+import uct from './uct.png'
 
 function getTokenLogo(symbol) {
   if (symbol.indexOf('USDC') > -1) {
@@ -23,7 +23,7 @@ export default function TagNetworkToken ({ responsive, explorer, token }) {
   const href = `${explorer}/${token.link || `token/${token.addr}`}`
   return (
     <div className='flex items-center text-gray-500 hover:text-primary hover:underline cursor-pointer'>
-      <a href={href} className='flex items-center w-4 h-4' target='_blank' rel='noreferrer'>
+      <a href={href} className='flex items-center w-4' target='_blank' rel='noreferrer'>
         {logo && <Image src={logo} alt='' />}
       </a>
       <a
