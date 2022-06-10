@@ -24,7 +24,7 @@ export default function TagNetwork ({ responsive, size = 'sm', network, address,
   const logo = logos[alias]
   return (
     <div className={classnames('flex items-center text-xs text-gray-500', className)}>
-      <div className={classnames('flex items-center mr-1', size === 'md' ? 'w-5 h-5' : 'w-4 h-4')}>
+      <div className={classnames('flex items-center mr-1 rounded-full shadow', size === 'md' ? 'w-5 h-5' : 'w-4 h-4')}>
         {logo && <Image src={logo} alt='' />}
       </div>
       <div className={classnames('items-center', responsive ? 'hidden sm:flex' : 'flex')}>

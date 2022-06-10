@@ -20,7 +20,7 @@ export default function Badge({ type, className, children }) {
   return (
     <div className='flex relative'>
       <span className={classnames(
-        'px-2 inline-flex text-sm leading-5 font-semibold rounded-full',
+        'px-2 inline-flex text-sm leading-5 font-semibold rounded-full shadow-sm',
         tooltip && 'has-tooltip cursor-pointer',
         badgeClassnames[type] || 'bg-gray-100 text-gray-500',
         className
