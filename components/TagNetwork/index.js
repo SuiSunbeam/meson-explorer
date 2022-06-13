@@ -15,10 +15,10 @@ import aurora from './aurora.png'
 import cfx from './cfx.png'
 import evmos from './evmos.png'
 import movr from './movr.png'
-import beam from './beam.png'
+import glmr from './glmr.png'
 import trx from './trx.png'
 
-const logos = { eth, bnb, ava, matic, ftm, arb, opt, one, aurora, cfx, evmos, movr, beam, trx }
+const logos = { eth, bnb, ava, matic, ftm, arb, opt, one, aurora, cfx, evmos, movr, glmr, trx }
 
 export default function TagNetwork ({ responsive, size = 'sm', network, address, className }) {
   const alias = network.alias?.toLowerCase() || network.networkAlias?.toLowerCase()
