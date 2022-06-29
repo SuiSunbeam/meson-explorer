@@ -63,7 +63,7 @@ function StatsByChain() {
       req += `/${type}`
     }
   }
-  const { data: generalData } = useSWR(`general`, fetcher)
+  const { data: generalData } = useSWR(`stats/general`, fetcher)
   const { data, error } = useSWR(req, fetcher)
 
   let body = null
