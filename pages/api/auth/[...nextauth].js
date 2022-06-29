@@ -10,5 +10,8 @@ export default NextAuth({
       clientSecret: process.env.GITHUB_SECRET
     })
   ],
-  adapter: MongoDBAdapter(mongo)
+  adapter: MongoDBAdapter(mongo),
+  session: {
+    strategy: 'jwt'
+  }
 })
