@@ -12,11 +12,9 @@ import Table from '../components/Table'
 import SwapRow from '../components/SwapRow'
 import Pagination from '../components/Pagination'
 
-const authorizedEmails = process.env.NEXT_PUBLIC_AUTHORIZED.split(';')
-
 export default function SwapList() {
   const { data: session } = useSession()
-  const authorized = session?.user?.email && authorizedEmails.includes(session.user.email)
+  const authorized = session?.user?.roles?.includes('admin')
 
   const router = useRouter()
   const page = Number(router.query.page || 1) - 1

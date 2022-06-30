@@ -13,5 +13,19 @@ export default NextAuth({
   adapter: MongoDBAdapter(mongo),
   session: {
     strategy: 'jwt'
+  },
+  callbacks: {
+    async session({ session, token }) {
+      if (token) {
+        session.user.roles = token.roles
+      }
+      return session
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.roles = user.roles
+      }
+      return token
+    }
   }
 })

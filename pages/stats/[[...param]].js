@@ -13,7 +13,6 @@ import TagNetwork from '../../components/TagNetwork'
 
 import { getAllNetworks, formatDuration } from '../../lib/swap'
 
-const authorizedEmails = process.env.NEXT_PUBLIC_AUTHORIZED.split(';')
 const fmt = Intl.NumberFormat()
 
 export default function AuthWrapper() {
@@ -23,7 +22,7 @@ export default function AuthWrapper() {
     return 'Need login'
   }
 
-  if (!authorizedEmails.includes(session.user.email)) {
+  if (!session.user.roles?.includes('admin')) {
     return 'Unauthorized'
   }
 

@@ -30,6 +30,10 @@ export default function AuthWrapper() {
     return 'Need login'
   }
 
+  if (!session.user.roles?.includes('admin')) {
+    return 'Unauthorized'
+  }
+
   return <QueuedTxs />
 }
 

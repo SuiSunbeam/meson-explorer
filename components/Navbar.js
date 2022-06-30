@@ -101,13 +101,11 @@ export default function Navbar({ globalState, setGlobalState }) {
   )
 }
 
-const authorizedEmails = process.env.NEXT_PUBLIC_AUTHORIZED.split(';')
-
 function Profile ({ globalState, setGlobalState }) {
   const router = useRouter()
   const { data: session } = useSession()
 
-  const authorized = session?.user?.email && authorizedEmails.includes(session.user.email)
+  const authorized = session?.user?.roles?.includes('admin')
 
   const { coinType } = globalState
   const { networkId, currentAccount} = globalState.browserExt || {}
