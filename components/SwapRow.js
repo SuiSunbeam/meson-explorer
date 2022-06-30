@@ -2,7 +2,6 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import debounce from 'lodash/debounce'
-import { ethers } from 'ethers'
 import { Swap } from '@mesonfi/sdk'
 
 import socket from '../lib/socket'

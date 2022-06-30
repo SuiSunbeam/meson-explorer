@@ -35,7 +35,7 @@ export function CardTitle({ title, subtitle, badge, right = [], tabs = [] }) {
           key={`tab-${index}`}
           onClick={t.onClick}
           className={classnames(
-            'py-2 mr-2 sm:mr-6 cursor-pointer whitespace-nowrap h-[40px]',
+            'py-2 mr-1 sm:mr-4 cursor-pointer whitespace-nowrap h-[40px]',
             t.active ? 'border-b-2 border-primary text-primary' : 'hover:border-b-2 border-gray-300'
           )}
         >{t.display || t.name}</div>
