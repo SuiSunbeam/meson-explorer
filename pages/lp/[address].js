@@ -91,7 +91,9 @@ function LpContentRow ({ address, network }) {
 
 function TokenAmount ({ client, address, token, explorer }) {
   const [deposit, setDeposit] = React.useState(<Loading />)
+  const [depositDecimal, setDepositDecimal] = React.useState()
   const [balance, setBalance] = React.useState(<Loading />)
+  const [balanceDecimal, setBalanceDecimal] = React.useState()
 
   useEffect(() => {
     if (!address) {
@@ -105,7 +107,8 @@ function TokenAmount ({ client, address, token, explorer }) {
         }
         const bal = ethers.utils.formatUnits(v, 6)
         const [i, d] = bal.split('.')
-        setDeposit(`${i.padStart(6, ' ')}.${d.padEnd(6, '0').substring(0, 6)}`)
+        setDeposit(i.padStart(6, ' '))
+        setDepositDecimal(`.${d.padEnd(6, '0').substring(0, 6)}`)
       })
     
     client.balanceOfToken(token.addr, address)
@@ -116,19 +119,20 @@ function TokenAmount ({ client, address, token, explorer }) {
         }
         const bal = ethers.utils.formatUnits(v, token.decimals)
         const [i, d] = bal.split('.')
-        setBalance(`${i.padStart(6, ' ')}.${d.padEnd(6, '0').substring(0, 6)}`)
+        setBalance(i.padStart(6, ' '))
+        setBalanceDecimal(`.${d.padEnd(6, '0').substring(0, 6)}`)
       })
   }, [address])
 
   return (
     <div className='flex items-center'>
       <div className='flex flex-1 items-center'>
-        <pre className='text-sm font-mono mr-1'>{deposit}</pre>
+        <pre className='text-sm font-mono mr-1'>{deposit}<span className='text-gray-300'>{depositDecimal}</span></pre>
         <TagNetworkToken explorer={explorer} token={token} />
       </div>
 
       <div className='flex flex-1 items-center'>
-        <pre className='text-sm font-mono mr-1'>{balance}</pre>
+        <pre className='text-sm font-mono mr-1'>{balance}<span className='text-gray-300'>{balanceDecimal}</span></pre>
         <TagNetworkToken explorer={explorer} token={token} />
       </div>
     </div>
