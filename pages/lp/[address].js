@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import classnames from 'classnames'
 import { useRouter } from 'next/router'
 
 import { ethers } from 'ethers'
@@ -74,6 +75,7 @@ function LpContentRow ({ address, network }) {
 
   return (
     <ListRow
+      size='sm'
       title={
         <div className='flex flex-col align-start'>
           <TagNetwork size='md' network={network} />
@@ -90,9 +92,9 @@ function LpContentRow ({ address, network }) {
 }
 
 function TokenAmount ({ client, address, token, explorer }) {
-  const [deposit, setDeposit] = React.useState(<Loading />)
+  const [deposit, setDeposit] = React.useState()
   const [depositDecimal, setDepositDecimal] = React.useState()
-  const [balance, setBalance] = React.useState(<Loading />)
+  const [balance, setBalance] = React.useState()
   const [balanceDecimal, setBalanceDecimal] = React.useState()
 
   useEffect(() => {
@@ -126,13 +128,35 @@ function TokenAmount ({ client, address, token, explorer }) {
 
   return (
     <div className='flex items-center'>
-      <div className='flex flex-1 items-center'>
-        <pre className='text-sm font-mono mr-1'>{deposit}<span className='text-gray-300'>{depositDecimal}</span></pre>
+      <div className='flex flex-1 items-center h-5'>
+        {
+          deposit
+            ? <pre className={classnames(
+                'text-sm font-mono mr-1',
+                deposit <= 1000 && 'bg-red-500 text-white',
+                deposit > 1000 && deposit <= 5000 && 'text-red-500',
+                deposit > 5000 && deposit <= 10000 && 'text-yellow-500',
+                deposit > 10000 && deposit <= 20000 && 'text-blue-600'
+              )}>
+                <span>{deposit}</span>
+                <span className='opacity-40'>{depositDecimal}</span>
+              </pre>
+            : <span className='ml-[86px] mr-3'><Loading /></span>
+        }
         <TagNetworkToken explorer={explorer} token={token} />
       </div>
 
-      <div className='flex flex-1 items-center'>
-        <pre className='text-sm font-mono mr-1'>{balance}<span className='text-gray-300'>{balanceDecimal}</span></pre>
+      <div className='flex flex-1 items-center h-5'>
+        {
+          balance
+            ? <pre className={classnames(
+                'text-sm font-mono mr-1',
+                balance < 1 && 'text-gray-300'
+              )}>
+                {balance}<span className='opacity-40'>{balanceDecimal}</span>
+              </pre>
+            : <span className='ml-[86px] mr-3'><Loading /></span>
+        }
         <TagNetworkToken explorer={explorer} token={token} />
       </div>
     </div>
