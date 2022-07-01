@@ -24,7 +24,7 @@ export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly
   const alias = network.alias?.toLowerCase() || network.networkAlias?.toLowerCase()
   const logo = logos[alias]
   return (
-    <div className={classnames('flex items-center text-gray-500', size === 'xs' && 'text-xs', className)}>
+    <div className={classnames('flex items-center text-gray-500', size === 'sm' && 'text-xs', className)}>
       <div className={classnames('flex items-center rounded-full shadow', size === 'md' ? 'w-5 h-5 mr-2' : 'w-4 h-4 mr-1')}>
         {logo && <Image src={logo} alt='' />}
       </div>
