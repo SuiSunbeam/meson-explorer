@@ -1,4 +1,4 @@
-import { Queues } from '../../../../../lib/db'
+import { Queue } from '../../../../../lib/db'
 
 export default async function handler(req, res) {
   const { type, networkId } = req.query
@@ -19,7 +19,7 @@ export default async function handler(req, res) {
 }
 
 async function _getBlockByStatus(networkId, status = 'keyv') {
-  const tasks = await Queues.find({ key: {
+  const tasks = await Queue.find({ key: {
     $gt: `${status}:${networkId}|fetchBlock`,
     $lt: `${status}:${networkId}|fetchBlock~`
   } })
@@ -33,7 +33,7 @@ async function _getBlockByStatus(networkId, status = 'keyv') {
 }
 
 async function _getTxByStatus(networkId, status = 'keyv') {
-  const tasks = await Queues.find({ key: {
+  const tasks = await Queue.find({ key: {
     $gt: `${status}:${networkId}|onTransaction`,
     $lt: `${status}:${networkId}|onTransaction~`
   } })
