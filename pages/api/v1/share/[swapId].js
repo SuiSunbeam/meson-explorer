@@ -34,6 +34,7 @@ export default async function handler(req, res) {
     shareCode = await ShareCodes.create({
       _id: swapId,
       code: `${share._id}${share.seq}`,
+      encoded: swap.encoded,
       n: 0,
       expires: Date.now() + 3 * 86400_000
     })
