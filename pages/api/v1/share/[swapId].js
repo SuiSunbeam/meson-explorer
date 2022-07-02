@@ -35,6 +35,7 @@ export default async function handler(req, res) {
       _id: swapId,
       code: `${share._id}${share.seq}`,
       encoded: swap.encoded,
+      duration,
       n: 0,
       expires: Date.now() + 3 * 86400_000
     })
