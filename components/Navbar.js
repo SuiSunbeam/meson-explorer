@@ -192,14 +192,24 @@ function Profile ({ globalState, setGlobalState }) {
               </div>
               {
                 authorized &&
-                <Menu.Item>
-                  <div
-                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                    onClick={() => router.push('/stats')}
-                  >
-                    Stats
-                  </div>
-                </Menu.Item>
+                <>
+                  <Menu.Item>
+                    <div
+                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                      onClick={() => router.push('/lp/0x13B0A18505A7C03aAE841C527eCBe72836275E54')}
+                    >
+                      LP Status
+                    </div>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <div
+                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                      onClick={() => router.push('/stats')}
+                    >
+                      Stats
+                    </div>
+                  </Menu.Item>
+                </>
               }
             </div>
           }
