@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     return
   }
 
-  const swapId = req.query.swapId
+  const { swapId, locale = 'en' } = req.query
   const swap = await Swaps.findById(swapId)
   if (!swap) {
     res.status(400).json({ error: { code: -32602, message: 'Failed to get swap data' } })
@@ -36,6 +36,7 @@ export default async function handler(req, res) {
       code: `${share._id}${share.seq}`,
       encoded: swap.encoded,
       duration,
+      locale,
       n: 0,
       expires: Date.now() + 3 * 86400_000
     })
