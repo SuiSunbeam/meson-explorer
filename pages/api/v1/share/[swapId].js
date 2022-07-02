@@ -42,9 +42,7 @@ export default async function handler(req, res) {
 
   const result = {
     address,
-    inChain: swap.inChain,
-    outChain: swap.outChain,
-    fee: swap.fee,
+    encoded: swap.encoded,
     duration,
     code: shareCode.code
   }
