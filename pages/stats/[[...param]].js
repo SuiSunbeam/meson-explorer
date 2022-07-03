@@ -18,7 +18,7 @@ export default function StatsByChain() {
   const tabs = getAllNetworks().map(n => ({
     key: n.id,
     name: n.name,
-    display: <TagNetwork size='md' network={n} iconOnly className='ml-2' />,
+    display: <TagNetwork size='md' network={n} iconOnly />,
     shortCoinType: n.shortSlip44
   }))
   tabs.unshift({ key: 'all', name: 'All Chains', shortCoinType: '' })

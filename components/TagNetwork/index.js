@@ -25,13 +25,17 @@ export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly
   const logo = logos[alias]
   return (
     <div className={classnames('flex items-center text-gray-500', size === 'sm' && 'text-xs', className)}>
-      <div className={classnames('flex items-center rounded-full shadow', size === 'md' ? 'w-5 h-5 mr-2' : 'w-4 h-4 mr-1')}>
+      <div className={classnames('flex items-center rounded-full shadow', size === 'md' ? 'w-5 h-5' : 'w-4 h-4')}>
         {logo && <Image src={logo} alt='' />}
       </div>
-      <div className={classnames('items-center', responsive ? 'hidden sm:flex' : 'flex')}>
-        {!iconOnly && (network.networkName || network.name)}
-        {address && <ExternalIcon href={`${network.explorer}/address/${address}`} />}
-      </div>
+      {
+        !iconOnly &&
+        <div className={classnames('items-center', size === 'md' ? 'ml-2' : 'ml-1', responsive ? 'hidden sm:flex' : 'flex')}>
+          {network.networkName || network.name}
+          {address && <ExternalIcon href={`${network.explorer}/address/${address}`} />}
+        </div>
+      }
+     
     </div>
   )
 }

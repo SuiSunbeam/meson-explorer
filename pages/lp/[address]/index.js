@@ -56,10 +56,7 @@ function LpContent ({ address }) {
 
   return (
     <dl>
-      <ListRow
-        size='sm'
-        title={<span className='ml-7'>Total</span>}
-      >
+      <ListRow size='sm' title='Total'>
         <div className='flex items-center'>
           <div className='flex flex-1 items-center h-5'>
             <NumberDisplay value={ethers.utils.formatUnits(totalDeposit, 6)} />

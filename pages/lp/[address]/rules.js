@@ -24,9 +24,9 @@ export default function SwapRuleList() {
   } else {
     body = (
       <Table size='lg' headers={[
-        { name: 'route / priority', width: '25%', className: 'pl-4 md:pl-6' },
-        { name: 'limit', width: '15%' },
-        { name: 'fee rule', width: '60%' }
+        { name: 'route / priority', width: '40%', className: 'pl-4 md:pl-6' },
+        { name: 'limit', width: '20%' },
+        { name: 'fee rule', width: '40%' }
       ]}>
         {data.map((d, i) => <SwapRule key={i} d={d} />)}
       </Table>

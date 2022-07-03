@@ -29,7 +29,7 @@ export default function QueuedBlocks() {
   const tabs = getAllNetworks().map(n => ({
     key: n.id,
     name: n.name,
-    display: <TagNetwork size='md' network={n} iconOnly className='ml-2' />,
+    display: <TagNetwork size='md' network={n} iconOnly />,
     shortCoinType: n.shortSlip44
   }))
 
