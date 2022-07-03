@@ -110,7 +110,7 @@ function LpContentRow ({ address, network, add }) {
     client.getBalance(formatedAddress)
       .catch(() => {})
       .then(v => v && setCore(ethers.utils.formatUnits(v, network.nativeCurrency?.decimals || 18)))
-  }, [formatedAddress])
+  }, [formatedAddress]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <ListRow
@@ -164,7 +164,7 @@ function TokenAmount ({ client, address, token, explorer, add }) {
           setBalance(ethers.utils.formatUnits(v, token.decimals))
         }
       })
-  }, [address])
+  }, [address]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className='flex items-center'>
