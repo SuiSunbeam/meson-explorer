@@ -4,23 +4,25 @@ import { useRouter } from 'next/router'
 
 import { ethers } from 'ethers'
 
-import Card, { CardTitle, CardBody } from '../../components/Card'
-import { Loading } from '../../components/LoadingScreen'
-import ListRow from '../../components/ListRow'
-import TagNetwork from '../../components/TagNetwork'
-import TagNetworkToken from '../../components/TagNetworkToken'
+import Card, { CardTitle, CardBody } from '../../../components/Card'
+import LoadingScreen, { Loading } from '../../../components/LoadingScreen'
+import ListRow from '../../../components/ListRow'
+import TagNetwork from '../../../components/TagNetwork'
+import TagNetworkToken from '../../../components/TagNetworkToken'
 
-import { presets, getAllNetworks } from '../../lib/swap'
+import { presets, getAllNetworks } from '../../../lib/swap'
 
 export default function LpPage() {
   const router = useRouter()
   const { address } = router.query
 
-  let body = null
-  if (!address) {
-    body = <div className='py-6 px-4 sm:px-6 text-red-400'>xxx</div>
-  } else {
-    body = <LpContent address={address} />
+  let body = <CardBody><LoadingScreen /></CardBody>
+  if (address) {
+    body = (
+      <CardBody border={false}>
+        <LpContent address={address} />
+      </CardBody>
+    )
   }
 
   return (
@@ -28,18 +30,18 @@ export default function LpPage() {
       <CardTitle
         title='LP'
         subtitle={address}
+        tabs={[
+          { key: 'liquidity', name: 'Liquidity', active: true },
+          { key: 'rates', name: 'Fee Rates', onClick: () => router.push(`/lp/${address}/rates`) }
+        ]}
       />
-      <CardBody border={false}>
-        <dl>
-          {body}
-        </dl>
-      </CardBody>
+      {body}
     </Card>
   )
 }
 
 function LpContent ({ address }) {
-  return getAllNetworks().map(n => <LpContentRow key={n.id} address={address} network={n} />)
+  return <dl>{getAllNetworks().map(n => <LpContentRow key={n.id} address={address} network={n} />)}</dl>
 }
 
 function LpContentRow ({ address, network }) {
