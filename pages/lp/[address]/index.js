@@ -32,7 +32,7 @@ export default function LpPage() {
         subtitle={address}
         tabs={[
           { key: 'liquidity', name: 'Liquidity', active: true },
-          { key: 'rates', name: 'Fee Rates', onClick: () => router.push(`/lp/${address}/rates`) }
+          { key: 'rules', name: 'Swap Rules', onClick: () => router.push(`/lp/${address}/rules`) }
         ]}
       />
       {body}
