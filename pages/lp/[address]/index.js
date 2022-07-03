@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import classnames from 'classnames'
 import { useRouter } from 'next/router'
 
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 
 import Card, { CardTitle, CardBody } from '../../../components/Card'
 import LoadingScreen, { Loading } from '../../../components/LoadingScreen'
@@ -41,10 +41,56 @@ export default function LpPage() {
 }
 
 function LpContent ({ address }) {
-  return <dl>{getAllNetworks().map(n => <LpContentRow key={n.id} address={address} network={n} />)}</dl>
+  const [totalDeposit, setTotalDeposit] = React.useState(BigNumber.from(0))
+  const [totalBalance, setTotalBalance] = React.useState(BigNumber.from(0))
+
+  React.useEffect(() => {
+    setTotalDeposit(BigNumber.from(0))
+    setTotalBalance(BigNumber.from(0))
+  }, [address])
+
+  const add = React.useMemo(() => ({
+    toDeposit: delta => setTotalDeposit(v => v.add(delta)),
+    toBalance: delta => setTotalBalance(v => v.add(delta))
+  }), [setTotalDeposit, setTotalBalance])
+
+  return (
+    <dl>
+      <ListRow
+        size='sm'
+        title={<span className='ml-7'>Total</span>}
+      >
+        <div className='flex items-center'>
+          <div className='flex flex-1 items-center h-5'>
+            <NumberDisplay value={ethers.utils.formatUnits(totalDeposit, 6)} />
+          </div>
+          <div className='flex flex-1 items-center h-5'>
+            <NumberDisplay value={ethers.utils.formatUnits(totalBalance, 6)} />
+          </div>
+        </div>
+      </ListRow>
+      {getAllNetworks().map(n => (
+        <LpContentRow key={n.id} address={address} network={n} add={add} />
+      ))}
+    </dl>
+  )
 }
 
-function LpContentRow ({ address, network }) {
+function NumberDisplay ({ value, classNames }) {
+  if (!value) {
+    return <span className='ml-[100px] mr-[6px]'><Loading /></span>
+  }
+
+  const [i, d = ''] = value.split('.')
+  return (
+    <pre className={classnames('text-sm font-mono mr-1', classNames)}>
+      <span>{i.padStart(7, ' ')}</span>
+      <span className='opacity-40'>.{d.padEnd(6, '0').substring(0, 6)}</span>
+    </pre>
+  )
+}
+
+function LpContentRow ({ address, network, add }) {
   const [core, setCore] = React.useState(<Loading />)
 
   const client = presets.clientFromUrl({
@@ -66,13 +112,7 @@ function LpContentRow ({ address, network }) {
     }
     client.getBalance(formatedAddress)
       .catch(() => {})
-      .then(v => {
-        if (!v) {
-          return
-        }
-        const balance = ethers.utils.formatUnits(v, network.nativeCurrency?.decimals || 18)
-        setCore(balance)
-      })
+      .then(v => v && setCore(ethers.utils.formatUnits(v, network.nativeCurrency?.decimals || 18)))
   }, [formatedAddress])
 
   return (
@@ -88,16 +128,23 @@ function LpContentRow ({ address, network }) {
         </div>
       }
     >
-    {network.tokens.map(t => <TokenAmount key={t.addr} client={client} address={formatedAddress} token={t} explorer={network.explorer} />)}
+      {network.tokens.map(t => (
+        <TokenAmount
+          key={t.addr}
+          client={client}
+          address={formatedAddress}
+          token={t}
+          explorer={network.explorer}
+          add={add}
+        />
+      ))}
     </ListRow>
   )
 }
 
-function TokenAmount ({ client, address, token, explorer }) {
+function TokenAmount ({ client, address, token, explorer, add }) {
   const [deposit, setDeposit] = React.useState()
-  const [depositDecimal, setDepositDecimal] = React.useState()
   const [balance, setBalance] = React.useState()
-  const [balanceDecimal, setBalanceDecimal] = React.useState()
 
   useEffect(() => {
     if (!address) {
@@ -106,59 +153,42 @@ function TokenAmount ({ client, address, token, explorer }) {
     client.balanceOf(token.addr, address)
       .catch(() => {})
       .then(v => {
-        if (!v) {
-          return
+        if (v) {
+          add.toDeposit(v)
+          setDeposit(ethers.utils.formatUnits(v, 6))
         }
-        const bal = ethers.utils.formatUnits(v, 6)
-        const [i, d] = bal.split('.')
-        setDeposit(i.padStart(6, ' '))
-        setDepositDecimal(`.${d.padEnd(6, '0').substring(0, 6)}`)
       })
     
     client.balanceOfToken(token.addr, address)
       .catch(() => {})
       .then(v => {
-        if (!v) {
-          return
+        if (v) {
+          add.toBalance(v.div(10 ** (token.decimals - 6)))
+          setBalance(ethers.utils.formatUnits(v, token.decimals))
         }
-        const bal = ethers.utils.formatUnits(v, token.decimals)
-        const [i, d] = bal.split('.')
-        setBalance(i.padStart(6, ' '))
-        setBalanceDecimal(`.${d.padEnd(6, '0').substring(0, 6)}`)
       })
   }, [address])
 
   return (
     <div className='flex items-center'>
       <div className='flex flex-1 items-center h-5'>
-        {
-          deposit
-            ? <pre className={classnames(
-                'text-sm font-mono mr-1',
-                deposit <= 1000 && 'bg-red-500 text-white',
-                deposit > 1000 && deposit <= 5000 && 'text-red-500',
-                deposit > 5000 && deposit <= 10000 && 'text-yellow-500',
-                deposit > 10000 && deposit <= 20000 && 'text-blue-600'
-              )}>
-                <span>{deposit}</span>
-                <span className='opacity-40'>{depositDecimal}</span>
-              </pre>
-            : <span className='ml-[86px] mr-3'><Loading /></span>
-        }
+        <NumberDisplay
+          value={deposit}
+          classNames={classnames(
+            deposit <= 1000 && 'bg-red-500 text-white',
+            deposit > 1000 && deposit <= 5000 && 'text-red-500',
+            deposit > 5000 && deposit <= 10000 && 'text-yellow-500',
+            deposit > 10000 && deposit <= 20000 && 'text-blue-600'
+          )}
+        />
         <TagNetworkToken explorer={explorer} token={token} />
       </div>
 
       <div className='flex flex-1 items-center h-5'>
-        {
-          balance
-            ? <pre className={classnames(
-                'text-sm font-mono mr-1',
-                balance < 1 && 'text-gray-300'
-              )}>
-                {balance}<span className='opacity-40'>{balanceDecimal}</span>
-              </pre>
-            : <span className='ml-[86px] mr-3'><Loading /></span>
-        }
+        <NumberDisplay
+          value={balance}
+          classNames={classnames(balance < 1 && 'text-gray-300')}
+        />
         <TagNetworkToken explorer={explorer} token={token} />
       </div>
     </div>
