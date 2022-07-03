@@ -7,16 +7,17 @@ export const middleware = withAuth(
     const isAdmin = token?.roles?.includes('admin')
     const pathname = req.nextUrl.pathname
 
-    if (!token && (
+    if (
       pathname.startsWith('/pending') ||
       pathname.startsWith('/stats') ||
-      pathname.startsWith('/queued')
-    )) {
-      return NextResponse.redirect(new URL('/', req.url))
-    }
-
-    if (!isAdmin && pathname.startsWith('/lp')) {
-      return NextResponse.redirect(new URL('/', req.url))
+      pathname.startsWith('/queued') ||
+      pathname.startsWith('/lp')
+    ) {
+      if (!token) {
+        return NextResponse.redirect(new URL('/', req.url))
+      } else if (!isAdmin) {
+        return NextResponse.rewrite(new URL('/unauthorized', req.url))
+      }
     }
 
     if (!isAdmin && (

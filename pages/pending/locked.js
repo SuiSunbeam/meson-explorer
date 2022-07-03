@@ -10,21 +10,7 @@ import Table from '../../components/Table'
 import SwapRow from '../../components/SwapRow'
 import Pagination from '../../components/Pagination'
 
-export default function AuthWrapper() {
-  const { data: session } = useSession()
-
-  if (!session?.user) {
-    return 'Need login'
-  }
-
-  if (!session.user.roles?.includes('admin')) {
-    return 'Unauthorized'
-  }
-
-  return <LockedSwapList />
-}
-
-function LockedSwapList() {
+export default function LockedSwapList() {
   const router = useRouter()
   const page = Number(router.query.page || 1) - 1
   const pageValid = !Number.isNaN(page) && Number.isInteger(page) && page >= 0

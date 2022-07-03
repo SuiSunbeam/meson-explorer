@@ -15,21 +15,7 @@ import { getAllNetworks, formatDuration } from '../../lib/swap'
 
 const fmt = Intl.NumberFormat()
 
-export default function AuthWrapper() {
-  const { data: session } = useSession()
-
-  if (!session?.user) {
-    return 'Need login'
-  }
-
-  if (!session.user.roles?.includes('admin')) {
-    return 'Unauthorized'
-  }
-
-  return <StatsByChain />
-}
-
-function StatsByChain() {
+export default function StatsByChain() {
   const tabs = getAllNetworks().map(n => ({
     key: n.id,
     name: n.name,

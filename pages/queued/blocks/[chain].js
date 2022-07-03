@@ -23,21 +23,7 @@ import { getAllNetworks } from '../../../lib/swap'
 
 Chart.register(PointElement, LineElement, LinearScale, ScatterController, Title, Legend, Tooltip)
 
-export default function AuthWrapper() {
-  const { data: session } = useSession()
-
-  if (!session?.user) {
-    return 'Need login'
-  }
-
-  if (!session.user.roles?.includes('admin')) {
-    return 'Unauthorized'
-  }
-
-  return <QueuedBlocks />
-}
-
-function QueuedBlocks() {
+export default function QueuedBlocks() {
   const router = useRouter()
   const { chain } = router.query
 
