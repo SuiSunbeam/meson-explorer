@@ -12,6 +12,23 @@ import TagNetworkToken from '../../../components/TagNetworkToken'
 
 import { presets, getAllNetworks } from '../../../lib/swap'
 
+const CORE_ALERT = {
+  eth: 0.01,
+  bnb: 0.1,
+  polygon: 0.1,
+  evmos: 0.001,
+  arb: 0.05,
+  opt: 0.05,
+  aurora: 0.00001,
+  cfx: 0.01,
+  avax: 0.01,
+  ftm: 1,
+  tron: 50,
+  one: 10,
+  movr: 0.05,
+  beam: 0.1,
+}
+
 export default function LpPage() {
   const router = useRouter()
   const { address } = router.query
@@ -112,13 +129,20 @@ function LpContentRow ({ address, network, add }) {
       .then(v => v && setCore(ethers.utils.formatUnits(v, network.nativeCurrency?.decimals || 18)))
   }, [formatedAddress]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const alert = CORE_ALERT[network.id]
   return (
     <ListRow
       size='sm'
       title={
         <div className='flex flex-col align-start'>
           <TagNetwork size='md' network={network} />
-          <div className='flex ml-7 mt-0.5 text-xs font-mono'>
+          <div className={classnames(
+            'flex ml-7 mt-0.5 text-xs font-mono',
+            core <= alert && 'bg-red-500 text-white',
+            core > alert && core <= alert * 3 && 'text-red-500',
+            core > alert * 3 && core <= alert * 10 && 'text-yellow-500',
+            core > alert * 10 && core <= alert * 20 && 'text-blue-400',
+          )}>
             {core}
             <div className='ml-1'>{network.nativeCurrency?.symbol || 'ETH'}</div>
           </div>
@@ -175,7 +199,7 @@ function TokenAmount ({ client, address, token, explorer, add }) {
             deposit <= 1000 && 'bg-red-500 text-white',
             deposit > 1000 && deposit <= 5000 && 'text-red-500',
             deposit > 5000 && deposit <= 10000 && 'text-yellow-500',
-            deposit > 10000 && deposit <= 20000 && 'text-blue-600'
+            deposit > 10000 && deposit <= 20000 && 'text-blue-400'
           )}
         />
         <TagNetworkToken explorer={explorer} token={token} />
