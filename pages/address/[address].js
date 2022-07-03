@@ -50,9 +50,9 @@ export default function AddressSwapList() {
     })
     body = (
       <>
-        <Table headers={[
-          { name: 'swap id / time', width: '18%', className: 'pl-3 md:pl-4 hidden sm:table-cell' },
-          { name: 'swap id', width: '18%', className: 'sm:hidden' },
+        <Table size='lg' headers={[
+          { name: 'swap id / time', width: '18%', className: 'hidden sm:table-cell' },
+          { name: 'swap id', width: '18%', className: 'pl-4 sm:hidden' },
           { name: 'status', width: '10%', className: 'hidden sm:table-cell' },
           { name: 'from', width: '18%' },
           { name: 'to', width: '18%' },
@@ -60,7 +60,7 @@ export default function AddressSwapList() {
           { name: 'fee', width: '9%', className: 'hidden md:table-cell' },
           { name: 'duration', width: '9%', className: 'hidden lg:table-cell' }
         ]}>
-          {list.map(row => <SwapRow key={row._id} data={row} />)}
+          {list.map(row => <SwapRow key={row._id} extraMargin data={row} />)}
         </Table>
         <Pagination size={10} page={data.page} total={total} onPageChange={onPageChange} />
       </>
