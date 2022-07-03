@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import classnames from 'classnames'
 import { useRouter } from 'next/router'
 
@@ -106,7 +106,7 @@ function LpContentRow ({ address, network, add }) {
     }
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!formatedAddress) {
       return
     }
@@ -146,7 +146,7 @@ function TokenAmount ({ client, address, token, explorer, add }) {
   const [deposit, setDeposit] = React.useState()
   const [balance, setBalance] = React.useState()
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!address) {
       return
     }

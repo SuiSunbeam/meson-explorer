@@ -104,7 +104,6 @@ export default function Navbar({ globalState, setGlobalState }) {
 function Profile ({ globalState, setGlobalState }) {
   const router = useRouter()
   const { data: session } = useSession()
-
   const authorized = session?.user?.roles?.includes('admin')
 
   const { coinType } = globalState

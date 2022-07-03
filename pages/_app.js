@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Head from 'next/head'
 import Script from 'next/script'
 import { SessionProvider } from 'next-auth/react'
@@ -14,7 +14,7 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
   const [globalState, setGlobalState] = React.useState({})
   const router = useRouter()
 
-  useEffect(() => {
+  React.useEffect(() => {
     const handleRouteChange = (url) => {
       ga.pageview(url)
     }
