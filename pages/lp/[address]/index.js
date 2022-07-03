@@ -213,7 +213,7 @@ function TokenAmount ({ client, address, token, explorer, add }) {
             deposit > 10000 && deposit <= 20000 && 'text-blue-400'
           )}
         />
-        <TagNetworkToken explorer={explorer} token={token} />
+        <TagNetworkToken explorer={explorer} token={token} iconOnly />
       </div>
 
       <div className='flex flex-1 items-center h-5'>
@@ -221,7 +221,7 @@ function TokenAmount ({ client, address, token, explorer, add }) {
           value={balance}
           classNames={classnames(balance < 1 && 'text-gray-300')}
         />
-        <TagNetworkToken explorer={explorer} token={token} />
+        <TagNetworkToken explorer={explorer} token={token} iconOnly />
       </div>
     </div>
   )
