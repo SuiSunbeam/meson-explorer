@@ -24,6 +24,7 @@ export const middleware = withAuth(
       pathname.startsWith('/api/v1/swap/bonded') ||
       pathname.startsWith('/api/v1/swap/locked') ||
       pathname.startsWith('/api/v1/swap/conflict') ||
+      pathname.startsWith('/api/v1/rules') ||
       pathname.startsWith('/api/v1/stats') ||
       pathname.startsWith('/api/v1/queued')
     )) {
