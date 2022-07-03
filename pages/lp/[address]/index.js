@@ -9,6 +9,7 @@ import LoadingScreen, { Loading } from '../../../components/LoadingScreen'
 import ListRow from '../../../components/ListRow'
 import TagNetwork from '../../../components/TagNetwork'
 import TagNetworkToken from '../../../components/TagNetworkToken'
+import ExternalLink from '../../../components/ExternalLink'
 
 import { presets, getAllNetworks } from '../../../lib/swap'
 
@@ -126,7 +127,12 @@ function LpContentRow ({ address, network, add }) {
     }
     client.getBalance(formatedAddress)
       .catch(() => {})
-      .then(v => v && setCore(ethers.utils.formatUnits(v, network.nativeCurrency?.decimals || 18)))
+      .then(v => {
+        if (v) {
+          const [i, d] = ethers.utils.formatUnits(v, network.nativeCurrency?.decimals || 18).split('.')
+          setCore(`${i}.${d.substring(0, 6)}`)
+        }
+      })
   }, [formatedAddress]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const alert = CORE_ALERT[network.id]
@@ -134,8 +140,13 @@ function LpContentRow ({ address, network, add }) {
     <ListRow
       size='sm'
       title={
-        <div className='flex flex-col align-start'>
-          <TagNetwork size='md' network={network} />
+        <div className='flex flex-row sm:flex-col align-start justify-between'>
+          <div className='self-start'>
+            <ExternalLink size='md' className='flex flex-row normal-case' href={`${network.explorer}/address/${network.mesonAddress}`}>
+              <TagNetwork size='md' network={network} iconOnly />
+              <div className='ml-2 font-medium'>{network.name}</div>
+            </ExternalLink>
+          </div>
           <div className={classnames(
             'flex ml-7 mt-0.5 text-xs font-mono',
             core <= alert && 'bg-red-500 text-white',
