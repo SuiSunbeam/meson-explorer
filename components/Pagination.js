@@ -1,6 +1,6 @@
 import classnames from 'classnames'
-
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid'
+
 import Button from './Button'
 
 export default function Pagination({ size = 10, page, total, maxPage, onPageChange }) {

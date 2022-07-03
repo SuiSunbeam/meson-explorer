@@ -1,12 +1,17 @@
 import React from 'react'
+import { PencilIcon } from '@heroicons/react/solid'
+
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 
 import { ethers } from 'ethers'
 
-import Card, { CardTitle, CardBody } from 'components/Card'
 import LoadingScreen from 'components/LoadingScreen'
+import Card, { CardTitle, CardBody } from 'components/Card'
+import Modal from 'components/Modal'
+import Input from 'components/Input'
 import Table, { Td } from 'components/Table'
+import Button from 'components/Button'
 
 import fetcher from 'lib/fetcher'
 
@@ -14,7 +19,8 @@ export default function SwapRuleList() {
   const router = useRouter()
   const { address } = router.query
 
-  const { data, error } = useSWR(`rules`, fetcher)
+  const { data, error, mutate } = useSWR('rules', fetcher)
+  const [modalData, setModalData] = React.useState()
 
   let body = null
   if (error) {
@@ -24,11 +30,12 @@ export default function SwapRuleList() {
   } else {
     body = (
       <Table size='lg' headers={[
-        { name: 'route / priority', width: '40%', className: 'pl-4 md:pl-6' },
+        { name: 'route / priority', width: '35%', className: 'pl-4 md:pl-6' },
         { name: 'limit', width: '20%' },
-        { name: 'fee rule', width: '40%' }
+        { name: 'fee rule', width: '35%' },
+        { name: 'edit', width: '10%', className: 'text-right' },
       ]}>
-        {data.map((d, i) => <SwapRule key={i} d={d} />)}
+        {data.map((d, i) => <SwapRule key={i} d={d} onOpenModal={d => setModalData(d)} />)}
       </Table>
     )
   }
@@ -44,11 +51,103 @@ export default function SwapRuleList() {
         ]}
       />
       <CardBody>{body}</CardBody>
+      <SwapRuleModal
+        data={modalData}
+        onClose={refresh => {
+          setModalData()
+          refresh && mutate()
+        }}
+      />
     </Card>
   )
 }
 
-function SwapRule ({ d }) {
+function SwapRuleModal ({ data, onClose }) {
+  const [from, setFrom] = React.useState('')
+  const [to, setTo] = React.useState('')
+  const [priority, setPriority] = React.useState(0)
+  const [limit, setLimit] = React.useState(0)
+  const [fee, setFee] = React.useState('')
+
+  React.useEffect(() => {
+    if (data) {
+      setFrom(data.from)
+      setTo(data.to)
+      setPriority(data.priority)
+      setLimit(data.limit)
+      setFee(JSON.stringify(data.fee, null, 2))
+    }
+  }, [data])
+
+  const onSave = async () => {
+    const updates = { from, to, priority, limit, fee: JSON.parse(fee) }
+    await fetcher.put(`rules/${data._id}`, updates)
+    onClose(true)
+  }
+
+  const onDelete = async () => {
+    await fetcher.delete(`rules/${data._id}`)
+    onClose(true)
+  }
+
+  return (
+    <Modal
+      isOpen={!!data}
+      title='Swap Rule'
+      onClose={onClose}
+    >
+      <div className='grid grid-cols-6 gap-x-6 gap-y-4'>
+        <Input
+          className='col-span-3'
+          id='from'
+          label='From'
+          type='text'
+          value={from}
+          onChange={setFrom}
+        />
+        <Input
+          className='col-span-3'
+          id='to'
+          label='To'
+          type='text'
+          value={to}
+          onChange={setTo}
+        />
+        <Input
+          className='col-span-3'
+          id='priority'
+          label='Priority'
+          type='number'
+          value={priority}
+          onChange={setPriority}
+        />
+        <Input
+          className='col-span-3'
+          id='limit'
+          label='Limit'
+          type='number'
+          value={limit}
+          onChange={setLimit}
+        />
+        <Input
+          className='col-span-6'
+          id='rules'
+          label='Fee Rules'
+          type='textarea'
+          value={fee}
+          onChange={setFee}
+        />
+      </div>
+
+      <div className='flex justify-between mt-6'>
+        <Button rounded color='error' onClick={onDelete}>Delete</Button>
+        <Button rounded color='info' onClick={onSave}>Save</Button>
+      </div>
+    </Modal>
+  )
+}
+
+function SwapRule ({ d, onOpenModal }) {
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-100'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1'>
@@ -63,6 +162,11 @@ function SwapRule ({ d }) {
       </Td>
       <Td size='sm'>{d.limit}</Td>
       <Td size='sm'>{d.fee?.map((item, i) => <FeeRule key={i} {...item} />)}</Td>
+      <Td size='sm' className='text-right'>
+        <Button rounded size='xs' color='info' onClick={() => onOpenModal(d)}>
+          <PencilIcon className='w-4 h-4' aria-hidden='true' />
+        </Button>
+      </Td>
     </tr>
   )
 }
