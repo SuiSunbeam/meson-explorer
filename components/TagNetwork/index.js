@@ -1,7 +1,7 @@
 import classnames from 'classnames'
 import Image from 'next/image'
 
-import { ExternalIcon } from '../ExternalLink'
+import { ExternalIcon } from 'components/ExternalLink'
 
 import eth from './eth.png'
 import bnb from './bnb.png'

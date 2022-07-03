@@ -1,4 +1,4 @@
-import { Rules } from '../../../../lib/db'
+import { Rules } from 'lib/db'
 
 export default async function handler(req, res) {
   const result = await Rules.find().sort({ priority: -1 }).exec()

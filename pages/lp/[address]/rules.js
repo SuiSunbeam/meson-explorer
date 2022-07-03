@@ -4,11 +4,11 @@ import useSWR from 'swr'
 
 import { ethers } from 'ethers'
 
-import Card, { CardTitle, CardBody } from '../../../components/Card'
-import LoadingScreen from '../../../components/LoadingScreen'
-import Table, { Td } from '../../../components/Table'
+import Card, { CardTitle, CardBody } from 'components/Card'
+import LoadingScreen from 'components/LoadingScreen'
+import Table, { Td } from 'components/Table'
 
-import fetcher from '../../../lib/fetcher'
+import fetcher from 'lib/fetcher'
 
 export default function SwapRuleList() {
   const router = useRouter()

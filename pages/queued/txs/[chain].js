@@ -13,12 +13,12 @@ import {
   Tooltip
 } from 'chart.js'
 
-import fetcher from '../../../lib/fetcher'
-import LoadingScreen from '../../../components/LoadingScreen'
-import Card, { CardTitle, CardBody } from '../../../components/Card'
-import TagNetwork from '../../../components/TagNetwork'
+import fetcher from 'lib/fetcher'
+import LoadingScreen from 'components/LoadingScreen'
+import Card, { CardTitle, CardBody } from 'components/Card'
+import TagNetwork from 'components/TagNetwork'
 
-import { getAllNetworks } from '../../../lib/swap'
+import { getAllNetworks } from 'lib/swap'
 
 Chart.register(PointElement, LineElement, LinearScale, ScatterController, Title, Legend, Tooltip)
 

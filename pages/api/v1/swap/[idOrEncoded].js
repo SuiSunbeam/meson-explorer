@@ -1,5 +1,5 @@
-import { Swaps } from '../../../../lib/db'
-import { getSwapId } from '../../../../lib/swap'
+import { Swaps } from 'lib/db'
+import { getSwapId } from 'lib/swap'
 
 export default async function handler(req, res) {
   const [p0, p1] = req.query.idOrEncoded.split(':', 2)

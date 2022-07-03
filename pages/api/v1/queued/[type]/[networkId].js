@@ -1,4 +1,4 @@
-import { Queue } from '../../../../../lib/db'
+import { Queue } from 'lib/db'
 
 export default async function handler(req, res) {
   const { type, networkId } = req.query

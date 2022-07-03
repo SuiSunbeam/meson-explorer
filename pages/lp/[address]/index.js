@@ -4,14 +4,14 @@ import { useRouter } from 'next/router'
 
 import { BigNumber, ethers } from 'ethers'
 
-import Card, { CardTitle, CardBody } from '../../../components/Card'
-import LoadingScreen, { Loading } from '../../../components/LoadingScreen'
-import ListRow from '../../../components/ListRow'
-import TagNetwork from '../../../components/TagNetwork'
-import TagNetworkToken from '../../../components/TagNetworkToken'
-import ExternalLink from '../../../components/ExternalLink'
+import Card, { CardTitle, CardBody } from 'components/Card'
+import LoadingScreen, { Loading } from 'components/LoadingScreen'
+import ListRow from 'components/ListRow'
+import TagNetwork from 'components/TagNetwork'
+import TagNetworkToken from 'components/TagNetworkToken'
+import ExternalLink from 'components/ExternalLink'
 
-import { presets, getAllNetworks } from '../../../lib/swap'
+import { presets, getAllNetworks } from 'lib/swap'
 
 const CORE_ALERT = {
   eth: 0.01,

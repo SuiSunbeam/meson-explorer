@@ -4,11 +4,11 @@ import Script from 'next/script'
 import { SessionProvider } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
-import '../styles/globals.css'
+import 'styles/globals.css'
 
-import AppContext from '../lib/context'
-import * as ga from '../lib/ga'
-import Navbar from '../components/Navbar'
+import AppContext from 'lib/context'
+import * as ga from 'lib/ga'
+import Navbar from 'components/Navbar'
 
 export default function App({ Component, pageProps: { session, ...pageProps } }) {
   const [globalState, setGlobalState] = React.useState({})

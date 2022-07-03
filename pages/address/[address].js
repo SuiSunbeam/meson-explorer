@@ -2,11 +2,11 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 
-import LoadingScreen from '../../components/LoadingScreen'
-import Card, { CardTitle, CardBody } from '../../components/Card'
-import Table from '../../components/Table'
-import SwapRow from '../../components/SwapRow'
-import Pagination from '../../components/Pagination'
+import LoadingScreen from 'components/LoadingScreen'
+import Card, { CardTitle, CardBody } from 'components/Card'
+import Table from 'components/Table'
+import SwapRow from 'components/SwapRow'
+import Pagination from 'components/Pagination'
 
 const fetcher = async param => {
   const [address, pageStr] = param.split(':')

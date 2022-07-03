@@ -1,5 +1,5 @@
 import Badge from './Badge'
-import { getStatusFromEvents } from '../lib/swap'
+import { getStatusFromEvents } from 'lib/swap'
 
 export default function SwapStatusBadge({ events, expired, error, className }) {
   const status = error ? 'ERROR' : getStatusFromEvents(events, expired)

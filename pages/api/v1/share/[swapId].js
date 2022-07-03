@@ -1,4 +1,4 @@
-import { Swaps, Shares, ShareCodes } from '../../../../lib/db'
+import { Swaps, Shares, ShareCodes } from 'lib/db'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {

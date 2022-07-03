@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'
-import { presets } from '../../../../../lib/swap'
+import { presets } from 'lib/swap'
 
 const EXPLORER_APIS = {
   eth: 'https://api.etherscan.io',

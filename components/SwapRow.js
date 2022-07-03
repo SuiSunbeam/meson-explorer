@@ -4,8 +4,8 @@ import Link from 'next/link'
 import debounce from 'lodash/debounce'
 import { Swap } from '@mesonfi/sdk'
 
-import socket from '../lib/socket'
-import { parseNetworkAndToken, abbreviate, getDuration } from '../lib/swap'
+import socket from 'lib/socket'
+import { parseNetworkAndToken, abbreviate, getDuration } from 'lib/swap'
 
 import { Td } from './Table'
 import SwapStatusBadge from './SwapStatusBadge'

@@ -5,12 +5,12 @@ import useSWR from 'swr'
 import { SearchIcon } from '@heroicons/react/outline'
 import { ethers } from 'ethers'
 
-import fetcher from '../lib/fetcher'
-import LoadingScreen from '../components/LoadingScreen'
-import Card from '../components/Card'
-import Table from '../components/Table'
-import SwapRow from '../components/SwapRow'
-import Pagination from '../components/Pagination'
+import fetcher from 'lib/fetcher'
+import LoadingScreen from 'components/LoadingScreen'
+import Card from 'components/Card'
+import Table from 'components/Table'
+import SwapRow from 'components/SwapRow'
+import Pagination from 'components/Pagination'
 
 export default function SwapList() {
   const { data: session } = useSession()

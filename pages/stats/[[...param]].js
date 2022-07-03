@@ -3,14 +3,14 @@ import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { ethers } from 'ethers'
 
-import fetcher from '../../lib/fetcher'
-import LoadingScreen from '../../components/LoadingScreen'
-import Card, { CardTitle, CardBody, StatCard } from '../../components/Card'
-import Table, { Td } from '../../components/Table'
-import ButtonGroup from '../../components/ButtonGroup'
-import TagNetwork from '../../components/TagNetwork'
+import fetcher from 'lib/fetcher'
+import LoadingScreen from 'components/LoadingScreen'
+import Card, { CardTitle, CardBody, StatCard } from 'components/Card'
+import Table, { Td } from 'components/Table'
+import ButtonGroup from 'components/ButtonGroup'
+import TagNetwork from 'components/TagNetwork'
 
-import { getAllNetworks, formatDuration } from '../../lib/swap'
+import { getAllNetworks, formatDuration } from 'lib/swap'
 
 const fmt = Intl.NumberFormat()
 

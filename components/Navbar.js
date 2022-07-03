@@ -6,8 +6,8 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { UserCircleIcon, LinkIcon, CreditCardIcon } from '@heroicons/react/outline'
 import { UserCircleIcon as SolidUserCircleIcon } from '@heroicons/react/solid'
 
-import extensions from '../lib/extensions'
-import { presets, getExtType, abbreviate } from '../lib/swap'
+import extensions from 'lib/extensions'
+import { presets, getExtType, abbreviate } from 'lib/swap'
 
 const testnetMode = Boolean(process.env.NEXT_PUBLIC_TESTNET)
 
