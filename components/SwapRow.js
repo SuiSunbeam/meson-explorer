@@ -86,7 +86,7 @@ export default function SwapRow({ data: raw, extraMargin }) {
   const recipient = data.fromTo[1] || ''
   return (
     <tr
-      className='odd:bg-white even:bg-gray-50 hover:bg-primary-100'
+      className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'
       onMouseDown={evt => {
         mouseJustDown.current = true
         setTimeout(() => { mouseJustDown.current = false }, 500)

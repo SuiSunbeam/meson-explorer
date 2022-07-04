@@ -154,7 +154,7 @@ function SwapRuleModal ({ data, onClose }) {
 
 function SwapRule ({ d, onOpenModal }) {
   return (
-    <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-100'>
+    <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1'>
         <div className='flex flex-row items-center'>
           {d.from}

@@ -86,7 +86,7 @@ export default function SwapList() {
           }}>
             <input
               type='search'
-              className='focus:ring-primary-100 focus:border-primary block w-full pl-9 pr-2 sm:text-sm border-gray-200 rounded-md'
+              className='focus:ring-primary-50 focus:border-primary block w-full pl-9 pr-2 sm:text-sm border-gray-200 rounded-md'
               placeholder='Search by swap id, encoded or address'
               value={search}
               onChange={evt => setSearchValue(evt.target.value)}
