@@ -1,6 +1,7 @@
 import React from 'react'
 import classnames from 'classnames'
 import { useRouter } from 'next/router'
+import ReconnectingWebSocket from 'reconnecting-websocket'
 
 import { BigNumber, ethers } from 'ethers'
 
@@ -12,6 +13,11 @@ import TagNetworkToken from 'components/TagNetworkToken'
 import ExternalLink from 'components/ExternalLink'
 
 import { presets, getAllNetworks } from 'lib/swap'
+
+let JsonRpcs = {}
+try {
+  JsonRpcs = JSON.parse(process.env.NEXT_PUBLIC_JSON_RPCS)
+} catch {}
 
 const CORE_ALERT = {
   eth: 0.01,
@@ -106,20 +112,49 @@ function NumberDisplay ({ value, classNames }) {
 }
 
 function LpContentRow ({ address, network, add }) {
+  const { id, url } = network
   const [core, setCore] = React.useState(<Loading />)
 
-  const client = presets.clientFromUrl({
-    id: network.id,
-    url: network.url.replace('${INFURA_API_KEY}', process.env.NEXT_PUBLIC_INFURA_PROJECT_ID)
-  })
+  const client = React.useMemo(() => {
+    let urls = [url.replace('${INFURA_API_KEY}', process.env.NEXT_PUBLIC_INFURA_PROJECT_ID)]
+    if (JsonRpcs[id]) {
+      if (typeof JsonRpcs[id] === 'string') {
+        urls = JsonRpcs[id].split(';')
+      } else if (Array.isArray(JsonRpcs[id])) {
+        urls = JsonRpcs[id]
+      }
+    }
+  
+    if (id.startsWith('tron')) {
+      return presets.clientFromUrl({ id, url: urls[0] })
+    } else {
+      return presets.clientFromUrl({
+        id,
+        quorum: {
+          threshold: 1,
+          list: urls.map((url, index) => {
+            if (url.startsWith('ws')) {
+              const ws = new ReconnectingWebSocket(url)
+              return { ws, priority: index, stallTimeout: 400, weight: 1 }
+            } else {
+              return { url, priority: index, stallTimeout: 400, weight: 1 }
+            }
+          })
+        }
+      })
+    }
+  }, [id, url])
 
-  let formatedAddress = address
-  if (network.id.startsWith('tron')) {
-    formatedAddress = client.tronWeb.address.fromHex(address?.replace('0x', '41'))
+  const formatedAddress = React.useMemo(() => {
+    if (!id.startsWith('tron')) {
+      return address
+    }
+    const formatedAddress = client.tronWeb.address.fromHex(address?.replace('0x', '41'))
     if (formatedAddress) {
       client.tronWeb.setAddress(formatedAddress)
     }
-  }
+    return formatedAddress
+  }, [id, address, client])
 
   React.useEffect(() => {
     if (!formatedAddress) {
