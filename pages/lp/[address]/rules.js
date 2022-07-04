@@ -214,7 +214,7 @@ function SwapRule ({ d, onOpenModal }) {
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1'>
-        <div className='flex flex-row items-center text-sm'>
+        <div className='flex flex-row items-center text-sm h-5'>
           <SwapRuleRouteKey routeKey={d.from} />
           <div className='text-gray-500 mx-1 text-xs'>{'->'}</div>
           <SwapRuleRouteKey routeKey={d.to} />
