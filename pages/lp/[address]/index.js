@@ -136,6 +136,12 @@ function LpContentRow ({ address, network, add }) {
   }, [formatedAddress]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const alert = CORE_ALERT[network.id]
+  const tokens = [...network.tokens]
+  if (network.mesonToken) {
+    tokens.push({ symbol: 'MSN', addr: network.mesonToken, decimals: 6, gray: true })
+  } else if (network.uctAddress) {
+    tokens.push({ symbol: 'UCT', addr: network.uctAddress, decimals: 6, gray: true })
+  }
   return (
     <ListRow
       size='sm'
@@ -160,7 +166,7 @@ function LpContentRow ({ address, network, add }) {
         </div>
       }
     >
-      {network.tokens.map(t => (
+      {tokens.map(t => (
         <TokenAmount
           key={t.addr}
           client={client}
@@ -206,7 +212,7 @@ function TokenAmount ({ client, address, token, explorer, add }) {
       <div className='flex flex-1 items-center h-5'>
         <NumberDisplay
           value={deposit}
-          classNames={classnames(
+          classNames={token.gray ? 'text-gray-500' : classnames(
             deposit <= 1000 && 'bg-red-500 text-white',
             deposit > 1000 && deposit <= 5000 && 'text-red-500',
             deposit > 5000 && deposit <= 10000 && 'text-warning',
