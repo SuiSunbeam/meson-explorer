@@ -45,6 +45,7 @@ export default function SwapRuleList() {
       <CardTitle
         title='LP'
         subtitle={address}
+        right={<Button size='sm' color='primary' rounded onClick={() => setModalData({})}>New Swap Rule</Button>}
         tabs={[
           { key: 'liquidity', name: 'Liquidity', onClick: () => router.push(`/lp/${address}`) },
           { key: 'rules', name: 'Swap Rules', active: true }
@@ -71,17 +72,21 @@ function SwapRuleModal ({ data, onClose }) {
 
   React.useEffect(() => {
     if (data) {
-      setFrom(data.from)
-      setTo(data.to)
-      setPriority(data.priority)
-      setLimit(data.limit)
-      setFee(JSON.stringify(data.fee, null, 2))
+      setFrom(data.from || '*')
+      setTo(data.to || '*')
+      setPriority(data.priority || 0)
+      setLimit(data.limit || 0)
+      setFee(JSON.stringify(data.fee, null, 2) || '[\n]')
     }
   }, [data])
 
   const onSave = async () => {
-    const updates = { from, to, priority, limit, fee: JSON.parse(fee) }
-    await fetcher.put(`rules/${data._id}`, updates)
+    const newData = { from, to, priority, limit, fee: JSON.parse(fee) }
+    if (data._id) {
+      await fetcher.put(`rules/${data._id}`, newData)
+    } else {
+      await fetcher.post(`rules`, newData)
+    }
     onClose(true)
   }
 

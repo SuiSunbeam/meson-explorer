@@ -9,7 +9,7 @@ export default async function handler(req, res) {
       res.status(400).json({ error: { code: -32602, message: 'Failed to get rules' } })
     }
   } else if (req.method === 'POST') {
-    const result = await Rules.insert(req.body)
+    const result = await Rules.create(req.body)
     if (result) {
       res.json({ result })
     } else {
