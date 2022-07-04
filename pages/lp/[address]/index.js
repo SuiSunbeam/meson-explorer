@@ -151,8 +151,8 @@ function LpContentRow ({ address, network, add }) {
             'flex ml-7 mt-0.5 text-xs font-mono',
             core <= alert && 'bg-red-500 text-white',
             core > alert && core <= alert * 3 && 'text-red-500',
-            core > alert * 3 && core <= alert * 10 && 'text-yellow-500',
-            core > alert * 10 && core <= alert * 20 && 'text-blue-400',
+            core > alert * 3 && core <= alert * 10 && 'text-warning',
+            core > alert * 10 && core <= alert * 20 && 'text-indigo-500',
           )}>
             {core}
             <div className='ml-1'>{network.nativeCurrency?.symbol || 'ETH'}</div>
@@ -209,8 +209,8 @@ function TokenAmount ({ client, address, token, explorer, add }) {
           classNames={classnames(
             deposit <= 1000 && 'bg-red-500 text-white',
             deposit > 1000 && deposit <= 5000 && 'text-red-500',
-            deposit > 5000 && deposit <= 10000 && 'text-yellow-500',
-            deposit > 10000 && deposit <= 20000 && 'text-blue-400'
+            deposit > 5000 && deposit <= 10000 && 'text-warning',
+            deposit > 10000 && deposit <= 20000 && 'text-indigo-500'
           )}
         />
         <TagNetworkToken explorer={explorer} token={token} iconOnly />

@@ -12,8 +12,19 @@ module.exports = {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
       colors: {
-        'primary': '#00B49B',
-        'primary-100': 'rgba(0, 180, 155, 0.1)',
+        'primary': {
+          DEFAULT: '#00B49B',
+          '50': '#FFFFFF',
+          '100': '#E7FFF8',
+          '200': '#9BFFE6',
+          '300': '#4EFFDA',
+          '400': '#01FFD3',
+          '500': '#00B49B',
+          '600': '#00A594',
+          '700': '#00958B',
+          '800': '#008682',
+          '900': '#007777'
+        },
         'gray-500': '#9eaea4',
         'warning': '#FFA800',
         'warning-100': 'rgba(255, 168, 0, 0.1)',
