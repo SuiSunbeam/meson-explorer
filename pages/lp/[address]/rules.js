@@ -12,6 +12,8 @@ import Modal from 'components/Modal'
 import Input from 'components/Input'
 import Table, { Td } from 'components/Table'
 import Button from 'components/Button'
+import TagNetwork from 'components/TagNetwork'
+import TagNetworkToken from 'components/TagNetworkToken'
 
 import fetcher from 'lib/fetcher'
 
@@ -30,8 +32,8 @@ export default function SwapRuleList() {
   } else {
     body = (
       <Table size='lg' headers={[
-        { name: 'route / priority', width: '35%', className: 'pl-4 md:pl-6' },
-        { name: 'limit', width: '20%' },
+        { name: 'route / priority', width: '30%', className: 'pl-4 md:pl-6' },
+        { name: 'limit', width: '25%' },
         { name: 'fee rule', width: '35%' },
         { name: 'edit', width: '10%', className: 'text-right' },
       ]}>
@@ -156,10 +158,10 @@ function SwapRule ({ d, onOpenModal }) {
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1'>
-        <div className='flex flex-row items-center'>
-          {d.from}
+        <div className='flex flex-row items-center text-sm'>
+          <SwapRuleRouteKey routeKey={d.from} />
           <div className='text-gray-500 mx-1 text-xs'>{'->'}</div>
-          {d.to}
+          <SwapRuleRouteKey routeKey={d.to} />
         </div>
         <div className='text-xs text-gray-500'>
           #{d.priority}
@@ -173,6 +175,26 @@ function SwapRule ({ d, onOpenModal }) {
         </Button>
       </Td>
     </tr>
+  )
+}
+
+function SwapRuleRouteKey ({ routeKey = '' }) {
+  if (routeKey === '*') {
+    return 'any'
+  }
+  const [n, t = '*'] = routeKey.split(':')
+  if (n === '*') {
+    if (t === '*') {
+      return 'any'
+    } else {
+      return <TagNetworkToken iconOnly token={{ symbol: t }}/>
+    }
+  }
+  return (
+    <div className='flex flex-row'>
+      <TagNetwork iconOnly network={{ networkId: n }}/>
+      { t !== '*' && <TagNetworkToken iconOnly token={{ symbol: t }} className='ml-1' /> }
+    </div>
   )
 }
 

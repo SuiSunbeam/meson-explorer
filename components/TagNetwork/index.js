@@ -5,8 +5,8 @@ import { ExternalIcon } from 'components/ExternalLink'
 
 import eth from './eth.png'
 import bnb from './bnb.png'
-import ava from './ava.png'
-import matic from './matic.png'
+import avax from './avax.png'
+import polygon from './polygon.png'
 import ftm from './ftm.png'
 import arb from './arb.png'
 import opt from './opt.png'
@@ -15,14 +15,14 @@ import aurora from './aurora.png'
 import cfx from './cfx.png'
 import evmos from './evmos.png'
 import movr from './movr.png'
-import glmr from './glmr.png'
-import trx from './trx.png'
+import beam from './beam.png'
+import tron from './tron.png'
 
-const logos = { eth, bnb, ava, matic, ftm, arb, opt, one, aurora, cfx, evmos, movr, glmr, trx }
+const logos = { eth, bnb, avax, polygon, ftm, arb, opt, one, aurora, cfx, evmos, movr, beam, tron }
 
 export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly, address, className }) {
-  const alias = network.alias?.toLowerCase() || network.networkAlias?.toLowerCase()
-  const logo = logos[alias]
+  const id = (network.id || network.networkId).split('-')[0]
+  const logo = logos[id]
   return (
     <div className={classnames('flex items-center text-gray-500', size === 'sm' && 'text-xs', className)}>
       <div className={classnames('flex items-center rounded-full shadow', size === 'md' ? 'w-5 h-5' : 'w-4 h-4')}>
