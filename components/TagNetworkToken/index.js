@@ -18,12 +18,17 @@ function getTokenLogo(symbol) {
   }
 }
 
-export default function TagNetworkToken ({ responsive, explorer, token, iconOnly, className }) {
+export default function TagNetworkToken ({ responsive, size = 'sm', explorer, token, iconOnly, className }) {
   const logo = getTokenLogo(token.symbol)
   const href = explorer && `${explorer}/${token.link || `token/${token.addr}`}`
   return (
     <div className={classnames('flex items-center text-gray-500', href && 'cursor-pointer hover:text-primary hover:underline', className)}>
-      <a href={href} className='flex items-center w-4 rounded-full shadow' target='_blank' rel='noreferrer'>
+      <a
+        href={href}
+        className={classnames('flex items-center rounded-full shadow', size === 'md' ? 'w-5 h-5' : 'w-4 h-4')}
+        target='_blank'
+        rel='noreferrer'
+      >
         {logo && <Image src={logo} alt='' />}
       </a>
       {

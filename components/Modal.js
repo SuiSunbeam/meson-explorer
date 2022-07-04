@@ -32,7 +32,7 @@ export default function Modal ({ isOpen = false, title, children, onClose = () =
             >
               <Dialog.Panel className={classnames(
                 'relative bg-white rounded-lg shadow-xl transform transition-all',
-                'max-w-md w-full sm:my-8 px-4 pt-5 pb-4 sm:p-6 overflow-hidden'
+                'max-w-lg w-full sm:my-8 px-4 pt-5 pb-4 sm:p-6 overflow-hidden'
               )}>
                 <div className='flex flex-col'>
                   <Dialog.Title as='h3' className='mb-5 text-lg leading-6 font-medium text-gray-900'>
@@ -46,23 +46,5 @@ export default function Modal ({ isOpen = false, title, children, onClose = () =
         </div>
       </Dialog>
     </Transition>
-  )
-}
-
-export function ModalContent ({ children, className, title, onClose }) {
-  return (
-    <div className={classnames('flex flex-col w-[calc(100vw-4rem)] sm:w-[calc(100vw-5rem)]', className)}>
-      {title && <ModalTitle onClose={onClose}>{title}</ModalTitle>}
-      <div className='pt-4'>{children}</div>
-    </div>
-  )
-}
-
-export function ModalTitle ({ children, onClose }) {
-  return (
-    <Dialog.Title as='h1' className='flex justify-between items-center text-lg font-semibold leading-6'>
-      {children}
-      {onClose ? <div onClick={onClose}>x</div> : null}
-    </Dialog.Title>
   )
 }

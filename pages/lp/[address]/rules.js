@@ -10,12 +10,26 @@ import LoadingScreen from 'components/LoadingScreen'
 import Card, { CardTitle, CardBody } from 'components/Card'
 import Modal from 'components/Modal'
 import Input from 'components/Input'
+import Select from 'components/Select'
 import Table, { Td } from 'components/Table'
 import Button from 'components/Button'
 import TagNetwork from 'components/TagNetwork'
 import TagNetworkToken from 'components/TagNetworkToken'
 
 import fetcher from 'lib/fetcher'
+import { getAllNetworks } from 'lib/swap'
+
+const chains = [
+  { id: '*', name: 'Any Chain' },
+  ...getAllNetworks().map(n => ({ id: n.id, name: n.name, icon: <TagNetwork iconOnly size='md' network={n} /> }))
+]
+const tokens = [
+  { id: '*', name: 'Any Token' },
+  { id: 'USDC', name: 'USDC', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'USDC' }} /> },
+  { id: 'USDT', name: 'USDT', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'USDT' }} /> },
+  { id: 'MSN', name: 'MSN', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'MSN' }} /> },
+  { id: 'UCT', name: 'UCT', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'UCT' }} /> }
+]
 
 export default function SwapRuleList() {
   const router = useRouter()
@@ -66,16 +80,23 @@ export default function SwapRuleList() {
 }
 
 function SwapRuleModal ({ data, onClose }) {
-  const [from, setFrom] = React.useState('')
-  const [to, setTo] = React.useState('')
+  const [fromChain, setFromChain] = React.useState('*')
+  const [fromToken, setFromToken] = React.useState('*')
+  const [toChain, setToChain] = React.useState('*')
+  const [toToken, setToToken] = React.useState('*')
+
   const [priority, setPriority] = React.useState(0)
   const [limit, setLimit] = React.useState(0)
   const [fee, setFee] = React.useState('')
 
   React.useEffect(() => {
     if (data) {
-      setFrom(data.from || '*')
-      setTo(data.to || '*')
+      const [fromChain, fromToken = '*'] = (data.from || '').split(':')
+      setFromChain(fromChain || '*')
+      setFromToken(fromToken)
+      const [toChain, toToken = '*'] = (data.to || '').split(':')
+      setToChain(toChain || '*')
+      setToToken(toToken)
       setPriority(data.priority || 0)
       setLimit(data.limit || 0)
       setFee(JSON.stringify(data.fee, null, 2) || '[\n]')
@@ -83,7 +104,14 @@ function SwapRuleModal ({ data, onClose }) {
   }, [data])
 
   const onSave = async () => {
-    const newData = { from, to, priority, limit, fee: JSON.parse(fee) }
+    const newData = {
+      from: fromToken === '*' ? fromChain : `${fromChain}:${fromToken}`,
+      to: toToken === '*' ? toChain : `${toChain}:${toToken}`,
+      priority,
+      limit,
+      fee: JSON.parse(fee)
+    }
+
     if (data._id) {
       await fetcher.put(`rules/${data._id}`, newData)
     } else {
@@ -104,22 +132,50 @@ function SwapRuleModal ({ data, onClose }) {
       onClose={onClose}
     >
       <div className='grid grid-cols-6 gap-x-6 gap-y-4'>
-        <Input
-          className='col-span-3'
-          id='from'
-          label='From'
-          type='text'
-          value={from}
-          onChange={setFrom}
-        />
-        <Input
-          className='col-span-3'
-          id='to'
-          label='To'
-          type='text'
-          value={to}
-          onChange={setTo}
-        />
+        <div className='col-span-3'>
+          <label className='block text-sm font-medium text-gray-700'>From</label>
+          <div className='mt-1 flex border border-gray-300 shadow-sm rounded-md'>
+            <Select
+              className='w-7/12 border-r border-gray-300'
+              noIcon
+              noBorder
+              options={chains}
+              value={fromChain}
+              onChange={setFromChain}
+            />
+            <Select
+              className='w-5/12'
+              noIcon
+              noBorder
+              options={tokens}
+              value={fromToken}
+              onChange={setFromToken}
+            />
+          </div>
+        </div>
+
+        <div className='col-span-3'>
+          <label className='block text-sm font-medium text-gray-700'>To</label>
+          <div className='mt-1 flex border border-gray-300 shadow-sm rounded-md'>
+            <Select
+              className='w-7/12 border-r border-gray-300'
+              noIcon
+              noBorder
+              options={chains}
+              value={toChain}
+              onChange={setToChain}
+            />
+            <Select
+              className='w-5/12'
+              noIcon
+              noBorder
+              options={tokens}
+              value={toToken}
+              onChange={setToToken}
+            />
+          </div>
+        </div>
+
         <Input
           className='col-span-3'
           id='priority'
@@ -187,12 +243,12 @@ function SwapRuleRouteKey ({ routeKey = '' }) {
     if (t === '*') {
       return 'any'
     } else {
-      return <TagNetworkToken iconOnly token={{ symbol: t }}/>
+      return <TagNetworkToken iconOnly token={{ symbol: t }} />
     }
   }
   return (
     <div className='flex flex-row'>
-      <TagNetwork iconOnly network={{ networkId: n }}/>
+      <TagNetwork iconOnly network={{ networkId: n }} />
       { t !== '*' && <TagNetworkToken iconOnly token={{ symbol: t }} className='ml-1' /> }
     </div>
   )

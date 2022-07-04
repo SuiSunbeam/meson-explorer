@@ -16,7 +16,7 @@ function TypedInput ({ id, type = 'text', placeholder, value, onChange }) {
         id={id}
         name={id}
         rows={5}
-        className='shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'
+        className='mt-1 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'
         placeholder={placeholder}
         value={value}
         onChange={evt => onChange(evt.target.value)}
