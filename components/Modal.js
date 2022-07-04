@@ -3,7 +3,6 @@ import classnames from 'classnames'
 import { Dialog, Transition } from '@headlessui/react'
 
 export default function Modal ({ isOpen = false, title, children, onClose = () => {} }) {
-  const focusRef = React.useRef()
   return (
     <Transition show={isOpen} as={React.Fragment}>
       <Dialog as='div' className='relative z-10' onClose={onClose}>
