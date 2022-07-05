@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   }
 
   const duration = Math.floor((swap.released - swap.created) / 1000)
-  if (duration > 99) {
+  if (duration > 99 || swap.fee < 1) {
     res.status(400).json({ error: { code: -32602, message: 'Failed to create share code' } })
     return
   }
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
       duration,
       locale,
       n: 0,
-      expires: Date.now() + 3 * 86400_000
+      expires: Date.now() + 7 * 86400_000
     })
     await Shares.findByIdAndUpdate(share._id, { $inc: { seq: 1 } })
   }
