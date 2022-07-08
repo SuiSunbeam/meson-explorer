@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   }
 
   const duration = Math.floor((swap.released - swap.created) / 1000)
-  if (duration > 120 || duration < 20 || swap.fee > 2_000_000 || swap.inToken > 2) {
+  if (duration > 180 || duration < 20 || swap.fee > 2_000_000 || swap.inToken > 2) {
     res.status(400).json({ error: { code: -32602, message: 'Failed to create share code' } })
     return
   }
