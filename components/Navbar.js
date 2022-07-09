@@ -208,6 +208,14 @@ function Profile ({ globalState, setGlobalState }) {
                       Stats
                     </div>
                   </Menu.Item>
+                  <Menu.Item>
+                    <div
+                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                      onClick={() => router.push('/share')}
+                    >
+                      Share Stats
+                    </div>
+                  </Menu.Item>
                 </>
               }
             </div>
