@@ -29,7 +29,8 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
   return (
     <>
       <Head>
-        <title>Meson Explorer</title>
+        <title>Meson Explorer - One-stop block explorer for Meson cross-chain stable swaps</title>
+        <meta name='title' content='Meson Explorer - One-stop block explorer for Meson cross-chain stable swaps' />
       </Head>
       <Script strategy='afterInteractive' src={`https://www.googletagmanager.com/gtag/js?id=${ga.GA_TRACKING_ID}`} />
       <script
