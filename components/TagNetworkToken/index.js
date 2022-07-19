@@ -20,7 +20,8 @@ function getTokenLogo(symbol) {
 
 export default function TagNetworkToken ({ responsive, size = 'sm', explorer, token, iconOnly, className }) {
   const logo = getTokenLogo(token.symbol)
-  const href = explorer && `${explorer}/${token.link || `token/${token.addr}`}`
+  const tokenLink = token.link || (token.addr ? `token/${token.addr}` : '')
+  const href = explorer && `${explorer}/${tokenLink}`
   return (
     <div className={classnames('flex items-center text-gray-500', href && 'cursor-pointer hover:text-primary hover:underline', className)}>
       <a

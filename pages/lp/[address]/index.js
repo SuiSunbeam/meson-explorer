@@ -172,9 +172,7 @@ function LpContentRow ({ address, network, add }) {
 
   const alert = CORE_ALERT[network.id]
   const tokens = [...network.tokens]
-  if (network.mesonToken) {
-    tokens.push({ symbol: 'MSN', addr: network.mesonToken, decimals: 6, gray: true })
-  } else if (network.uctAddress) {
+  if (network.uctAddress) {
     tokens.push({ symbol: 'UCT', addr: network.uctAddress, decimals: 6, gray: true })
   }
   return (

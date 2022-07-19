@@ -473,10 +473,10 @@
   resolved "https://npm.pkg.github.com/download/@mesonfi/contract-types/0.10.0/d0989f6625c810368b81bd5c9caa4f9c1e6dd00a0d3ed16336217c6bab6fe502#e0b477da5e7635a56aa6e9ec0d7e886d1f66d034"
   integrity sha512-nlM6b8yt1XqlvkQobWgsxb+ZPdfn5oy8dGS1uLYS5ka4wDGm4cbow5+aEuUqITv+XGdnXnIVh5T6S01nLlqYvg==
 
-"@mesonfi/presets@0.10.5":
-  version "0.10.5"
-  resolved "https://npm.pkg.github.com/download/@mesonfi/presets/0.10.5/35f1f57a47ca024c3ac01a53a27ed9bb46278ffc9a354697bc1dc07a1350d61f#af0fc613448364f47e9e5880a6ea73337b22cdbc"
-  integrity sha512-b8YJTOy6ThvZ0n1gVcXj4qOQ1R7QU75iZrpwDBlixtMZJ04tgFDf6/KG2eBNEqGGaKuB9BuTee3SmFgZCGDUVw==
+"@mesonfi/presets@0.10.6":
+  version "0.10.6"
+  resolved "https://npm.pkg.github.com/download/@mesonfi/presets/0.10.6/a3ca931a430fce25ad256a86a307988bfb8e12394fdd5f91292d217a44fcbbaf#68dfc24d7b0ba8e41200f13eac3060bd120701dc"
+  integrity sha512-qp8E1hX1f0LVV4aZGkFfNRNzdN9an7/gJ4KcggD9rw2ZtawF2hdflre+0/QgRfP9VQ24K2y/uyKv1lQO2Od/ow==
   dependencies:
     "@ethersproject/abstract-signer" "^5.6.0"
     "@ethersproject/bignumber" "^5.6.0"
@@ -485,13 +485,13 @@
     "@ethersproject/properties" "^5.6.0"
     "@ethersproject/providers" "^5.6.0"
     "@mesonfi/contract-abis" "^0.10.0"
-    "@mesonfi/sdk" "^0.10.0"
+    "@mesonfi/sdk" "^0.10.2"
     tronweb "^4.1.0"
 
-"@mesonfi/sdk@0.10.0", "@mesonfi/sdk@^0.10.0":
-  version "0.10.0"
-  resolved "https://npm.pkg.github.com/download/@mesonfi/sdk/0.10.0/96944713b4cf75d48a75624b5f522e2998c9d4c96fc9b7046b7e0fc5dd553c45#aa9fc5acfb6a2587711c233f33bdb0731b5ec3d4"
-  integrity sha512-fOp0tV64xWF1IiNNCfQpmzWbS045sSLysbFXWfPtSud/FBQL4mvyom9GBAY8vrwVPx4zFixiJzeQ3EQJiBW/Xg==
+"@mesonfi/sdk@0.10.2", "@mesonfi/sdk@^0.10.2":
+  version "0.10.2"
+  resolved "https://npm.pkg.github.com/download/@mesonfi/sdk/0.10.2/8829940fa7ac681401f3805b4880ecb08ad44d611bfb0db8737d891303a21049#d01efd72279e2f5fab104ecea703f0b297912233"
+  integrity sha512-Ahzr1c/kv9WejZEOlA1l5NkCqXje8GFxqIcQZWGYgBWja2cIBO6tNvUr/2RKQBNIZi2zbjBiK3+11rP+8Nj4eg==
   dependencies:
     "@ethersproject/abi" "^5.6.0"
     "@ethersproject/address" "^5.6.0"
