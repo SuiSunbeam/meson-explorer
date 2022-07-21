@@ -81,5 +81,13 @@ async function post(req, res) {
 }
 
 async function put(req, res) {
-  res.status(404).send()
+  const { swapId, style } = req.query
+
+  if (!['default', 'rtl', 'aurora', 'arbitrum', 'cashback-avax'].includes(style)) {
+    res.status(400).send()
+    return
+  }
+
+  await ShareCodes.findByIdAndUpdate(swapId, { $set: { style } })
+  res.json({ result: true })
 }
