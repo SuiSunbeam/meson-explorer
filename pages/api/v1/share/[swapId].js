@@ -13,12 +13,14 @@ export default async function handler(req, res) {
     return
   }
 
+  let style = ''
   const duration = Math.floor((swap.released - swap.created) / 1000)
   if (swap.salt.charAt(4) === 'f') {
     if (swap.outChain !== '0x2328' || swap.amount < 100_000000) {
       res.status(400).json({ error: { code: -32602, message: 'Failed to create share code' } })
       return
     }
+    style = 'cashback-avax'
   } else if (duration > 240 || duration < 20 || swap.fee > 2_000_000 || swap.inToken > 2) {
     res.status(400).json({ error: { code: -32602, message: 'Failed to create share code' } })
     return
@@ -39,6 +41,7 @@ export default async function handler(req, res) {
     shareCode = await ShareCodes.create({
       _id: swapId,
       code: `${share._id}${share.seq}`,
+      style,
       encoded: swap.encoded,
       duration,
       locale,
@@ -49,10 +52,11 @@ export default async function handler(req, res) {
   }
 
   const result = {
+    code: shareCode.code,
+    style,
     address,
     encoded: swap.encoded,
     duration,
-    code: shareCode.code
   }
 
   res.json({ result })
