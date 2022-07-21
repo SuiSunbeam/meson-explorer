@@ -81,7 +81,8 @@ async function post(req, res) {
 }
 
 async function put(req, res) {
-  const { swapId, style } = req.query
+  const { swapId } = req.query
+  const { style } = req.body
 
   if (!['default', 'rtl', 'aurora', 'arbitrum', 'cashback-avax'].includes(style)) {
     res.status(400).send()
