@@ -58,7 +58,7 @@ async function post(req, res) {
     shareCode = await ShareCodes.create({
       _id: swapId,
       code: `${share._id}${share.seq}`,
-      style,
+      style: styles[0],
       encoded: swap.encoded,
       duration,
       locale,
