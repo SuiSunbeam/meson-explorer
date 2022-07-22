@@ -27,7 +27,7 @@ async function post(req, res) {
       return
     }
     styles.push('cashback-avax')
-    text = 'Earn an additional cash back by sharing the poster on Twitter with <b>@mesonfi</b> and tag <b>3 friends</b>.'
+    text = 'Earn cash back by sharing the poster on Twitter with <b>@mesonfi</b> and tag <b>3 friends</b>.'
   } else if (duration > 240 || duration < 20 || swap.fee > 2_000_000 || swap.inToken > 2) {
     res.status(400).json({ error: { code: -32602, message: 'Failed to create share code' } })
     return
