@@ -5,6 +5,9 @@ export default async function handler(req, res) {
     return await post(req, res)
   } else if (req.method === 'PUT') {
     return await put(req, res)
+  } else if (req.method === 'OPTIONS') {
+    res.end()
+    return
   }
 
   res.status(404).send()
@@ -72,7 +75,6 @@ async function post(req, res) {
 
   const result = {
     code: shareCode.code,
-    style: styles[0],
     styles,
     text,
     address,
@@ -80,7 +82,7 @@ async function post(req, res) {
     duration,
   }
 
-  res.json({ result })
+  res.status(200).json({ result })
 }
 
 async function put(req, res) {
@@ -93,5 +95,5 @@ async function put(req, res) {
   }
 
   await ShareCodes.findByIdAndUpdate(swapId, { $set: { style } })
-  res.json({ result: true })
+  res.status(200).json({ result: true })
 }
