@@ -25,11 +25,11 @@ async function post(req, res) {
   let text = 'Share the poster to friends'
   const duration = Math.floor((swap.released - swap.created) / 1000)
   if (swap.salt.charAt(4) === 'f') {
-    if (swap.outChain !== '0x2328' || swap.amount < 100_000000) {
+    if (swap.outChain !== '0x0a0a' || swap.amount < 100_000000) {
       res.status(400).json({ error: { code: -32602, message: 'Failed to create share code' } })
       return
     }
-    styles.push('cashback-avax')
+    styles.push('cashback-aurora')
     text = 'Earn cash back by sharing the poster on Twitter with <b>@mesonfi</b> and tag <b>3 friends</b>.'
   } else if (duration > 240 || duration < 20 || swap.fee > 2_000_000 || swap.inToken > 2) {
     res.status(400).json({ error: { code: -32602, message: 'Failed to create share code' } })
