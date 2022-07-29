@@ -46,9 +46,10 @@ async function post(req, res) {
     return
   }
 
-  if (swap.outChain === '0x0a0a') {
-    styles.push('aurora')
-  } else if (swap.outChain === '0x2329') {
+  // if (swap.outChain === '0x0a0a') {
+  //   styles.push('aurora')
+  // } else
+  if (swap.outChain === '0x2329') {
     styles.push('arbitrum')
   }
 
