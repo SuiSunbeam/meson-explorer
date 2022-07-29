@@ -22,7 +22,7 @@ async function post(req, res) {
   }
 
   const styles = []
-  let text
+  let text = 'Share the poster to friends'
   const duration = Math.floor((swap.released - swap.created) / 1000)
   if (swap.salt.charAt(4) === 'f') {
     if (swap.outChain !== '0x2328' || swap.amount < 100_000000) {
