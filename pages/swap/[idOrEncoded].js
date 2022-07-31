@@ -148,7 +148,7 @@ function CorrectSwap({ data: raw }) {
           <ListRow title='Fee'>
             <div className='flex items-center'>
               <div className='mr-1'>{ethers.utils.formatUnits(swap.fee, 6)}</div>
-              <TagNetworkToken explorer={from.explorer} token={from.token} />
+              <TagNetworkToken explorer={to.explorer} token={to.token} />
             </div>
           </ListRow>
           <ListRow title='Requested at'>
