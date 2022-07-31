@@ -109,9 +109,8 @@ function CorrectSwap({ data: raw }) {
       const fromAddress = data.fromTo[0] || data.initiator
       const recipient = data.fromTo[1] || ''
 
-      const feeWaived = (parseInt(swap.salt[2], 16) % 8) >= 4
       let inAmount = ethers.utils.formatUnits(swap.amount, swap.inToken === 255 ? 4 : 6)
-      let outAmount = ethers.utils.formatUnits(swap.amount.sub(feeWaived ? 0 : swap.amount.div(1000)).sub(swap.fee), 6)
+      let outAmount = ethers.utils.formatUnits(swap.amount.sub(swap.baseFee).sub(swap.fee), 6)
       if (swap.salt.startsWith('0x00') || swap.salt.startsWith('0xff')) {
         inAmount = ethers.utils.formatUnits(swap.amount.add(swap.fee), swap.inToken === 255 ? 4 : 6)
         outAmount = ethers.utils.formatUnits(swap.amount, 6)
