@@ -1,4 +1,5 @@
 import React from 'react'
+import classnames from 'classnames'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
@@ -110,8 +111,8 @@ function CorrectSwap({ data: raw }) {
       const recipient = data.fromTo[1] || ''
 
       let inAmount = ethers.utils.formatUnits(swap.amount, swap.inToken === 255 ? 4 : 6)
-      let outAmount = ethers.utils.formatUnits(swap.amount.sub(swap.baseFee).sub(swap.fee), 6)
-      if (swap.salt.startsWith('0x00') || swap.salt.startsWith('0xff')) {
+      let outAmount = ethers.utils.formatUnits(swap.amount.sub(swap.totalFee), 6)
+      if (swap.deprecatedEncoding) {
         inAmount = ethers.utils.formatUnits(swap.amount.add(swap.fee), swap.inToken === 255 ? 4 : 6)
         outAmount = ethers.utils.formatUnits(swap.amount, 6)
       }
@@ -147,8 +148,14 @@ function CorrectSwap({ data: raw }) {
           </ListRow>
           <ListRow title='Fee'>
             <div className='flex items-center'>
-              <div className='mr-1'>{ethers.utils.formatUnits(swap.fee, 6)}</div>
-              <TagNetworkToken explorer={to.explorer} token={to.token} />
+              <div className='mr-1'>{ethers.utils.formatUnits(swap.totalFee, 6)}</div>
+              <TagNetworkToken
+                explorer={swap.deprecatedEncoding ? from.explorer : to.explorer}
+                token={swap.deprecatedEncoding ? from.token : to.token}
+              />
+            </div>
+            <div className={classnames('text-sm text-gray-500', swap.totalFee.gt(0) ? '' : 'hidden')}>
+              {ethers.utils.formatUnits(swap.platformFee, 6)} Platform fee + {ethers.utils.formatUnits(swap.fee, 6)} LP fee
             </div>
           </ListRow>
           <ListRow title='Requested at'>

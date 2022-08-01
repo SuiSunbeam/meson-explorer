@@ -488,10 +488,10 @@
     "@mesonfi/sdk" "^0.11.0"
     tronweb "^4.1.0"
 
-"@mesonfi/sdk@0.11.1", "@mesonfi/sdk@^0.11.0":
-  version "0.11.1"
-  resolved "https://npm.pkg.github.com/download/@mesonfi/sdk/0.11.1/bcb909c71b2f4366d6f7130b9f0c7f1458657294be2ad12d5bbe9eb2c7c37489#9c2ef8440ff78754f049af91cc0fd5452f580e52"
-  integrity sha512-glKb7Y4HKWp9kEbmn/+3eQHla2ZNXY6u3P83UTqUpSj2R/MdhgAymqIJ5QIWPiKEEJMjusoOGb907rGvGIimpQ==
+"@mesonfi/sdk@0.11.2", "@mesonfi/sdk@^0.11.0":
+  version "0.11.2"
+  resolved "https://npm.pkg.github.com/download/@mesonfi/sdk/0.11.2/9a080bffd1e629dc1c4c1e9d17e0a1680e07fca5cafe6d06474e710c1159b92a#d3698d58c24f330ddf8b09a7e39fead89dcaa462"
+  integrity sha512-HQooAXV3KJrIgWlmqpq/uz19w2QDTBUw3pub77oNZJd0UGjjQJYJu1nR9rlpdiCRHg/OLXegWKjT9aqfJRMVlA==
   dependencies:
     "@ethersproject/abi" "^5.6.0"
     "@ethersproject/address" "^5.6.0"
