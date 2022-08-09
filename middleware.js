@@ -22,6 +22,7 @@ export const middleware = withAuth(
     }
 
     if (!isAdmin && (
+      pathname.startsWith('/api/v1/admin') ||
       pathname.startsWith('/api/v1/swap/bonded') ||
       pathname.startsWith('/api/v1/swap/locked') ||
       pathname.startsWith('/api/v1/swap/conflict') ||

@@ -7,11 +7,13 @@ import { BigNumber, ethers } from 'ethers'
 
 import Card, { CardTitle, CardBody } from 'components/Card'
 import LoadingScreen, { Loading } from 'components/LoadingScreen'
+import Button from 'components/Button'
 import ListRow from 'components/ListRow'
 import TagNetwork from 'components/TagNetwork'
 import TagNetworkToken from 'components/TagNetworkToken'
 import ExternalLink from 'components/ExternalLink'
 
+import fetcher from 'lib/fetcher'
 import { presets, getAllNetworks } from 'lib/swap'
 
 let JsonRpcs = {}
@@ -49,6 +51,17 @@ export default function LpPage() {
     )
   }
 
+  const restartLp = async () => {
+    await fetcher.post(`admin/restart`, { service: 'lp' })
+    window.alert('LP service restarted!')
+  }
+
+  const restartRelayer = async () => {
+    await fetcher.post(`admin/restart`, { service: 'relayer' })
+    window.alert('Relayer restarted! LP service will restart after 20 seconds.')
+    setTimeout(restartLp, 20000)
+  }
+
   return (
     <Card>
       <CardTitle
@@ -58,6 +71,12 @@ export default function LpPage() {
           { key: 'liquidity', name: 'Liquidity', active: true },
           { key: 'rules', name: 'Swap Rules', onClick: () => router.push(`/lp/${address}/rules`) }
         ]}
+        right={
+          <div className='flex gap-1'>
+            <Button size='sm' color='info' rounded onClick={() => restartLp()}>Restart LP</Button>
+            <Button size='sm' color='info' rounded onClick={() => restartRelayer()}>Restart Relayer</Button>
+          </div>
+        }
       />
       {body}
     </Card>
