@@ -13,20 +13,27 @@ export default async function handler(req, res) {
 async function getRecentFailRate() {
   const query = { disabled: { $ne: true } }
   const list = await Swaps.find(query)
-    .select('events')
+    .select('events created released')
     .sort({ created: -1 })
-    .limit(50)
+    .limit(20)
     .exec()
-  return list.filter(swap => !swap.events.find(e => e.name === 'RELEASED')).length / 50
+  
+  const released = list.filter(swap => !!swap.events.find(e => e.name === 'RELEASED'))
+  
+  const durations = released.map(swap => swap.released - swap.created)
+  const fails = (20 - released.length) / 20
+
+  const duration = Math.floor(durations.reduce((x, y) => x + y, 0 ) / durations.length / 1000)
+  return { fails, duration }
 }
 
 async function get(req, res) {
-  const fails = await getRecentFailRate()
-  res.json({ result: fails })
+  const result = await getRecentFailRate()
+  res.json({ result })
 }
 
 async function post(req, res) {
-  const fails = await getRecentFailRate()
-  const result = await SwapFails.create({ fails, ts: new Date() })
+  const result = await getRecentFailRate()
+  await SwapFails.create({ ...result, ts: new Date() })
   res.json({ result })
 }
