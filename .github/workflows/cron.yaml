@@ -1,0 +1,12 @@
+name: check-success-rate
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check success rate
+        run: |
+          curl --request POST \
+          --url 'https://explorer.meson.fi/api/v1/check'
