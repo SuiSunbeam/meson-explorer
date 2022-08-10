@@ -1,4 +1,5 @@
 import { Swaps, SwapFails } from 'lib/db'
+import { restartService } from '../admin/restart'
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
@@ -33,7 +34,11 @@ async function get(req, res) {
 }
 
 async function post(req, res) {
-  const result = await getRecentFailRate()
-  await SwapFails.create({ ...result, ts: new Date() })
+  const result = { ...(await getRecentFailRate()), ts: new Date() }
+  if (result.fails > 0.3 || result.duration > 8 * 60) {
+    result.restart = true
+    await restartService('lp')
+  }
+  await SwapFails.create(result)
   res.json({ result })
 }
