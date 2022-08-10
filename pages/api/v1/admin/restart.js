@@ -9,7 +9,7 @@ export default async function handler(req, res) {
 
 async function post(req, res) {
   const { service } = req.body
-  const result = await restart(service)
+  const result = await restartService(service)
   if (result) {
     res.json({ result })
   } else {
