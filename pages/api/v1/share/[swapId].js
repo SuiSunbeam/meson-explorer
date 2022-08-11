@@ -31,9 +31,6 @@ async function post(req, res) {
     }
     styles.push('cashback-aurora')
     text = 'Earn cash back by sharing the poster on Twitter with <b>@mesonfi</b> and tag <b>3 friends</b>.'
-  } else if (duration > 240 || duration < 20 || swap.fee > 2_000_000 || swap.inToken > 2) {
-    res.status(400).json({ error: { code: -32602, message: 'Failed to create share code' } })
-    return
   }
 
   const address = swap.fromTo[0]
@@ -46,19 +43,24 @@ async function post(req, res) {
     return
   }
 
+  const properData = _swapHasProperData(swap, duration)
   // if (swap.outChain === '0x0a0a') {
   //   styles.push('aurora')
   // } else
-  if (swap.outChain === '0x2329') {
+  if (swap.outChain === '0x2329' && properData) {
     styles.push('arbitrum')
   }
 
   if (['ar', 'fa'].includes(locale)) {
     styles.push('v2-rtl')
-    styles.push('rtl')
+    if (properData) {
+      styles.push('rtl')
+    }
   } else {
     styles.push('v2')
-    styles.push('default')
+    if (properData) {
+      styles.push('default')
+    }
   }
 
   let shareCode = await ShareCodes.findById(swapId)
@@ -99,4 +101,8 @@ async function put(req, res) {
 
   await ShareCodes.findByIdAndUpdate(swapId, { $set: { style } })
   res.status(200).json({ result: true })
+}
+
+function _swapHasProperData(swap, duration) {
+  return duration <= 240 && duration >= 20 && swap.fee < 2_000_000 && swap.inToken < 3
 }
