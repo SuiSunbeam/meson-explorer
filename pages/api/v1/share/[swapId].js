@@ -54,8 +54,10 @@ async function post(req, res) {
   }
 
   if (['ar', 'fa'].includes(locale)) {
+    styles.push('v2-rtl')
     styles.push('rtl')
   } else {
+    styles.push('v2')
     styles.push('default')
   }
 
@@ -90,7 +92,7 @@ async function put(req, res) {
   const { swapId } = req.query
   const { style } = req.body
 
-  if (!['default', 'rtl', 'aurora', 'arbitrum', 'cashback-avax'].includes(style)) {
+  if (!['v2', 'v2-rtl', 'uct', 'default', 'rtl', 'aurora', 'arbitrum', 'cashback-avax'].includes(style)) {
     res.status(400).send()
     return
   }
