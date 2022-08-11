@@ -23,7 +23,6 @@ async function post(req, res) {
 
   const styles = []
   let text = 'Share the poster to friends'
-  const duration = Math.floor((swap.released - swap.created) / 1000)
   if (swap.salt.charAt(4) === 'f') {
     if (swap.outChain !== '0x0a0a' || swap.amount < 5_000000) {
       res.status(400).json({ error: { code: -32602, message: 'Failed to create share code' } })
@@ -43,7 +42,7 @@ async function post(req, res) {
     return
   }
 
-  const properData = _swapHasProperData(swap, duration)
+  const properData = _swapHasProperData(swap)
   // if (swap.outChain === '0x0a0a') {
   //   styles.push('aurora')
   // } else
@@ -70,7 +69,7 @@ async function post(req, res) {
       code: `${share._id}${share.seq}`,
       style: styles[0],
       encoded: swap.encoded,
-      duration,
+      duration: properData?.duration,
       locale,
       n: 0,
       expires: Date.now() + 7 * 86400_000
@@ -84,7 +83,7 @@ async function post(req, res) {
     text,
     address,
     encoded: swap.encoded,
-    duration,
+    ...properData
   }
 
   res.status(200).json({ result })
@@ -103,6 +102,11 @@ async function put(req, res) {
   res.status(200).json({ result: true })
 }
 
-function _swapHasProperData(swap, duration) {
-  return duration <= 240 && duration >= 20 && swap.fee < 2_000_000 && swap.inToken < 3
+function _swapHasProperData(swap) {
+  const duration = Math.floor((swap.released - swap.created) / 1000)
+  if (duration <= 240 && duration >= 20 && swap.fee < 2_000_000 && swap.inToken < 3) {
+    return {
+      duration
+    }
+  }
 }
