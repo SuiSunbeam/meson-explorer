@@ -25,7 +25,7 @@ async function post(req, res) {
   let text = 'Share the poster to friends'
   const duration = Math.floor((swap.released - swap.created) / 1000)
   if (swap.salt.charAt(4) === 'f') {
-    if (swap.outChain !== '0x0a0a' || swap.amount < 100_000000) {
+    if (swap.outChain !== '0x0a0a' || swap.amount < 5_000000) {
       res.status(400).json({ error: { code: -32602, message: 'Failed to create share code' } })
       return
     }
