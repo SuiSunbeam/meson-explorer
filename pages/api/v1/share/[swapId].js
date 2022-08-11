@@ -42,22 +42,27 @@ async function post(req, res) {
     return
   }
 
+  if (swap.inToken === 255) {
+    styles.push('uct')
+  }
   const properData = _swapHasProperData(swap)
-  // if (swap.outChain === '0x0a0a') {
-  //   styles.push('aurora')
-  // } else
-  if (swap.outChain === '0x2329' && properData) {
-    styles.push('arbitrum')
+  if (properData && swap.inToken < 3) {
+    // if (swap.outChain === '0x0a0a') {
+    //   styles.push('aurora')
+    // } else
+    if (swap.outChain === '0x2329') {
+      styles.push('arbitrum')
+    }
   }
 
   if (['ar', 'fa'].includes(locale)) {
     styles.push('v2-rtl')
-    if (properData) {
+    if (properData && swap.inToken < 3) {
       styles.push('rtl')
     }
   } else {
     styles.push('v2')
-    if (properData) {
+    if (properData && swap.inToken < 3) {
       styles.push('default')
     }
   }
@@ -104,7 +109,7 @@ async function put(req, res) {
 
 function _swapHasProperData(swap) {
   const duration = Math.floor((swap.released - swap.created) / 1000)
-  if (duration <= 240 && duration >= 20 && swap.fee < 2_000_000 && swap.inToken < 3) {
+  if (duration <= 240 && duration >= 20 && swap.fee < 2_000_000) {
     return {
       duration
     }
