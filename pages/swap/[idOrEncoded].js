@@ -155,7 +155,7 @@ function CorrectSwap({ data: raw }) {
               />
             </div>
             <div className={classnames('text-sm text-gray-500', swap.totalFee.gt(0) ? '' : 'hidden')}>
-              {ethers.utils.formatUnits(swap.platformFee, 6)} Platform fee + {ethers.utils.formatUnits(swap.fee, 6)} LP fee
+              {ethers.utils.formatUnits(swap.platformFee, 6)} Service fee + {ethers.utils.formatUnits(swap.fee, 6)} LP fee
             </div>
           </ListRow>
           <ListRow title='Requested at'>
