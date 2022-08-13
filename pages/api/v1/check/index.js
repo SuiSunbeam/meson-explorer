@@ -1,3 +1,4 @@
+import fetch from 'node-fetch'
 import { Swaps, SwapFails } from 'lib/db'
 import { restartService } from '../admin/restart'
 
@@ -35,10 +36,33 @@ async function get(req, res) {
 
 async function post(req, res) {
   const result = { ...(await getRecentFailRate()), ts: new Date() }
-  if (result.fails > 0.3 || result.duration > 8 * 60) {
+  if (result.fails > 0.2 || result.duration > 7 * 60) {
     result.restart = true
     await restartService('lp')
+    await pushNotification(result)
   }
   await SwapFails.create(result)
   res.json({ result })
+}
+
+async function pushNotification({ fails, duration }) {
+  const rate = Math.floor(100 * fails)
+  const dur = `${Math.floor(duration / 60)}m${duration % 60}s`
+  const body = JSON.stringify({
+    message: `Fail Rate: ${rate}%; Avg duration: ${dur}`,
+    description: 'alert message body here',
+    tags: ['Meson', 'SwapSuccessRateAlert', 'Important'],
+    entity: 'Meson', 
+    priority: 'P3'
+  })
+
+  const response = await fetch('https://api.eu.opsgenie.com/v2/alerts', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `GenieKey ${process.env.GENIE_KEY}`
+    },
+    body
+  })
+  return await response.json()
 }
