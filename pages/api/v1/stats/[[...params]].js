@@ -8,7 +8,8 @@ export default async function handler(req, res) {
       $project: {
         success: { $gt: ['$released', null] },
         amount: { $toLong: '$amount' },
-        fee: { $toLong: '$fee' },
+        srFee: { $toLong: '$srFee' },
+        lpFee: { $toLong: '$lpFee' },
         duration: { $toLong: { $divide: [{ $subtract: ['$released', '$created'] }, 1000] } },
         date: { $dateToString: { date: '$created', format: '%Y-%m-%d' } },
         fromAddress: { $arrayElemAt: ['$fromTo', 0] }
@@ -20,7 +21,8 @@ export default async function handler(req, res) {
         count: { $sum: 1 },
         success: { $sum: { $cond: ['$success', 1, 0] } },
         volume: { $sum: { $cond: ['$success', '$amount', 0] } },
-        fee: { $sum: { $cond: ['$success', '$fee', 0] } },
+        srFee: { $sum: { $cond: ['$success', '$srFee', 0] } },
+        lpFee: { $sum: { $cond: ['$success', '$lpFee', 0] } },
         addresses: { $addToSet: '$fromAddress' },
         duration: { $avg: { $cond: [{ $and: ['$success', { $lt: ['$duration', 600] }] }, '$duration', undefined] } }
       }
@@ -30,7 +32,8 @@ export default async function handler(req, res) {
         count: '$count',
         success: '$success',
         volume: '$volume',
-        fee: '$fee',
+        srFee: '$srFee',
+        lpFee: '$lpFee',
         addresses: { $size: '$addresses' },
         duration: '$duration'
       }

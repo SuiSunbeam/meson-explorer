@@ -56,13 +56,14 @@ export default function StatsByChain() {
   } else if (!data) {
     body = <LoadingScreen />
   } else {
-    const total = data.reduce(({ count, volume, fee, success }, row) => ({
+    const total = data.reduce(({ count, volume, srFee, lpFee, success }, row) => ({
       count: row.count + count,
       volume: row.volume + volume,
-      fee: row.fee + fee,
+      srFee: row.srFee + srFee,
+      lpFee: row.lpFee + lpFee,
       success: row.success + success,
       duration: 0
-    }), { count: 0, volume: 0, fee: 0, success: 0, duration: 0 })
+    }), { count: 0, volume: 0, srFee: 0, lpFee: 0, success: 0, duration: 0 })
     body = (
       <Table
         size='lg'
@@ -71,9 +72,10 @@ export default function StatsByChain() {
           { name: '# success / #  total', width: '20%' },
           { name: 'Addrs', width: '10%' },
           { name: 'Volume', width: '15%' },
-          { name: 'Total Fee', width: '10%' },
-          { name: 'Avg. Swap Amount', width: '15%' },
-          { name: 'Avg. Duration', width: '15%' }
+          { name: 'Service Fee', width: '10%' },
+          { name: 'LP Fee', width: '10%' },
+          { name: 'Avg. Swap Amount', width: '10%' },
+          { name: 'Avg. Duration', width: '10%' }
         ]}
       >
         <StatTableRow _id='Total' {...total} />
@@ -125,9 +127,10 @@ export default function StatsByChain() {
   )
 }
 
-function StatTableRow({ _id: date, count, volume, fee, success, addresses, duration }) {
+function StatTableRow({ _id: date, count, volume, srFee, lpFee, success, addresses, duration }) {
   const vol = fmt.format(Math.floor(ethers.utils.formatUnits(volume, 6)))
-  const fee2 = fmt.format(Math.floor(ethers.utils.formatUnits(fee || 0, 6)))
+  const srFeeStr = fmt.format(Math.floor(ethers.utils.formatUnits(srFee || 0, 6)))
+  const lpFeeStr = fmt.format(Math.floor(ethers.utils.formatUnits(lpFee || 0, 6)))
   const avgSwapAmount = success ? fmt.format(Math.floor(ethers.utils.formatUnits(Math.floor(volume / success), 6))) : '-'
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
@@ -135,7 +138,8 @@ function StatTableRow({ _id: date, count, volume, fee, success, addresses, durat
       <Td>{success} / {count} <span className='text-gray-500 text-sm'>({Math.floor(success / count * 1000) / 10}%)</span></Td>
       <Td>{addresses}</Td>
       <Td>${vol}</Td>
-      <Td>${fee2}</Td>
+      <Td>${srFeeStr}</Td>
+      <Td>${lpFeeStr}</Td>
       <Td>${avgSwapAmount}</Td>
       <Td>{formatDuration(duration * 1000)}</Td>
     </tr>
