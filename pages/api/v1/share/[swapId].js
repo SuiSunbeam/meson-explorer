@@ -24,12 +24,14 @@ async function post(req, res) {
   const styles = []
   let text = 'Share the poster to friends'
   if (swap.salt.charAt(4) === 'f') {
-    if (swap.outChain !== '0x0a0a' || swap.amount < 5_000000) {
-      res.status(400).json({ error: { code: -32602, message: 'Failed to create share code' } })
-      return
-    }
-    styles.push('cashback-aurora')
     text = 'Earn cash back by sharing the poster on Twitter with <b>@mesonfi</b> and tag <b>3 friends</b>.'
+    if (swap.outChain === '0x0a0a') {
+      styles.push('cashback-aurora')
+    } else if (swap.outChain === '0x0266') {
+      styles.push('cashback-opt')
+    } else {
+      res.status(400).json({ error: { code: -32602, message: 'Failed to create share code' } })
+    }
   }
 
   const address = swap.fromTo[0]
