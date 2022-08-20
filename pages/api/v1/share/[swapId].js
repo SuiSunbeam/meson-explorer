@@ -79,7 +79,8 @@ async function post(req, res) {
       duration: properData?.duration,
       locale,
       n: 0,
-      expires: Date.now() + 7 * 86400_000
+      expires: Date.now() + 7 * 86400_000,
+      meta: properData
     })
     await Shares.findByIdAndUpdate(share._id, { $inc: { seq: 1 } })
   }
@@ -111,9 +112,11 @@ async function put(req, res) {
 
 function _swapHasProperData(swap) {
   const duration = Math.floor((swap.released - swap.created) / 1000)
-  if (duration <= 240 && duration >= 20 && swap.fee < 2_000_000) {
+  const fee = swap.lpFee + swap.srFee
+  if (duration <= 240 && duration >= 20 && fee < 2_000_000) {
     return {
-      duration
+      duration,
+      fee,
     }
   }
 }
