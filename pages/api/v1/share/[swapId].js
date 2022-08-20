@@ -115,8 +115,7 @@ function _swapHasProperData(swap) {
   const fee = swap.lpFee + swap.srFee
   if (duration <= 240 && duration >= 20 && fee < 2_000_000) {
     return {
-      duration,
-      fee,
+      duration
     }
   }
 }
