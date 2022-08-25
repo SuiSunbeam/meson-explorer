@@ -10,6 +10,7 @@ import extensions from 'lib/extensions'
 import { presets, getExtType, abbreviate } from 'lib/swap'
 
 const testnetMode = Boolean(process.env.NEXT_PUBLIC_TESTNET)
+const lps = process.env.NEXT_PUBLIC_LPS.split(',')
 
 const navigation = [
   // { name: 'Swaps', href: '#', current: true },
@@ -192,14 +193,18 @@ function Profile ({ globalState, setGlobalState }) {
               {
                 authorized &&
                 <>
-                  <Menu.Item>
-                    <div
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                      onClick={() => router.push('/lp/0x13B0A18505A7C03aAE841C527eCBe72836275E54')}
-                    >
-                      LP Status
-                    </div>
-                  </Menu.Item>
+                  {
+                    lps.map((lp, index) => (
+                      <Menu.Item key={`lp-${index}`}>
+                        <div
+                          className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                          onClick={() => router.push(`/lp/${lp}`)}
+                        >
+                          LP Status
+                        </div>
+                      </Menu.Item>
+                    ))
+                  }
                   <Menu.Item>
                     <div
                       className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
