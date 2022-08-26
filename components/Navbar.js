@@ -10,7 +10,7 @@ import extensions from 'lib/extensions'
 import { presets, getExtType, abbreviate } from 'lib/swap'
 
 const testnetMode = Boolean(process.env.NEXT_PUBLIC_TESTNET)
-const lps = process.env.NEXT_PUBLIC_LPS.split(',')
+const lps = process.env.NEXT_PUBLIC_LPS?.split(',') || []
 
 const navigation = [
   // { name: 'Swaps', href: '#', current: true },
