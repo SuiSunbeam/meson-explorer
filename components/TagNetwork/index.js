@@ -16,9 +16,10 @@ import cfx from './cfx.png'
 import evmos from './evmos.png'
 import movr from './movr.png'
 import beam from './beam.png'
+import eos from './eos.png'
 import tron from './tron.png'
 
-const logos = { eth, ropsten: eth, bnb, avax, polygon, ftm, arb, opt, one, aurora, cfx, evmos, movr, beam, tron }
+const logos = { eth, ropsten: eth, bnb, avax, polygon, ftm, arb, opt, one, aurora, cfx, evmos, movr, beam, eos, tron }
 
 export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly, address, className }) {
   const id = (network.id || network.networkId).split('-')[0]
