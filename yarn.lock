@@ -473,10 +473,10 @@
   resolved "https://npm.pkg.github.com/download/@mesonfi/contract-types/0.11.0/5b1babad94356b091ba710fb0abad040eb341937f8d624a56bef138e7ac89b59#f0281808214711f52c7d720bc403448d1dd0bc07"
   integrity sha512-wjWNlg4UXW+2bw5f3Jf6WZJm0+TlZfbc2GYM8YCOyaK9DMITc4ndX9N5uiM6MQyHKcXkG1BuVWEIEFjXLvTjPA==
 
-"@mesonfi/presets@0.11.2":
-  version "0.11.2"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/0.11.2/11b318f16dc2a009b70dd62dc3799820d3ef574b#11b318f16dc2a009b70dd62dc3799820d3ef574b"
-  integrity sha512-alOPHMECMc6YHqY0J/EyoXpej/8pukcfqcLjZsgsDYYixYtt5wuGd2ZvGDosA8WActRIuWz+StkdMcS+GoJrRg==
+"@mesonfi/presets@0.11.3":
+  version "0.11.3"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/0.11.3/f8cb4deff756836cbc14add9dc520512e8d0db63#f8cb4deff756836cbc14add9dc520512e8d0db63"
+  integrity sha512-+jfApbId4NQDgKpltQ5jFbBBa6zWpUJ+t1MtSh1CQ+RPfVlFLSEbWb0JgVbqNEiyXIkUXZF25XyGzv8OBKorww==
   dependencies:
     "@ethersproject/abstract-signer" "^5.6.0"
     "@ethersproject/bignumber" "^5.6.0"
