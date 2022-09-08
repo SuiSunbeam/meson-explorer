@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     return
   }
 
-  const query = { disabled: { $ne: true } }
+  const query = { disabled: { $ne: true }, hide: { $ne: true } }
   const total = await Swaps.count(query)
   const list = await Swaps.find(query)
     .select('encoded events initiator fromTo created released')
