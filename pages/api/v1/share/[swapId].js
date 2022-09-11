@@ -25,7 +25,9 @@ async function post(req, res) {
   let text = 'Share the poster to friends'
   if (swap.salt.charAt(4) === 'f') {
     text = 'Earn cash back by sharing the poster on Twitter with <b>@mesonfi</b> and tag <b>3 friends</b>.'
-    if (swap.outChain === '0x0a0a') {
+    if (swap.inChain === '0x00c3') {
+      styles.push('cashback-tron')
+    } else if (swap.outChain === '0x0a0a') {
       styles.push('cashback-aurora')
     } else if (swap.outChain === '0x0266') {
       styles.push('cashback-opt')
@@ -101,7 +103,7 @@ async function put(req, res) {
   const { swapId } = req.query
   const { style } = req.body
 
-  if (!['v2', 'v2-rtl', 'uct', 'default', 'rtl', 'aurora', 'arbitrum', 'cashback-avax'].includes(style)) {
+  if (!style) {
     res.status(400).send()
     return
   }
