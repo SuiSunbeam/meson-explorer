@@ -24,7 +24,7 @@ async function post(req, res) {
   const styles = []
   let text = 'Share the poster to friends'
   if (swap.salt.charAt(4) === 'f') {
-    text = 'Share cash back with freinds'
+    text = 'Share cash back with friends'
     if (swap.inChain === '0x00c3') {
       styles.push('cashback-tron')
     } else if (swap.outChain === '0x0a0a') {
