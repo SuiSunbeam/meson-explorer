@@ -110,11 +110,12 @@ export default async function handler(req, res) {
     if (!rule || amount.eq(0)) {
       return res.json({
         data: {
-          totalFee,
-          originalFee,
-          lpFee,
+          totalFee: Number(fromValue(totalFee)),
+          originalFee: Number(fromValue(originalFee)),
+          lpFee: Number(fromValue(lpFee)),
           waiveServiceFee,
           waived: rulesInfo.waived,
+          swaps: rulesInfo.swaps
         },
         code: 200
       })
@@ -139,9 +140,9 @@ export default async function handler(req, res) {
 
     return res.json({
       data: {
-        totalFee: fromValue(totalFee),
-        originalFee: fromValue(originalFee),
-        lpFee: fromValue(lpFee),
+        totalFee: Number(fromValue(totalFee)),
+        originalFee: Number(fromValue(originalFee)),
+        lpFee: Number(fromValue(lpFee)),
         waiveServiceFee,
         waived: rulesInfo.waived,
         swaps: rulesInfo.swaps
