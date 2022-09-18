@@ -465,18 +465,18 @@
 
 "@mesonfi/contract-abis@^1.0.0-rc.1":
   version "1.0.0-rc.1"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/contract-abis/1.0.0-rc.1/da50e3347b3f8090d9bac95b55faf3d6e9e3e0e3#da50e3347b3f8090d9bac95b55faf3d6e9e3e0e3"
-  integrity sha512-PsnO+MSO2N/GnATNtYXL+Ytm5sDMkp85hf+5edEETwVMQQ98H37NlDbrbTre9pU241V8kUHvlUkTsVMzUETMww==
+  resolved "https://npm.pkg.github.com/download/@MesonFi/contract-abis/1.0.0-rc.1/2b0e66e2fa8f591bc7e6150989909b967644dc8b#2b0e66e2fa8f591bc7e6150989909b967644dc8b"
+  integrity sha512-zUUWJWpmYt796Y4Xp2apEWb8Y8PR7EvN1lhyoPaHDAw1YQHLPtYFjsWR7ZS0O+vAbM39x02jZInHB2dEl7LtKg==
 
 "@mesonfi/contract-types@^1.0.0-rc.1":
   version "1.0.0-rc.1"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/contract-types/1.0.0-rc.1/051fbfb9886e00a0acec2e1e8fa5e01313d3d995#051fbfb9886e00a0acec2e1e8fa5e01313d3d995"
-  integrity sha512-nmmQGeM74BUtRbEouEXxUrTP+sG+ig5c3LfINrK77iFqAzUROE/dYigfrPQakmG4d1sKAASWC+S4VktLJ/Llug==
+  resolved "https://npm.pkg.github.com/download/@MesonFi/contract-types/1.0.0-rc.1/dc10ec3ca9a63783b4b2c57363f3edf643fc173b#dc10ec3ca9a63783b4b2c57363f3edf643fc173b"
+  integrity sha512-c0jD/kcVmyqsK21UH42yhYesWoYO+mKIlADfB1sbBS8pOWmXv5DidTijlXRptrlQphPgJDzdFUV9G/XK7kOMrQ==
 
 "@mesonfi/presets@1.0.0-rc.1":
   version "1.0.0-rc.1"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.0.0-rc.1/f95761c44657d11654b078635e88800b4b66851f#f95761c44657d11654b078635e88800b4b66851f"
-  integrity sha512-1FpP0aLU1pI4VP1tY/Dtd4koh6oERVlOYN+/PpMVOGKirYgB25KZnSYz5exDsEW+fwj5bardQwiUS5is7AS8WA==
+  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.0.0-rc.1/c955ae5be565ac85ccca2ce210dc95741f2854cd#c955ae5be565ac85ccca2ce210dc95741f2854cd"
+  integrity sha512-y3gZb9w7M/+kJqEibLam6n3goH0hG8NgNwcPkh9s8snx2nU34prsL1DJoTcEFL5AZWgeBBrI9ihycBccqEzVlQ==
   dependencies:
     "@ethersproject/abstract-signer" "^5.6.0"
     "@ethersproject/bignumber" "^5.6.0"
@@ -486,7 +486,7 @@
     "@ethersproject/providers" "^5.6.0"
     "@mesonfi/contract-abis" "^1.0.0-rc.1"
     "@mesonfi/sdk" "^1.0.0-rc.1"
-    tronweb "^4.2.0"
+    tronweb "^4.3.0"
 
 "@mesonfi/sdk@1.0.0-rc.1", "@mesonfi/sdk@^1.0.0-rc.1":
   version "1.0.0-rc.1"
@@ -3045,7 +3045,7 @@ tr46@^3.0.0:
   dependencies:
     punycode "^2.1.1"
 
-tronweb@^4.2.0:
+tronweb@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/tronweb/-/tronweb-4.3.0.tgz#d3a088e9efb839f0d445f9dc5c79853ab33ccbfa"
   integrity sha512-U+s+NBGOg+zfiXeO2kaljJCClg8y8v0McIdO3aAN3/UujDJHou6d6XVPaiMnli4ynE0XC4JHSUM+5KcYos+DiQ==
