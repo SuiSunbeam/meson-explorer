@@ -240,7 +240,7 @@ function TokenAmount ({ client, address, token, explorer, add }) {
     if (!address) {
       return
     }
-    client.balanceOf(token.addr, address)
+    client.poolTokenBalance(token.addr, address)
       .catch(() => {})
       .then(v => {
         if (v) {
