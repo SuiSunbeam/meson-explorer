@@ -490,8 +490,8 @@
 
 "@mesonfi/sdk@1.0.0-rc.1", "@mesonfi/sdk@^1.0.0-rc.1":
   version "1.0.0-rc.1"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.0.0-rc.1/720a95a439a7218d2e52bbf00b2bdede77c16e27#720a95a439a7218d2e52bbf00b2bdede77c16e27"
-  integrity sha512-EyRukG1x5HH5yx77EJdEWXYaNJlWRKbqd2zLzBNLu5XDGoFa5XWJImNNs4LJJaLi6Teo5HRDc8zcHRlIljihlA==
+  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.0.0-rc.1/bd50591f0f8f64a136cba598ba45b1e194f6ee43#bd50591f0f8f64a136cba598ba45b1e194f6ee43"
+  integrity sha512-jmwvBAcCxGyG3PvUiMuHH8crICmCwXwwYOuRb8KNYiThGaWi04HAPrZ5IqujD1oNnBoAOaq59wlAc4/lpugL0A==
   dependencies:
     "@ethersproject/abi" "^5.6.0"
     "@ethersproject/address" "^5.6.0"
