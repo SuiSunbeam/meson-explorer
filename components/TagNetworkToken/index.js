@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 import usdc from './usdc.png'
 import usdt from './usdt.png'
-import msn from './msn.png'
+import busd from './busd.png'
 import uct from './uct.png'
 
 function getTokenLogo(symbol) {
@@ -11,8 +11,8 @@ function getTokenLogo(symbol) {
     return usdc
   } else if (symbol.indexOf('USDT') > -1) {
     return usdt
-  } else if (symbol.indexOf('MSN') > -1) {
-    return msn
+  } else if (symbol.indexOf('BUSD') > -1) {
+    return busd
   } else if (symbol.indexOf('UCT') > -1) {
     return uct
   }
