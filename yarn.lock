@@ -475,8 +475,8 @@
 
 "@mesonfi/presets@1.0.0-rc.1":
   version "1.0.0-rc.1"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.0.0-rc.1/357fef134719fb4fdd1dc2d0767acbf72edfa860#357fef134719fb4fdd1dc2d0767acbf72edfa860"
-  integrity sha512-QLoajXl7+WFEhZWJ6FxBha0boyDTC1YBAhjVhe1+t4vHcuyLvAHIff3VvjwcDI+YpTD/0FavxYFnAvPS7JP37Q==
+  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.0.0-rc.1/3a05ec5dcba76fbf24e3f52ec067fd4018a6f02d#3a05ec5dcba76fbf24e3f52ec067fd4018a6f02d"
+  integrity sha512-KT/dlEhEKDxiMl2U6AXHkl0ys4+h7WdDRklzttOg47B7p4ONaqXSsNe2yi/rxXIT6brMLQLsqRk35hRkB9HGLQ==
   dependencies:
     "@ethersproject/abstract-signer" "^5.6.0"
     "@ethersproject/bignumber" "^5.6.0"
