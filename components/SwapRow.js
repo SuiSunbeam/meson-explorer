@@ -2,10 +2,9 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import debounce from 'lodash/debounce'
-import { Swap } from '@mesonfi/sdk'
 
 import socket from 'lib/socket'
-import { parseNetworkAndToken, abbreviate, getDuration } from 'lib/swap'
+import { presets, abbreviate, getDuration } from 'lib/swap'
 
 import { Td } from './Table'
 import SwapStatusBadge from './SwapStatusBadge'
@@ -36,15 +35,7 @@ export default function SwapRow({ data: raw, extraMargin }) {
     }
   }, 250), [router, swapId])
 
-  let swap
-  try {
-    swap = Swap.decode(data.encoded)
-  } catch {}
-  const from = parseNetworkAndToken(swap?.inChain, swap?.inToken)
-  const to = parseNetworkAndToken(swap?.outChain, swap?.outToken)
-  const expired = swap?.expireTs < Date.now() / 1000
-
-  const swapUpdateListener = ({ status, data } = {}) => {
+  const swapUpdateListener = React.useCallback(({ status, data } = {}) => {
     setData(prev => {
       const updates = {}
       if (!data.hash || !prev.events.find(e => e.hash === data.hash)) {
@@ -67,7 +58,10 @@ export default function SwapRow({ data: raw, extraMargin }) {
       }
       return prev
     })
-  }
+  }, [])
+
+  const { swap, from, to } = React.useMemo(() => presets.parseInOutNetworkTokens(data.encoded), [data.encoded])
+  const expired = swap?.expireTs < Date.now() / 1000
 
   const swapId = data?._id
   const noSubscribe = !from || !to || (data.released && data.events.find(e => e.name === 'EXECUTED'))
@@ -76,7 +70,7 @@ export default function SwapRow({ data: raw, extraMargin }) {
       return
     }
     return socket.subscribe(swapId, swapUpdateListener)
-  }, [swapId, noSubscribe])
+  }, [swapId, noSubscribe, swapUpdateListener])
 
   if (!from || !to) {
     return null
@@ -115,7 +109,7 @@ export default function SwapRow({ data: raw, extraMargin }) {
         <SwapStatusBadge events={data.events} expired={expired} />
       </Td>
       <Td>
-        <TagNetwork responsive network={from} address={fromAddress} />
+        <TagNetwork responsive network={from.network} address={fromAddress} />
         <div className='text-normal hover:underline hover:text-primary hidden lg:inline-block'>
           <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress)}</Link>
         </div>
@@ -127,7 +121,7 @@ export default function SwapRow({ data: raw, extraMargin }) {
         </div>
       </Td>
       <Td>
-        <TagNetwork responsive network={to} address={recipient} />
+        <TagNetwork responsive network={to.network} address={recipient} />
         <div className='text-normal hover:underline hover:text-primary hidden lg:inline-block'>
           <Link href={`/address/${recipient}`}>{abbreviate(recipient)}</Link>
         </div>
@@ -144,10 +138,10 @@ export default function SwapRow({ data: raw, extraMargin }) {
             <AmountDisplay value={swap.amount} decimals={swap.inToken === 255 ? 4 : 6} />
           </div>
           <div className='flex items-center'>
-            <TagNetworkToken responsive explorer={from.explorer} token={from.token} />
+            <TagNetworkToken responsive explorer={from.network.explorer} token={from.token} />
             <div className='hidden md:flex'>
               <div className='text-gray-500 mx-1 text-xs'>{'->'}</div>
-              <TagNetworkToken responsive explorer={to.explorer} token={to.token} />
+              <TagNetworkToken responsive explorer={to.network.explorer} token={to.token} />
             </div>
           </div>
         </div>
@@ -155,7 +149,7 @@ export default function SwapRow({ data: raw, extraMargin }) {
       <Td className='hidden md:table-cell'>
         <div className='flex items-center lg:flex-col lg:items-start'>
           <div className='mr-1'><AmountDisplay value={swap.totalFee} /></div>
-          <TagNetworkToken responsive explorer={from.explorer} token={from.token} />
+          <TagNetworkToken responsive explorer={from.network.explorer} token={from.token} />
         </div>
       </Td>
       <Td className='hidden lg:table-cell'>

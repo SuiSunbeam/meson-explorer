@@ -23,7 +23,7 @@ import zksync from './zksync.png'
 const logos = { eth, ropsten: eth, bnb, avax, polygon, ftm, arb, opt, one, aurora, cfx, evmos, movr, beam, eos, tron, zksync }
 
 export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly, address, className }) {
-  const id = (network.id || network.networkId).split('-')[0]
+  const id = network.id.split('-')[0]
   const logo = logos[id]
   return (
     <div className={classnames('flex items-center text-gray-500', size === 'sm' && 'text-xs', className)}>
@@ -33,7 +33,7 @@ export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly
       {
         !iconOnly &&
         <div className={classnames('items-center', size === 'md' ? 'ml-2' : 'ml-1', responsive ? 'hidden sm:flex' : 'flex')}>
-          {network.networkName || network.name}
+          {network.name}
           {address && <ExternalIcon href={`${network.explorer}/address/${address}`} />}
         </div>
       }

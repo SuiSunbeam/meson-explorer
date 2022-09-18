@@ -1,6 +1,8 @@
 import classnames from 'classnames'
 import Image from 'next/image'
 
+import { getExplorerTokenLink } from 'lib/swap'
+
 import usdc from './usdc.png'
 import usdt from './usdt.png'
 import busd from './busd.png'
@@ -20,7 +22,7 @@ function getTokenLogo(symbol) {
 
 export default function TagNetworkToken ({ responsive, size = 'sm', explorer, token, iconOnly, className }) {
   const logo = getTokenLogo(token.symbol)
-  const tokenLink = token.link || (token.addr ? `token/${token.addr}` : '')
+  const tokenLink = getExplorerTokenLink(token)
   const href = explorer && `${explorer}/${tokenLink}`
   return (
     <div className={classnames('flex items-center text-gray-500', href && 'cursor-pointer hover:text-primary hover:underline', className)}>
