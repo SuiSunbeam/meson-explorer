@@ -52,7 +52,7 @@ export default async function handler(req, res) {
     // NOTE: non-preminum address, just using for data query
     const address = '0x18D594bF5213A847c001775d8C4AaC9427284774'
     const { token, inChain, outChain, amount: queryAmount } = req.query
-    const tokenIndex = token === 'USDC' ? 1 : token === 'USDT' ? 2 : null
+    const tokenSymbol = token.startsWith('USDC') ? 'USDC' : token.startsWith('USDT') ? 'USDT' : null
 
     if (queryAmount > 5000) {
       res.json({
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
       })
     }
 
-    if (!tokenIndex) {
+    if (!tokenSymbol) {
       res.json({
         message: 'The swap route must has specific token.',
         code: 500
@@ -74,8 +74,8 @@ export default async function handler(req, res) {
 
     const fromNetwork = networks.find(item => item.name === inChain)
     const toNetwork = networks.find(item => item.name === outChain)
-    const fromSymbol = fromNetwork.tokens.find(item => item.symbol.startsWith(token))?.symbol
-    const toSymbol = toNetwork.tokens.find(item => item.symbol.startsWith(token))?.symbol
+    const fromSymbol = fromNetwork.tokens.find(item => item.symbol.startsWith(tokenSymbol))?.symbol
+    const toSymbol = toNetwork.tokens.find(item => item.symbol.startsWith(tokenSymbol))?.symbol
 
     if(!toSymbol || !fromSymbol) {
       return res.json({
