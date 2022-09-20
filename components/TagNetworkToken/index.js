@@ -38,7 +38,7 @@ export default function TagNetworkToken ({ responsive, size = 'sm', explorer, to
         !iconOnly &&
         <a
           href={href}
-          className={classnames('text-xs', responsive ? 'hidden lg:flex lg:ml-1' : 'flex ml-1')}
+          className={classnames('text-xs mt-px', responsive ? 'hidden lg:flex lg:ml-1' : 'flex ml-1')}
           target='_blank'
           rel='noreferrer'
         >
