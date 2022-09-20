@@ -113,6 +113,7 @@ function CorrectSwap({ data: raw }) {
       <dl>
         <ListRow title='Encoded As'>
           <div className='break-all'>{data.encoded}</div>
+          {!swap.version && <div className='text-sm text-gray-500'>v0 encoding</div>}
         </ListRow>
         <ListRow title='From'>
           <TagNetwork network={from.network} address={fromAddress} />
