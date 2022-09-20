@@ -3,6 +3,15 @@ import { withAuth } from 'next-auth/middleware'
 
 export const middleware = withAuth(
   async function middleware(req) {
+    if (process.env.NODE_ENV === 'production') {
+      if (req.headers.get('x-forwarded-proto') !== 'https') {
+        return NextResponse.redirect(
+          `https://${req.headers.get('host')}${req.nextUrl.pathname}`,
+          301
+        )
+      }
+    }
+
     const token = req.nextauth.token
     const isAdmin = token?.roles?.includes('admin')
     const pathname = req.nextUrl.pathname
