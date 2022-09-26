@@ -448,8 +448,8 @@
 
 "@mesonfi/sdk@1.0.0-rc.1", "@mesonfi/sdk@^1.0.0-rc.1":
   version "1.0.0-rc.1"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.0.0-rc.1/19a34f3e9277d8821c4f1da990cfe60425e592aa#19a34f3e9277d8821c4f1da990cfe60425e592aa"
-  integrity sha512-PDAp0y3ZKL74j/HPo9UIaYl2J5DL84W5Cw5Uhkfr6NlbhSwNNww5leVpeKQqlZtrcT3o5PX3Hz+2mgfe9oXXUw==
+  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.0.0-rc.1/480cb7c9c9b94762f547bb7bcaec10df305cbdeb#480cb7c9c9b94762f547bb7bcaec10df305cbdeb"
+  integrity sha512-PWtzg85sQxXlDSQgrWX2L+Al4Oa1l8PDVE9OeD4I4yTL8o5v5u56Dp9OgK8tXNtZNZdkwfMVn52VtBQptl25cw==
   dependencies:
     "@mesonfi/contract-abis" "^1.0.0-rc.1"
     "@mesonfi/contract-types" "^1.0.0-rc.1"
