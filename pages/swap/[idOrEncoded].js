@@ -6,12 +6,11 @@ import Link from 'next/link'
 import { XCircleIcon } from '@heroicons/react/solid'
 import useSWR from 'swr'
 import { ethers } from 'ethers'
-import { Swap } from '@mesonfi/sdk'
 
 import AppContext from 'lib/context'
 import fetcher from 'lib/fetcher'
 import socket from 'lib/socket'
-import { parseNetworkAndToken, sortEvents, getStatusFromEvents, getDuration } from 'lib/swap'
+import { presets, sortEvents, getStatusFromEvents, getDuration, getExplorerTxLink } from 'lib/swap'
 import extensions from 'lib/extensions'
 
 import LoadingScreen from 'components/LoadingScreen'
@@ -93,96 +92,87 @@ function CorrectSwap({ data: raw }) {
 
 
   let body
-  let swap
-  try {
-    swap = Swap.decode(data?.encoded)
-  } catch {}
+  const { swap, from, to } = React.useMemo(() => presets.parseInOutNetworkTokens(data?.encoded), [data?.encoded])
 
   if (!data) {
     body = <LoadingScreen />
+  } else if (!from || !to) {
+    body = ''
   } else {
-    const from = parseNetworkAndToken(swap?.inChain, swap?.inToken)
-    const to = parseNetworkAndToken(swap?.outChain, swap?.outToken)
+    const fromAddress = data.fromTo[0] || data.initiator
+    const recipient = data.fromTo[1] || ''
 
-    if (!from || !to) {
-      body = ''
-    } else {
-      const fromAddress = data.fromTo[0] || data.initiator
-      const recipient = data.fromTo[1] || ''
+    let inAmount = ethers.utils.formatUnits(swap.amount, swap.inToken === 255 ? 4 : 6)
+    let outAmount = ethers.utils.formatUnits(swap.amount.sub(swap.totalFee), 6)
+    if (swap.deprecatedEncoding) {
+      inAmount = ethers.utils.formatUnits(swap.amount.add(swap.fee), swap.inToken === 255 ? 4 : 6)
+      outAmount = ethers.utils.formatUnits(swap.amount, 6)
+    }
+    const feeSide = swap.deprecatedEncoding ? from : to
+    body = (
+      <dl>
+        <ListRow title='Encoded As'>
+          <div className='break-all'>{data.encoded}</div>
+          {!swap.version && <div className='text-sm text-gray-500'>v0 encoding</div>}
+        </ListRow>
+        <ListRow title='From'>
+          <TagNetwork network={from.network} address={fromAddress} />
+          <div className='text-normal truncate'>
+            <span className='hover:underline hover:text-primary'>
+              <Link href={`/address/${fromAddress}`}>{fromAddress}</Link>
+            </span>
+          </div>
+        </ListRow>
+        <ListRow title='To'>
+          <TagNetwork network={to.network} address={recipient} />
+          <div className='text-normal truncate'>
+            <span className='hover:underline hover:text-primary'>
+              <Link href={`/address/${recipient}`}>{recipient}</Link>
+            </span>
+          </div>
+        </ListRow>
+        <ListRow title='Amount'>
+          <div className='flex items-center'>
+            <div className='mr-1'>{inAmount}</div>
+            <TagNetworkToken explorer={from.network.explorer} token={from.token} />
+            <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
+            <div className='mr-1'>{outAmount}</div>
+            <TagNetworkToken explorer={to.network.explorer} token={to.token} />
+          </div>
+        </ListRow>
+        <ListRow title='Fee'>
+          <div className='flex items-center'>
+            <div className='mr-1'>{ethers.utils.formatUnits(swap.totalFee, 6)}</div>
+            <TagNetworkToken explorer={feeSide.network.explorer} token={feeSide.token} />
+          </div>
+          <div className={classnames('text-sm text-gray-500', swap.totalFee.gt(0) ? '' : 'hidden')}>
+            {ethers.utils.formatUnits(swap.platformFee, 6)} Service fee + {ethers.utils.formatUnits(swap.fee, 6)} LP fee
+          </div>
+        </ListRow>
+        <ListRow title='Requested at'>
+          {new Date(data.created).toLocaleString()}
+        </ListRow>
+        {data.provider && <ListRow title='Provider'><div className='truncate'>{data.provider}</div></ListRow>}
+        <SwapTimes data={data} expired={expired} expireTs={swap.expireTs} />
 
-      let inAmount = ethers.utils.formatUnits(swap.amount, swap.inToken === 255 ? 4 : 6)
-      let outAmount = ethers.utils.formatUnits(swap.amount.sub(swap.totalFee), 6)
-      if (swap.deprecatedEncoding) {
-        inAmount = ethers.utils.formatUnits(swap.amount.add(swap.fee), swap.inToken === 255 ? 4 : 6)
-        outAmount = ethers.utils.formatUnits(swap.amount, 6)
-      }
-      body = (
-        <dl>
-          <ListRow title='Encoded As'>
-            <div className='break-all'>{data.encoded}</div>
-          </ListRow>
-          <ListRow title='From'>
-            <TagNetwork network={from} address={fromAddress} />
-            <div className='text-normal truncate'>
-              <span className='hover:underline hover:text-primary'>
-                <Link href={`/address/${fromAddress}`}>{fromAddress}</Link>
-              </span>
-            </div>
-          </ListRow>
-          <ListRow title='To'>
-            <TagNetwork network={to} address={recipient} />
-            <div className='text-normal truncate'>
-              <span className='hover:underline hover:text-primary'>
-                <Link href={`/address/${recipient}`}>{recipient}</Link>
-              </span>
-            </div>
-          </ListRow>
-          <ListRow title='Amount'>
-            <div className='flex items-center'>
-              <div className='mr-1'>{inAmount}</div>
-              <TagNetworkToken explorer={from.explorer} token={from.token} />
-              <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
-              <div className='mr-1'>{outAmount}</div>
-              <TagNetworkToken explorer={to.explorer} token={to.token} />
-            </div>
-          </ListRow>
-          <ListRow title='Fee'>
-            <div className='flex items-center'>
-              <div className='mr-1'>{ethers.utils.formatUnits(swap.totalFee, 6)}</div>
-              <TagNetworkToken
-                explorer={swap.deprecatedEncoding ? from.explorer : to.explorer}
-                token={swap.deprecatedEncoding ? from.token : to.token}
-              />
-            </div>
-            <div className={classnames('text-sm text-gray-500', swap.totalFee.gt(0) ? '' : 'hidden')}>
-              {ethers.utils.formatUnits(swap.platformFee, 6)} Service fee + {ethers.utils.formatUnits(swap.fee, 6)} LP fee
-            </div>
-          </ListRow>
-          <ListRow title='Requested at'>
-            {new Date(data.created).toLocaleString()}
-          </ListRow>
-          {data.provider && <ListRow title='Provider'><div className='truncate'>{data.provider}</div></ListRow>}
-          <SwapTimes data={data} expired={expired} expireTs={swap.expireTs} />
-
-          <ListRow title='Process'>
-            <ul role='list' className='border border-gray-200 rounded-md divide-y divide-gray-200 bg-white'>
-              {sortEvents(data?.events).map((e, index) => (
-                <li key={`process-${index}`}>
-                  <div className='lg:grid lg:grid-cols-4 sm:px-4 sm:py-3 px-3 py-2 text-sm'>
-                    <div><SwapStepName {...e} /></div>
-                    <div className='lg:col-span-3 lg:flex lg:flex-row lg:justify-end'>
-                      <div className='max-w-full truncate text-gray-500'>
-                        <SwapStepInfo {...e} fromAddress={fromAddress} from={from} to={to} />
-                      </div>
+        <ListRow title='Process'>
+          <ul role='list' className='border border-gray-200 rounded-md divide-y divide-gray-200 bg-white'>
+            {sortEvents(data?.events).map((e, index) => (
+              <li key={`process-${index}`}>
+                <div className='lg:grid lg:grid-cols-4 sm:px-4 sm:py-3 px-3 py-2 text-sm'>
+                  <div><SwapStepName {...e} /></div>
+                  <div className='lg:col-span-3 lg:flex lg:flex-row lg:justify-end'>
+                    <div className='max-w-full truncate text-gray-500'>
+                      <SwapStepInfo {...e} fromAddress={fromAddress} from={from} to={to} />
                     </div>
                   </div>
-                </li>
-              ))}
-            </ul>
-          </ListRow>
-        </dl>
-      )
-    }
+                </div>
+              </li>
+            ))}
+          </ul>
+        </ListRow>
+      </dl>
+    )
   }
 
   const expired = swap?.expireTs < Date.now() / 1000
@@ -258,15 +248,20 @@ function SwapStepName({ index, name }) {
 
 function SwapStepInfo({ index, hash, recipient, name, fromAddress, from, to }) {
   if (index === 0) {
-    return <ExternalLink size='sm' href={`${from.explorer}/address/${fromAddress}`}>{fromAddress}</ExternalLink>
+    return <ExternalLink size='sm' href={`${from.network.explorer}/address/${fromAddress}`}>{fromAddress}</ExternalLink>
   } else if (index === 5) {
-    return <ExternalLink size='sm' href={`${to.explorer}/address/${recipient}`}>{recipient}</ExternalLink>
+    return <ExternalLink size='sm' href={`${to.network.explorer}/address/${recipient}`}>{recipient}</ExternalLink>
   }
   return (
     <div className='flex items-center'>
       {name.endsWith(':FAILED') && <FailedIcon />}
       <div className='truncate'>
-        <ExternalLink size='sm' href={`${[3, 4, 7].includes(index) ? to.explorerTx : from.explorerTx}/${hash}`}>{hash}</ExternalLink>
+        <ExternalLink
+          size='sm'
+          href={getExplorerTxLink([3, 4, 7].includes(index) ? to : from, hash)}
+        >
+          {hash}
+        </ExternalLink>
       </div>
     </div>
   )

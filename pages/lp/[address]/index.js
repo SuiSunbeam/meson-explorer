@@ -164,30 +164,20 @@ function LpContentRow ({ address, network, add }) {
     }
   }, [id, url])
 
-  const formatedAddress = React.useMemo(() => {
-    if (!id.startsWith('tron')) {
-      return address
-    }
-    const formatedAddress = client.tronWeb.address.fromHex(address?.replace('0x', '41'))
-    if (formatedAddress) {
-      client.tronWeb.setAddress(formatedAddress)
-    }
-    return formatedAddress
-  }, [id, address, client])
-
+  const nativeDecimals = network.nativeCurrency?.decimals || 18
   React.useEffect(() => {
-    if (!formatedAddress) {
+    if (!address) {
       return
     }
-    client.getBalance(formatedAddress)
-      .catch(() => {})
+    client.getBalance(address)
+      .catch(err => console.error(err))
       .then(v => {
         if (v) {
-          const [i, d] = ethers.utils.formatUnits(v, network.nativeCurrency?.decimals || 18).split('.')
+          const [i, d] = ethers.utils.formatUnits(v, nativeDecimals).split('.')
           setCore(`${i}.${d.substring(0, 6)}`)
         }
       })
-  }, [formatedAddress]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [client, address, nativeDecimals])
 
   const alert = CORE_ALERT[network.id]
   const tokens = [...network.tokens]
@@ -222,7 +212,7 @@ function LpContentRow ({ address, network, add }) {
         <TokenAmount
           key={t.addr}
           client={client}
-          address={formatedAddress}
+          address={address}
           token={t}
           explorer={network.explorer}
           add={add}
@@ -240,7 +230,7 @@ function TokenAmount ({ client, address, token, explorer, add }) {
     if (!address) {
       return
     }
-    client.balanceOf(token.addr, address)
+    client.poolTokenBalance(token.addr, address, { from: address })
       .catch(() => {})
       .then(v => {
         if (v) {
@@ -249,7 +239,7 @@ function TokenAmount ({ client, address, token, explorer, add }) {
         }
       })
     
-    client.balanceOfToken(token.addr, address)
+    client.getTokenContract(token.addr).balanceOf(address, { from: address })
       .catch(() => {})
       .then(v => {
         if (v) {
