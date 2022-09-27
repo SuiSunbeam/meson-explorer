@@ -200,7 +200,7 @@ function Profile ({ globalState, setGlobalState }) {
                           className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
                           onClick={() => router.push(`/lp/${lp}`)}
                         >
-                          LP Status
+                          LP {lp.substring(0, 6)}...
                         </div>
                       </Menu.Item>
                     ))
