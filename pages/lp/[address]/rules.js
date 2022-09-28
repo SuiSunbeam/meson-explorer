@@ -248,7 +248,7 @@ function SwapRuleRouteKey ({ routeKey = '' }) {
   }
   return (
     <div className='flex flex-row'>
-      <TagNetwork iconOnly network={{ networkId: n }} />
+      <TagNetwork iconOnly network={{ id: n }} />
       { t !== '*' && <TagNetworkToken iconOnly token={{ symbol: t }} className='ml-1' /> }
     </div>
   )
