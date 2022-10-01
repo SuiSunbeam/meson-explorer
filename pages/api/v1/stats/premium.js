@@ -14,8 +14,9 @@ export default async function handler(req, res) {
         date: {
           $dateToString: { date: { $cond: ['$paid', '$ts', '$since'] }, format: '%Y-%m-%d' }
         },
-        buy: { $cond: [{ $and: ['$paid', { $gte: ['$ts', '$since'] }] }, 1, 0] },
-        renew: { $cond: [{ $and: ['$paid', { $lt: ['$ts', '$since'] }] }, 1, 0] },
+        buy: { $cond: [{ $and: ['$paid', { $gt: ['$since', null] }, { $gte: ['$ts', '$since'] }] }, 1, 0] },
+        extra: { $cond: [{ $lte: ['$since', null] }, 1, 0] },
+        renew: { $cond: [{ $and: ['$paid', { $gt: ['$since', null] }, { $lt: ['$ts', '$since'] }] }, 1, 0] },
         redeem: { $cond: ['$paid', 0, 1] }
       }
     },
@@ -23,6 +24,7 @@ export default async function handler(req, res) {
       $group: {
         _id: '$date',
         buy: { $sum: '$buy' },
+        extra: { $sum: '$extra' },
         renew: { $sum: '$renew' },
         redeem: { $sum: '$redeem' }
       }
