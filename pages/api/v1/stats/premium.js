@@ -2,25 +2,29 @@ import { Premiums } from 'lib/db'
 
 export default async function handler(req, res) {
   const pipeline = [
-    { $match: { meta: { $exists: true } } },
+    {
+      $project: {
+        paid: { $gt: ['$meta', null] },
+        since: '$since',
+        ts: { $toDate: { $multiply: [{ $ifNull: ['$meta.ts', { $toLong: 0 }] }, 1000] } }
+      }
+    },
     {
       $project: {
         date: {
-          $dateToString: {
-            date: { $toDate: { $multiply: ['$meta.ts', 1000] } },
-            format: '%Y-%m-%d'
-          }
+          $dateToString: { date: { $cond: ['$paid', '$ts', '$since'] }, format: '%Y-%m-%d' }
         },
-        renew: {
-          $lt: [{ $multiply: ['$meta.ts', 1000] }, { $toLong: '$since' }]
-        }
+        buy: { $cond: [{ $and: ['$paid', { $gte: ['$ts', '$since'] }] }, 1, 0] },
+        renew: { $cond: [{ $and: ['$paid', { $lt: ['$ts', '$since'] }] }, 1, 0] },
+        redeem: { $cond: ['$paid', 0, 1] }
       }
     },
     {
       $group: {
         _id: '$date',
-        buy: { $sum: { $cond: ['$renew', 0, 1] } },
-        renew: { $sum: { $cond: ['$renew', 1, 0] } }
+        buy: { $sum: '$buy' },
+        renew: { $sum: '$renew' },
+        redeem: { $sum: '$redeem' }
       }
     },
     { $sort: { _id: -1 } }

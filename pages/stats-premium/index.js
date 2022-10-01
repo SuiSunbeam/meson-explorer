@@ -16,15 +16,17 @@ export default function StatsPremium() {
   } else if (!data) {
     body = <LoadingScreen />
   } else {
-    const total = data.reduce(({ buy, renew }, row) => ({
+    const total = data.reduce(({ buy, renew, redeem }, row) => ({
       buy: row.buy + buy,
-      renew: row.renew + renew
-    }), { buy: 0, renew: 0 })
+      renew: row.renew + renew,
+      redeem: row.redeem + redeem
+    }), { buy: 0, renew: 0, redeem: 0 })
     body = (
       <Table size='lg' headers={[
         { name: 'date', width: '40%' },
-        { name: 'buy', width: '30%' },
-        { name: 'renew', width: '30%' }
+        { name: 'buy', width: '20%' },
+        { name: 'renew', width: '20%' },
+        { name: 'redeem', width: '20%' }
       ]}>
         <StatPremiumRow _id='Total' {...total} />
         {data.map((row, index) => <StatPremiumRow key={`stat-table-row-${index}`} {...row} />)}
@@ -42,12 +44,13 @@ export default function StatsPremium() {
   )
 }
 
-function StatPremiumRow ({ _id: date, buy, renew }) {
+function StatPremiumRow ({ _id: date, buy, renew, redeem }) {
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td size='lg'>{date}</Td>
       <Td>{buy}</Td>
       <Td>{renew}</Td>
+      <Td>{redeem}</Td>
     </tr>
   )
 }
