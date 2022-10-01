@@ -100,7 +100,7 @@ function SwapRuleModal ({ data, onClose }) {
       setToChain(toChain || '*')
       setToToken(toToken)
       setPriority(data.priority || 0)
-      setLimit(data.limit || '')
+      setLimit(typeof data.limit === 'number' ? data.limit : '')
       setInitiator(data.initiator || '')
       setFee(JSON.stringify(data.fee, null, 2) || '[\n]')
     }
@@ -111,7 +111,7 @@ function SwapRuleModal ({ data, onClose }) {
       from: fromToken === '*' ? fromChain : `${fromChain}:${fromToken}`,
       to: toToken === '*' ? toChain : `${toChain}:${toToken}`,
       priority,
-      limit: limit ? Number(limit) : null,
+      limit,
       initiator,
       fee: JSON.parse(fee)
     }

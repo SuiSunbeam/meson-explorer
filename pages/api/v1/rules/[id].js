@@ -3,7 +3,12 @@ import { Rules } from 'lib/db'
 export default async function handler(req, res) {
   const id = req.query.id
   if (req.method === 'PUT') {
-    const result = await Rules.findByIdAndUpdate(id, { $set: req.body }, { new: true })
+    const update = { $set: req.body }
+    if (!req.body.limit) {
+      delete update.$set.limit
+      update.$unset = { limit: true }
+    }
+    const result = await Rules.findByIdAndUpdate(id, update, { new: true })
     if (result) {
       res.json({ result })
     } else {
