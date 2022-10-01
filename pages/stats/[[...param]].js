@@ -94,13 +94,13 @@ export default function StatsByChain() {
       <div className='grid md:grid-cols-4 grid-cols-2 md:gap-5 gap-3 md:mb-5 mb-3'>
         <StatCard title='# of Swaps' value={<>{nSuccess} / {nTotal} {rate}</>} />
         <StatCard title='# of Addresses' value={addresses || 'N/A'} />
-        <StatCard title='Total Volume' value={volume ? `$${fmt.format(ethers.utils.formatUnits(volume, 6))}` : 'N/A'} />
+        <StatCard title='Total Volume' value={volume ? `$${fmt.format(Math.floor(ethers.utils.formatUnits(volume, 6)))}` : 'N/A'} />
         <StatCard title='Avg. Duration' value={duration ? formatDuration(duration * 1000) : 'N/A'} />
       </div>
 
       <Card>
         <CardTitle
-          title='Stats'
+          title='Stats for Swaps'
           badge={shortCoinType &&
             <ButtonGroup
               size='sm'

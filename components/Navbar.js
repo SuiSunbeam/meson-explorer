@@ -61,7 +61,7 @@ export default function Navbar({ globalState, setGlobalState }) {
                         href={item.href}
                         className={classNames(
                           item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'px-3 py-2 rounded-md text-sm font-medium'
+                          'px-3 py-1.5 rounded-md text-sm font-medium'
                         )}
                         aria-current={item.current ? 'page' : undefined}
                       >
@@ -79,7 +79,7 @@ export default function Navbar({ globalState, setGlobalState }) {
           </div>
 
           <Disclosure.Panel className='sm:hidden'>
-            <div className='px-2 pt-2 pb-3 space-y-1'>
+            <div className='px-2 pt-1.5 pb-3 space-y-1'>
               {navigation.map((item) => (
                 <Disclosure.Button
                   key={item.name}
@@ -87,7 +87,7 @@ export default function Navbar({ globalState, setGlobalState }) {
                   href={item.href}
                   className={classNames(
                     item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                    'block px-3 py-2 rounded-md text-base font-medium'
+                    'block px-3 py-1.5 rounded-md text-base font-medium'
                   )}
                   aria-current={item.current ? 'page' : undefined}
                 >
@@ -164,10 +164,23 @@ function Profile ({ globalState, setGlobalState }) {
         leaveTo='transform opacity-0 scale-95'
       >
         <Menu.Items className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-200 z-10'>
+          <div className='py-1'>
+            <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
+              <UserCircleIcon className='w-4 h-4 mr-1'/>{session?.user.email || '(Guest)'}
+            </div>
+            <Menu.Item>
+              <div
+                className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                onClick={() => { session ? signOut() : signIn() }}
+              >
+                { session ? 'Sign out' : 'Sign in'}
+              </div>
+            </Menu.Item>
+          </div>
           {
             extName &&
             <div className='py-1'>
-              <div className='flex items-center px-4 pt-2 pb-1 text-xs text-gray-500'>
+              <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
                 {
                   connectedAddress 
                   ? <><CreditCardIcon className='w-4 h-4 mr-1'/>{abbreviate(connectedAddress)}</>
@@ -176,7 +189,7 @@ function Profile ({ globalState, setGlobalState }) {
               </div>
               <Menu.Item>
                 <div
-                  className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
                   onClick={onClick}
                 >
                   {connectedAddress ? `Disconnect ${extName}` : extName}
@@ -185,56 +198,67 @@ function Profile ({ globalState, setGlobalState }) {
             </div>
           }
           {
-            session?.user &&
+            authorized &&
             <div className='py-1'>
-              <div className='flex items-center px-4 pt-2 pb-1 text-xs text-gray-500'>
-                <UserCircleIcon className='w-4 h-4 mr-1'/>{session?.user.email}
+              <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
+                LPs
               </div>
               {
-                authorized &&
-                <>
-                  {
-                    lps.map((lp, index) => (
-                      <Menu.Item key={`lp-${index}`}>
-                        <div
-                          className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                          onClick={() => router.push(`/lp/${lp}`)}
-                        >
-                          LP {lp.substring(0, 6)}...
-                        </div>
-                      </Menu.Item>
-                    ))
-                  }
-                  <Menu.Item>
+                lps.map((lp, index) => (
+                  <Menu.Item key={`lp-${index}`}>
                     <div
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                      onClick={() => router.push('/stats')}
+                      className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer overflow-hidden truncate'
+                      onClick={() => router.push(`/lp/${lp}`)}
                     >
-                      Stats
+                      {lp}
                     </div>
                   </Menu.Item>
-                  <Menu.Item>
-                    <div
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                      onClick={() => router.push('/share')}
-                    >
-                      Share Stats
-                    </div>
-                  </Menu.Item>
-                </>
+                ))
               }
+            </div>
+          }
+          {
+            authorized &&
+            <div className='py-1'>
+              <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
+                Stats
+              </div>
+              <Menu.Item>
+                <div
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => router.push('/stats')}
+                >
+                  Swaps
+                </div>
+              </Menu.Item>
+              <Menu.Item>
+                <div
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => router.push('/stats-premium')}
+                >
+                  Premium
+                </div>
+              </Menu.Item>
+              <Menu.Item>
+                <div
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => router.push('/stats-share')}
+                >
+                  Share
+                </div>
+              </Menu.Item>
             </div>
           }
           {
             authorized &&
             <>
               <div className='py-1'>
-                <div className='flex items-center px-4 pt-2 pb-1 text-xs text-gray-500'>
+                <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
                   Pendings
                 </div>
                 <Menu.Item>
                   <div
-                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                    className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
                     onClick={() => router.push('/pending/bonded')}
                   >
                     Bonded
@@ -242,7 +266,7 @@ function Profile ({ globalState, setGlobalState }) {
                 </Menu.Item>
                 <Menu.Item>
                   <div
-                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                    className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
                     onClick={() => router.push('/pending/locked')}
                   >
                     Locked
@@ -250,7 +274,7 @@ function Profile ({ globalState, setGlobalState }) {
                 </Menu.Item>
                 <Menu.Item>
                   <div
-                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                    className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
                     onClick={() => router.push('/pending/conflict')}
                   >
                     Conflict
@@ -258,12 +282,12 @@ function Profile ({ globalState, setGlobalState }) {
                 </Menu.Item>
               </div>
               <div className='py-1'>
-                <div className='flex items-center px-4 pt-2 pb-1 text-xs text-gray-500'>
+                <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
                   Queued
                 </div>
                 <Menu.Item>
                   <div
-                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                    className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
                     onClick={() => router.push('/queued/blocks/eth')}
                   >
                     Blocks
@@ -271,7 +295,7 @@ function Profile ({ globalState, setGlobalState }) {
                 </Menu.Item>
                 <Menu.Item>
                   <div
-                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                    className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
                     onClick={() => router.push('/queued/txs/eth')}
                   >
                     Transactions
@@ -280,16 +304,6 @@ function Profile ({ globalState, setGlobalState }) {
               </div>
             </>
           }
-          <div className='py-1'>
-            <Menu.Item>
-              <div
-                className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                onClick={() => { session ? signOut() : signIn() }}
-              >
-                { session ? 'Sign out' : 'Sign in'}
-              </div>
-            </Menu.Item>
-          </div>
         </Menu.Items>
       </Transition>
     </Menu>

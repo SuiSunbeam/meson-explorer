@@ -9,7 +9,7 @@ import LoadingScreen from 'components/LoadingScreen'
 import Table, { Td } from 'components/Table'
 
 export default function ShareStats() {
-  const { data, error } = useSWR(`share/stats`, fetcher)
+  const { data, error } = useSWR(`stats/share`, fetcher)
 
   let body
   if (error) {
@@ -24,14 +24,14 @@ export default function ShareStats() {
         { name: 'clicks', width: '15%' },
         { name: 'posters', width: '15%' }
       ]}>
-        {data.map((row, index) => <ShareStatRow key={`stat-table-row-${index}`} {...row} />)}
+        {data.map((row, index) => <StatShareRow key={`stat-table-row-${index}`} {...row} />)}
       </Table>
     )
   }
 
   return (
     <Card>
-      <CardTitle title='Share Stats' />
+      <CardTitle title='Stats for Shares' />
       <CardBody>
         {body}
       </CardBody>
@@ -39,8 +39,7 @@ export default function ShareStats() {
   )
 }
 
-function ShareStatRow ({ _id, address, n, seq }) {
-
+function StatShareRow ({ _id, address, n, seq }) {
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td size='lg'>

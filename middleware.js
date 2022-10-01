@@ -17,11 +17,10 @@ export const middleware = withAuth(
     const pathname = req.nextUrl.pathname
 
     if (
-      pathname.startsWith('/pending') ||
+      pathname.startsWith('/lp') ||
       pathname.startsWith('/stats') ||
-      pathname.startsWith('/share') ||
-      pathname.startsWith('/queued') ||
-      pathname.startsWith('/lp')
+      pathname.startsWith('/pending') ||
+      pathname.startsWith('/queued')
     ) {
       if (!token) {
         return NextResponse.redirect(new URL('/', req.url))
@@ -32,12 +31,11 @@ export const middleware = withAuth(
 
     if (!isAdmin && (
       pathname.startsWith('/api/v1/admin') ||
+      pathname.startsWith('/api/v1/rules') ||
+      // pathname.startsWith('/api/v1/stats') ||
       pathname.startsWith('/api/v1/swap/bonded') ||
       pathname.startsWith('/api/v1/swap/locked') ||
       pathname.startsWith('/api/v1/swap/conflict') ||
-      pathname.startsWith('/api/v1/rules') ||
-      pathname.startsWith('/api/v1/share/stats') ||
-      // pathname.startsWith('/api/v1/stats') ||
       pathname.startsWith('/api/v1/queued')
     )) {
       return NextResponse.rewrite(new URL('/api/401', req.url))
