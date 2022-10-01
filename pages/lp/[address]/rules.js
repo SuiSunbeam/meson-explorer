@@ -46,9 +46,10 @@ export default function SwapRuleList() {
   } else {
     body = (
       <Table size='lg' headers={[
-        { name: 'route / priority', width: '30%', className: 'pl-4 md:pl-6' },
-        { name: 'limit', width: '25%' },
-        { name: 'fee rule', width: '35%' },
+        { name: 'route / priority', width: '20%', className: 'pl-4 md:pl-6' },
+        { name: 'limit', width: '20%' },
+        { name: 'fee rule', width: '20%' },
+        { name: 'initiator', width: '30%' },
         { name: 'edit', width: '10%', className: 'text-right' },
       ]}>
         {data.map((d, i) => <SwapRule key={i} d={d} onOpenModal={d => setModalData(d)} />)}
@@ -86,7 +87,8 @@ function SwapRuleModal ({ data, onClose }) {
   const [toToken, setToToken] = React.useState('*')
 
   const [priority, setPriority] = React.useState(0)
-  const [limit, setLimit] = React.useState(0)
+  const [limit, setLimit] = React.useState('')
+  const [initiator, setInitiator] = React.useState('')
   const [fee, setFee] = React.useState('')
 
   React.useEffect(() => {
@@ -98,7 +100,8 @@ function SwapRuleModal ({ data, onClose }) {
       setToChain(toChain || '*')
       setToToken(toToken)
       setPriority(data.priority || 0)
-      setLimit(data.limit || 0)
+      setLimit(data.limit || '')
+      setInitiator(data.initiator || '')
       setFee(JSON.stringify(data.fee, null, 2) || '[\n]')
     }
   }, [data])
@@ -108,7 +111,8 @@ function SwapRuleModal ({ data, onClose }) {
       from: fromToken === '*' ? fromChain : `${fromChain}:${fromToken}`,
       to: toToken === '*' ? toChain : `${toChain}:${toToken}`,
       priority,
-      limit,
+      limit: limit ? Number(limit) : null,
+      initiator,
       fee: JSON.parse(fee)
     }
 
@@ -194,6 +198,13 @@ function SwapRuleModal ({ data, onClose }) {
         />
         <Input
           className='col-span-6'
+          id='initiator'
+          label='Initiator'
+          value={initiator}
+          onChange={setInitiator}
+        />
+        <Input
+          className='col-span-6'
           id='rules'
           label='Fee Rules'
           type='textarea'
@@ -225,6 +236,7 @@ function SwapRule ({ d, onOpenModal }) {
       </Td>
       <Td size='sm'>{d.limit}</Td>
       <Td size='sm'>{d.fee?.map((item, i) => <FeeRule key={i} {...item} />)}</Td>
+      <Td size='sm'>{d.initiator}</Td>
       <Td size='sm' className='text-right'>
         <Button rounded size='xs' color='info' onClick={() => onOpenModal(d)}>
           <PencilIcon className='w-4 h-4' aria-hidden='true' />
