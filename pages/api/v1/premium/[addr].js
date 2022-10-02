@@ -1,6 +1,8 @@
 import { Premiums } from 'lib/db'
 
 export default async function handler(req, res) {
+  const addr = req.query.addr
+
   const page = Number(req.query.page) || 0
   const size = Number(req.query.size) || 10
   if (page < 0 || page !== Math.floor(page)) {
@@ -14,7 +16,7 @@ export default async function handler(req, res) {
     return
   }
 
-  const query = { meta: { $exists: true } }
+  const query = { initiator: addr, meta: { $exists: true } }
   const total = await Premiums.count(query)
   const list = await Premiums.find(query)
     .sort({ 'meta.ts': -1 })

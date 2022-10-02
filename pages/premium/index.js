@@ -18,7 +18,7 @@ export default function PaidPremiumList() {
   const page = Number(router.query.page || 1) - 1
   const pageValid = !Number.isNaN(page) && Number.isInteger(page) && page >= 0
   if (!pageValid) {
-    router.replace('/')
+    router.replace('/premium')
   }
   
   React.useEffect(() => {
@@ -63,7 +63,7 @@ export default function PaidPremiumList() {
     <Card>
       <CardTitle
         title='Paid Premium'
-        subtitle=''
+        subtitle='All'
       />
       <CardBody>
         {body}
@@ -72,7 +72,7 @@ export default function PaidPremiumList() {
   )
 }
 
-function PaidPremiumRow ({ initiator, hash, paid, used, quota, since, until, meta }) {
+export function PaidPremiumRow ({ initiator, hash, paid, used, quota, since, until, meta, linkPrefix = 'premium' }) {
   let type = 'BUY'
   let badgeType = 'info'
   if (!since) {
@@ -87,7 +87,7 @@ function PaidPremiumRow ({ initiator, hash, paid, used, quota, since, until, met
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td size='' className='pl-3 md:pl-4 py-2'>
         <div className='text-primary hover:underline'>
-          <Link href={`/address/${initiator}`}>{abbreviate(initiator, 8, 6)}</Link>
+          <Link href={`/${linkPrefix}/${initiator}`}>{abbreviate(initiator, 8, 6)}</Link>
         </div>
         <div className='text-xs text-gray-500'>
           {new Date(meta.ts * 1000).toLocaleString()}
