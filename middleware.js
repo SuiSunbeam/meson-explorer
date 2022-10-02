@@ -19,6 +19,7 @@ export const middleware = withAuth(
     if (
       pathname.startsWith('/lp') ||
       pathname.startsWith('/stats') ||
+      pathname.startsWith('/premium') ||
       pathname.startsWith('/pending') ||
       pathname.startsWith('/queued')
     ) {
@@ -32,6 +33,7 @@ export const middleware = withAuth(
     if (!isAdmin && (
       pathname.startsWith('/api/v1/admin') ||
       pathname.startsWith('/api/v1/rules') ||
+      pathname.startsWith('/api/v1/premium') ||
       // pathname.startsWith('/api/v1/stats') ||
       pathname.startsWith('/api/v1/swap/bonded') ||
       pathname.startsWith('/api/v1/swap/locked') ||
