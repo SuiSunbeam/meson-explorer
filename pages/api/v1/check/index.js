@@ -4,9 +4,9 @@ import { restartService } from '../admin/restart'
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
-    get(req, res)
+    await get(req, res)
   } else if (req.method === 'POST') {
-    post(req, res)
+    await post(req, res)
   } else {
     res.status(404).send()
   }
