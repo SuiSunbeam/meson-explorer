@@ -38,6 +38,7 @@ export const middleware = withAuth(
       pathname.startsWith('/api/v1/swap/bonded') ||
       pathname.startsWith('/api/v1/swap/locked') ||
       pathname.startsWith('/api/v1/swap/conflict') ||
+      pathname.startsWith('/api/v1/retrieve') ||
       pathname.startsWith('/api/v1/queued')
     )) {
       return NextResponse.rewrite(new URL('/api/401', req.url))

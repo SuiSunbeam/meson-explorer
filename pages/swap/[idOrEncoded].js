@@ -182,7 +182,16 @@ function CorrectSwap({ data: raw }) {
         title='Swap'
         badge={<SwapStatusBadge events={data?.events || []} expired={expired} />}
         subtitle={data?._id}
-        right={<SwapActionButton data={data} swap={swap} show={connectedAddress} setGlobalState={setGlobalState} />}
+        right={(
+          <SwapActionButton
+            data={data}
+            swap={swap}
+            from={from}
+            to={to}
+            connected={connectedAddress}
+            setGlobalState={setGlobalState}
+          />
+        )}
       />
       <CardBody border={!data}>
         {body}
@@ -191,10 +200,9 @@ function CorrectSwap({ data: raw }) {
   )
 }
 
-function SwapActionButton({ data, swap, show, setGlobalState }) {
-  let empty
-  if (!show || !data || (data.released && data.executed)) {
-    empty = true
+function SwapActionButton({ data, swap, from, to, connected, setGlobalState }) {
+  if (!data || (data.released && data.executed)) {
+    return null
   }
 
   const expired = swap?.expireTs < Date.now() / 1000
@@ -212,28 +220,42 @@ function SwapActionButton({ data, swap, show, setGlobalState }) {
     }
   }, [setGlobalState, status, swap?.inChain, swap?.outChain])
 
-  if (empty) {
-    return null
+  const retrieve = async () => {
+    await fetcher.post(`retrieve`, { networkId: from.network.id, encoded: swap.encoded })
+    await fetcher.post(`retrieve`, { networkId: to.network.id, encoded: swap.encoded })
+  }
+  const retrieveButton = (<Button size='sm' color='info' rounded onClick={retrieve}>Retrieve</Button>)
+
+  if (!connected) {
+    return retrieveButton
   }
 
   const initiator = data.initiator || data.fromTo[0]
   const recipient = data.fromTo[1]
+
+  let actionButton = null
   switch (status) {
     case 'REQUESTING':
-      return <Button size='sm' color='info' rounded onClick={() => extensions.bond(swap, data.signature, initiator)}>Bond</Button>
+      actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.bond(swap, data.signature, initiator)}>Bond</Button>
     case 'BONDED':
-      return <Button size='sm' color='info' rounded onClick={() => extensions.lock(swap, data.signature, initiator)}>Lock</Button>
+      actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.lock(swap, data.signature, initiator)}>Lock</Button>
     case 'EXPIRED*':
     case 'CANCELLED*':
-      return <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, initiator)}>Unlock</Button>
+      actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, initiator)}>Unlock</Button>
     case 'EXPIRED':
-      return <Button size='sm' color='info' rounded onClick={() => extensions.withdraw(swap)}>Withdraw</Button>
+      actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.withdraw(swap)}>Withdraw</Button>
     case 'RELEASED':
-      return <Button size='sm' color='info' rounded onClick={() => extensions.execute(swap, data.releaseSignature, recipient)}>Execute</Button>
+      actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.execute(swap, data.releaseSignature, recipient)}>Execute</Button>
     case 'RELEASING*':
-      return <Button size='sm' color='info' rounded onClick={() => extensions.release(swap, data.releaseSignature, initiator, recipient)}>Release</Button>
+      actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.release(swap, data.releaseSignature, initiator, recipient)}>Release</Button>
   }
-  return null
+
+  return (
+    <div className='flex flex-row gap-1'>
+      {retrieveButton}
+      {actionButton}
+    </div>
+  )
 }
 
 function SwapStepName({ index, name }) {
