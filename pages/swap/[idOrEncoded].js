@@ -201,10 +201,6 @@ function CorrectSwap({ data: raw }) {
 }
 
 function SwapActionButton({ data, swap, from, to, connected, setGlobalState }) {
-  if (!data || (data.released && data.executed)) {
-    return null
-  }
-
   const expired = swap?.expireTs < Date.now() / 1000
   let status = getStatusFromEvents(data?.events || [], expired)
 
@@ -219,6 +215,10 @@ function SwapActionButton({ data, swap, from, to, connected, setGlobalState }) {
       }
     }
   }, [setGlobalState, status, swap?.inChain, swap?.outChain])
+
+  if (!data || (data.released && data.executed)) {
+    return null
+  }
 
   const retrieve = async () => {
     await fetcher.post(`retrieve`, { networkId: from.network.id, encoded: swap.encoded })
