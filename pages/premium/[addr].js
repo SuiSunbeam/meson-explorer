@@ -24,7 +24,7 @@ export default function PaidPremiumList() {
     if (!pageValid) {
       router.replace(`/premium/${addr}`)
     }
-  }, [pageValid, router])
+  }, [pageValid, router, addr])
 
   const { data, error } = useSWR(pageValid && `premium/${addr}?page=${page}`, fetcher)
 
