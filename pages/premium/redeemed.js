@@ -15,7 +15,7 @@ export default function RedeemedPremiumList() {
       queryUrl='premium/redeemed'
       fallback='/premium/redeemed'
       tableHeaders={[
-        { name: 'initiator / time', width: '30%', className: 'pl-3 md:pl-4' },
+        { name: 'initiator / time', width: '30%' },
         { name: 'type', width: '20%' },
         { name: 'usage', width: '20%' },
         { name: 'valid', width: '30%' }
@@ -31,7 +31,7 @@ function RedeemedPremiumRow ({ data }) {
   const badgeType = 'info'
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
-      <Td size='' className='pl-3 md:pl-4 py-2'>
+      <Td size='' className='pl-4 pr-3 sm:pl-6 py-2'>
         <div className='text-primary hover:underline'>
           <Link href={`/premium/${initiator}`}>{abbreviate(initiator, 8, 6)}</Link>
         </div>

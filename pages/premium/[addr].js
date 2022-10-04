@@ -15,7 +15,7 @@ export default function PaidPremiumList() {
       queryUrl={`premium/${addr}`}
       fallback={`/premium/${addr}`}
       tableHeaders={[
-        { name: 'initiator / time', width: '20%', className: 'pl-3 md:pl-4' },
+        { name: 'initiator / time', width: '20%' },
         { name: 'type', width: '10%' },
         { name: 'tx hash', width: '20%' },
         { name: 'paid', width: '10%' },

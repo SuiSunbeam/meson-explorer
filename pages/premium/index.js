@@ -17,7 +17,7 @@ export default function PaidPremiumList() {
       queryUrl='premium'
       fallback='/premium'
       tableHeaders={[
-        { name: 'initiator / time', width: '20%', className: 'pl-3 md:pl-4' },
+        { name: 'initiator / time', width: '20%' },
         { name: 'type', width: '10%' },
         { name: 'tx hash', width: '20%' },
         { name: 'paid', width: '10%' },
@@ -46,7 +46,7 @@ export function PaidPremiumRow ({ data, linkPrefix = 'premium' }) {
   const network = meta && presets.getNetwork(meta.network)
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
-      <Td size='' className='pl-3 md:pl-4 py-2'>
+      <Td size='' className='pl-4 pr-3 sm:pl-6 py-2'>
         <div className='text-primary hover:underline'>
           <Link href={`/${linkPrefix}/${initiator}`}>{abbreviate(initiator, 8, 6)}</Link>
         </div>
