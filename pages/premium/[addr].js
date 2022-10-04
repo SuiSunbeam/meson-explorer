@@ -38,9 +38,9 @@ export default function PaidPremiumList() {
   } else {
     const { total, list } = data
     if (page * 10 > total) {
-      router.replace(`/premium/${premium}`)
+      router.replace(`/premium/${addr}`)
     }
-    const onPageChange = page => router.push(`/premium/${premium}?page=${page+1}`)
+    const onPageChange = page => router.push(`/premium/${addr}?page=${page+1}`)
     body = (
       <>
         <Table headers={[
