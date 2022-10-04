@@ -117,7 +117,7 @@ export function PaidPremiumRow ({ initiator, hash, paid, used, quota, since, unt
       <Td>
       {
         type === 'EXTRA' 
-          ? <div>+{paid / 200000 + 0.05}k</div>
+          ? <div>+{paid / 20000 + 0.5}k</div>
           : <>
               <div>{Math.floor(used / 1000_000000)}k / {quota / 1000_000000}k</div>
               <div className='text-xs text-gray-500'>{Math.floor(used/quota*1000)/10}%</div>
