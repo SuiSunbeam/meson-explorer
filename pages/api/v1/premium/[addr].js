@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     return
   }
 
-  const query = { initiator: addr, meta: { $exists: true } }
+  const query = { initiator: addr }
   const total = await Premiums.count(query)
   const list = await Premiums.find(query)
     .sort({ 'meta.ts': -1 })

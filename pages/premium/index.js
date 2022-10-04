@@ -75,14 +75,17 @@ export default function PaidPremiumList() {
 export function PaidPremiumRow ({ initiator, hash, paid, used, quota, since, until, meta, linkPrefix = 'premium' }) {
   let type = 'BUY'
   let badgeType = 'info'
-  if (!since) {
+  if (!meta) {
+    type = 'REDEEM'
+    badgeType = 'info'
+  } else if (!since) {
     type = 'EXTRA'
     badgeType = 'warning'
   } else if (since > meta.ts) {
     type = 'RENEW'
     badgeType = 'success'
   }
-  const network = presets.getNetwork(meta.network)
+  const network = meta && presets.getNetwork(meta.network)
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td size='' className='pl-3 md:pl-4 py-2'>
@@ -90,18 +93,26 @@ export function PaidPremiumRow ({ initiator, hash, paid, used, quota, since, unt
           <Link href={`/${linkPrefix}/${initiator}`}>{abbreviate(initiator, 8, 6)}</Link>
         </div>
         <div className='text-xs text-gray-500'>
-          {new Date(meta.ts * 1000).toLocaleString()}
+          {new Date((meta ? meta.ts : since) * 1000).toLocaleString()}
         </div>
       </Td>
       <Td><Badge type={badgeType}>{type}</Badge></Td>
       <Td>
+      {
+        meta &&
         <ExternalLink size='md' className='text-black' href={`${network?.explorer}/tx/${hash}`}>
           {abbreviate(hash, 8, 6)}
         </ExternalLink>
+      }
       </Td>
       <Td>
-        <div>$<AmountDisplay value={paid} /></div>
-        <div className='text-xs text-gray-500'>{network.name}</div>
+      {
+        paid &&
+        <>
+          <div>$<AmountDisplay value={paid} /></div>
+          <div className='text-xs text-gray-500'>{network.name}</div>
+        </>
+      }
       </Td>
       <Td>
       {

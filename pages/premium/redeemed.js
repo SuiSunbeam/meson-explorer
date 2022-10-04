@@ -69,7 +69,7 @@ export default function RedeemedPremiumList() {
 }
 
 function RedeemedPremiumRow ({ initiator, paid, used, quota, since, until }) {
-  const type = 'REDEEMED'
+  const type = 'REDEEM'
   const badgeType = 'info'
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
