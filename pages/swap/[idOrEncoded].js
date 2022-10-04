@@ -2,9 +2,9 @@ import React from 'react'
 import classnames from 'classnames'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-
-import { XCircleIcon } from '@heroicons/react/solid'
 import useSWR from 'swr'
+
+import { XCircleIcon, RefreshIcon } from '@heroicons/react/solid'
 import { ethers } from 'ethers'
 
 import AppContext from 'lib/context'
@@ -230,7 +230,11 @@ function SwapActionButton({ data, swap, from, to, connected, setGlobalState }) {
     await fetcher.post(`retrieve`, { networkId: from.network.id, encoded: swap.encoded })
     await fetcher.post(`retrieve`, { networkId: to.network.id, encoded: swap.encoded })
   }
-  const retrieveButton = (<Button size='sm' color='info' rounded onClick={retrieve}>Retrieve</Button>)
+  const retrieveButton = (
+    <Button size='sm' color='' className='px-1' rounded onClick={retrieve}>
+      <RefreshIcon className='w-4' aria-hidden='true' />
+    </Button>
+  )
 
   if (!connected) {
     return retrieveButton
@@ -258,8 +262,8 @@ function SwapActionButton({ data, swap, from, to, connected, setGlobalState }) {
 
   return (
     <div className='flex flex-row gap-1'>
-      {retrieveButton}
       {actionButton}
+      {retrieveButton}
     </div>
   )
 }
