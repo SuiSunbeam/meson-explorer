@@ -3,36 +3,34 @@ import Link from 'next/link'
 
 import { presets, abbreviate, formatDate } from 'lib/swap'
 
-import Card, { CardTitle, CardBody } from 'components/Card'
-import PagiList from 'components/PagiList'
-import Table, { Td } from 'components/Table'
+import PagiCard from 'components/Pagi/PagiCard'
+import { Td } from 'components/Table'
 import ExternalLink from 'components/ExternalLink'
 import Badge from 'components/Badge'
 import AmountDisplay from 'components/AmountDisplay'
 
 export default function PaidPremiumList() {
   return (
-    <Card>
-      <CardTitle title='Paid Premium' subtitle='All' />
-      <CardBody>
-        <PagiList queryUrl='premium' fallback='/premium'>
-          <Table headers={[
-            { name: 'initiator / time', width: '20%', className: 'pl-3 md:pl-4 hidden sm:table-cell' },
-            { name: 'type', width: '10%' },
-            { name: 'tx hash', width: '20%' },
-            { name: 'paid', width: '10%' },
-            { name: 'usage', width: '15%' },
-            { name: 'valid', width: '25%' }
-          ]}>
-            {list => list.map(row => <PaidPremiumRow key={row._id} {...row} />)}
-          </Table>
-        </PagiList>
-      </CardBody>
-    </Card>
+    <PagiCard
+      title='Paid Premium'
+      subtitle='All' 
+      queryUrl='premium'
+      fallback='/premium'
+      tableHeaders={[
+        { name: 'initiator / time', width: '20%', className: 'pl-3 md:pl-4' },
+        { name: 'type', width: '10%' },
+        { name: 'tx hash', width: '20%' },
+        { name: 'paid', width: '10%' },
+        { name: 'usage', width: '15%' },
+        { name: 'valid', width: '25%' }
+      ]}
+      Row={PaidPremiumRow}
+    />
   )
 }
 
-export function PaidPremiumRow ({ initiator, hash, paid, used, quota, since, until, meta, linkPrefix = 'premium' }) {
+export function PaidPremiumRow ({ data, linkPrefix = 'premium' }) {
+  const { initiator, hash, paid, used, quota, since, until, meta } = data
   let type = 'BUY'
   let badgeType = 'info'
   if (!meta) {

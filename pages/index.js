@@ -4,7 +4,7 @@ import { SearchIcon } from '@heroicons/react/outline'
 import { ethers } from 'ethers'
 
 import Card from 'components/Card'
-import PagiList from 'components/PagiList'
+import PagiList from 'components/Pagi/PagiList'
 import Table from 'components/Table'
 import SwapRow from 'components/SwapRow'
 
@@ -63,7 +63,7 @@ export default function SwapList() {
             { name: 'fee', width: '9%', className: 'hidden md:table-cell' },
             { name: 'duration', width: '9%', className: 'hidden lg:table-cell' }
           ]}>
-            {list => list.map(row => <SwapRow key={row._id} data={row} />)}
+            {list => list.map(row => <SwapRow key={row._id} smMargin data={row} />)}
           </Table>
         </PagiList>
       </Card>

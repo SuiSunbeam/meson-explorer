@@ -3,32 +3,30 @@ import Link from 'next/link'
 
 import { abbreviate, formatDate } from 'lib/swap'
 
-import Card, { CardTitle, CardBody } from 'components/Card'
-import PagiList from 'components/PagiList'
-import Table, { Td } from 'components/Table'
+import PagiCard from 'components/Pagi/PagiCard'
+import { Td } from 'components/Table'
 import Badge from 'components/Badge'
 
 export default function RedeemedPremiumList() {
   return (
-    <Card>
-      <CardTitle title='Redeemed Premium' subtitle='' />
-      <CardBody>
-        <PagiList queryUrl='premium/redeemed' fallback='/premium/redeemed'>
-          <Table headers={[
-            { name: 'initiator / time', width: '30%', className: 'pl-3 md:pl-4 hidden sm:table-cell' },
-            { name: 'type', width: '20%' },
-            { name: 'usage', width: '20%' },
-            { name: 'valid', width: '30%' }
-          ]}>
-            {list => list.map(row => <RedeemedPremiumRow key={row._id} {...row} />)}
-          </Table>
-        </PagiList>
-      </CardBody>
-    </Card>
+    <PagiCard
+      title='Redeemed Premium'
+      subtitle='' 
+      queryUrl='premium/redeemed'
+      fallback='/premium/redeemed'
+      tableHeaders={[
+        { name: 'initiator / time', width: '30%', className: 'pl-3 md:pl-4' },
+        { name: 'type', width: '20%' },
+        { name: 'usage', width: '20%' },
+        { name: 'valid', width: '30%' }
+      ]}
+      Row={RedeemedPremiumRow}
+    />
   )
 }
 
-function RedeemedPremiumRow ({ initiator, paid, used, quota, since, until }) {
+function RedeemedPremiumRow ({ data }) {
+  const { initiator, paid, used, quota, since, until } = data
   const type = 'REDEEM'
   const badgeType = 'info'
   return (

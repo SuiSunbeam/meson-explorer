@@ -13,7 +13,7 @@ import TagNetwork from './TagNetwork'
 import TagNetworkToken from './TagNetworkToken'
 import AmountDisplay from './AmountDisplay'
 
-export default function SwapRow({ data: raw, extraMargin }) {
+export default function SwapRow({ data: raw, smMargin }) {
   const router = useRouter()
   const [data, setData] = React.useState(raw)
   React.useEffect(() => { setData(raw) }, [raw])
@@ -88,7 +88,7 @@ export default function SwapRow({ data: raw, extraMargin }) {
       }}
       onMouseUp={handleMouse}
     >
-      <Td size='' className={extraMargin ? 'pl-4 pr-3 sm:pl-6 py-2' : 'pl-3 md:pl-4 py-2'}>
+      <Td size='' className={smMargin ? 'pl-3 md:pl-4 py-2' : 'pl-4 pr-3 sm:pl-6 py-2'}>
         <div className='text-primary hover:underline hidden lg:block'>
           <Link href={`/swap/${swapId}`}>{abbreviate(swapId)}</Link>
         </div>
