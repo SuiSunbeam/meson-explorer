@@ -16,6 +16,7 @@ import extensions from 'lib/extensions'
 import LoadingScreen from 'components/LoadingScreen'
 import Card, { CardTitle, CardBody } from 'components/Card'
 import Button from 'components/Button'
+import Badge from 'components/Badge'
 import SwapStatusBadge from 'components/SwapStatusBadge'
 import ListRow from 'components/ListRow'
 import ExternalLink from 'components/ExternalLink'
@@ -180,7 +181,12 @@ function CorrectSwap({ data: raw }) {
     <Card>
       <CardTitle
         title='Swap'
-        badge={<SwapStatusBadge events={data?.events || []} expired={expired} />}
+        badge={(
+          <div className='flex flex-row items-center'>
+            <SwapStatusBadge events={data?.events || []} expired={expired} />
+            <Badge className='ml-2'>{data?.hide ? 'HIDE' : ''}</Badge>
+          </div>
+        )}
         subtitle={data?._id}
         right={(
           <SwapActionButton
