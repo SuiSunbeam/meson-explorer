@@ -1,6 +1,7 @@
+import React from 'react'
 import classnames from 'classnames'
 
-export default function Table ({ headers, size = 'md', children }) {
+export default function Table ({ headers, size = 'md', children, list }) {
   return (
     <div className='overflow-auto'>
       <table className='min-w-full divide-y divide-gray-200'>
@@ -12,7 +13,7 @@ export default function Table ({ headers, size = 'md', children }) {
           </tr>
         </thead>
         <tbody className='bg-white divide-y divide-gray-200'>
-          {children}
+          {typeof children === 'function' ? children(list) : children}
         </tbody>
       </table>
     </div>

@@ -21,6 +21,9 @@ function getTokenLogo(symbol) {
 }
 
 export default function TagNetworkToken ({ responsive, size = 'sm', explorer, token, iconOnly, className }) {
+  if (!token) {
+    return null
+  }
   const logo = getTokenLogo(token.symbol)
   const tokenLink = getExplorerTokenLink(token)
   const href = explorer && `${explorer}/${tokenLink}`
