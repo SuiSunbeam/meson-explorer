@@ -75,7 +75,7 @@ function RedeemedPremiumRow ({ initiator, paid, used, quota, since, until }) {
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td size='' className='pl-3 md:pl-4 py-2'>
         <div className='text-primary hover:underline'>
-          <Link href={`/address/${initiator}`}>{abbreviate(initiator, 8, 6)}</Link>
+          <Link href={`/premium/${initiator}`}>{abbreviate(initiator, 8, 6)}</Link>
         </div>
         <div className='text-xs text-gray-500'>
           {new Date(since * 1000).toLocaleString()}
