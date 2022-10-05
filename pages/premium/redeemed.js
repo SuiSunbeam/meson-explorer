@@ -10,7 +10,7 @@ import Badge from 'components/Badge'
 export default function RedeemedPremiumList() {
   return (
     <PagiCard
-      title='Redeemed Premium'
+      title='Premium Redeems'
       subtitle='' 
       queryUrl='premium/redeemed'
       fallback='/premium/redeemed'

@@ -1,17 +1,30 @@
 import React from 'react'
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
+
+import useSWR from 'swr'
+import fetcher from 'lib/fetcher'
 
 import PagiCard from 'components/Pagi/PagiCard'
 import SwapRow from 'components/SwapRow'
+import Badge from 'components/Badge'
 
 export default function AddressSwapList() {
   const router = useRouter()
   const address = router.query.address
 
+  const { data: session } = useSession()
+  const authorized = session?.user?.roles?.includes('admin')
+
+  const { data } = useSWR(authorized && `premium/${address}`, fetcher)
+  const premium = data?.total
+    ? <Badge type='warning' className='mr-1' onClick={() => router.push(`/premium/${address}`)}>PREMIUM</Badge>
+    : null
+
   return (
     <PagiCard
-      title='Address'
-      subtitle={address}
+      title='Swaps for Address'
+      subtitle={<div className='flex items-center'>{premium}{address}</div>}
       queryUrl={`address/${address}/swap`}
       fallback={`/address/${address}`}
       tableHeaders={[

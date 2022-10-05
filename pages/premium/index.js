@@ -12,8 +12,7 @@ import AmountDisplay from 'components/AmountDisplay'
 export default function PaidPremiumList() {
   return (
     <PagiCard
-      title='Paid Premium'
-      subtitle='All' 
+      title='Premium Payments'
       queryUrl='premium'
       fallback='/premium'
       tableHeaders={[

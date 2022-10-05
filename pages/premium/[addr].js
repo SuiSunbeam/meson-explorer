@@ -10,7 +10,7 @@ export default function PaidPremiumList() {
 
   return (
     <PagiCard
-      title='Paid Premium'
+      title='Premium for Address'
       subtitle={addr} 
       queryUrl={`premium/${addr}`}
       fallback={`/premium/${addr}`}
