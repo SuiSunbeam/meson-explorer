@@ -1,4 +1,5 @@
 import React from 'react'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 import { abbreviate, formatDate } from 'lib/swap'
@@ -7,13 +8,19 @@ import PagiCard from 'components/Pagi/PagiCard'
 import { Td } from 'components/Table'
 import Badge from 'components/Badge'
 
-export default function RedeemedPremiumList() {
+export default function RedeemList() {
+  const router = useRouter()
+
   return (
     <PagiCard
-      title='Premium Redeems'
-      subtitle='' 
-      queryUrl='premium/redeemed'
-      fallback='/premium/redeemed'
+      title='Premiums'
+      tabs={[
+        { key: 'payment', name: 'Payments', onClick: () => router.push('/premium') },
+        { key: 'redeem', name: 'Redeems', active: true },
+        { key: 'daily', name: 'Daily Stats', onClick: () => router.push('/premium/daily') }
+      ]}
+      queryUrl='premium/redeem'
+      fallback='/premium/redeem'
       tableHeaders={[
         { name: 'initiator / time', width: '30%' },
         { name: 'type', width: '20%' },

@@ -1,4 +1,5 @@
 import React from 'react'
+import { useRouter } from 'next/router'
 import useSWR from 'swr'
 
 import fetcher from 'lib/fetcher'
@@ -8,6 +9,7 @@ import LoadingScreen from 'components/LoadingScreen'
 import Table, { Td } from 'components/Table'
 
 export default function StatsPremium() {
+  const router = useRouter()
   const { data, error } = useSWR(`stats/premium`, fetcher)
 
   let body
@@ -38,7 +40,14 @@ export default function StatsPremium() {
 
   return (
     <Card>
-      <CardTitle title='Stats for Premium' />
+      <CardTitle
+        title='Premiums'
+        tabs={[
+          { key: 'payment', name: 'Payments', onClick: () => router.push('/premium') },
+          { key: 'redeem', name: 'Redeems', onClick: () => router.push('/premium/redeem') },
+          { key: 'daily', name: 'Daily Stats', active: true }
+        ]}
+      />
       <CardBody>
         {body}
       </CardBody>
