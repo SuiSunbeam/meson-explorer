@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
 import { SearchIcon } from '@heroicons/react/outline'
 import { ethers } from 'ethers'
 
@@ -9,6 +10,7 @@ import Table from 'components/Table'
 import SwapRow from 'components/SwapRow'
 
 export default function SwapList() {
+  const router = useRouter()
   const { data: session } = useSession()
   const authorized = session?.user?.roles?.includes('admin')
 
