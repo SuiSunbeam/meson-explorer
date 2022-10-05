@@ -17,7 +17,7 @@ export default function RedeemList() {
       tabs={[
         { key: 'payment', name: 'Payments', onClick: () => router.push('/premium') },
         { key: 'redeem', name: 'Redeems', active: true },
-        { key: 'daily', name: 'Daily Stats', onClick: () => router.push('/premium/daily') }
+        { key: 'daily', name: 'Daily Stats', onClick: () => router.push('/premium/stats') }
       ]}
       queryUrl='premium/redeem'
       fallback='/premium/redeem'

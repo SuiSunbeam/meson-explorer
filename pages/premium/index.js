@@ -19,7 +19,7 @@ export default function PaymentList() {
       tabs={[
         { key: 'payment', name: 'Payments', active: true },
         { key: 'redeem', name: 'Redeems', onClick: () => router.push('/premium/redeem') },
-        { key: 'daily', name: 'Daily Stats', onClick: () => router.push('/premium/daily') }
+        { key: 'daily', name: 'Daily Stats', onClick: () => router.push('/premium/stats') }
       ]}
       queryUrl='premium'
       fallback='/premium'
