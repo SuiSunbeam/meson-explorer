@@ -247,15 +247,20 @@ function SwapActionButton({ data, swap, from, to, connected, setGlobalState }) {
   switch (status) {
     case 'REQUESTING':
       actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.bond(swap, data.signature, initiator)}>Bond</Button>
+      break;
     case 'BONDED':
       actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.lock(swap, data.signature, initiator)}>Lock</Button>
+      break;
     case 'EXPIRED*':
     case 'CANCELLED*':
       actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, initiator)}>Unlock</Button>
+      break;
     case 'EXPIRED':
       actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.withdraw(swap)}>Withdraw</Button>
+      break;
     case 'RELEASED':
       actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.execute(swap, data.releaseSignature, recipient)}>Execute</Button>
+      break;
     case 'RELEASING*':
       actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.release(swap, data.releaseSignature, initiator, recipient)}>Release</Button>
   }
