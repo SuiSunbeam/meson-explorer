@@ -105,7 +105,8 @@ export default function Navbar({ globalState, setGlobalState }) {
 function Profile ({ globalState, setGlobalState }) {
   const router = useRouter()
   const { data: session } = useSession()
-  const authorized = session?.user?.roles?.includes('admin')
+  const isRoot = session?.user?.roles?.includes('root')
+  const isAdmin = session?.user?.roles?.includes('admin')
 
   const { coinType } = globalState
   const { networkId, currentAccount} = globalState.browserExt || {}
@@ -198,7 +199,7 @@ function Profile ({ globalState, setGlobalState }) {
             </div>
           }
           {
-            authorized &&
+            isAdmin &&
             <div className='py-1'>
               <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
                 LPs
@@ -218,7 +219,7 @@ function Profile ({ globalState, setGlobalState }) {
             </div>
           }
           {
-            authorized &&
+            isAdmin &&
             <div className='py-1'>
               <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
                 Stats
@@ -234,9 +235,9 @@ function Profile ({ globalState, setGlobalState }) {
               <Menu.Item>
                 <div
                   className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                  onClick={() => router.push('/stats-premium')}
+                  onClick={() => router.push('/premium')}
                 >
-                  Premium
+                  Premiums
                 </div>
               </Menu.Item>
               <Menu.Item>
@@ -244,37 +245,13 @@ function Profile ({ globalState, setGlobalState }) {
                   className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
                   onClick={() => router.push('/stats-share')}
                 >
-                  Share
+                  Posters
                 </div>
               </Menu.Item>
             </div>
           }
           {
-            authorized &&
-            <div className='py-1'>
-              <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
-                Premium
-              </div>
-              <Menu.Item>
-                <div
-                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                  onClick={() => router.push('/premium')}
-                >
-                  Paid
-                </div>
-              </Menu.Item>
-              <Menu.Item>
-                <div
-                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                  onClick={() => router.push('/premium/redeemed')}
-                >
-                  Redeemed
-                </div>
-              </Menu.Item>
-            </div>
-          }
-          {
-            authorized &&
+            isRoot &&
             <>
               <div className='py-1'>
                 <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
