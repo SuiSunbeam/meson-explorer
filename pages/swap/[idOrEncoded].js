@@ -1,5 +1,6 @@
 import React from 'react'
 import classnames from 'classnames'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import useSWR from 'swr'
@@ -51,6 +52,9 @@ export default function SwapDetail() {
 }
 
 function CorrectSwap({ data: raw }) {
+  const { data: session } = useSession()
+  const authorized = session?.user?.roles?.includes('admin')
+
   const { globalState, setGlobalState } = React.useContext(AppContext)
   const { currentAccount } = globalState.browserExt || {}
   const connectedAddress = currentAccount?.hex
@@ -184,7 +188,7 @@ function CorrectSwap({ data: raw }) {
         badge={(
           <div className='flex flex-row items-center'>
             <SwapStatusBadge events={data?.events || []} expired={expired} />
-            <Badge className='ml-2'>{data?.hide ? 'HIDE' : ''}</Badge>
+            {authorized && <Badge className='ml-2'>{data?.hide ? 'HIDE' : ''}</Badge>}
           </div>
         )}
         subtitle={data?._id}
