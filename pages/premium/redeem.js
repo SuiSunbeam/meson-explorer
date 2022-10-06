@@ -23,8 +23,9 @@ export default function RedeemList() {
       fallback='/premium/redeem'
       tableHeaders={[
         { name: 'initiator / time', width: '30%' },
-        { name: 'type', width: '20%' },
-        { name: 'usage', width: '20%' },
+        { name: 'type', width: '15%' },
+        { name: 'usage', width: '15%' },
+        { name: 'hide', width: '10%' },
         { name: 'valid', width: '30%' }
       ]}
       Row={RedeemedPremiumRow}
@@ -33,7 +34,7 @@ export default function RedeemList() {
 }
 
 function RedeemedPremiumRow ({ data }) {
-  const { initiator, paid, used, quota, since, until } = data
+  const { initiator, paid, used, quota, since, until, hide } = data
   const type = 'REDEEM'
   const badgeType = 'info'
   return (
@@ -58,6 +59,7 @@ function RedeemedPremiumRow ({ data }) {
         
       }
       </Td>
+      <Td><Badge type={hide ? 'info' : ''}>{hide ? 'HIDE' : ''}</Badge></Td>
       <Td>{type !== 'EXTRA' && `${formatDate(since * 1000)} - ${formatDate(until * 1000)}`}</Td>
     </tr>
   )

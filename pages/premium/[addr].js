@@ -15,11 +15,12 @@ export default function PaidPremiumList() {
       queryUrl={`premium/${addr}`}
       fallback={`/premium/${addr}`}
       tableHeaders={[
-        { name: 'initiator / time', width: '20%' },
-        { name: 'type', width: '10%' },
-        { name: 'tx hash', width: '20%' },
-        { name: 'paid', width: '10%' },
+        { name: 'initiator / time', width: '18%' },
+        { name: 'type', width: '8%' },
+        { name: 'tx hash', width: '18%' },
+        { name: 'paid', width: '8%' },
         { name: 'usage', width: '15%' },
+        { name: 'hide', width: '8%' },
         { name: 'valid', width: '25%' }
       ]}
       Row={props => PaidPremiumRow({ ...props, linkPrefix: 'address' })}

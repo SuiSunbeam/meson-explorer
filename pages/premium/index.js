@@ -24,11 +24,12 @@ export default function PaymentList() {
       queryUrl='premium'
       fallback='/premium'
       tableHeaders={[
-        { name: 'initiator / time', width: '20%' },
-        { name: 'type', width: '10%' },
-        { name: 'tx hash', width: '20%' },
-        { name: 'paid', width: '10%' },
+        { name: 'initiator / time', width: '18%' },
+        { name: 'type', width: '8%' },
+        { name: 'tx hash', width: '18%' },
+        { name: 'paid', width: '8%' },
         { name: 'usage', width: '15%' },
+        { name: 'hide', width: '8%' },
         { name: 'valid', width: '25%' }
       ]}
       Row={PaidPremiumRow}
@@ -37,7 +38,7 @@ export default function PaymentList() {
 }
 
 export function PaidPremiumRow ({ data, linkPrefix = 'premium' }) {
-  const { initiator, hash, paid, used, quota, since, until, meta } = data
+  const { initiator, hash, paid, used, quota, since, until, hide, meta } = data
   let type = 'BUY'
   let badgeType = 'info'
   if (!meta) {
@@ -90,6 +91,7 @@ export function PaidPremiumRow ({ data, linkPrefix = 'premium' }) {
         
       }
       </Td>
+      <Td><Badge type={hide ? 'info' : ''}>{hide ? 'HIDE' : ''}</Badge></Td>
       <Td>{type !== 'EXTRA' && `${formatDate(since * 1000)} - ${formatDate(until * 1000)}`}</Td>
     </tr>
   )
