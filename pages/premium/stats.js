@@ -45,7 +45,8 @@ export default function StatsPremium() {
         tabs={[
           { key: 'payment', name: 'Payments', onClick: () => router.push('/premium') },
           { key: 'redeem', name: 'Redeems', onClick: () => router.push('/premium/redeem') },
-          { key: 'daily', name: 'Daily Stats', active: true }
+          { key: 'daily', name: 'Daily Stats', active: true },
+          { key: 'giveaway', name: 'Give Aways', onClick: () => router.push('/premium/give-away') }
         ]}
       />
       <CardBody>
