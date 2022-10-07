@@ -17,7 +17,6 @@ export default async function handler(req, res) {
     await BannersInAppDb.findOneAndUpdate({ text: 'banner|free-premium' }, [{ $addFields: { address: { $setUnion: [newAddress, '$address'] } } }])
     res.json({ result: true })
   } else if (req.method === 'DELETE') {
-    console.log(req.body)
     const address = req.body.address.toLowerCase()
     const result = await Banners.findOneAndUpdate({ text: 'banner|free-premium' }, { $pull: { address } })
     await BannersInAppDb.findOneAndUpdate({ text: 'banner|free-premium' }, { $pull: { address, meta: { address } } })
