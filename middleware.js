@@ -1,6 +1,47 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from 'next-auth/middleware'
 
+const getApiAccessRoles = pathname => {
+  if (
+    pathname.startsWith('/api/v1/swap/bonded') ||
+    pathname.startsWith('/api/v1/swap/locked') ||
+    pathname.startsWith('/api/v1/swap/conflict') ||
+    pathname.startsWith('/api/v1/queued')
+  ) {
+    return ['root']
+  } else if (
+    pathname.startsWith('/api/v1/admin') ||
+    pathname.startsWith('/api/v1/stats') ||
+    pathname.startsWith('/api/v1/rules') ||
+    pathname.startsWith('/api/v1/retrieve')
+  ) {
+    return ['admin', 'root']
+  } else if (
+    pathname.startsWith('/api/v1/premium')
+  ) {
+    return ['operator', 'admin', 'root']
+  }
+}
+
+const getPageAccessRoles = pathname => {
+  if (
+    pathname.startsWith('/pending') ||
+    pathname.startsWith('/queued')
+  ) {
+    return ['root']
+  } else if (
+    pathname.startsWith('/lp') ||
+    pathname.startsWith('/stats') ||
+    pathname.startsWith('/premium/stats')
+  ) {
+    return ['admin', 'root']
+  } else if (
+    pathname.startsWith('/premium')
+  ) {
+    return ['operator', 'admin', 'root']
+  }
+}
+
 export const middleware = withAuth(
   async function middleware(req) {
     if (process.env.NODE_ENV === 'production') {
@@ -13,35 +54,23 @@ export const middleware = withAuth(
     }
 
     const token = req.nextauth.token
-    const isAdmin = token?.roles?.includes('admin')
+    const roles = token?.roles || []
     const pathname = req.nextUrl.pathname
 
-    if (
-      pathname.startsWith('/lp') ||
-      pathname.startsWith('/stats') ||
-      pathname.startsWith('/premium') ||
-      pathname.startsWith('/pending') ||
-      pathname.startsWith('/queued')
-    ) {
-      if (!token) {
-        return NextResponse.redirect(new URL('/', req.url))
-      } else if (!isAdmin) {
-        return NextResponse.rewrite(new URL('/unauthorized', req.url))
+    if (pathname.startsWith('/api/v1')) {
+      const apiRoles = getApiAccessRoles(pathname)
+      if (apiRoles && !apiRoles.some(r => roles.includes(r))) {
+        return NextResponse.rewrite(new URL('/api/401', req.url))
       }
-    }
-
-    if (!isAdmin && (
-      pathname.startsWith('/api/v1/admin') ||
-      pathname.startsWith('/api/v1/rules') ||
-      pathname.startsWith('/api/v1/premium') ||
-      // pathname.startsWith('/api/v1/stats') ||
-      pathname.startsWith('/api/v1/swap/bonded') ||
-      pathname.startsWith('/api/v1/swap/locked') ||
-      pathname.startsWith('/api/v1/swap/conflict') ||
-      pathname.startsWith('/api/v1/retrieve') ||
-      pathname.startsWith('/api/v1/queued')
-    )) {
-      return NextResponse.rewrite(new URL('/api/401', req.url))
+    } else {
+      const pageRoles = getPageAccessRoles(pathname)
+      if (pageRoles) {
+        if (!token) {
+          return NextResponse.redirect(new URL('/', req.url))
+        } else if (!pageRoles.some(r => roles.includes(r))) {
+          return NextResponse.rewrite(new URL('/unauthorized', req.url))
+        }
+      }
     }
   },
   {

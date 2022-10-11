@@ -107,6 +107,7 @@ function Profile ({ globalState, setGlobalState }) {
   const { data: session } = useSession()
   const isRoot = session?.user?.roles?.includes('root')
   const isAdmin = session?.user?.roles?.includes('admin')
+  const isOperator = session?.user?.roles?.includes('operator')
 
   const { coinType } = globalState
   const { networkId, currentAccount} = globalState.browserExt || {}
@@ -178,28 +179,38 @@ function Profile ({ globalState, setGlobalState }) {
               </div>
             </Menu.Item>
           </div>
-          {
-            extName &&
-            <div className='py-1'>
-              <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
-                {
-                  connectedAddress 
-                  ? <><CreditCardIcon className='w-4 h-4 mr-1'/>{abbreviate(connectedAddress)}</>
-                  : <><LinkIcon className='w-4 h-4 mr-1'/>Connect Wallet</>
-                }
+          <div className='py-1'>
+            <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
+              {
+                connectedAddress 
+                ? <><CreditCardIcon className='w-4 h-4 mr-1'/>{abbreviate(connectedAddress)}</>
+                : <><LinkIcon className='w-4 h-4 mr-1'/>Connect Wallet</>
+              }
+            </div>
+            <Menu.Item>
+              <div
+                className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                onClick={onClick}
+              >
+                {connectedAddress ? `Disconnect ${extName}` : extName}
               </div>
+            </Menu.Item>
+          </div>
+          {
+            (isRoot || isAdmin || isOperator) &&
+            <div className='py-1'>
               <Menu.Item>
                 <div
                   className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                  onClick={onClick}
+                  onClick={() => router.push('/premium')}
                 >
-                  {connectedAddress ? `Disconnect ${extName}` : extName}
+                  Premiums
                 </div>
               </Menu.Item>
             </div>
           }
           {
-            isAdmin &&
+            (isRoot || isAdmin) &&
             <div className='py-1'>
               <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
                 LPs
@@ -219,7 +230,7 @@ function Profile ({ globalState, setGlobalState }) {
             </div>
           }
           {
-            isAdmin &&
+            (isRoot || isAdmin) &&
             <div className='py-1'>
               <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
                 Stats
@@ -230,14 +241,6 @@ function Profile ({ globalState, setGlobalState }) {
                   onClick={() => router.push('/stats')}
                 >
                   Swaps
-                </div>
-              </Menu.Item>
-              <Menu.Item>
-                <div
-                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                  onClick={() => router.push('/premium')}
-                >
-                  Premiums
                 </div>
               </Menu.Item>
               <Menu.Item>
