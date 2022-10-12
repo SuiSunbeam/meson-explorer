@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from 'next-auth/middleware'
 
+const { NODE_ENV } = process.env
+
 const getApiAccessRoles = pathname => {
   if (
     pathname.startsWith('/api/v1/swap/bonded') ||
@@ -44,13 +46,8 @@ const getPageAccessRoles = pathname => {
 
 export const middleware = withAuth(
   async function middleware(req) {
-    if (process.env.NODE_ENV === 'production') {
-      if (req.headers.get('x-forwarded-proto') !== 'https') {
-        return NextResponse.redirect(
-          `https://${req.headers.get('host')}${req.nextUrl.pathname}`,
-          301
-        )
-      }
+    if (NODE_ENV === 'production' && req.headers.get('x-forwarded-proto') !== 'https') {
+      return NextResponse.redirect(`https://${req.headers.get('host')}${req.nextUrl.pathname}`)
     }
 
     const token = req.nextauth.token
