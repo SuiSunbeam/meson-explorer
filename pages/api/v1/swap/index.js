@@ -3,7 +3,9 @@ import { listHandler } from 'lib/api'
 
 export default listHandler({
   collection: Swaps,
-  getQuery: () => ({ disabled: { $ne: true }, hide: { $ne: true } }),
+  getQuery: (_, roles) => roles?.some(r => ['root', 'admin'].includes(r))
+    ? { disabled: { $ne: true } }
+    : { disabled: { $ne: true }, hide: { $ne: true } },
   sort: { created: -1 },
   select: 'encoded events initiator fromTo created released'
 })
