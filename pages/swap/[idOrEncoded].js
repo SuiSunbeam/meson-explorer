@@ -53,7 +53,7 @@ export default function SwapDetail() {
 
 function CorrectSwap({ data: raw }) {
   const { data: session } = useSession()
-  const authorized = session?.user?.roles?.includes('admin')
+  const authorized = session?.user?.roles?.some(r => ['root', 'admin'].includes(r))
 
   const { globalState, setGlobalState } = React.useContext(AppContext)
   const { currentAccount } = globalState.browserExt || {}

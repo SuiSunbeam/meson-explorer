@@ -12,7 +12,7 @@ import SwapRow from 'components/SwapRow'
 export default function SwapList() {
   const router = useRouter()
   const { data: session } = useSession()
-  const authorized = session?.user?.roles?.includes('admin')
+  const authorized = session?.user?.roles?.some(r => ['root', 'admin'].includes(r))
 
   const [search, setSearchValue] = React.useState('')
 
