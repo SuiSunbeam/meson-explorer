@@ -50,37 +50,51 @@ async function getSwapRules(initiator) {
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     const supportedTokens = ['USDC', 'USDT', 'BUSD']
-    // NOTE: non-preminum address, just using for data query
+    const networkAlias = Object.fromEntries(Object.entries({
+        Tron: 'TRX'
+      }).map(([key, value]) => [value, key]))
+    
+      // NOTE: non-preminum address, just using for data query
     const address = '0x18D594bF5213A847c001775d8C4AaC9427284774'
     const { token, inChain, outChain, amount: queryAmount } = req.query
+    const inChainNetwork = networkAlias[inChain] ?? inChain
+    const outChainNetwork = networkAlias[outChain] ?? outChain
 
-    if (queryAmount > 5000) {
-      res.json({
-        message: 'The amount cannot exceed 5000',
-        code: 500
-      })
-    }
     const tokenSymbol = token?.split('.')[0]
-    if (!supportedTokens.includes(tokenSymbol) ) {
+    if (!supportedTokens.includes(tokenSymbol)) {
       res.json({
         message: 'The swap route must has specific token.',
-        code: 500
+        code: 400
+      })
+    }
+
+    if (queryAmount < 1) {
+      res.json({
+        message: `At least 1 ${tokenSymbol} needed`,
+        code: 400
       })
     }
 
     const rulesInfo = await getSwapRules(address)
-
     const networks = mesonPresets.getAllNetworks()
 
-    const fromNetwork = networks.find(item => item.name === inChain)
-    const toNetwork = networks.find(item => item.name === outChain)
+    const fromNetwork = networks.find(item => item.name === inChainNetwork)
+    const toNetwork = networks.find(item => item.name === outChainNetwork)
+
+    if (!fromNetwork || !toNetwork) {
+      return res.json({
+        message: 'This swap route is not available',
+        code: 400
+      })
+    }
+
     const fromSymbol = fromNetwork.tokens.find(item => item.symbol.startsWith(tokenSymbol))?.symbol
     const toSymbol = toNetwork.tokens.find(item => item.symbol.startsWith(tokenSymbol))?.symbol
 
-    if(!toSymbol || !fromSymbol) {
+    if (!toSymbol || !fromSymbol) {
       return res.json({
         message: 'This swap route is not available',
-        code: 500
+        code: 400
       })
     }
 
@@ -88,12 +102,14 @@ export default async function handler(req, res) {
       from: [fromNetwork.id, fromSymbol],
       to: [toNetwork.id, toSymbol]
     })
+
     if (rule.limit === 0) {
       return res.json({
         message: 'This swap route is not available',
-        code: 500
+        code: 400
       })
     }
+
     const value = ethers.utils.parseUnits(queryAmount || '0', 6)
     const amount = BigNumber.from(value)
 
@@ -137,7 +153,7 @@ export default async function handler(req, res) {
       totalFee = totalFee.add(lpFee)
       break
     }
-
+    console.log(totalFee, originalFee)
     return res.json({
       data: {
         totalFee: Number(fromValue(totalFee)),

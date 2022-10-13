@@ -436,7 +436,7 @@
   resolved "https://npm.pkg.github.com/download/@MesonFi/contract-types/1.0.0/126882e1ada69af9e1d9087b23dad51c054e5dc6#126882e1ada69af9e1d9087b23dad51c054e5dc6"
   integrity sha512-1/I4PA/HTn0fGdlXUa+It/EYj4IM2ayz+hjIb4v0HosytymaF+EGv4mDr4EYxoJdsqHLO6SochqJsDxEPhQubA==
 
-"@mesonfi/presets@1.0.0":
+"@mesonfi/presets@^1.0.0":
   version "1.0.0"
   resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.0.0/a95f866365a3c3432f3b5077637241184adb6c45#a95f866365a3c3432f3b5077637241184adb6c45"
   integrity sha512-FO82jANVMFKrOHxLsMF9hT95mrKJNZFZJ89izR/O5nKRpS8dQBGcvMYdgwxgcPiCpXDpaDPxjtWgeOlPjX1SHA==
