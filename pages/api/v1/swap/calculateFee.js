@@ -49,10 +49,10 @@ async function getSwapRules(initiator) {
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
+    const supportedTokens = ['USDC', 'USDT', 'BUSD']
     // NOTE: non-preminum address, just using for data query
     const address = '0x18D594bF5213A847c001775d8C4AaC9427284774'
     const { token, inChain, outChain, amount: queryAmount } = req.query
-    const tokenSymbol = token.startsWith('USDC') ? 'USDC' : token.startsWith('USDT') ? 'USDT' : null
 
     if (queryAmount > 5000) {
       res.json({
@@ -60,8 +60,8 @@ export default async function handler(req, res) {
         code: 500
       })
     }
-
-    if (!tokenSymbol) {
+    const tokenSymbol = token?.split('.')[0]
+    if (!supportedTokens.includes(tokenSymbol) ) {
       res.json({
         message: 'The swap route must has specific token.',
         code: 500
