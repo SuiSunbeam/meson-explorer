@@ -285,27 +285,6 @@ function Profile ({ globalState, setGlobalState }) {
                   </div>
                 </Menu.Item>
               </div>
-              <div className='py-1'>
-                <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
-                  Queued
-                </div>
-                <Menu.Item>
-                  <div
-                    className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                    onClick={() => router.push('/queued/blocks/eth')}
-                  >
-                    Blocks
-                  </div>
-                </Menu.Item>
-                <Menu.Item>
-                  <div
-                    className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                    onClick={() => router.push('/queued/txs/eth')}
-                  >
-                    Transactions
-                  </div>
-                </Menu.Item>
-              </div>
             </>
           }
         </Menu.Items>

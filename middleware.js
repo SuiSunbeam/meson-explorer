@@ -7,8 +7,7 @@ const getApiAccessRoles = pathname => {
   if (
     pathname.startsWith('/api/v1/swap/bonded') ||
     pathname.startsWith('/api/v1/swap/locked') ||
-    pathname.startsWith('/api/v1/swap/conflict') ||
-    pathname.startsWith('/api/v1/queued')
+    pathname.startsWith('/api/v1/swap/conflict')
   ) {
     return ['root']
   } else if (
@@ -27,8 +26,7 @@ const getApiAccessRoles = pathname => {
 
 const getPageAccessRoles = pathname => {
   if (
-    pathname.startsWith('/pending') ||
-    pathname.startsWith('/queued')
+    pathname.startsWith('/pending')
   ) {
     return ['root']
   } else if (
