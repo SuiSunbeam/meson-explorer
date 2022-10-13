@@ -13,7 +13,7 @@ export default async function handler(req, res) {
       const result = await post(initiator)
       res.json({ result })
     } catch (e) {
-      res.status(400).json({ error: { code: -32602, message: `Failed to post premium: ${e.message}` } })
+      res.status(400).json({ error: { code: -32602, message: `Failed to claim premium: ${e.message}` } })
     }
   } else if (req.method === 'OPTIONS') {
     res.end()
@@ -22,12 +22,10 @@ export default async function handler(req, res) {
   }
 }
 
-function _query(initiator, d = new Date()) {
-  return { _id: { $gt: `${initiator}:${d.valueOf() / 1000}`, $lt: `${initiator}:~` } }
-}
-
 async function get(initiator, withId = false) {
-  return await Premiums.find(_query(initiator))
+  const d = new Date()
+  const query = { _id: { $gt: `${initiator}:${d.valueOf() / 1000}`, $lt: `${initiator}:~` } }
+  return await Premiums.find(query)
     .sort({ _id: 1 })
     .select('-__v -meta' + withId ? '' : ' -_id')
     .exec()
@@ -52,7 +50,7 @@ async function post(initiator) {
   return [_.omit(premium.toJSON(), ['_id', '__v', 'meta'])]
 }
 
-async function onPaid(data) {
+export async function onPremiumPaid(data) {
   let initiator
   if (data.network.startsWith('tron')) {
     initiator = TronWeb.address.toHex(data.from).replace('41', '0x')
