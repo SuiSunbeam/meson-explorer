@@ -17,7 +17,7 @@ export default function AddressSwapList() {
   const roles = session?.user?.roles || []
   const checkPremium = roles.some(r => ['root', 'admin', 'operator'].includes(r))
 
-  const { data } = useSWR(checkPremium && `premium/${address}`, fetcher)
+  const { data } = useSWR(checkPremium && `admin/premium/${address}`, fetcher)
   const premium = data?.total
     ? <Badge type='warning' className='mr-1' onClick={() => router.push(`/premium/${address}`)}>PREMIUM</Badge>
     : null
