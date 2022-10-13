@@ -20,7 +20,7 @@ export default function RedeemList() {
         { key: 'daily', name: 'Daily Stats', onClick: () => router.push('/premium/stats') },
         { key: 'giveaway', name: 'Give Aways', onClick: () => router.push('/premium/give-away') }
       ]}
-      queryUrl='premium/redeem'
+      queryUrl='admin/premium/redeem'
       fallback='/premium/redeem'
       tableHeaders={[
         { name: 'initiator / time', width: '30%' },

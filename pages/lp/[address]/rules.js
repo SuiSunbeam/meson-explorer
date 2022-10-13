@@ -35,7 +35,7 @@ export default function SwapRuleList() {
   const router = useRouter()
   const { address } = router.query
 
-  const { data, error, mutate } = useSWR('rules', fetcher)
+  const { data, error, mutate } = useSWR('admin/rules', fetcher)
   const [modalData, setModalData] = React.useState()
 
   let body = null
@@ -117,15 +117,15 @@ function SwapRuleModal ({ data, onClose }) {
     }
 
     if (data._id) {
-      await fetcher.put(`rules/${data._id}`, newData)
+      await fetcher.put(`admin/rules/${data._id}`, newData)
     } else {
-      await fetcher.post(`rules`, newData)
+      await fetcher.post(`admin/rules`, newData)
     }
     onClose(true)
   }
 
   const onDelete = async () => {
-    await fetcher.delete(`rules/${data._id}`)
+    await fetcher.delete(`admin/rules/${data._id}`)
     onClose(true)
   }
 

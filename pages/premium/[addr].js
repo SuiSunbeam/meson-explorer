@@ -12,7 +12,7 @@ export default function PaidPremiumList() {
     <PagiCard
       title='Premium for Address'
       subtitle={addr} 
-      queryUrl={`premium/${addr}`}
+      queryUrl={`admin/premium/${addr}`}
       fallback={`/premium/${addr}`}
       tableHeaders={[
         { name: 'initiator / time', width: '18%' },

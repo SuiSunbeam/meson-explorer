@@ -11,17 +11,15 @@ const getApiAccessRoles = pathname => {
   ) {
     return ['root']
   } else if (
-    pathname.startsWith('/api/v1/admin') ||
-    pathname.startsWith('/api/v1/stats') ||
-    pathname.startsWith('/api/v1/rules') ||
-    pathname.startsWith('/api/v1/retrieve')
-  ) {
-    return ['admin', 'root']
-  } else if (
-    pathname.startsWith('/api/v1/premium')
+    pathname.startsWith('/api/v1/admin/premium')
   ) {
     return ['operator', 'admin', 'root']
-  }
+  } else if (
+    pathname.startsWith('/api/v1/admin') ||
+    pathname.startsWith('/api/v1/stats')
+  ) {
+    return ['admin', 'root']
+  } 
 }
 
 const getPageAccessRoles = pathname => {

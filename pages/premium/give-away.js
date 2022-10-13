@@ -18,11 +18,11 @@ import { abbreviate } from 'lib/swap'
 export default function GiveAwayList() {
   const router = useRouter()
 
-  const { data, error, mutate } = useSWR('premium/give-away', fetcher)
+  const { data, error, mutate } = useSWR('admin/premium/give-away', fetcher)
   const [isModalOpen, setModalOpen] = React.useState()
   
   const onDelete = async address => {
-    await fetcher.delete('premium/give-away', { address })
+    await fetcher.delete('admin/premium/give-away', { address })
     mutate()
   }
 

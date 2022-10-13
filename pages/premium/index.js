@@ -22,7 +22,7 @@ export default function PaymentList() {
         { key: 'daily', name: 'Daily Stats', onClick: () => router.push('/premium/stats') },
         { key: 'giveaway', name: 'Give Aways', onClick: () => router.push('/premium/give-away') }
       ]}
-      queryUrl='premium'
+      queryUrl='admin/premium'
       fallback='/premium'
       tableHeaders={[
         { name: 'initiator / time', width: '18%' },
