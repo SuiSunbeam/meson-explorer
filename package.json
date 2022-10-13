@@ -10,7 +10,7 @@
   "dependencies": {
     "@headlessui/react": "^1.6.5",
     "@heroicons/react": "^1.0.6",
-    "@mesonfi/presets": "^1.0.0",
+    "@mesonfi/presets": "1.0.0",
     "@mesonfi/sdk": "1.0.0",
     "@next-auth/mongodb-adapter": "^1.0.3",
     "bs58": "^5.0.0",
