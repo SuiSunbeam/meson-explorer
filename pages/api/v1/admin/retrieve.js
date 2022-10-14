@@ -47,7 +47,7 @@ async function post(req, res) {
   const txs = json.result.filter(tx => encodedList.includes(tx.input.substring(10, 74)))
 
   await Promise.all(txs.map(async tx => {
-    const response = await fetch(`${relayer}/api/v1/transaction`, {
+    const response = await fetch(`${relayer}/transaction`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
