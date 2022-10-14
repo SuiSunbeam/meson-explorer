@@ -37,7 +37,10 @@ const matchSwapRule = (rules, { from, to }) => {
 }
 
 async function getSwapRules(initiator) {
-  const rules = await Rules.find().sort({ priority: -1 }).exec()
+  const rules = await Rules.find({ initiator: { $in: ['', initiator] } })
+  .sort({ priority: -1 })
+  .select('priority from to fee limit')
+  .exec()
   if (initiator) {
     const date = new Date()
     date.setUTCHours(0, 0, 0, 0)
@@ -55,7 +58,7 @@ export default async function handler(req, res) {
       }).map(([key, value]) => [value, key]))
     
       // NOTE: non-preminum address, just using for data query
-    const address = '0x18D594bF5213A847c001775d8C4AaC9427284774'
+    const address = '0x18d594bf5213a847c001775d8c4aac9427284774'
     const { token, inChain, outChain, amount: queryAmount } = req.query
     const inChainNetwork = networkAlias[inChain] ?? inChain
     const outChainNetwork = networkAlias[outChain] ?? outChain
@@ -113,10 +116,6 @@ export default async function handler(req, res) {
     const value = ethers.utils.parseUnits(queryAmount || '0', 6)
     const amount = BigNumber.from(value)
 
-    // const waiveServiceFee = swapData.premium
-    // ? swapData.premium.used < swapData.premium.quota
-    // : (cached.waived < 10000_000_000 && cached.swaps < 10)
-
     // non-premium
     const waiveServiceFee = rulesInfo.waived < 10000_000_000 && rulesInfo.swaps < 10
     let originalFee = amount.div(1000)
@@ -129,9 +128,6 @@ export default async function handler(req, res) {
           totalFee: Number(fromValue(totalFee)),
           originalFee: Number(fromValue(originalFee)),
           lpFee: Number(fromValue(lpFee)),
-          waiveServiceFee,
-          waived: rulesInfo.waived,
-          swaps: rulesInfo.swaps
         },
         code: 200
       })
@@ -153,15 +149,12 @@ export default async function handler(req, res) {
       totalFee = totalFee.add(lpFee)
       break
     }
-    console.log(totalFee, originalFee)
+    
     return res.json({
       data: {
         totalFee: Number(fromValue(totalFee)),
         originalFee: Number(fromValue(originalFee)),
         lpFee: Number(fromValue(lpFee)),
-        waiveServiceFee,
-        waived: rulesInfo.waived,
-        swaps: rulesInfo.swaps
       },
       code: 200
     })
