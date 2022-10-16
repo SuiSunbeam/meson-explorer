@@ -2,6 +2,7 @@ import classnames from 'classnames'
 import Image from 'next/image'
 
 import { ExternalIcon } from 'components/ExternalLink'
+import { getExplorerAddressLink } from 'lib/swap'
 
 import eth from './eth.png'
 import bnb from './bnb.png'
@@ -34,7 +35,7 @@ export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly
         !iconOnly &&
         <div className={classnames('items-center', size === 'md' ? 'ml-2' : 'ml-1', responsive ? 'hidden sm:flex' : 'flex')}>
           {network.name}
-          {address && <ExternalIcon href={`${network.explorer}/address/${address}`} />}
+          {address && <ExternalIcon href={getExplorerAddressLink(network, address)} />}
         </div>
       }
      
