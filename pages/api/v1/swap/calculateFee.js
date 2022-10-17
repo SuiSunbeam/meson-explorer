@@ -58,7 +58,6 @@ export default async function handler(req, res) {
       }).map(([key, value]) => [value, key]))
     
       // NOTE: non-preminum address, just using for data query
-    const address = '0x18d594bf5213a847c001775d8c4aac9427284774'
     const { token, inChain, outChain, amount: queryAmount } = req.query
     const inChainNetwork = networkAlias[inChain] ?? inChain
     const outChainNetwork = networkAlias[outChain] ?? outChain
@@ -77,6 +76,8 @@ export default async function handler(req, res) {
         code: 400
       })
     }
+
+    const address = queryAmount > 5000 ? '' : '0x18d594bf5213a847c001775d8c4aac9427284774'
 
     const rulesInfo = await getSwapRules(address)
     const networks = mesonPresets.getAllNetworks()
