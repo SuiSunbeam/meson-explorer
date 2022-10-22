@@ -11,7 +11,7 @@ import { ethers } from 'ethers'
 import AppContext from 'lib/context'
 import fetcher from 'lib/fetcher'
 import socket from 'lib/socket'
-import { presets, sortEvents, getStatusFromEvents, getDuration, getExplorerTxLink } from 'lib/swap'
+import { presets, sortEvents, getStatusFromEvents, getDuration, getExplorerAddressLink, getExplorerTxLink } from 'lib/swap'
 import extensions from 'lib/extensions'
 
 import LoadingScreen from 'components/LoadingScreen'
@@ -289,9 +289,9 @@ function SwapStepName({ index, name }) {
 
 function SwapStepInfo({ index, hash, recipient, name, fromAddress, from, to }) {
   if (index === 0) {
-    return <ExternalLink size='sm' href={`${from.network.explorer}/address/${fromAddress}`}>{fromAddress}</ExternalLink>
+    return <ExternalLink size='sm' href={getExplorerAddressLink(from.network, fromAddress)}>{fromAddress}</ExternalLink>
   } else if (index === 5) {
-    return <ExternalLink size='sm' href={`${to.network.explorer}/address/${recipient}`}>{recipient}</ExternalLink>
+    return <ExternalLink size='sm' href={getExplorerAddressLink(to.network, recipient)}>{recipient}</ExternalLink>
   }
   return (
     <div className='flex items-center'>
@@ -299,7 +299,7 @@ function SwapStepInfo({ index, hash, recipient, name, fromAddress, from, to }) {
       <div className='truncate'>
         <ExternalLink
           size='sm'
-          href={getExplorerTxLink([3, 4, 7].includes(index) ? to : from, hash)}
+          href={getExplorerTxLink(([3, 4, 7].includes(index) ? to : from).network, hash)}
         >
           {hash}
         </ExternalLink>

@@ -14,7 +14,7 @@ import TagNetworkToken from 'components/TagNetworkToken'
 import ExternalLink from 'components/ExternalLink'
 
 import fetcher from 'lib/fetcher'
-import { presets, getAllNetworks } from 'lib/swap'
+import { presets, getAllNetworks, getExplorerAddressLink } from 'lib/swap'
 
 let JsonRpcs = {}
 try {
@@ -109,9 +109,14 @@ function LpContent ({ address }) {
           </div>
         </div>
       </ListRow>
-      {getAllNetworks().map(n => (
-        <LpContentRow key={n.id} address={address} network={n} add={add} />
-      ))}
+      {
+        getAllNetworks()
+          .filter(n => (
+            (address.length === 66 && n.id.startsWith('aptos')) ||
+            (address.length === 42 && !n.id.startsWith('aptos'))
+          ))
+          .map(n => <LpContentRow key={n.id} address={address} network={n} add={add} />)
+      }
     </dl>
   )
 }
@@ -145,6 +150,8 @@ function LpContentRow ({ address, network, add }) {
     }
   
     if (id.startsWith('tron')) {
+      return presets.clientFromUrl({ id, url: urls[0] })
+    } else if (id.startsWith('aptos')) {
       return presets.clientFromUrl({ id, url: urls[0] })
     } else {
       return presets.clientFromUrl({
@@ -190,7 +197,11 @@ function LpContentRow ({ address, network, add }) {
       title={
         <div className='flex flex-row sm:flex-col align-start justify-between'>
           <div className='self-start'>
-            <ExternalLink size='md' className='flex flex-row normal-case' href={`${network.explorer}/address/${network.mesonAddress}`}>
+            <ExternalLink
+              size='md'
+              className='flex flex-row normal-case'
+              href={getExplorerAddressLink(network, network.mesonAddress)}
+            >
               <TagNetwork size='md' network={network} iconOnly />
               <div className='ml-2 font-medium'>{network.name}</div>
             </ExternalLink>

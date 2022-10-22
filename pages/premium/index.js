@@ -2,7 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
-import { presets, abbreviate, formatDate } from 'lib/swap'
+import { presets, abbreviate, formatDate, getExplorerTxLink } from 'lib/swap'
 
 import PagiCard from 'components/Pagi/PagiCard'
 import { Td } from 'components/Table'
@@ -67,7 +67,7 @@ export function PaidPremiumRow ({ data, linkPrefix = 'premium' }) {
       <Td>
       {
         meta &&
-        <ExternalLink size='md' className='text-black' href={`${network?.explorer}/tx/${hash}`}>
+        <ExternalLink size='md' className='text-black' href={getExplorerTxLink(network, hash)}>
           {abbreviate(hash, 8, 6)}
         </ExternalLink>
       }

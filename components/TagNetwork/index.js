@@ -2,6 +2,7 @@ import classnames from 'classnames'
 import Image from 'next/image'
 
 import { ExternalIcon } from 'components/ExternalLink'
+import { getExplorerAddressLink } from 'lib/swap'
 
 import eth from './eth.png'
 import bnb from './bnb.png'
@@ -18,9 +19,10 @@ import movr from './movr.png'
 import beam from './beam.png'
 import eos from './eos.png'
 import tron from './tron.png'
+import aptos from './aptos.png'
 import zksync from './zksync.png'
 
-const logos = { eth, ropsten: eth, bnb, avax, polygon, ftm, arb, opt, one, aurora, cfx, evmos, movr, beam, eos, tron, zksync }
+const logos = { eth, ropsten: eth, bnb, avax, polygon, ftm, arb, opt, one, aurora, cfx, evmos, movr, beam, eos, tron, aptos, zksync }
 
 export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly, address, className }) {
   const id = network.id.split('-')[0]
@@ -34,7 +36,7 @@ export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly
         !iconOnly &&
         <div className={classnames('items-center', size === 'md' ? 'ml-2' : 'ml-1', responsive ? 'hidden sm:flex' : 'flex')}>
           {network.name}
-          {address && <ExternalIcon href={`${network.explorer}/address/${address}`} />}
+          {address && <ExternalIcon href={getExplorerAddressLink(network, address)} />}
         </div>
       }
      
