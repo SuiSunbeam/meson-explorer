@@ -91,7 +91,7 @@ function NewGiveAwayModal ({ isOpen, onClose }) {
 
   const onConfirm = async () => {
     const body = value.trim().split('\n')
-    await fetcher.post('premium/give-away', body)
+    await fetcher.post('admin/premium/give-away', body)
     setValue('')
     onClose(true)
   }
