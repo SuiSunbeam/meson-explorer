@@ -139,7 +139,7 @@ function LpContentRow ({ address, network, add }) {
   const { id, url } = network
   const [core, setCore] = React.useState(<Loading />)
 
-  const client = React.useMemo(() => {
+  const mesonClient = React.useMemo(() => {
     let urls = [url.replace('${INFURA_API_KEY}', process.env.NEXT_PUBLIC_INFURA_PROJECT_ID)]
     if (JsonRpcs[id]) {
       if (typeof JsonRpcs[id] === 'string') {
@@ -149,12 +149,13 @@ function LpContentRow ({ address, network, add }) {
       }
     }
   
+    let client
     if (id.startsWith('tron')) {
-      return presets.clientFromUrl({ id, url: urls[0] })
+      client = presets.createNetworkClient({ id, url: urls[0] })
     } else if (id.startsWith('aptos')) {
-      return presets.clientFromUrl({ id, url: urls[0] })
+      client = presets.createNetworkClient({ id, url: urls[0] })
     } else {
-      return presets.clientFromUrl({
+      client = presets.createNetworkClient({
         id,
         quorum: {
           threshold: 1,
@@ -169,6 +170,7 @@ function LpContentRow ({ address, network, add }) {
         }
       })
     }
+    return presets.createMesonClient(id, client)
   }, [id, url])
 
   const nativeDecimals = network.nativeCurrency?.decimals || 18
@@ -176,7 +178,7 @@ function LpContentRow ({ address, network, add }) {
     if (!address) {
       return
     }
-    client.getBalance(address)
+    mesonClient.getBalance(address)
       .catch(err => console.error(err))
       .then(v => {
         if (v) {
@@ -184,7 +186,7 @@ function LpContentRow ({ address, network, add }) {
           setCore(`${i}.${d.substring(0, 6)}`)
         }
       })
-  }, [client, address, nativeDecimals])
+  }, [mesonClient, address, nativeDecimals])
 
   const alert = CORE_ALERT[network.id]
   const tokens = [...network.tokens]
@@ -222,7 +224,7 @@ function LpContentRow ({ address, network, add }) {
       {tokens.map(t => (
         <TokenAmount
           key={t.addr}
-          client={client}
+          mesonClient={mesonClient}
           address={address}
           token={t}
           explorer={network.explorer}
@@ -233,7 +235,7 @@ function LpContentRow ({ address, network, add }) {
   )
 }
 
-function TokenAmount ({ client, address, token, explorer, add }) {
+function TokenAmount ({ mesonClient, address, token, explorer, add }) {
   const [deposit, setDeposit] = React.useState()
   const [balance, setBalance] = React.useState()
 
@@ -241,7 +243,7 @@ function TokenAmount ({ client, address, token, explorer, add }) {
     if (!address) {
       return
     }
-    client.poolTokenBalance(token.addr, address, { from: address })
+    mesonClient.poolTokenBalance(token.addr, address, { from: address })
       .catch(() => {})
       .then(v => {
         if (v) {
@@ -250,7 +252,7 @@ function TokenAmount ({ client, address, token, explorer, add }) {
         }
       })
     
-    client.getTokenContract(token.addr).balanceOf(address, { from: address })
+    mesonClient.getTokenContract(token.addr).balanceOf(address, { from: address })
       .catch(() => {})
       .then(v => {
         if (v) {
