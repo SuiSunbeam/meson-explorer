@@ -226,7 +226,16 @@ function SwapActionButton({ data, swap, from, to, connected, setGlobalState }) {
     }
   }, [setGlobalState, status, swap?.inChain, swap?.outChain])
 
-  if (!data || (data.released && data.executed)) {
+  if (!data) {
+    return null
+  }
+
+  const locks = data.events.filter(e => e.name === 'LOCKED').length
+  const unlocks = data.events.filter(e => e.name === 'UNLOCKED').length
+  const releases = data.events.filter(e => e.name === 'RELEASED').length
+  const executed = data.events.filter(e => e.name === 'EXECUTED').length
+
+  if (executed && (releases + unlocks - locks === 0)) {
     return null
   }
 
@@ -267,6 +276,10 @@ function SwapActionButton({ data, swap, from, to, connected, setGlobalState }) {
       break;
     case 'RELEASING*':
       actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.release(swap, data.releaseSignature, initiator, recipient)}>Release</Button>
+  }
+
+  if (locks > releases + unlocks) {
+    actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, initiator)}>Unlock</Button>
   }
 
   return (

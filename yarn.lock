@@ -436,21 +436,21 @@
   resolved "https://npm.pkg.github.com/download/@MesonFi/contract-types/1.0.0/126882e1ada69af9e1d9087b23dad51c054e5dc6#126882e1ada69af9e1d9087b23dad51c054e5dc6"
   integrity sha512-1/I4PA/HTn0fGdlXUa+It/EYj4IM2ayz+hjIb4v0HosytymaF+EGv4mDr4EYxoJdsqHLO6SochqJsDxEPhQubA==
 
-"@mesonfi/presets@1.2.0-beta.1":
-  version "1.2.0-beta.1"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.2.0-beta.1/aec1f67de0c07e3cb37d36eeb9c997b581574438#aec1f67de0c07e3cb37d36eeb9c997b581574438"
-  integrity sha512-3XzPWJiDlsRvLu4krFkv1SAOxevQio3uqHYCR+vG+v9iIaUcwuGtUZ0LVhX3cvUid+rE4k6Tbu2EQf595lB7uA==
+"@mesonfi/presets@1.2.0-beta.2":
+  version "1.2.0-beta.2"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.2.0-beta.2/4046613d924de14941ec4df2a08190cf54026bad#4046613d924de14941ec4df2a08190cf54026bad"
+  integrity sha512-Te9H0t25E+HzT433L58wIFYLP6Kz4PUTw9C/9wSf1CEVSqVygqY0fAP6WbkEeEU8Il7dE3zcaRbTErhuw6KmOw==
   dependencies:
     "@mesonfi/contract-abis" "^1.0.0"
-    "@mesonfi/sdk" "^1.2.0-beta.1"
+    "@mesonfi/sdk" "^1.2.0-beta.2"
     aptos "^1.3.16"
     ethers "^5.7.1"
     tronweb "^4.3.0"
 
-"@mesonfi/sdk@1.2.0-beta.1", "@mesonfi/sdk@^1.2.0-beta.1":
-  version "1.2.0-beta.1"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.2.0-beta.1/a34f849a54202ffb4a21d6745b123b2bcb30c7fb#a34f849a54202ffb4a21d6745b123b2bcb30c7fb"
-  integrity sha512-4SoLqiavSLvxmkvmDhIyluZH39KHbdALaFSFIXLZNFrc854sYNqOFhDoVpnaSluFNqSLaYtUpkth0B9NEBguiA==
+"@mesonfi/sdk@1.2.0-beta.2", "@mesonfi/sdk@^1.2.0-beta.2":
+  version "1.2.0-beta.2"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.2.0-beta.2/c971f1a16684b3b0593185a84613301257202311#c971f1a16684b3b0593185a84613301257202311"
+  integrity sha512-yV/+zaw1MuU96rIXqB4GwxtaiwnP/R4XR4Q6B5wr+lfhG0zvay3LB9JKSY5W/yYpNnWdcGoP5DFzrmICCcFOIw==
   dependencies:
     "@mesonfi/contract-abis" "^1.0.0"
     "@mesonfi/contract-types" "^1.0.0"

@@ -106,7 +106,13 @@ export default function SwapRow({ data: raw, smMargin }) {
         </div>
       </Td>
       <Td className='hidden sm:table-cell'>
-        <SwapStatusBadge events={data.events} expired={expired} />
+        <div className='flex items-center'>
+          <SwapStatusBadge events={data.events} expired={expired} />
+          {
+            data.locks &&
+            <span className='text-xs text-gray-500 ml-2'>{data.releases} / {data.locks - data.releases - data.unlocks}</span>
+          }
+        </div>
       </Td>
       <Td>
         <TagNetwork responsive network={from.network} address={fromAddress} />

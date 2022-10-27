@@ -284,6 +284,14 @@ function Profile ({ globalState, setGlobalState }) {
                     Conflict
                   </div>
                 </Menu.Item>
+                <Menu.Item>
+                  <div
+                    className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                    onClick={() => router.push('/pending/double')}
+                  >
+                    Double
+                  </div>
+                </Menu.Item>
               </div>
             </>
           }
