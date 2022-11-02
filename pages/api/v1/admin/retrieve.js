@@ -13,7 +13,7 @@ const API_HOSTS = {
   opt: 'https://api-optimistic.etherscan.io/api',
   avax: 'https://api.snowtrace.io/api',
   ftm: 'https://api.ftmscan.com/api',
-  aurora: 'https://explorer.mainnet.aurora.dev/api',
+  aurora: 'https://api.aurorascan.dev/api',
   cfx: 'https://evmapi.confluxscan.net/api',
   movr: 'https://api-moonriver.moonscan.io/api'
 }
@@ -44,7 +44,9 @@ async function post(req, res) {
   const url = host + query(network.mesonAddress)
   const response = await fetch(url)
   const json = await response.json()
-  const txs = json.result.filter(tx => encodedList.includes(tx.input.substring(10, 74)))
+  const txs = json.result
+    .filter(tx => encodedList.includes(tx.input.substring(10, 74)))
+    .filter(tx => tx.txreceipt_status !== '0')
 
   await Promise.all(txs.map(async tx => {
     const response = await fetch(`${relayer}/transaction`, {
