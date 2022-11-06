@@ -239,10 +239,10 @@ function SwapActionButton({ data, swap, from, to, connected, setGlobalState }) {
     return null
   }
 
-  const retrieve = async () => {
-    await fetcher.post(`admin/retrieve`, { networkId: from.network.id, encoded: swap.encoded })
-    await fetcher.post(`admin/retrieve`, { networkId: to.network.id, encoded: swap.encoded })
-  }
+  const retrieve = async () => Promise.all([
+    fetcher.post(`admin/retrieve`, { networkId: from.network.id, encoded: swap.encoded }),
+    fetcher.post(`admin/retrieve`, { networkId: to.network.id, encoded: swap.encoded })
+  ])
   const retrieveButton = (
     <Button size='sm' color='' className='px-1' rounded onClick={retrieve}>
       <RefreshIcon className='w-4' aria-hidden='true' />
