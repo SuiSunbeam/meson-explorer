@@ -9,7 +9,9 @@ export default function SwapStatusBadge({ events, expired, error, className }) {
 function badgeType(status) {
   switch (status) {
     case 'RELEASED':
+    case 'RELEASED*':
     case 'DONE':
+    case 'DONE*':
       return 'success'
     case 'ERROR':
     case 'EXPIRED':
