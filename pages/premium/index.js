@@ -77,7 +77,7 @@ export function PaidPremiumRow ({ data, linkPrefix = 'premium' }) {
         paid &&
         <>
           <div>$<AmountDisplay value={paid} /></div>
-          <div className='text-xs text-gray-500'>{network.name}</div>
+          <div className='text-xs text-gray-500'>{network?.name}</div>
         </>
       }
       </Td>
