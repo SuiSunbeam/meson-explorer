@@ -38,7 +38,7 @@ export default listHandler({
       }
     },
     {
-      $match: { extra: { $gt: 0 } }
+      $match: { extra: { $gt: 0 }, locks: { $gt: 1 } }
     }
   ],
   sort: { created: -1 },
