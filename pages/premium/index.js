@@ -4,13 +4,14 @@ import useSWR from 'swr'
 
 import fetcher from 'lib/fetcher'
 
-import Card, { CardTitle, CardBody } from 'components/Card'
+import Card, { CardTitle, CardBody, StatCard } from 'components/Card'
 import LoadingScreen from 'components/LoadingScreen'
 import Table, { Td } from 'components/Table'
 
 export default function StatsPremium() {
   const router = useRouter()
   const { data, error } = useSWR(`stats/premium`, fetcher)
+  const { data: generalData } = useSWR(`admin/premium/general`, fetcher)
 
   let body
   if (error) {
@@ -39,20 +40,26 @@ export default function StatsPremium() {
   }
 
   return (
-    <Card>
-      <CardTitle
-        title='Premiums'
-        tabs={[
-          { key: 'payment', name: 'Payments', onClick: () => router.push('/premium/payments') },
-          { key: 'stats', name: 'Daily Stats', active: true },
-          { key: 'redeem', name: 'Redeems', onClick: () => router.push('/premium/redeem') },
-          { key: 'giveaway', name: 'Give Aways', onClick: () => router.push('/premium/give-away') }
-        ]}
-      />
-      <CardBody>
-        {body}
-      </CardBody>
-    </Card>
+    <>
+      <div className='grid md:grid-cols-4 grid-cols-2 md:gap-5 gap-3 md:mb-5 mb-3'>
+        <StatCard title='# of Current Premium' value={generalData?.current || 'N/A'} />
+        <StatCard title='# of Past Premium' value={generalData?.total || 'N/A'} />
+      </div>
+      <Card>
+        <CardTitle
+          title='Premiums'
+          tabs={[
+            { key: 'stats', name: 'Daily Stats', active: true },
+            { key: 'payment', name: 'Payments', onClick: () => router.push('/premium/payments') },
+            { key: 'redeem', name: 'Redeems', onClick: () => router.push('/premium/redeem') },
+            { key: 'giveaway', name: 'Give Aways', onClick: () => router.push('/premium/give-away') }
+          ]}
+        />
+        <CardBody>
+          {body}
+        </CardBody>
+      </Card>
+    </>
   )
 }
 

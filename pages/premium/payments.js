@@ -17,8 +17,8 @@ export default function PaymentList() {
     <PagiCard
       title='Premiums'
       tabs={[
+        { key: 'stats', name: 'Daily Stats', onClick: () => router.push('/premium') },
         { key: 'payment', name: 'Payments', active: true },
-        { key: 'stats', name: 'Daily Stats', onClick: () => router.push('/premium/stats') },
         { key: 'redeem', name: 'Redeems', onClick: () => router.push('/premium/redeem') },
         { key: 'giveaway', name: 'Give Aways', onClick: () => router.push('/premium/give-away') }
       ]}
