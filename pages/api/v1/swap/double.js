@@ -33,7 +33,12 @@ export default listHandler({
       }
     },
     {
-      $match: { locks: { $gt: 1 } }
+      $addFields: {
+        extra: { $subtract: ['$locks', { $sum: ['$unlocks', '$releases'] }] }
+      }
+    },
+    {
+      $match: { extra: { $gt: 0 } }
     }
   ],
   sort: { created: -1 },
