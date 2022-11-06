@@ -2,7 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 
 import PagiCard from 'components/Pagi/PagiCard'
-import { PaidPremiumRow } from './index'
+import { PaidPremiumRow } from './payments'
 
 export default function PaidPremiumList() {
   const router = useRouter()

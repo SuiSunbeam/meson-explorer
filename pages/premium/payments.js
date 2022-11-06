@@ -18,8 +18,8 @@ export default function PaymentList() {
       title='Premiums'
       tabs={[
         { key: 'payment', name: 'Payments', active: true },
+        { key: 'stats', name: 'Daily Stats', onClick: () => router.push('/premium/stats') },
         { key: 'redeem', name: 'Redeems', onClick: () => router.push('/premium/redeem') },
-        { key: 'daily', name: 'Daily Stats', onClick: () => router.push('/premium/stats') },
         { key: 'giveaway', name: 'Give Aways', onClick: () => router.push('/premium/give-away') }
       ]}
       queryUrl='admin/premium'

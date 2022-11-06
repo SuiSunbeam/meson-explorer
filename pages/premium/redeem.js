@@ -15,9 +15,9 @@ export default function RedeemList() {
     <PagiCard
       title='Premiums'
       tabs={[
-        { key: 'payment', name: 'Payments', onClick: () => router.push('/premium') },
+        { key: 'payment', name: 'Payments', onClick: () => router.push('/premium/payments') },
+        { key: 'stats', name: 'Daily Stats', onClick: () => router.push('/premium/stats') },
         { key: 'redeem', name: 'Redeems', active: true },
-        { key: 'daily', name: 'Daily Stats', onClick: () => router.push('/premium/stats') },
         { key: 'giveaway', name: 'Give Aways', onClick: () => router.push('/premium/give-away') }
       ]}
       queryUrl='admin/premium/redeem'

@@ -49,9 +49,9 @@ export default function GiveAwayList() {
         title='Premiums'
         right={<Button size='sm' color='primary' rounded onClick={() => setModalOpen(true)}>Add</Button>}
         tabs={[
-          { key: 'payment', name: 'Payments', onClick: () => router.push('/premium') },
+          { key: 'payment', name: 'Payments', onClick: () => router.push('/premium/payments') },
+          { key: 'stats', name: 'Daily Stats', onClick: () => router.push('/premium/stats') },
           { key: 'redeem', name: 'Redeems', onClick: () => router.push('/premium/redeem') },
-          { key: 'daily', name: 'Daily Stats', onClick: () => router.push('/premium/stats') },
           { key: 'giveaway', name: 'Give Aways', active: true }
         ]}
       />
