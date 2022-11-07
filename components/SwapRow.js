@@ -110,7 +110,7 @@ export default function SwapRow({ data: raw, smMargin }) {
           <SwapStatusBadge events={data.events} expired={expired} />
           {
             data.locks &&
-            <span className='text-xs text-gray-500 ml-2'>{data.releases} / {data.locks - data.releases - data.unlocks}</span>
+            <span className='text-xs text-gray-500 ml-2'>{data.releases},{data.unlocks} / {data.locks}</span>
           }
         </div>
       </Td>
