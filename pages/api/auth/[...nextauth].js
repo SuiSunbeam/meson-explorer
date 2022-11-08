@@ -12,7 +12,8 @@ export default NextAuth({
   ],
   adapter: MongoDBAdapter(mongo),
   session: {
-    strategy: 'jwt'
+    strategy: 'jwt',
+    maxAge: 24 * 3600,
   },
   callbacks: {
     async session({ session, token }) {
