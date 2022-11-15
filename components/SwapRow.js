@@ -155,7 +155,7 @@ export default function SwapRow({ data: raw, smMargin }) {
       <Td className='hidden md:table-cell'>
         <div className='flex items-center lg:flex-col lg:items-start'>
           <div className='mr-1'><AmountDisplay value={swap.totalFee} /></div>
-          <TagNetworkToken responsive explorer={from.network.explorer} token={from.token} />
+          <TagNetworkToken responsive explorer={to.network.explorer} token={to.token} />
         </div>
       </Td>
       <Td className='hidden lg:table-cell'>
