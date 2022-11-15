@@ -10,5 +10,5 @@ export default async function handler(req, res) {
 }
 
 async function _getExpiredList() {
-  return await Premiums.find({ until: { $gt : new Date()}}).select('initiator params')
+  return await Premiums.find({ until: { $lt : new Date()}}).select('initiator params')
 }

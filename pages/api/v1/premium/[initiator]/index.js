@@ -68,7 +68,7 @@ async function _updatePremiumRoleClaim(initiator, body) {
     throw new Error('The address is not Meson Premium')
   }
 
-  return await Premiums.findOneAndUpdate({ initiator }, { $addToSet: { params: { roleClaimed: body.claim, discordId: body.discordId } }})
+  return await Premiums.findOneAndUpdate({ initiator }, { params: { roleClaimed: body.claim, discordId: body.discordId }})
 }
 
 export async function onPremiumPaid(data) {
