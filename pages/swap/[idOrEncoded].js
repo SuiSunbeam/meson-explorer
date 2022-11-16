@@ -11,7 +11,16 @@ import { ethers } from 'ethers'
 import AppContext from 'lib/context'
 import fetcher from 'lib/fetcher'
 import socket from 'lib/socket'
-import { presets, sortEvents, getStatusFromEvents, getDuration, getExplorerAddressLink, getExplorerTxLink } from 'lib/swap'
+import {
+  presets,
+  sortEvents,
+  FailedStatus,
+  CancelledStatus,
+  getStatusFromEvents,
+  getDuration,
+  getExplorerAddressLink,
+  getExplorerTxLink
+} from 'lib/swap'
 import extensions from 'lib/extensions'
 
 import LoadingScreen from 'components/LoadingScreen'
@@ -99,6 +108,9 @@ function CorrectSwap({ data: raw }) {
   let body
   const { swap, from, to } = React.useMemo(() => presets.parseInOutNetworkTokens(data?.encoded), [data?.encoded])
 
+  const expired = swap?.expireTs < Date.now() / 1000
+  const status = getStatusFromEvents(data?.events || [], expired)
+
   if (!data) {
     body = <LoadingScreen />
   } else if (!from || !to) {
@@ -138,22 +150,35 @@ function CorrectSwap({ data: raw }) {
         </ListRow>
         <ListRow title='Amount'>
           <div className='flex items-center'>
-            <div className='mr-1'>{inAmount}</div>
-            <TagNetworkToken explorer={from.network.explorer} token={from.token} />
-            <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
-            <div className='mr-1'>{outAmount}</div>
-            <TagNetworkToken explorer={to.network.explorer} token={to.token} />
+            <div className={classnames(
+              'relative flex items-center',
+              CancelledStatus.includes(status) && 'opacity-30 before:block before:absolute before:w-full before:h-0.5 before:bg-black before:z-10'
+            )}>
+              <div className='mr-1'>{inAmount}</div>
+              <TagNetworkToken explorer={from.network.explorer} token={from.token} className={CancelledStatus.includes(status) && 'text-black'}/>
+            </div>
+            {
+              !FailedStatus.includes(status) &&
+              <>
+                <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
+                <div className='mr-1'>{outAmount}</div>
+                <TagNetworkToken explorer={to.network.explorer} token={to.token} />
+              </>
+            }
           </div>
         </ListRow>
-        <ListRow title='Fee'>
-          <div className='flex items-center'>
-            <div className='mr-1'>{ethers.utils.formatUnits(swap.totalFee, 6)}</div>
-            <TagNetworkToken explorer={feeSide.network.explorer} token={feeSide.token} />
-          </div>
-          <div className={classnames('text-sm text-gray-500', swap.totalFee.gt(0) ? '' : 'hidden')}>
-            {ethers.utils.formatUnits(swap.platformFee, 6)} Service fee + {ethers.utils.formatUnits(swap.fee, 6)} LP fee
-          </div>
-        </ListRow>
+        {
+          !FailedStatus.includes(status) &&
+          <ListRow title='Fee'>
+            <div className='flex items-center'>
+              <div className='mr-1'>{ethers.utils.formatUnits(swap.totalFee, 6)}</div>
+              <TagNetworkToken explorer={feeSide.network.explorer} token={feeSide.token} />
+            </div>
+            <div className={classnames('text-sm text-gray-500', swap.totalFee.gt(0) ? '' : 'hidden')}>
+              {ethers.utils.formatUnits(swap.platformFee, 6)} Service fee + {ethers.utils.formatUnits(swap.fee, 6)} LP fee
+            </div>
+          </ListRow>
+        }
         <ListRow title='Requested at'>
           {new Date(data.created).toLocaleString()}
         </ListRow>
@@ -180,7 +205,6 @@ function CorrectSwap({ data: raw }) {
     )
   }
 
-  const expired = swap?.expireTs < Date.now() / 1000
   return (
     <Card>
       <CardTitle
@@ -196,6 +220,7 @@ function CorrectSwap({ data: raw }) {
           <SwapActionButton
             data={data}
             swap={swap}
+            status={status}
             from={from}
             to={to}
             connected={connectedAddress}
@@ -210,10 +235,7 @@ function CorrectSwap({ data: raw }) {
   )
 }
 
-function SwapActionButton({ data, swap, from, to, connected, setGlobalState }) {
-  const expired = swap?.expireTs < Date.now() / 1000
-  let status = getStatusFromEvents(data?.events || [], expired)
-
+function SwapActionButton({ data, swap, status, from, to, connected, setGlobalState }) {
   React.useEffect(() => {
     if (swap?.inChain && swap?.outChain) {
       if (status === 'BONDED' || status === 'EXPIRED*' || status === 'CANCELLED*' || status === 'RELEASING*') {
