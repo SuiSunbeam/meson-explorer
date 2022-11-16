@@ -53,7 +53,7 @@ async function post(initiator) {
   }
   const since = new Date()
   since.setUTCHours(0, 0, 0, 0)
-  const premium = await _create(initiator, 500000_000000, since, undefined, { hash: initiator, erc20Value: 0 })
+  const premium = await _create(initiator, 500000_000000, since, undefined, undefined, { hash: initiator, erc20Value: 0 })
   return [_.omit(premium.toJSON(), ['_id', '__v', 'meta'])]
 }
 
