@@ -33,6 +33,15 @@ import ExternalLink from 'components/ExternalLink'
 import TagNetwork from 'components/TagNetwork'
 import TagNetworkToken from 'components/TagNetworkToken'
 
+
+const StatusDesc = {
+  RELEASING: `Releasing fund to recipient...`,
+  DROPPED: `Swap not processed by Meson. Fund still in user's address.`,
+  EXPIRED: `Swap didn't finish within valid time. Need to withdraw fund.`,
+  CANCELLED: `Swap didn't finish within valid time. Fund was returned to sender's address.`,
+  UNLOCKED: `Swap didn't finish within valid time. Fund can be withdrawn after expire time.`
+}
+
 export default function SwapDetail() {
   const router = useRouter()
   const idOrEncoded = router.query.idOrEncoded
@@ -44,12 +53,12 @@ export default function SwapDetail() {
         <CardTitle
           title='Swap'
           badge={<SwapStatusBadge error />}
-          subtitle={idOrEncoded}
+          subtitle={error.message}
         />
         <CardBody border={false}>
           <dl>
-            <ListRow title='Reason'>
-              {error.message}
+            <ListRow title='Swap ID'>
+              <div className='break-all'>{idOrEncoded}</div>
             </ListRow>
           </dl>
         </CardBody>
@@ -128,6 +137,9 @@ function CorrectSwap({ data: raw }) {
     const feeSide = swap.deprecatedEncoding ? from : to
     body = (
       <dl>
+        <ListRow title='Swap ID'>
+          <div className='break-all'>{data?._id}</div>
+        </ListRow>
         <ListRow title='Encoded As'>
           <div className='break-all'>{data.encoded}</div>
           {!swap.version && <div className='text-sm text-gray-500'>v0 encoding</div>}
@@ -215,7 +227,7 @@ function CorrectSwap({ data: raw }) {
             {authorized && <Badge className='ml-2'>{data?.hide ? 'HIDE' : ''}</Badge>}
           </div>
         )}
-        subtitle={data?._id}
+        subtitle={StatusDesc[status?.replace('*', '')]}
         right={(
           <SwapActionButton
             data={data}
