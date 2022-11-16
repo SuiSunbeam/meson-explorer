@@ -52,14 +52,14 @@ async function post(initiator) {
     return premiums
   }
   const since = new Date()
-  since.setUTCHours(0,0,0,0)
+  since.setUTCHours(0, 0, 0, 0)
   const premium = await _create(initiator, 500000_000000, since, undefined, { hash: initiator, erc20Value: 0 })
   return [_.omit(premium.toJSON(), ['_id', '__v', 'meta'])]
 }
 
 async function _updatePremiumRoleClaim(initiator, body) {
   // TODO: add the limit to invoke
-  if(!body.discordId) {
+  if (!body.discordId) {
     throw new Error('Update premium error')
   }
 
@@ -68,7 +68,7 @@ async function _updatePremiumRoleClaim(initiator, body) {
     throw new Error('The address is not Meson Premium')
   }
 
-  return await Premiums.findOneAndUpdate({ initiator }, { params: { roleClaimed: body.claim, discordId: body.discordId }})
+  return await Premiums.findOneAndUpdate({ initiator }, { params: { roleClaimed: body.claim, discordId: body.discordId } }, { sort: { since: -1 } })
 }
 
 export async function onPremiumPaid(data) {
@@ -86,17 +86,30 @@ export async function onPremiumPaid(data) {
   } else {
     let since = new Date()
     const lastPremium = exists?.[exists.length - 1]
+    const params = lastPremium?.params
+
     if (lastPremium) {
       since = new Date((lastPremium.until + 1) * 1000)
     } else {
-      since.setUTCHours(0,0,0,0)
+      since.setUTCHours(0, 0, 0, 0)
     }
-    premium = await _create(initiator, paid.mul(50000).toNumber(), since, lastPremium?.hide, data)
+    premium = await _create(initiator, paid.mul(50000).toNumber(), since, lastPremium?.hide, params, data)
+
+    if(params) {
+      await fetch(`https://meson-bot.herokuapp.com/api/v1/claim-premium-role`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          initiator,
+          ...params
+        }),
+      })
+    }
   }
   return [_.omit(premium.toJSON(), ['_id', '__v', 'meta'])]
 }
 
-async function _create(initiator, quota, since, hide, { hash, erc20Value, ...tx }) {
+async function _create(initiator, quota, since, hide, params, { hash, erc20Value, ...tx }) {
   const until = since.valueOf() + 86400_000 * 30 - 1000
   return await Premiums.create({
     _id: `${initiator}:${until / 1000}`,
@@ -108,7 +121,8 @@ async function _create(initiator, quota, since, hide, { hash, erc20Value, ...tx 
     since,
     until: new Date(until),
     hide,
-    meta: tx
+    meta: tx,
+    params
   })
 }
 
