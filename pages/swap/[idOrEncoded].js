@@ -118,7 +118,7 @@ function CorrectSwap({ data: raw }) {
   const { swap, from, to } = React.useMemo(() => presets.parseInOutNetworkTokens(data?.encoded), [data?.encoded])
 
   const expired = swap?.expireTs < Date.now() / 1000
-  const status = getStatusFromEvents(data?.events || [], expired)
+  const status = getStatusFromEvents(data?.events, expired)
 
   if (!data) {
     body = <LoadingScreen />
@@ -223,7 +223,7 @@ function CorrectSwap({ data: raw }) {
         title='Swap'
         badge={(
           <div className='flex flex-row items-center'>
-            <SwapStatusBadge events={data?.events || []} expired={expired} />
+            <SwapStatusBadge events={data?.events} expired={expired} />
             {authorized && <Badge className='ml-2'>{data?.hide ? 'HIDE' : ''}</Badge>}
           </div>
         )}
