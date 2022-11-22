@@ -18,6 +18,7 @@ function badgeType(status) {
     case 'EXPIRED*':
       return 'error'
     case 'LOCKED':
+    case 'UNLOCKED':
     case 'RELEASING':
     case 'RELEASING*':
       return 'info'
