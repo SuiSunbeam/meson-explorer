@@ -1,10 +1,17 @@
 import React from 'react'
+import classnames from 'classnames'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import debounce from 'lodash/debounce'
 
 import socket from 'lib/socket'
-import { presets, abbreviate, getDuration } from 'lib/swap'
+import {
+  presets,
+  abbreviate,
+  getDuration,
+  CancelledStatus,
+  getStatusFromEvents
+} from 'lib/swap'
 
 import { Td } from './Table'
 import SwapStatusBadge from './SwapStatusBadge'
@@ -62,6 +69,8 @@ export default function SwapRow({ data: raw, smMargin }) {
 
   const { swap, from, to } = React.useMemo(() => presets.parseInOutNetworkTokens(data.encoded), [data.encoded])
   const expired = swap?.expireTs < Date.now() / 1000
+  const status = getStatusFromEvents(data?.events, expired)
+  console.log('status', status)
 
   const swapId = data?._id
   const noSubscribe = !from || !to || (data.released && data.events.find(e => e.name === 'EXECUTED'))
@@ -140,7 +149,10 @@ export default function SwapRow({ data: raw, smMargin }) {
       </Td>
       <Td>
         <div className='flex lg:flex-col'>
-          <div className='mr-1'>
+          <div className={classnames(
+            'relative flex items-center self-start mr-1',
+            CancelledStatus.includes(status) && 'opacity-30 before:block before:absolute before:w-full before:h-0.5 before:bg-black before:z-10'
+          )}>
             <AmountDisplay value={swap.amount} decimals={swap.inToken === 255 ? 4 : 6} />
           </div>
           <div className='flex items-center'>
@@ -153,10 +165,13 @@ export default function SwapRow({ data: raw, smMargin }) {
         </div>
       </Td>
       <Td className='hidden md:table-cell'>
+      {
+        !CancelledStatus.includes(status) &&
         <div className='flex items-center lg:flex-col lg:items-start'>
           <div className='mr-1'><AmountDisplay value={swap.totalFee} /></div>
           <TagNetworkToken responsive explorer={to.network.explorer} token={to.token} />
         </div>
+      }
       </Td>
       <Td className='hidden lg:table-cell'>
         <span className='text-gray-500'>
