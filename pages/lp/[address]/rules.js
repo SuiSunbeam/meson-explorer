@@ -50,6 +50,7 @@ export default function SwapRuleList() {
         { name: 'limit', width: '20%' },
         { name: 'fee rule', width: '20%' },
         { name: 'initiator', width: '30%' },
+        { name: 'mark', width: '30%' },
         { name: 'edit', width: '10%', className: 'text-right' },
       ]}>
         {data.map((d, i) => <SwapRule key={i} d={d} onOpenModal={d => setModalData(d)} />)}
@@ -89,6 +90,7 @@ function SwapRuleModal ({ data, onClose }) {
   const [priority, setPriority] = React.useState(0)
   const [limit, setLimit] = React.useState('')
   const [initiator, setInitiator] = React.useState('')
+  const [mark, setMark] = React.useState('')
   const [fee, setFee] = React.useState('')
 
   React.useEffect(() => {
@@ -102,6 +104,7 @@ function SwapRuleModal ({ data, onClose }) {
       setPriority(data.priority || 0)
       setLimit(typeof data.limit === 'number' ? data.limit : '')
       setInitiator(data.initiator || '')
+      setInitiator(data.mark || '')
       setFee(JSON.stringify(data.fee, null, 2) || '[\n]')
     }
   }, [data])
@@ -113,6 +116,7 @@ function SwapRuleModal ({ data, onClose }) {
       priority,
       limit,
       initiator,
+      mark,
       fee: JSON.parse(fee)
     }
 
@@ -211,6 +215,13 @@ function SwapRuleModal ({ data, onClose }) {
           value={fee}
           onChange={setFee}
         />
+        <Input
+          className='col-span-6'
+          id='mark'
+          label='Mark'
+          value={mark}
+          onChange={setMark}
+        />
       </div>
 
       <div className='flex justify-between mt-6'>
@@ -237,6 +248,7 @@ function SwapRule ({ d, onOpenModal }) {
       <Td size='sm'>{d.limit}</Td>
       <Td size='sm'>{d.fee?.map((item, i) => <FeeRule key={i} {...item} />)}</Td>
       <Td size='sm'>{d.initiator}</Td>
+      <Td size='sm'>{d.mark}</Td>
       <Td size='sm' className='text-right'>
         <Button rounded size='xs' color='info' onClick={() => onOpenModal(d)}>
           <PencilIcon className='w-4 h-4' aria-hidden='true' />
