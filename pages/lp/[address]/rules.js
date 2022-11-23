@@ -104,7 +104,7 @@ function SwapRuleModal ({ data, onClose }) {
       setPriority(data.priority || 0)
       setLimit(typeof data.limit === 'number' ? data.limit : '')
       setInitiator(data.initiator || '')
-      setInitiator(data.mark || '')
+      setMark(data.mark || '')
       setFee(JSON.stringify(data.fee, null, 2) || '[\n]')
     }
   }, [data])
