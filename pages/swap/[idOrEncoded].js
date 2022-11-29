@@ -313,7 +313,7 @@ function SwapActionButton({ data, swap, status, from, to, connected, setGlobalSt
   }
 
   if (locks > releases + unlocks) {
-    // actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, initiator)}>Unlock</Button>
+    actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, initiator)}>Unlock</Button>
   }
 
   return (
