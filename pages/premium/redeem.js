@@ -42,7 +42,7 @@ function RedeemedPremiumRow ({ data }) {
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-2'>
         <div className='text-primary hover:underline'>
-          <Link href={`/premium/${initiator}`}>{abbreviate(initiator, 8, 6)}</Link>
+          <Link href={`/premium/${initiator}`}>{abbreviate(initiator, 6)}</Link>
         </div>
         <div className='text-xs text-gray-500'>
           {new Date(since * 1000).toLocaleString()}

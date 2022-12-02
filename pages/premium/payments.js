@@ -57,7 +57,7 @@ export function PaidPremiumRow ({ data, linkPrefix = 'premium' }) {
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-2'>
         <div className='text-primary hover:underline'>
-          <Link href={`/${linkPrefix}/${initiator}`}>{abbreviate(initiator, 8, 6)}</Link>
+          <Link href={`/${linkPrefix}/${initiator}`}>{abbreviate(initiator, 6)}</Link>
         </div>
         <div className='text-xs text-gray-500'>
           {new Date((meta ? meta.ts : since) * 1000).toLocaleString()}
@@ -68,7 +68,7 @@ export function PaidPremiumRow ({ data, linkPrefix = 'premium' }) {
       {
         meta &&
         <ExternalLink size='md' className='text-black' href={getExplorerTxLink(network, hash)}>
-          {abbreviate(hash, 8, 6)}
+          {abbreviate(hash, 6)}
         </ExternalLink>
       }
       </Td>

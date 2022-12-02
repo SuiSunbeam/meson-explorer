@@ -102,10 +102,10 @@ export default function SwapRow({ data: raw, smMargin }) {
           <Link href={`/swap/${swapId}`}>{abbreviate(swapId)}</Link>
         </div>
         <div className='text-primary hover:underline hidden sm:inline-block lg:hidden'>
-          <Link href={`/swap/${swapId}`}>{abbreviate(swapId, 6, 4)}</Link>
+          <Link href={`/swap/${swapId}`}>{abbreviate(swapId, 4)}</Link>
         </div>
         <div className='text-primary hover:underline sm:hidden'>
-          <Link href={`/swap/${swapId}`}>{abbreviate(swapId, 6, 0)}</Link>
+          <Link href={`/swap/${swapId}`}>{abbreviate(swapId, 4, 0)}</Link>
         </div>
         <div className='text-xs text-gray-500 hidden sm:block'>
           {new Date(data.created).toLocaleString()}
@@ -129,10 +129,10 @@ export default function SwapRow({ data: raw, smMargin }) {
           <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress)}</Link>
         </div>
         <div className='text-normal hover:underline hover:text-primary hidden sm:inline-block lg:hidden'>
-          <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress, 6, 4)}</Link>
+          <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress, 4)}</Link>
         </div>
         <div className='text-normal hover:underline hover:text-primary sm:hidden'>
-          <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress, 6, 0)}</Link>
+          <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress, 4, 0)}</Link>
         </div>
       </Td>
       <Td>
@@ -141,10 +141,10 @@ export default function SwapRow({ data: raw, smMargin }) {
           <Link href={`/address/${recipient}`}>{abbreviate(recipient)}</Link>
         </div>
         <div className='text-normal hover:underline hover:text-primary hidden sm:inline-block lg:hidden'>
-          <Link href={`/address/${recipient}`}>{abbreviate(recipient, 6, 4)}</Link>
+          <Link href={`/address/${recipient}`}>{abbreviate(recipient, 4)}</Link>
         </div>
         <div className='text-normal hover:underline hover:text-primary sm:hidden'>
-          <Link href={`/address/${recipient}`}>{abbreviate(recipient, 6, 0)}</Link>
+          <Link href={`/address/${recipient}`}>{abbreviate(recipient, 4, 0)}</Link>
         </div>
       </Td>
       <Td>

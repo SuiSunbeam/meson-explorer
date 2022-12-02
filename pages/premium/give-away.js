@@ -73,7 +73,7 @@ function GiveAwayRow ({ data, onDelete }) {
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1'>
         <div className='text-primary hover:underline'>
-          <Link href={`/premium/${address}`}>{abbreviate(address, 8, 6)}</Link>
+          <Link href={`/premium/${address}`}>{abbreviate(address, 6)}</Link>
         </div>
       </Td>
       <Td size='sm'>{redeemed && <Badge type='info'>REDEEMED</Badge>}</Td>
