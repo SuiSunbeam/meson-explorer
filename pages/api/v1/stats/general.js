@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   const pipeline = [
     {
       $project: {
-        success: { $gt: ['$released', null] },
+        success: { $in: ['RELEASED', '$events.name'] },
         amount: { $toLong: '$amount' },
         duration: { $toLong: { $divide: [{ $subtract: ['$released', '$created'] }, 1000] } },
         date: { $dateToString: { date: '$created', format: '%Y-%m-%d' } }

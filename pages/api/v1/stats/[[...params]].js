@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   const pipeline = [
     {
       $project: {
-        success: { $gt: ['$released', null] },
+        success: { $in: ['RELEASED', '$events.name'] },
         amount: { $toLong: '$amount' },
         srFee: { $toLong: '$srFee' },
         lpFee: { $toLong: '$lpFee' },
