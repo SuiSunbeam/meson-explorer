@@ -112,12 +112,19 @@ function Profile ({ globalState, setGlobalState }) {
   const { coinType } = globalState
   const { networkId, currentAccount} = globalState.browserExt || {}
   
-  const [extName, setExtName] = React.useState()
+  const [extAddrs, setExtAddrs] = React.useState([])
   const [error, setError] = React.useState()
   React.useEffect(() => {
-    const extType = getExtType(coinType)
-    setExtName(extensions.getName(extType))
-  }, [coinType])
+    const exts = extensions.detectAllExtensions()
+      .filter(ext => !ext.notInstalled && ext.type !== 'walletconnect')
+    
+    Promise.all(exts.map(
+      async ext => (await ext.glimpse() || [undefined]).map(account => ({ ext, account }))
+    )).then(extAddrs => {
+      const flatted = extAddrs.flat()
+      setExtAddrs(flatted)
+    })
+  }, [])
 
   const connectedAddress = currentAccount?.address
   const onClick = async () => {
@@ -143,6 +150,16 @@ function Profile ({ globalState, setGlobalState }) {
       setError('')
     }
   }, [coinType, networkId])
+
+
+  const renderAccount = (account, ext) => {
+    if (account) {
+      return abbreviate(account.address, 6)
+    } else if (ext.notInstalled) {
+      return `Install ${ext.name}`
+    }
+    return <span className='text-primary underline'>Connect</span>
+  }
 
   return (
     <Menu as='div' className='ml-1 relative'>
@@ -181,20 +198,30 @@ function Profile ({ globalState, setGlobalState }) {
           </div>
           <div className='py-1'>
             <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
-              {
-                connectedAddress 
-                ? <><CreditCardIcon className='w-4 h-4 mr-1'/>{abbreviate(connectedAddress)}</>
-                : <><LinkIcon className='w-4 h-4 mr-1'/>Connect Wallet</>
-              }
+            {
+              connectedAddress 
+              ? <><CreditCardIcon className='w-4 h-4 mr-1' />{abbreviate(connectedAddress)}</>
+              : <><LinkIcon className='w-3.5 h-3.5 mr-1.5' />Login with</>
+            }
             </div>
-            <Menu.Item>
-              <div
-                className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                onClick={onClick}
-              >
-                {connectedAddress ? `Disconnect ${extName}` : extName}
-              </div>
-            </Menu.Item>
+            {
+              extAddrs.map(({ ext, account }) => (
+                <Menu.Item key={ext.id}>
+                  <div
+                    className='px-4 py-1.5 flex items-center text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                    onClick={onClick}
+                  >
+                    <div>
+                      <img alt={ext.name} crossOrigin='anonymous' className='w-3.5 h-3.5' src={ext.icon} />
+                    </div>
+                    <div className='ml-1.5'>
+                      {renderAccount(account, ext)}
+                    </div>
+                    {/* {connectedAddress ? `Disconnect ${ext.name}` : ext.name} */}
+                  </div>
+                </Menu.Item>
+              ))
+            }
           </div>
           {
             (isRoot || isAdmin || isOperator) &&
