@@ -1,13 +1,14 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useSession, signIn, signOut } from 'next-auth/react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
+import { Float } from 'headlessui-float-react'
+import { Disclosure, Menu } from '@headlessui/react'
 import { UserCircleIcon, LinkIcon, CreditCardIcon } from '@heroicons/react/outline'
 import { UserCircleIcon as SolidUserCircleIcon } from '@heroicons/react/solid'
 
 import extensions from 'lib/extensions'
-import { presets, getExtType, abbreviate } from 'lib/swap'
+import { abbreviate } from 'lib/swap'
 
 const testnetMode = Boolean(process.env.NEXT_PUBLIC_TESTNET)
 const lps = process.env.NEXT_PUBLIC_LPS?.split(',') || []
@@ -109,9 +110,9 @@ function Profile ({ globalState, setGlobalState }) {
   const isAdmin = session?.user?.roles?.includes('admin')
   const isOperator = session?.user?.roles?.includes('operator')
 
-  const { coinType } = globalState
-  const { networkId, currentAccount} = globalState.browserExt || {}
+  const { browserExt, account  } = globalState
   
+  const [show, setShow] = React.useState(false)
   const [extAddrs, setExtAddrs] = React.useState([])
   const [error, setError] = React.useState()
   React.useEffect(() => {
@@ -126,31 +127,36 @@ function Profile ({ globalState, setGlobalState }) {
     })
   }, [])
 
-  const connectedAddress = currentAccount?.address
-  const onClick = async () => {
-    if (connectedAddress) {
-      extensions.disconnect()
-      setGlobalState(prev => ({ ...prev, browserExt: null }))
-    } else {
-      const extType = getExtType(coinType)
-      await extensions.connect(extType, browserExt => setGlobalState(prev => ({ ...prev, browserExt })))
-    }
-  }
+  const connectedAddress = account?.address
+  const onClickAccount = React.useCallback(async (evt, account, ext) => {
+    evt.stopPropagation()
 
-  React.useEffect(() => {
-    if (!coinType || !networkId) {
-      setError('')
+    if (account) {
+      console.log(account)
+      // setSelectedExt(ext)
+      // setSelectedAddr(account.address)
+      // onSelect(account.address, ext)
+      setGlobalState(prev => ({ ...prev, browserExt: ext, account }))
       return
     }
-    const network = presets.getNetworkFromShortCoinType(coinType)
-    if (networkId !== network.id) {
-      setError('Mismatch network')
-      extensions.switch(network.id)
-    } else {
-      setError('')
-    }
-  }, [coinType, networkId])
 
+    ext.enable().then(async () => {
+      const accounts = await ext.glimpse()
+      ext.dispose() // TODO: if callbacks are set, can remove this
+      setExtAddrs(extAddrs => extAddrs.map(item => {
+        if (item.ext === ext) {
+          return accounts?.map(account => ({ ext, account }))
+        }
+        return item
+      }).flat())
+    }).catch(e => {
+      ext.dispose()
+    })
+  }, [setGlobalState])
+
+  const onDisconnect = React.useCallback(() => {
+    setGlobalState(prev => ({ ...prev, browserExt: null, account: null }))
+  }, [setGlobalState])
 
   const renderAccount = (account, ext) => {
     if (account) {
@@ -163,18 +169,13 @@ function Profile ({ globalState, setGlobalState }) {
 
   return (
     <Menu as='div' className='ml-1 relative'>
-      <div>
-        <Menu.Button className='max-w-xs bg-gray-300 rounded-full flex items-center text-sm focus:outline-none'>
-          {
-            session
-            // eslint-disable-next-line @next/next/no-img-element
-            ? <img className='h-8 w-8 rounded-full' src={session?.user.image} alt='' />
-            : <SolidUserCircleIcon className='h-8 w-8 rounded-full bg-gray-100 text-gray-500'/>
-          }
-        </Menu.Button>
-      </div>
-      <Transition
-        as={Fragment}
+      {show && (
+        <div className='fixed inset-0 z-20 overflow-y-auto no-scrollbar' onClick={() => setShow(false)}>
+        </div>
+      )}
+      <Float
+        show={show}
+        placement='bottom-end'
         enter='transition ease-out duration-100'
         enterFrom='transform opacity-0 scale-95'
         enterTo='transform opacity-100 scale-100'
@@ -182,7 +183,26 @@ function Profile ({ globalState, setGlobalState }) {
         leaveFrom='transform opacity-100 scale-100'
         leaveTo='transform opacity-0 scale-95'
       >
-        <Menu.Items className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-200 z-10'>
+        <Menu.Button
+          className='max-w-xs bg-gray-300 rounded-full flex items-center text-sm focus:outline-none'
+          onClick={() => setShow(true)}
+        >
+          {
+            session
+            // eslint-disable-next-line @next/next/no-img-element
+            ? <img className='h-8 w-8 rounded-full' src={session?.user.image} alt='' />
+            : <SolidUserCircleIcon className='h-8 w-8 rounded-full bg-gray-100 text-gray-500'/>
+          }
+        </Menu.Button>
+        <Menu.Items
+          static
+          className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-200 z-10'
+          onClick={evt => {
+            if (evt.target.role === 'menuitem') {
+              setShow(false)
+            }
+          }}
+        >
           <div className='py-1'>
             <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
               <UserCircleIcon className='w-4 h-4 mr-1'/>{session?.user.email || '(Guest)'}
@@ -200,27 +220,33 @@ function Profile ({ globalState, setGlobalState }) {
             <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
             {
               connectedAddress 
-              ? <><CreditCardIcon className='w-4 h-4 mr-1' />{abbreviate(connectedAddress)}</>
+              ? <>
+                  <img alt={browserExt?.name} crossOrigin='anonymous' className='w-3.5 h-3.5 mr-1.5' src={browserExt?.icon} />
+                  {abbreviate(connectedAddress)}
+                </>
               : <><LinkIcon className='w-3.5 h-3.5 mr-1.5' />Login with</>
             }
             </div>
             {
-              extAddrs.map(({ ext, account }) => (
-                <Menu.Item key={ext.id}>
-                  <div
-                    className='px-4 py-1.5 flex items-center text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                    onClick={onClick}
-                  >
-                    <div>
-                      <img alt={ext.name} crossOrigin='anonymous' className='w-3.5 h-3.5' src={ext.icon} />
-                    </div>
-                    <div className='ml-1.5'>
-                      {renderAccount(account, ext)}
-                    </div>
-                    {/* {connectedAddress ? `Disconnect ${ext.name}` : ext.name} */}
+              connectedAddress
+                ? <div className='px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer' onClick={onDisconnect}>
+                    Disconnect
                   </div>
-                </Menu.Item>
-              ))
+                : <div className='max-h-[128px] overflow-y-auto'>
+                    {extAddrs.map(({ ext, account }) => (
+                      <Menu.Item key={`${ext.id}-${account?.address}`}>
+                        <div
+                          className='pl-4 py-1.5 flex items-center text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                          onClick={evt => onClickAccount(evt, account, ext)}
+                        >
+                          <div>
+                            <img alt={ext.name} crossOrigin='anonymous' className='w-3.5 h-3.5 mr-1.5' src={ext.icon} />
+                          </div>
+                          {renderAccount(account, ext)}
+                        </div>
+                      </Menu.Item>
+                    ))}
+                  </div>
             }
           </div>
           {
@@ -323,7 +349,7 @@ function Profile ({ globalState, setGlobalState }) {
             </>
           }
         </Menu.Items>
-      </Transition>
+      </Float>
     </Menu>
   )
 }
