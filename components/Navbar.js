@@ -132,10 +132,6 @@ function Profile ({ globalState, setGlobalState }) {
     evt.stopPropagation()
 
     if (account) {
-      console.log(account)
-      // setSelectedExt(ext)
-      // setSelectedAddr(account.address)
-      // onSelect(account.address, ext)
       setGlobalState(prev => ({ ...prev, browserExt: ext, account }))
       return
     }
