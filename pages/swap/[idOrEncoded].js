@@ -73,10 +73,6 @@ function CorrectSwap({ data: raw }) {
   const { data: session } = useSession()
   const authorized = session?.user?.roles?.some(r => ['root', 'admin'].includes(r))
 
-  const { globalState, setGlobalState } = React.useContext(AppContext)
-  const { currentAccount } = globalState.browserExt || {}
-  const connectedAddress = currentAccount?.hex
-
   const [data, setData] = React.useState(raw)
   React.useEffect(() => { setData(raw) }, [raw])
 
@@ -117,8 +113,7 @@ function CorrectSwap({ data: raw }) {
   let body
   const { swap, from, to } = React.useMemo(() => presets.parseInOutNetworkTokens(data?.encoded), [data?.encoded])
 
-  const expired = swap?.expireTs < Date.now() / 1000
-  const status = getStatusFromEvents(data?.events, expired)
+  const status = getStatusFromEvents(data?.events, swap?.expired)
 
   if (!data) {
     body = <LoadingScreen />
@@ -138,7 +133,7 @@ function CorrectSwap({ data: raw }) {
     body = (
       <dl>
         <ListRow title='Swap ID'>
-          <div className='break-all'>{data?._id}</div>
+          <div className='break-all'>{data._id}</div>
         </ListRow>
         <ListRow title='Encoded As'>
           <div className='break-all'>{data.encoded}</div>
@@ -195,11 +190,11 @@ function CorrectSwap({ data: raw }) {
           {new Date(data.created).toLocaleString()}
         </ListRow>
         {data.provider && <ListRow title='Provider'><div className='truncate'>{data.provider}</div></ListRow>}
-        <SwapTimes data={data} expired={expired} expireTs={swap.expireTs} />
+        <SwapTimes data={data} swap={swap} />
 
         <ListRow title='Process'>
           <ul role='list' className='border border-gray-200 rounded-md divide-y divide-gray-200 bg-white'>
-            {sortEvents(data?.events).map((e, index) => (
+            {sortEvents(data.events).map((e, index) => (
               <li key={`process-${index}`}>
                 <div className='lg:grid lg:grid-cols-4 sm:px-4 sm:py-3 px-3 py-2 text-sm'>
                   <div><SwapStepName {...e} /></div>
@@ -223,22 +218,12 @@ function CorrectSwap({ data: raw }) {
         title='Swap'
         badge={(
           <div className='flex flex-row items-center'>
-            <SwapStatusBadge events={data?.events} expired={expired} />
+            <SwapStatusBadge events={data?.events} expired={swap?.expired} />
             {authorized && <Badge className='ml-2'>{data?.hide ? 'HIDE' : ''}</Badge>}
           </div>
         )}
         subtitle={StatusDesc[status?.replace('*', '')]}
-        right={(
-          <SwapActionButton
-            data={data}
-            swap={swap}
-            status={status}
-            from={from}
-            to={to}
-            connected={connectedAddress}
-            setGlobalState={setGlobalState}
-          />
-        )}
+        right={authorized && <SwapActionButton data={data} swap={swap} status={status} from={from} to={to} />}
       />
       <CardBody border={!data}>
         {body}
@@ -247,19 +232,7 @@ function CorrectSwap({ data: raw }) {
   )
 }
 
-function SwapActionButton({ data, swap, status, from, to, connected, setGlobalState }) {
-  React.useEffect(() => {
-    if (swap?.inChain && swap?.outChain) {
-      if (status === 'BONDED' || status === 'EXPIRED*' || status === 'CANCELLED*' || status === 'RELEASING*') {
-        setGlobalState(prev => ({ ...prev, coinType: swap?.outChain }))
-      } else if (status === 'REQUESTING' || status === 'EXPIRED' || status === 'RELEASED') {
-        setGlobalState(prev => ({ ...prev, coinType: swap?.inChain }))
-      } else {
-        setGlobalState(prev => ({ ...prev, coinType: '' }))
-      }
-    }
-  }, [setGlobalState, status, swap?.inChain, swap?.outChain])
-
+function SwapActionButton({ data, swap, status, from, to }) {
   if (!data) {
     return null
   }
@@ -269,7 +242,7 @@ function SwapActionButton({ data, swap, status, from, to, connected, setGlobalSt
   const releases = data.events.filter(e => e.name === 'RELEASED').length
   const executed = data.events.filter(e => e.name === 'EXECUTED').length
 
-  if (executed && (releases + unlocks - locks === 0)) {
+  if (executed && locks && (releases + unlocks - locks === 0)) {
     return null
   }
 
@@ -283,16 +256,13 @@ function SwapActionButton({ data, swap, status, from, to, connected, setGlobalSt
     </Button>
   )
 
-  if (!connected) {
-    return retrieveButton
-  }
-
   const initiator = data.initiator || data.fromTo[0]
   const recipient = data.fromTo[1]
 
   let actionButton = null
   switch (status) {
     case 'REQUESTING':
+    case 'POSTED':
       actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.bond(swap, data.signature, initiator)}>Bond</Button>
       break;
     case 'BONDED':
@@ -305,15 +275,18 @@ function SwapActionButton({ data, swap, status, from, to, connected, setGlobalSt
     case 'EXPIRED':
       actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.withdraw(swap)}>Withdraw</Button>
       break;
+    case 'RELEASING':
     case 'RELEASED':
       actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.execute(swap, data.releaseSignature, recipient)}>Execute</Button>
       break;
-    case 'RELEASING*':
-      actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.release(swap, data.releaseSignature, initiator, recipient)}>Release</Button>
-  }
-
-  if (locks > releases + unlocks) {
-    actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, initiator)}>Unlock</Button>
+    default:
+      if (locks > releases + unlocks) {
+        if (swap.expired) {
+          actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, initiator)}>Unlock</Button>
+        } else {
+          actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.release(swap, data.releaseSignature, initiator, recipient)}>Release</Button>
+        }
+      }
   }
 
   return (
@@ -359,7 +332,7 @@ function FailedIcon() {
   return <div className='text-red-400 w-4 mr-1'><XCircleIcon className='w-4' aria-hidden='true' /></div>
 }
 
-function SwapTimes({ data, expired, expireTs }) {
+function SwapTimes({ data, swap }) {
   if (data.released) {
     return (
       <>
@@ -369,8 +342,8 @@ function SwapTimes({ data, expired, expireTs }) {
     )
   }
   return (
-    <ListRow title={expired ? 'Expired at' : 'Will expire at'}>
-      {new Date(expireTs * 1000).toLocaleString()}
+    <ListRow title={swap.expired ? 'Expired at' : 'Will expire at'}>
+      {new Date(swap.expireTs * 1000).toLocaleString()}
     </ListRow>
   )
 }

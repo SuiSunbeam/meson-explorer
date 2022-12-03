@@ -70,7 +70,6 @@ export default function SwapRow({ data: raw, smMargin }) {
   const { swap, from, to } = React.useMemo(() => presets.parseInOutNetworkTokens(data.encoded), [data.encoded])
   const expired = swap?.expireTs < Date.now() / 1000
   const status = getStatusFromEvents(data?.events, expired)
-  console.log('status', status)
 
   const swapId = data?._id
   const noSubscribe = !from || !to || (data.released && data.events.find(e => e.name === 'EXECUTED'))
