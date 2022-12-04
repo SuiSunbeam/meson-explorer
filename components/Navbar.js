@@ -4,8 +4,9 @@ import Link from 'next/link'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import { Float } from 'headlessui-float-react'
 import { Disclosure, Menu } from '@headlessui/react'
-import { UserCircleIcon, LinkIcon, CreditCardIcon } from '@heroicons/react/outline'
+import { UserCircleIcon, LinkIcon } from '@heroicons/react/outline'
 import { UserCircleIcon as SolidUserCircleIcon } from '@heroicons/react/solid'
+import { ExtensionCallbacks } from '@mesonfi/extensions'
 
 import extensions from 'lib/extensions'
 import { abbreviate } from 'lib/swap'
@@ -110,58 +111,28 @@ function Profile ({ globalState, setGlobalState }) {
   const isAdmin = session?.user?.roles?.includes('admin')
   const isOperator = session?.user?.roles?.includes('operator')
 
-  const { browserExt, account  } = globalState
+  const { browserExt } = globalState
   
   const [show, setShow] = React.useState(false)
-  const [extAddrs, setExtAddrs] = React.useState([])
+  const [extList, setExtList] = React.useState([])
   const [error, setError] = React.useState()
+
   React.useEffect(() => {
-    const exts = extensions.detectAllExtensions()
-      .filter(ext => !ext.notInstalled && ext.type !== 'walletconnect')
-    
-    Promise.all(exts.map(
-      async ext => (await ext.glimpse() || [undefined]).map(account => ({ ext, account }))
-    )).then(extAddrs => {
-      const flatted = extAddrs.flat()
-      setExtAddrs(flatted)
-    })
+    extensions.bindEventHandlers(new ExtensionCallbacks(console, {
+      updateBrowserExt: browserExt => setGlobalState(prev => ({ ...prev, browserExt })),
+      switchNetwork: networkId => setGlobalState(prev => ({ ...prev, networkId })),
+    }))
+  }, [setGlobalState])
+
+  React.useEffect(() => {
+    const exts = extensions.detectAllExtensions().filter(ext => !ext.notInstalled && ext.type !== 'walletconnect')
+    setExtList(exts)
   }, [])
 
-  const connectedAddress = account?.address
-  const onClickAccount = React.useCallback(async (evt, account, ext) => {
+  const onClickExt = React.useCallback(async (evt, ext) => {
     evt.stopPropagation()
-
-    if (account) {
-      setGlobalState(prev => ({ ...prev, browserExt: ext, account }))
-      return
-    }
-
-    ext.enable().then(async () => {
-      const accounts = await ext.glimpse()
-      ext.dispose() // TODO: if callbacks are set, can remove this
-      setExtAddrs(extAddrs => extAddrs.map(item => {
-        if (item.ext === ext) {
-          return accounts?.map(account => ({ ext, account }))
-        }
-        return item
-      }).flat())
-    }).catch(e => {
-      ext.dispose()
-    })
-  }, [setGlobalState])
-
-  const onDisconnect = React.useCallback(() => {
-    setGlobalState(prev => ({ ...prev, browserExt: null, account: null }))
-  }, [setGlobalState])
-
-  const renderAccount = (account, ext) => {
-    if (account) {
-      return abbreviate(account.address, 6)
-    } else if (ext.notInstalled) {
-      return `Install ${ext.name}`
-    }
-    return <span className='text-primary underline'>Connect</span>
-  }
+    await extensions.connect(undefined, ext.type, ext.id)
+  }, [])
 
   return (
     <Menu as='div' className='ml-1 relative'>
@@ -213,37 +184,36 @@ function Profile ({ globalState, setGlobalState }) {
             </Menu.Item>
           </div>
           <div className='py-1'>
-            <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
-            {
-              connectedAddress 
-              ? <>
-                  <img alt={browserExt?.name} crossOrigin='anonymous' className='w-3.5 h-3.5 mr-1.5' src={browserExt?.icon} />
-                  {abbreviate(connectedAddress)}
-                </>
-              : <><LinkIcon className='w-3.5 h-3.5 mr-1.5' />Login with</>
-            }
-            </div>
-            {
-              connectedAddress
-                ? <div className='px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer' onClick={onDisconnect}>
-                    Disconnect
+          {
+            browserExt
+            ? <>
+                <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
+                  <img alt={browserExt.ext?.name} crossOrigin='anonymous' className='w-3.5 h-3.5 mr-1.5' src={browserExt.ext?.icon} />
+                  {browserExt.ext?.name}
+                </div>
+                <Menu.Item onClick={() => router.push(`/address/${browserExt.currentAccount?.address}`)}>
+                  <div className='px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'>
+                    {abbreviate(browserExt.currentAccount?.address)}
                   </div>
-                : <div className='max-h-[128px] overflow-y-auto'>
-                    {extAddrs.map(({ ext, account }) => (
-                      <Menu.Item key={`${ext.id}-${account?.address}`}>
-                        <div
-                          className='pl-4 py-1.5 flex items-center text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                          onClick={evt => onClickAccount(evt, account, ext)}
-                        >
-                          <div>
-                            <img alt={ext.name} crossOrigin='anonymous' className='w-3.5 h-3.5 mr-1.5' src={ext.icon} />
-                          </div>
-                          {renderAccount(account, ext)}
-                        </div>
-                      </Menu.Item>
-                    ))}
-                  </div>
-            }
+                </Menu.Item>
+                <Menu.Item onClick={evt => { evt.stopPropagation(); extensions.disconnect() }}>
+                  <div className='px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'>Disconnect</div>
+                </Menu.Item>
+              </>
+            : <>
+                <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
+                  <LinkIcon className='w-3.5 h-3.5 mr-1.5' />Login with
+                </div>
+                {extList.map(ext => (
+                  <Menu.Item key={ext.id} onClick={evt => onClickExt(evt, ext)}>
+                    <div className='pl-4 py-1.5 flex items-center text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'>
+                      <img alt={ext.name} crossOrigin='anonymous' className='w-3.5 h-3.5 mr-1.5' src={ext.icon} />
+                      {ext.name}
+                    </div>
+                  </Menu.Item>
+                ))}
+              </>
+          }
           </div>
           {
             (isRoot || isAdmin || isOperator) &&
