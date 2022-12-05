@@ -7,10 +7,12 @@ import { Disclosure, Menu } from '@headlessui/react'
 import { UserCircleIcon, LinkIcon } from '@heroicons/react/outline'
 import { UserCircleIcon as SolidUserCircleIcon } from '@heroicons/react/solid'
 import { ExtensionCallbacks } from '@mesonfi/extensions'
+import * as jwt from '@mesonfi/extensions/jwt'
 
 import extensions from 'lib/extensions'
 import { abbreviate } from 'lib/swap'
 
+const signingMessage = process.env.NEXT_PUBLIC_SIGNING_MESSAGE
 const testnetMode = Boolean(process.env.NEXT_PUBLIC_TESTNET)
 const lps = process.env.NEXT_PUBLIC_LPS?.split(',') || []
 
@@ -119,7 +121,13 @@ function Profile ({ globalState, setGlobalState }) {
 
   React.useEffect(() => {
     extensions.bindEventHandlers(new ExtensionCallbacks(console, {
-      updateBrowserExt: browserExt => setGlobalState(prev => ({ ...prev, browserExt })),
+      updateBrowserExt: async browserExt => {
+        if (browserExt) {
+          const token = await jwt.encode(extensions.currentExt, signingMessage)
+          console.log(token)
+        }
+        setGlobalState(prev => ({ ...prev, browserExt }))
+      },
       switchNetwork: networkId => setGlobalState(prev => ({ ...prev, networkId })),
     }))
   }, [setGlobalState])
