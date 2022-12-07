@@ -141,8 +141,10 @@ function Profile ({ globalState, setGlobalState }) {
   }, [setGlobalState])
 
   React.useEffect(() => {
-    const exts = extensions.detectAllExtensions().filter(ext => !ext.notInstalled && ext.type !== 'walletconnect')
-    setExtList(exts)
+    setTimeout(() => {
+      const exts = extensions.detectAllExtensions().filter(ext => !ext.notInstalled && ext.type !== 'walletconnect')
+      setExtList(exts)
+    }, 100)
 
     const token = window.localStorage.getItem('token')
     if (token) {
