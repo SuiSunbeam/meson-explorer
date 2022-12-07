@@ -106,6 +106,20 @@ export default function Navbar({ globalState, setGlobalState }) {
   )
 }
 
+const autoConnect = async (extensions, account) => {
+  if (!extensions.currentExt) {
+    const [extType, extId] = account.iss.split(':')
+    await extensions.connect(undefined, extType, extId)
+  }
+
+  const { address } = extensions.currentExt?.currentAccount || {}
+  if (address === account.sub) {
+    const token = await jwt.encode(extensions.currentExt, signingMessage)
+    window.localStorage.setItem('token', token)
+    return jwt.verify(token, signingMessage)
+  }
+}
+
 function Profile ({ globalState, setGlobalState }) {
   const router = useRouter()
   const { data: session } = useSession()
@@ -113,7 +127,7 @@ function Profile ({ globalState, setGlobalState }) {
   const isAdmin = session?.user?.roles?.includes('admin')
   const isOperator = session?.user?.roles?.includes('operator')
 
-  const { browserExt } = globalState
+  const { browserExt, account } = globalState
   
   const [show, setShow] = React.useState(false)
   const [extList, setExtList] = React.useState([])
@@ -121,13 +135,7 @@ function Profile ({ globalState, setGlobalState }) {
 
   React.useEffect(() => {
     extensions.bindEventHandlers(new ExtensionCallbacks(console, {
-      updateBrowserExt: async browserExt => {
-        if (browserExt) {
-          const token = await jwt.encode(extensions.currentExt, signingMessage)
-          console.log(token)
-        }
-        setGlobalState(prev => ({ ...prev, browserExt }))
-      },
+      updateBrowserExt: async browserExt => setGlobalState(prev => ({ ...prev, browserExt })),
       switchNetwork: networkId => setGlobalState(prev => ({ ...prev, networkId })),
     }))
   }, [setGlobalState])
@@ -135,11 +143,41 @@ function Profile ({ globalState, setGlobalState }) {
   React.useEffect(() => {
     const exts = extensions.detectAllExtensions().filter(ext => !ext.notInstalled && ext.type !== 'walletconnect')
     setExtList(exts)
+
+    const token = window.localStorage.getItem('token')
+    if (token) {
+      try {
+        const account = jwt.verify(token, signingMessage)
+        if (!extensions.currentExt) {
+          const [extType, extId] = account.iss.split(':')
+          extensions.connect(undefined, extType, extId).catch(e => {})
+        }
+        setGlobalState(prev => ({ ...prev, account }))
+      } catch (e) {
+        window.localStorage.removeItem('token')
+        if (e.payload) {
+          autoConnect(extensions, e.payload).then(account => {
+            setGlobalState(prev => ({ ...prev, account }))
+          })
+        }
+      }
+    }
   }, [])
 
   const onClickExt = React.useCallback(async (evt, ext) => {
     evt.stopPropagation()
     await extensions.connect(undefined, ext.type, ext.id)
+    const token = await jwt.encode(extensions.currentExt, signingMessage)
+    const account = jwt.verify(token, signingMessage)
+    setGlobalState(prev => ({ ...prev, account }))
+    window.localStorage.setItem('token', token)
+  }, [setGlobalState])
+
+  const logout = React.useCallback(evt => {
+    evt.stopPropagation()
+    extensions.disconnect()
+    setGlobalState(prev => ({ ...prev, account: undefined }))
+    window.localStorage.removeItem('token')
   }, [])
 
   return (
@@ -193,19 +231,19 @@ function Profile ({ globalState, setGlobalState }) {
           </div>
           <div className='py-1'>
           {
-            browserExt
+            account
             ? <>
                 <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
-                  <img alt={browserExt.ext?.name} crossOrigin='anonymous' className='w-3.5 h-3.5 mr-1.5' src={browserExt.ext?.icon} />
-                  {browserExt.ext?.name}
+                  <img alt={browserExt?.ext?.name} crossOrigin='anonymous' className='w-3.5 h-3.5 mr-1.5' src={browserExt?.ext?.icon} />
+                  {browserExt?.ext?.name}
                 </div>
-                <Menu.Item onClick={() => router.push(`/address/${browserExt.currentAccount?.address}`)}>
+                <Menu.Item onClick={() => router.push(`/address/${account.sub}`)}>
                   <div className='px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'>
-                    {abbreviate(browserExt.currentAccount?.address)}
+                    {abbreviate(account.sub)}
                   </div>
                 </Menu.Item>
-                <Menu.Item onClick={evt => { evt.stopPropagation(); extensions.disconnect() }}>
-                  <div className='px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'>Disconnect</div>
+                <Menu.Item onClick={logout}>
+                  <div className='px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'>Log out</div>
                 </Menu.Item>
               </>
             : <>

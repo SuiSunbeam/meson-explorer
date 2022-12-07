@@ -8,7 +8,6 @@ import useSWR from 'swr'
 import { XCircleIcon, RefreshIcon } from '@heroicons/react/solid'
 import { ethers } from 'ethers'
 
-import AppContext from 'lib/context'
 import fetcher from 'lib/fetcher'
 import socket from 'lib/socket'
 import {
