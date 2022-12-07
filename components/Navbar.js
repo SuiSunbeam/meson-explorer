@@ -7,7 +7,7 @@ import { Disclosure, Menu } from '@headlessui/react'
 import { UserCircleIcon, LinkIcon } from '@heroicons/react/outline'
 import { UserCircleIcon as SolidUserCircleIcon } from '@heroicons/react/solid'
 import { ExtensionCallbacks } from '@mesonfi/extensions'
-import * as jwt from '@mesonfi/extensions/jwt'
+import { useWeb3Login } from '@mesonfi/web3-jwt/react'
 
 import extensions from 'lib/extensions'
 import { abbreviate } from 'lib/swap'
@@ -106,20 +106,6 @@ export default function Navbar({ globalState, setGlobalState }) {
   )
 }
 
-const autoConnect = async (extensions, account) => {
-  if (!extensions.currentExt) {
-    const [extType, extId] = account.iss.split(':')
-    await extensions.connect(undefined, extType, extId)
-  }
-
-  const { address } = extensions.currentExt?.currentAccount || {}
-  if (address === account.sub) {
-    const token = await jwt.encode(extensions.currentExt, signingMessage)
-    window.localStorage.setItem('token', token)
-    return jwt.verify(token, signingMessage)
-  }
-}
-
 function Profile ({ globalState, setGlobalState }) {
   const router = useRouter()
   const { data: session } = useSession()
@@ -127,11 +113,13 @@ function Profile ({ globalState, setGlobalState }) {
   const isAdmin = session?.user?.roles?.includes('admin')
   const isOperator = session?.user?.roles?.includes('operator')
 
-  const { browserExt, account } = globalState
+  const { browserExt } = globalState
   
   const [show, setShow] = React.useState(false)
   const [extList, setExtList] = React.useState([])
   const [error, setError] = React.useState()
+
+  const { account, login, logout } = useWeb3Login(extensions, signingMessage)
 
   React.useEffect(() => {
     extensions.bindEventHandlers(new ExtensionCallbacks(console, {
@@ -145,42 +133,17 @@ function Profile ({ globalState, setGlobalState }) {
       const exts = extensions.detectAllExtensions().filter(ext => !ext.notInstalled && ext.type !== 'walletconnect')
       setExtList(exts)
     }, 100)
-
-    const token = window.localStorage.getItem('token')
-    if (token) {
-      try {
-        const account = jwt.verify(token, signingMessage)
-        if (!extensions.currentExt) {
-          const [extType, extId] = account.iss.split(':')
-          extensions.connect(undefined, extType, extId).catch(e => {})
-        }
-        setGlobalState(prev => ({ ...prev, account }))
-      } catch (e) {
-        window.localStorage.removeItem('token')
-        if (e.payload) {
-          autoConnect(extensions, e.payload).then(account => {
-            setGlobalState(prev => ({ ...prev, account }))
-          })
-        }
-      }
-    }
   }, [])
 
   const onClickExt = React.useCallback(async (evt, ext) => {
     evt.stopPropagation()
-    await extensions.connect(undefined, ext.type, ext.id)
-    const token = await jwt.encode(extensions.currentExt, signingMessage)
-    const account = jwt.verify(token, signingMessage)
-    setGlobalState(prev => ({ ...prev, account }))
-    window.localStorage.setItem('token', token)
-  }, [setGlobalState])
+    login(ext)
+  }, [login])
 
-  const logout = React.useCallback(evt => {
+  const onLogout = React.useCallback(evt => {
     evt.stopPropagation()
-    extensions.disconnect()
-    setGlobalState(prev => ({ ...prev, account: undefined }))
-    window.localStorage.removeItem('token')
-  }, [])
+    logout()
+  }, [logout])
 
   return (
     <Menu as='div' className='ml-1 relative'>
@@ -233,7 +196,7 @@ function Profile ({ globalState, setGlobalState }) {
           </div>
           <div className='py-1'>
           {
-            account
+            account?.sub
             ? <>
                 <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
                   <img alt={browserExt?.ext?.name} crossOrigin='anonymous' className='w-3.5 h-3.5 mr-1.5' src={browserExt?.ext?.icon} />
@@ -244,7 +207,7 @@ function Profile ({ globalState, setGlobalState }) {
                     {abbreviate(account.sub)}
                   </div>
                 </Menu.Item>
-                <Menu.Item onClick={logout}>
+                <Menu.Item onClick={onLogout}>
                   <div className='px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'>Log out</div>
                 </Menu.Item>
               </>
