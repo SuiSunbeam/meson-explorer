@@ -113,8 +113,6 @@ function Profile ({ globalState, setGlobalState }) {
   const isAdmin = session?.user?.roles?.includes('admin')
   const isOperator = session?.user?.roles?.includes('operator')
 
-  const { browserExt } = globalState
-  
   const [show, setShow] = React.useState(false)
   const [extList, setExtList] = React.useState([])
   const [error, setError] = React.useState()
@@ -132,7 +130,7 @@ function Profile ({ globalState, setGlobalState }) {
     setTimeout(() => {
       const exts = extensions.detectAllExtensions().filter(ext => !ext.notInstalled && ext.type !== 'walletconnect')
       setExtList(exts)
-    }, 100)
+    }, 200)
   }, [])
 
   const onClickExt = React.useCallback(async (evt, ext) => {
