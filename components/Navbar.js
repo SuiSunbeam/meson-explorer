@@ -145,6 +145,13 @@ function Profile ({ globalState, setGlobalState }) {
     logout()
   }, [logout])
 
+  const accountExt = React.useMemo(() => {
+    if (account?.iss) {
+      const [extId] = account.iss.split(':')
+      return extensions.detectAllExtensions().find(ext => ext.id === extId)
+    }
+  }, [account?.iss])
+
   return (
     <Menu as='div' className='ml-1 relative'>
       {show && (
@@ -199,8 +206,8 @@ function Profile ({ globalState, setGlobalState }) {
             account?.sub
             ? <>
                 <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
-                  <img alt={browserExt?.ext?.name} crossOrigin='anonymous' className='w-3.5 h-3.5 mr-1.5' src={browserExt?.ext?.icon} />
-                  {browserExt?.ext?.name}
+                  <img alt={accountExt?.name} crossOrigin='anonymous' className='w-3.5 h-3.5 mr-1.5' src={accountExt?.icon} />
+                  {accountExt?.name}
                 </div>
                 <Menu.Item onClick={() => router.push(`/address/${account.sub}`)}>
                   <div className='px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'>
