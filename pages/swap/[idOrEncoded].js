@@ -181,7 +181,7 @@ function CorrectSwap({ data: raw }) {
               <TagNetworkToken explorer={feeSide.network.explorer} token={feeSide.token} />
             </div>
             <div className={classnames('text-sm text-gray-500', swap.totalFee.gt(0) ? '' : 'hidden')}>
-              {ethers.utils.formatUnits(swap.platformFee, 6)} Service fee + {ethers.utils.formatUnits(swap.fee, 6)} LP fee
+              {ethers.utils.formatUnits(swap.serviceFee, 6)} Service fee + {ethers.utils.formatUnits(swap.fee, 6)} LP fee
             </div>
           </ListRow>
         }
