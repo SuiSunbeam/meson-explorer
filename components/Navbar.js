@@ -117,7 +117,7 @@ function Profile ({ globalState, setGlobalState }) {
   const [extList, setExtList] = React.useState([])
   const [error, setError] = React.useState()
 
-  const { account, login, logout } = useWeb3Login(extensions, signingMessage)
+  const { account, login, logout } = useWeb3Login(extensions, signingMessage, { duration: 86400 * 7 })
 
   React.useEffect(() => {
     extensions.bindEventHandlers(new ExtensionCallbacks(console, {
