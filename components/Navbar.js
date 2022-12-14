@@ -232,7 +232,7 @@ function Profile ({ globalState, setGlobalState }) {
           }
           </div>
           {
-            (isRoot || isAdmin || isOperator) &&
+            (isRoot || isAdmin) &&
             <div className='py-1'>
               <Menu.Item>
                 <div
@@ -245,7 +245,7 @@ function Profile ({ globalState, setGlobalState }) {
             </div>
           }
           {
-            (isRoot || isAdmin) &&
+            (isRoot || isAdmin || isOperator) &&
             <div className='py-1'>
               <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
                 LPs
