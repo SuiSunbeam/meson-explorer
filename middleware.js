@@ -11,10 +11,14 @@ const getApiAccessRoles = pathname => {
   ) {
     return ['root']
   } else if (
+    pathname.startsWith('/api/v1/admin/restart')
+  ) {
+    return ['root', 'admin', 'operator']
+  } else if (
     pathname.startsWith('/api/v1/admin') ||
     pathname.startsWith('/api/v1/stats')
   ) {
-    return ['admin', 'root']
+    return ['root', 'admin']
   } 
 }
 
@@ -27,11 +31,11 @@ const getPageAccessRoles = pathname => {
     pathname.startsWith('/premium') ||
     pathname.startsWith('/stats')
   ) {
-    return ['admin', 'root']
+    return ['root', 'admin']
   } else if (
     pathname.startsWith('/lp')
   ) {
-    return ['operator', 'admin', 'root']
+    return ['root', 'admin', 'operator']
   }
 }
 
