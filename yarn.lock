@@ -540,10 +540,10 @@
     ethers "^5.7.1"
     tronweb "^4.3.0"
 
-"@mesonfi/sdk@1.4.0-rc.1", "@mesonfi/sdk@^1.4.0-rc.1":
-  version "1.4.0-rc.1"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.4.0-rc.1/d784df40d39fe78830d66964f86e7371aec9a328#d784df40d39fe78830d66964f86e7371aec9a328"
-  integrity sha512-o+26Mlq8Y6PGUugAS4JC8/S0JaAVRINQjcpdjn3DTIgTSJcfBh9ClsUe1N/FvbI7ABOgIfC7W1F2SQgWxNz32g==
+"@mesonfi/sdk@1.4.0-rc.2", "@mesonfi/sdk@^1.4.0-rc.1":
+  version "1.4.0-rc.2"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.4.0-rc.2/bebc826b8c7732a1b68ee1051a9f52766734c87f#bebc826b8c7732a1b68ee1051a9f52766734c87f"
+  integrity sha512-FF2XZDIUDf+IlZsFiqs38tEnjs7mJYioRXdY4qfXZvkGVG5a6nzGSR0H0odTY3B/iPzbwLHyONth7Ayg9B6cVg==
   dependencies:
     "@mesonfi/contract-abis" "^1.0.0"
     "@mesonfi/contract-types" "^1.0.0"
