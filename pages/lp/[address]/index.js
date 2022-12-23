@@ -3,6 +3,7 @@ import classnames from 'classnames'
 import { useRouter } from 'next/router'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
+import { RefreshIcon } from '@heroicons/react/solid'
 import { BigNumber, ethers } from 'ethers'
 
 import Card, { CardTitle, CardBody } from 'components/Card'
@@ -193,12 +194,26 @@ function LpContentRow ({ address, network, add }) {
   if (network.uctAddress) {
     tokens.push({ symbol: 'UCT', addr: network.uctAddress, decimals: 6, gray: true })
   }
+
+  const [retrievePage, setRetrievePage] = React.useState('')
+  const retrieve = async () => {
+    const page = retrievePage || 1
+    setRetrievePage(page + 1)
+    await fetcher.post(`admin/retrieve`, { networkId: network.id, page })
+  }
+  const retrieveButton = (
+    <div className='ml-1 flex items-center cursor-pointer hover:text-indigo-500' onClick={retrieve}>
+      <RefreshIcon className='w-3.5 h-3.5' aria-hidden='true' />
+      <div className='ml-0.5 text-xs'>{retrievePage}</div>
+    </div>
+  )
+
   return (
     <ListRow
       size='sm'
       title={
         <div className='flex flex-row sm:flex-col align-start justify-between'>
-          <div className='self-start'>
+          <div className='self-start flex flex-row items-center'>
             <ExternalLink
               size='md'
               className='flex flex-row normal-case'
@@ -207,6 +222,7 @@ function LpContentRow ({ address, network, add }) {
               <TagNetwork size='md' network={network} iconOnly />
               <div className='ml-2 font-medium'>{network.name}</div>
             </ExternalLink>
+            {retrieveButton}
           </div>
           <div className={classnames(
             'flex ml-7 mt-0.5 text-xs font-mono',

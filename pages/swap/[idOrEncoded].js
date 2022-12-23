@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import useSWR from 'swr'
 
-import { XCircleIcon, RefreshIcon } from '@heroicons/react/solid'
+import { XCircleIcon } from '@heroicons/react/solid'
 import { ethers } from 'ethers'
 
 import fetcher from 'lib/fetcher'
@@ -245,16 +245,6 @@ function SwapActionButton({ data, swap, status, from, to }) {
     return null
   }
 
-  const retrieve = async () => Promise.all([
-    fetcher.post(`admin/retrieve`, { networkId: from.network.id, encoded: swap.encoded }),
-    fetcher.post(`admin/retrieve`, { networkId: to.network.id, encoded: swap.encoded })
-  ])
-  const retrieveButton = (
-    <Button size='sm' color='' className='px-1' rounded onClick={retrieve}>
-      <RefreshIcon className='w-4' aria-hidden='true' />
-    </Button>
-  )
-
   const initiator = data.initiator || data.fromTo[0]
   const recipient = data.fromTo[1]
 
@@ -291,7 +281,6 @@ function SwapActionButton({ data, swap, status, from, to }) {
   return (
     <div className='flex flex-row gap-1'>
       {actionButton}
-      {retrieveButton}
     </div>
   )
 }
