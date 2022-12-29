@@ -3,7 +3,8 @@ import mesonPresets from '@mesonfi/presets'
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
-    const result = await get()
+    const { address } = req.query
+    const result = await get(address)
     if (result) {
       res.json({ result })
     } else {
@@ -14,23 +15,22 @@ export default async function handler(req, res) {
   }
 }
 
-async function get() {
-  const banner = await Banners.findOne({ text: 'banner|cash-back', disabled: { $ne: false } })
-    .sort({ priority: -1 })
-    .select('params')
-    .exec()
+async function get(address) {
+  const cashbackBanners = await Banners.aggregate([
+    { $match: { disabled: false, text: 'banner|cash-back' } },
+  ])
 
+  const banner = cashbackBanners[0]
 
   if (banner) {
-    const currentBanner = banner._doc
-    const { networkId, min, startDate, endDate } = currentBanner?.params || {}
+    const { networkId, min, startDate, endDate } = banner?.params || {}
     const shortSlip44ID = mesonPresets.getNetwork(networkId)?.shortSlip44
 
     if (!shortSlip44ID) {
       return null
     }
 
-    const query = {
+    let query = {
       outChain: shortSlip44ID,
       amount: {
         $gte: min * 1000_000
@@ -41,11 +41,15 @@ async function get() {
       }
     }
 
-    const rawList = await Swaps.find(query)
-      .select('encoded fromTo')
-      .exec()
-
-    return rawList
+    if (address) {
+      query = {
+        ...query,
+        'fromTo.0': address
+      }
+      return await Swaps.findOne(query).select('fromTo').exec()
+    } else {
+      return await Swaps.find(query).select('fromTo').exec()
+    }
   } else {
     return null
   }
