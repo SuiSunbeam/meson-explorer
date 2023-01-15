@@ -23,7 +23,7 @@ async function get(address) {
   const banner = cashbackBanners[0]
 
   if (banner) {
-    const { networkId, min, startDate, endDate } = banner?.params || {}
+    const { networkId, min, startDate, endDate, from } = banner?.params || {}
     const shortSlip44ID = mesonPresets.getNetwork(networkId)?.shortSlip44
 
     if (!shortSlip44ID) {
@@ -31,14 +31,14 @@ async function get(address) {
     }
 
     let query = {
-      outChain: shortSlip44ID,
       amount: {
         $gte: min * 1000_000
       },
       created: {
         $gt: new Date(startDate),
         $lt: new Date(endDate)
-      }
+      },
+      ... from ? { inChain: shortSlip44ID } : { outChain: shortSlip44ID }
     }
 
     if (address) {
@@ -54,3 +54,4 @@ async function get(address) {
     return null
   }
 }
+
