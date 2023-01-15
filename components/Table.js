@@ -1,10 +1,10 @@
 import React from 'react'
 import classnames from 'classnames'
 
-export default function Table ({ headers, size = 'md', children, list }) {
+export default function Table ({ fixed, size = 'md', headers, children, list }) {
   return (
     <div className='overflow-auto'>
-      <table className='min-w-full divide-y divide-gray-200'>
+      <table className={classnames('min-w-full divide-y divide-gray-200', fixed && 'table-fixed')}>
         <thead className='bg-gray-50'>
           <tr>
             {headers.map((item, index) => (
@@ -36,10 +36,10 @@ export function Th({ size = 'md', width, className, children }) {
   )
 }
 
-export function Td({ className, size = 'md', children }) {
+export function Td({ className, size = 'md', wrap, children }) {
   return (
     <td className={classnames(
-      'whitespace-nowrap',
+      !wrap && 'whitespace-nowrap',
       size === 'lg' && 'pl-4 pr-3 sm:pl-6 py-2',
       size === 'md' && 'px-2 md:px-3 sm:py-4 py-2',
       size === 'sm' && 'px-2 md:px-3 py-1 text-sm',

@@ -95,7 +95,7 @@ export async function onPremiumPaid(data) {
     }
     premium = await _create(initiator, paid.mul(50000).toNumber(), since, lastPremium?.hide, params, data)
 
-    if(params) {
+    if (params) {
       await fetch(`https://meson-bot.herokuapp.com/api/v1/claim-premium-role`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

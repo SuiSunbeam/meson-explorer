@@ -15,6 +15,7 @@ import { abbreviate } from 'lib/swap'
 const signingMessage = process.env.NEXT_PUBLIC_SIGNING_MESSAGE
 const testnetMode = Boolean(process.env.NEXT_PUBLIC_TESTNET)
 const lps = process.env.NEXT_PUBLIC_LPS?.split(',') || []
+const relayers = process.env.NEXT_PUBLIC_SERVER_URL.split(',')
 
 const navigation = [
   // { name: 'Swaps', href: '#', current: true },
@@ -258,6 +259,26 @@ function Profile ({ globalState, setGlobalState }) {
                       onClick={() => router.push(`/lp/${lp}`)}
                     >
                       {lp}
+                    </div>
+                  </Menu.Item>
+                ))
+              }
+            </div>
+          }
+          {
+            (isRoot || isAdmin) &&
+            <div className='py-1'>
+              <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
+                Relayers
+              </div>
+              {
+                relayers.map((relayer, index) => (
+                  <Menu.Item key={`relayer-${index}`}>
+                    <div
+                      className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer overflow-hidden truncate'
+                      onClick={() => router.push(`/relayer/${encodeURIComponent(relayer)}`)}
+                    >
+                      {relayer}
                     </div>
                   </Menu.Item>
                 ))

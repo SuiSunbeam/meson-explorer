@@ -28,6 +28,7 @@ const getPageAccessRoles = pathname => {
   ) {
     return ['root']
   } else if (
+    pathname.startsWith('/relayer') ||
     pathname.startsWith('/premium') ||
     pathname.startsWith('/stats')
   ) {
