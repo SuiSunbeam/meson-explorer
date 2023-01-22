@@ -6,7 +6,7 @@ import useSWR from 'swr'
 import fetcher from 'lib/fetcher'
 import { abbreviate } from 'lib/swap'
 
-import Card, { CardTitle, CardBody } from 'components/Card'
+import Card, { CardTitle, CardBody, StatCard } from 'components/Card'
 import LoadingScreen from 'components/LoadingScreen'
 import Table, { Td } from 'components/Table'
 import TagNetwork from 'components/TagNetwork'
@@ -24,8 +24,9 @@ export default function AllsToStats() {
     body = (
       <Table size='lg' headers={[
         { name: 'recipient', width: '50%' },
-        { name: 'link', width: '30%' },
-        { name: 'will receive', width: '20%' },
+        { name: 'link', width: '20%' },
+        { name: 'clicks', width: '15%' },
+        { name: 'will receive', width: '15%' },
       ]}>
         {data.map((row, index) => <StatAllsToRow key={`stat-table-row-${index}`} {...row} />)}
       </Table>
@@ -33,16 +34,21 @@ export default function AllsToStats() {
   }
 
   return (
+    <>
+      <div className='grid md:grid-cols-4 grid-cols-2 md:gap-5 gap-3 md:mb-5 mb-3'>
+        <StatCard title='# of Links' value={data?.length} />
+      </div>
     <Card>
       <CardTitle title='Stats for AllsTo' />
       <CardBody>
         {body}
       </CardBody>
     </Card>
+    </>
   )
 }
 
-function StatAllsToRow ({ _id, uid, name, avatar, networkId, tokens }) {
+function StatAllsToRow ({ _id, uid, name, avatar, networkId, tokens, clicks }) {
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td size='lg'>
@@ -50,18 +56,21 @@ function StatAllsToRow ({ _id, uid, name, avatar, networkId, tokens }) {
           <img className='h-5 w-5 rounded-full mr-2' src={avatar} alt='' />
           {name}
         </div>
-        <div className='text-xs text-gray-500'>
-          {abbreviate(_id)}
+        <div className='text-xs text-gray-500 hover:underline hover:text-primary'>
+          <Link href={`/address/${_id}`}>
+            {abbreviate(_id)}
+          </Link>
         </div>
       </Td>
       <Td className={classnames(
         'text-sm font-mono hover:underline hover:text-primary',
         uid ? '' : 'text-gray-500'
       )}>
-        <Link href={`https://alls.to/${uid || _id.substring(0, 12)}`}>
+        <a href={`https://alls.to/${uid || _id.substring(0, 12)}`} target='_blank' rel='noreferrer'>
           {uid || _id.substring(0, 12)}
-        </Link>
+        </a>
       </Td>
+      <Td className='text-sm'>{clicks}</Td>
       <Td>
         <div className='flex items-center'>
           <TagNetwork size='md' network={{ id: networkId }} />
