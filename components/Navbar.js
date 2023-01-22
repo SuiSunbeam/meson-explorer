@@ -307,6 +307,14 @@ function Profile ({ globalState, setGlobalState }) {
                   Posters
                 </div>
               </Menu.Item>
+              <Menu.Item>
+                <div
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => router.push('/stats-alls-to')}
+                >
+                  AllsTo
+                </div>
+              </Menu.Item>
             </div>
           }
           {
