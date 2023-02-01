@@ -25,10 +25,11 @@ export default function AllsToStats() {
       <Table size='lg' headers={[
         { name: 'recipient', width: '50%' },
         { name: 'link', width: '20%' },
-        { name: 'clicks', width: '15%' },
-        { name: 'will receive', width: '15%' },
+        { name: 'did', width: '10%' },
+        { name: 'clicks', width: '10%' },
+        { name: 'will receive', width: '10%' },
       ]}>
-        {data.map((row, index) => <StatAllsToRow key={`stat-table-row-${index}`} {...row} />)}
+        {data.map((row, index) => <StatAllsToRow key={`stat-table-row-${index}`} data={row} />)}
       </Table>
     )
   }
@@ -48,7 +49,9 @@ export default function AllsToStats() {
   )
 }
 
-function StatAllsToRow ({ _id, uid, name, avatar, networkId, tokens, clicks }) {
+function StatAllsToRow ({ data }) {
+  const { addr, key = '', name, avatar, networkId, tokens, clicks } = data
+  const [handle, did] = key.split('#')
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td size='lg'>
@@ -57,19 +60,20 @@ function StatAllsToRow ({ _id, uid, name, avatar, networkId, tokens, clicks }) {
           {name}
         </div>
         <div className='text-xs text-gray-500 hover:underline hover:text-primary'>
-          <Link href={`/address/${_id}`}>
-            {abbreviate(_id)}
+          <Link href={`/address/${addr}`}>
+            {abbreviate(addr)}
           </Link>
         </div>
       </Td>
       <Td className={classnames(
         'text-sm font-mono hover:underline hover:text-primary',
-        uid ? '' : 'text-gray-500'
+        handle ? '' : 'text-gray-500'
       )}>
-        <a href={`https://alls.to/${uid || _id.substring(0, 12)}`} target='_blank' rel='noreferrer'>
-          {uid || _id.substring(0, 12)}
+        <a href={`https://alls.to/${handle || addr.substring(0, 12)}`} target='_blank' rel='noreferrer'>
+          {handle || addr.substring(0, 12)}
         </a>
       </Td>
+      <Td className='text-sm'>{did}</Td>
       <Td className='text-sm'>{clicks}</Td>
       <Td>
         <div className='flex items-center'>

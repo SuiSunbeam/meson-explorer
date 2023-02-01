@@ -1,7 +1,7 @@
-import { Recipients } from 'lib/db'
+import { AllsTo } from 'lib/db'
 
 export default async function handler(req, res) {
-  const result = await Recipients.find({}).sort({ n: -1 }).select('uid name networkId tokens avatar clicks')
+  const result = await AllsTo.find({}).sort({ n: -1 }).select('addr key name avatar networkId tokens clicks')
 
   if (result) {
     res.json({ result })
