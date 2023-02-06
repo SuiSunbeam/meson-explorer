@@ -18,14 +18,17 @@ export default function AddressSwapList() {
   const checkPremium = roles.some(r => ['root', 'admin', 'operator'].includes(r))
 
   const { data } = useSWR(checkPremium && `admin/premium/${address}`, fetcher)
-  const premium = data?.total
-    ? <Badge type='warning' className='mr-1' onClick={() => router.push(`/premium/${address}`)}>PREMIUM</Badge>
-    : null
+  let premiumBadge = null
+  if (data?.total) {
+    const lastUntil = data.list.map(item => item.until).filter(Boolean)[0]
+    const valid = lastUntil && lastUntil > Date.now() / 1000
+    premiumBadge = <Badge type={valid ? 'warning' : 'default'} className='mr-1' onClick={() => router.push(`/premium/${address}`)}>PREMIUM</Badge>
+  }
 
   return (
     <PagiCard
       title='Swaps for Address'
-      subtitle={<div className='flex items-center'>{premium}{address}</div>}
+      subtitle={<div className='flex items-center'>{premiumBadge}{address}</div>}
       queryUrl={`address/${address}/swap`}
       fallback={`/address/${address}`}
       tableHeaders={[
