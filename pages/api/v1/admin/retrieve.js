@@ -13,7 +13,7 @@ const API_HOSTS = {
   opt: 'https://api-optimistic.etherscan.io/api',
   avax: 'https://api.snowtrace.io/api',
   ftm: 'https://api.ftmscan.com/api',
-  aurora: 'https://api.aurorascan.dev/api',
+  aurora: 'https://explorer.mainnet.aurora.dev/api',
   cfx: 'https://evmapi.confluxscan.net/api',
   movr: 'https://api-moonriver.moonscan.io/api',
   aptos: 'https://indexer.mainnet.aptoslabs.com/v1/graphql'
