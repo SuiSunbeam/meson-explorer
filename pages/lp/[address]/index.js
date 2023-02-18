@@ -281,24 +281,34 @@ function TokenAmount ({ mesonClient, address, token, explorer, add }) {
   return (
     <div className='flex items-center'>
       <div className='flex flex-1 items-center h-5'>
-        <NumberDisplay
-          value={deposit}
-          classNames={token.gray ? 'text-gray-500' : classnames(
-            deposit <= 1000 && 'bg-red-500 text-white',
-            deposit > 1000 && deposit <= 5000 && 'text-red-500',
-            deposit > 5000 && deposit <= 10000 && 'text-warning',
-            deposit > 10000 && deposit <= 20000 && 'text-indigo-500'
-          )}
-        />
-        <TagNetworkToken explorer={explorer} token={token} iconOnly />
+        <div className={classnames(
+          'flex items-center relative',
+          token.disabled && 'after:block after:absolute after:w-full after:h-0.5 after:bg-gray-500'
+        )}>
+          <NumberDisplay
+            value={deposit}
+            classNames={(token.gray || token.disabled) ? 'text-gray-300' : classnames(
+              deposit <= 1000 && 'bg-red-500 text-white',
+              deposit > 1000 && deposit <= 5000 && 'text-red-500',
+              deposit > 5000 && deposit <= 10000 && 'text-warning',
+              deposit > 10000 && deposit <= 20000 && 'text-indigo-500'
+            )}
+          />
+          <TagNetworkToken explorer={explorer} token={token} iconOnly />
+        </div>
       </div>
 
       <div className='flex flex-1 items-center h-5'>
-        <NumberDisplay
-          value={balance}
-          classNames={classnames(balance < 1 && 'text-gray-300')}
-        />
-        <TagNetworkToken explorer={explorer} token={token} iconOnly />
+        <div className={classnames(
+          'flex items-center relative',
+          token.disabled && 'after:block after:absolute after:w-full after:h-0.5 after:bg-gray-500'
+        )}>
+          <NumberDisplay
+            value={balance}
+            classNames={classnames((balance < 1 || token.disabled) && 'text-gray-300')}
+          />
+          <TagNetworkToken explorer={explorer} token={token} iconOnly />
+        </div>
       </div>
     </div>
   )
