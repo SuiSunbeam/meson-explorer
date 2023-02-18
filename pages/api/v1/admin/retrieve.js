@@ -28,7 +28,7 @@ export default async function handler(req, res) {
 }
 
 async function post(req, res) {
-  const { networkId, encoded, page = 1 } = req.body
+  const { networkId, encoded, page = 1, size = 100 } = req.body
 
   if (networkId === 'aptos') {
     const txs = await retrieveAptos()
@@ -48,7 +48,7 @@ async function post(req, res) {
     return
   }
 
-  const url = host + query(network.mesonAddress, page)
+  const url = host + query(network.mesonAddress, page, size)
   const response = await fetch(url)
   const json = await response.json()
   const txs = json.result
