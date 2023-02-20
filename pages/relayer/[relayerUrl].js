@@ -12,27 +12,29 @@ import { presets } from 'lib/swap'
 
 export default function RelayerPage() {
   const router = useRouter()
-  const { url } = router.query
-  const decodedUrl = decodeURIComponent(url)
+  const { relayerUrl = '' } = router.query
+  const decodedRelayerUrl = decodeURIComponent(relayerUrl)
 
   return (
     <Card>
       <CardTitle
         title='Relayer'
-        subtitle={decodedUrl}
+        subtitle={decodedRelayerUrl}
         tabs={[
           { key: 'status', name: 'Status', active: true },
         ]}
       />
       <CardBody>
-        <RelayerStatus url={decodedUrl} />
+      {
+        decodedRelayerUrl && <RelayerStatus relayerUrl={decodedRelayerUrl} />
+      }
       </CardBody>
     </Card>
   )
 }
 
-function RelayerStatus ({ url }) {
-  const { data, error } = useSWR(`${url}/status`, fetcher)
+function RelayerStatus ({ relayerUrl }) {
+  const { data, error } = useSWR(`${relayerUrl}/status`, fetcher)
 
   if (error) {
     return (
