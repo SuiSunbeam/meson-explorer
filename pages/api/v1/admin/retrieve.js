@@ -16,6 +16,7 @@ const API_HOSTS = {
   aurora: 'https://explorer.mainnet.aurora.dev/api',
   cfx: 'https://evmapi.confluxscan.net/api',
   movr: 'https://api-moonriver.moonscan.io/api',
+  beam: 'https://api-moonbeam.moonscan.io/api',
   aptos: 'https://indexer.mainnet.aptoslabs.com/v1/graphql'
 }
 
