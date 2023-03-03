@@ -12,7 +12,10 @@ export default async function handler(req, res) {
         lpFee: { $toLong: '$lpFee' },
         duration: { $toLong: { $divide: [{ $subtract: ['$released', '$created'] }, 1000] } },
         date: { $dateToString: { date: '$created', format: '%Y-%m-%d' } },
-        fromAddress: { $arrayElemAt: ['$fromTo', 0] }
+        fromAddress: { $arrayElemAt: ['$fromTo', 0] },
+        isApiSwap: { $in: [{ $substr: ['$salt', 2, 1 ] }, ['d', '9']] },
+        isM2Swap: { $in: [{ $substr: ['$salt', 2, 1 ] }, ['e', 'a', '6', '2']] },
+        isA2Swap: { $in: [{ $substr: ['$salt', 2, 1 ] }, ['e', 'a']] },
       }
     },
     {
@@ -20,6 +23,12 @@ export default async function handler(req, res) {
         _id: '$date',
         count: { $sum: 1 },
         success: { $sum: { $cond: ['$success', 1, 0] } },
+        apiCount: { $sum: { $cond: ['$isApiSwap', 1, 0] } },
+        apiSuccess: { $sum: { $cond: [{ $and: ['$isApiSwap', '$success'] }, 1, 0] } },
+        m2Count: { $sum: { $cond: ['$isM2Swap', 1, 0] } },
+        m2Success: { $sum: { $cond: [{ $and: ['$isM2Swap', '$success'] }, 1, 0] } },
+        a2Count: { $sum: { $cond: ['$isA2Swap', 1, 0] } },
+        a2Success: { $sum: { $cond: [{ $and: ['$isA2Swap', '$success'] }, 1, 0] } },
         volume: { $sum: { $cond: ['$success', '$amount', 0] } },
         srFee: { $sum: { $cond: ['$success', '$srFee', 0] } },
         lpFee: { $sum: { $cond: ['$success', '$lpFee', 0] } },
@@ -31,6 +40,12 @@ export default async function handler(req, res) {
       $project: {
         count: '$count',
         success: '$success',
+        apiCount: '$apiCount',
+        apiSuccess: '$apiSuccess',
+        m2Count: '$m2Count',
+        m2Success: '$m2Success',
+        a2Count: '$a2Count',
+        a2Success: '$a2Success',
         volume: '$volume',
         srFee: '$srFee',
         lpFee: '$lpFee',

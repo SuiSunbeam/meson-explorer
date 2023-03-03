@@ -56,26 +56,33 @@ export default function StatsByChain() {
   } else if (!data) {
     body = <LoadingScreen />
   } else {
-    const total = data.reduce(({ count, volume, srFee, lpFee, success }, row) => ({
+    const total = data.reduce(({ count, success, apiCount, apiSuccess, m2Count, m2Success, a2Count, a2Success, srFee, lpFee }, row) => ({
       count: row.count + count,
-      volume: row.volume + volume,
+      success: row.success + success,
+      apiCount: row.apiCount + apiCount,
+      apiSuccess: row.apiSuccess + apiSuccess,
+      m2Count: row.m2Count + m2Count,
+      m2Success: row.m2Success + m2Success,
+      a2Count: row.a2Count + a2Count,
+      a2Success: row.a2Success + a2Success,
       srFee: row.srFee + srFee,
       lpFee: row.lpFee + lpFee,
-      success: row.success + success,
       duration: 0
-    }), { count: 0, volume: 0, srFee: 0, lpFee: 0, success: 0, duration: 0 })
+    }), { count: 0, success: 0, apiCount: 0, apiSuccess: 0, m2Count: 0, m2Success: 0, a2Count: 0, a2Success: 0, srFee: 0, lpFee: 0, duration: 0 })
     body = (
       <Table
         size='lg'
         headers={[
-          { name: 'Date', width: '15%' },
-          { name: '# success / #  total', width: '20%' },
-          { name: 'Addrs', width: '10%' },
-          { name: 'Volume', width: '15%' },
-          { name: 'Service Fee', width: '10%' },
-          { name: 'LP Fee', width: '10%' },
-          { name: 'Avg. Swap Amount', width: '10%' },
-          { name: 'Avg. Duration', width: '10%' }
+          { name: 'Date', width: '10%' },
+          { name: '# success / total', width: '15%' },
+          { name: '# API swaps', width: '10%' },
+          { name: '# meson.to swaps', width: '10%' },
+          { name: '# alls.to swaps', width: '10%' },
+          { name: 'Volume', width: '12%' },
+          { name: 'Addrs', width: '8%' },
+          { name: 'Service | LP Fee', width: '10%' },
+          { name: 'Avg. Amount', width: '8%' },
+          { name: 'Avg. Dur.', width: '7%' }
         ]}
       >
         <StatTableRow _id='Total' {...total} />
@@ -127,20 +134,40 @@ export default function StatsByChain() {
   )
 }
 
-function StatTableRow({ _id: date, count, volume, srFee, lpFee, success, addresses, duration }) {
-  const vol = fmt.format(Math.floor(ethers.utils.formatUnits(volume, 6)))
-  const srFeeStr = fmt.format(Math.floor(ethers.utils.formatUnits(srFee || 0, 6)))
-  const lpFeeStr = fmt.format(Math.floor(ethers.utils.formatUnits(lpFee || 0, 6)))
-  const avgSwapAmount = success ? fmt.format(Math.floor(ethers.utils.formatUnits(Math.floor(volume / success), 6))) : '-'
+function formatFee (feeValue) {
+  const feeAmount = Math.floor(ethers.utils.formatUnits(feeValue || 0, 6))
+  if (feeAmount > 10000) {
+    return Math.floor(feeAmount / 1000) + 'k'
+  }
+  return fmt.format(feeAmount)
+}
+
+function SwapCount({ count, success }) {
+  if (!count) {
+    return null
+  }
+  const countStr = count > 10000 ? Math.floor(count / 1000) + 'k' : count
+  const successStr = success > 10000 ? Math.floor(success / 1000) + 'k' : success
+  return <>{successStr} <span className='text-gray-500'>/</span> {countStr} <span className='text-gray-500 text-sm'>({Math.floor(success / count * 1000) / 10}%)</span></>
+}
+
+function StatTableRow({ _id: date, count, success, apiCount, apiSuccess, m2Count, m2Success, a2Count, a2Success, volume, srFee, lpFee, addresses, duration }) {
+  const volumeStr = volume ? `$${fmt.format(Math.floor(ethers.utils.formatUnits(volume, 6)))}` : ''
+  const srFeeStr = formatFee(srFee)
+  const lpFeeStr = formatFee(lpFee)
+  const avgSwapAmount = (success && volume) ? `$${fmt.format(Math.floor(ethers.utils.formatUnits(Math.floor(volume / success), 6)))}` : ''
+
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td size='lg'>{date}</Td>
-      <Td>{success} / {count} <span className='text-gray-500 text-sm'>({Math.floor(success / count * 1000) / 10}%)</span></Td>
+      <Td><SwapCount count={count} success={success} /></Td>
+      <Td><SwapCount count={apiCount} success={apiSuccess} /></Td>
+      <Td><SwapCount count={m2Count} success={m2Success} /></Td>
+      <Td><SwapCount count={a2Count} success={a2Success} /></Td>
+      <Td>{volumeStr}</Td>
       <Td>{addresses}</Td>
-      <Td>${vol}</Td>
-      <Td>${srFeeStr}</Td>
-      <Td>${lpFeeStr}</Td>
-      <Td>${avgSwapAmount}</Td>
+      <Td>${srFeeStr} <span className='text-gray-500'>|</span> ${lpFeeStr}</Td>
+      <Td>{avgSwapAmount}</Td>
       <Td>{formatDuration(duration * 1000)}</Td>
     </tr>
   )
