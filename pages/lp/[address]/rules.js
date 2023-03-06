@@ -46,12 +46,13 @@ export default function SwapRuleList() {
   } else {
     body = (
       <Table size='lg' headers={[
-        { name: 'route / priority', width: '20%', className: 'pl-4 md:pl-6' },
-        { name: 'limit', width: '20%' },
-        { name: 'fee rule', width: '20%' },
-        { name: 'initiator', width: '30%' },
-        { name: 'mark', width: '30%' },
-        { name: 'edit', width: '10%', className: 'text-right' },
+        { name: 'route / prio', width: '10%', className: 'pl-4 md:pl-6' },
+        { name: 'limit', width: '8%' },
+        { name: 'fee rule', width: '10%' },
+        { name: '', width: '5%' },
+        { name: 'initiator', width: '55%' },
+        { name: 'mark', width: '8%' },
+        { name: 'edit', width: '4%', className: 'text-right' },
       ]}>
         {data.map((d, i) => <SwapRule key={i} d={d} onOpenModal={d => setModalData(d)} />)}
       </Table>
@@ -247,7 +248,8 @@ function SwapRule ({ d, onOpenModal }) {
       </Td>
       <Td size='sm'>{d.limit}</Td>
       <Td size='sm'>{d.fee?.map((item, i) => <FeeRule key={i} {...item} />)}</Td>
-      <Td size='sm'>{d.initiator}</Td>
+      <Td></Td>
+      <Td size='sm' wrap><span className='break-all'>{d.initiator}</span></Td>
       <Td size='sm'>{d.mark}</Td>
       <Td size='sm' className='text-right'>
         <Button rounded size='xs' color='info' onClick={() => onOpenModal(d)}>
@@ -279,7 +281,12 @@ function SwapRuleRouteKey ({ routeKey = '' }) {
 }
 
 function FeeRule ({ min, base, rate }) {
-  const range = <span className='inline-block w-8'>{min && `[>${min}]`}</span>
+  let minStr = min
+  if (min > 1000) {
+    minStr = (min / 1000) + 'k'
+  }
+
+  const range = <span className='inline-block w-12'>{min && `≥${minStr}`}</span>
 
   const rule = []
   if (base) {
@@ -292,6 +299,9 @@ function FeeRule ({ min, base, rate }) {
     rule.push('0')
   }
   return (
-    <div>{range}{rule.join(' + ')}</div>
+    <div className='flex justify-between'>
+      <div>{range}</div>
+      <div>{rule.join(' + ')}</div>
+    </div>
   )
 }
