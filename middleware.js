@@ -42,7 +42,11 @@ const getPageAccessRoles = pathname => {
 
 export const middleware = withAuth(
   async function middleware(req) {
-    if (NODE_ENV === 'production' && req.headers.get('x-forwarded-proto') !== 'https') {
+    if (NODE_ENV !== 'production') {
+      return
+    }
+
+    if (req.headers.get('x-forwarded-proto') !== 'https') {
       return NextResponse.redirect(`https://${req.headers.get('host')}${req.nextUrl.pathname}`)
     }
 
