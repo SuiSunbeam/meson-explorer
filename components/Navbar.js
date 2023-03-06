@@ -122,7 +122,7 @@ function Profile ({ globalState, setGlobalState }) {
 
   React.useEffect(() => {
     extensions.bindEventHandlers(new ExtensionCallbacks(console, {
-      updateBrowserExt: async browserExt => setGlobalState(prev => ({ ...prev, browserExt })),
+      updateExtStatus: async browserExt => setGlobalState(prev => ({ ...prev, browserExt })),
       switchNetwork: networkId => setGlobalState(prev => ({ ...prev, networkId })),
     }))
   }, [setGlobalState])
