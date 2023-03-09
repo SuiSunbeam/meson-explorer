@@ -298,11 +298,11 @@ function SwapSaltBadges({ swap }) {
   }
   if (['d', '9'].includes(swap.salt[2])) {
     badges.push('API')
+  } else if (['6', '2'].includes(swap.salt[2])) {
+    badges.push('meson.to')
   } else if (['e', 'a'].includes(swap.salt[2])) {
     badges.push('meson.to')
-    if (['6', '2'].includes(swap.salt[2])) {
-      badges.push('alls.to')
-    }
+    badges.push('alls.to')
   }
   if (['f'].includes(swap.salt[4])) {
     badges.push('Cashback')
