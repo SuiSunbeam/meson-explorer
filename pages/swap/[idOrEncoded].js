@@ -137,6 +137,7 @@ function CorrectSwap({ data: raw }) {
         <ListRow title='Encoded As'>
           <div className='break-all'>{data.encoded}</div>
           {!swap.version && <div className='text-sm text-gray-500'>v0 encoding</div>}
+          {authorized && <SwapSaltBadges swap={swap} />}
         </ListRow>
         <ListRow title='From'>
           <TagNetwork network={from.network} address={fromAddress} />
@@ -283,6 +284,32 @@ function SwapActionButton({ data, swap, status, from, to }) {
   return (
     <div className='flex flex-row gap-1'>
       {actionButton}
+    </div>
+  )
+}
+
+function SwapSaltBadges({ swap }) {
+  const badges = []
+  if (swap.willWaiveFee) {
+    badges.push('No Service Fee')
+  }
+  if (['8'].includes(swap.salt[3])) {
+    badges.push('Non-typed Signing')
+  }
+  if (['d', '9'].includes(swap.salt[2])) {
+    badges.push('API')
+  } else if (['e', 'a'].includes(swap.salt[2])) {
+    badges.push('meson.to')
+    if (['6', '2'].includes(swap.salt[2])) {
+      badges.push('alls.to')
+    }
+  }
+  if (['f'].includes(swap.salt[4])) {
+    badges.push('Cashback')
+  }
+  return (
+    <div className='flex gap-1'>
+      {badges.map((text, i) => <Badge key={`badge-${i}`} type='info'>{text}</Badge>)}
     </div>
   )
 }
