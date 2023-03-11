@@ -28,6 +28,7 @@ const tokens = [
   { id: 'USDC', name: 'USDC', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'USDC' }} /> },
   { id: 'USDT', name: 'USDT', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'USDT' }} /> },
   { id: 'BUSD', name: 'BUSD', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'BUSD' }} /> },
+  { id: 'PoD', name: 'PoD', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'PoD' }} /> },
   { id: 'UCT', name: 'UCT', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'UCT' }} /> }
 ]
 
