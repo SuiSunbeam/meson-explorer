@@ -263,7 +263,9 @@ function TokenAmount ({ mesonClient, address, token, explorer, add }) {
       .catch(() => {})
       .then(v => {
         if (v) {
-          add.toDeposit(v)
+          if (token.tokenIndex !== 32) {
+            add.toDeposit(v)
+          }
           setDeposit(ethers.utils.formatUnits(v, 6))
         }
       })
@@ -272,7 +274,9 @@ function TokenAmount ({ mesonClient, address, token, explorer, add }) {
       .catch(() => {})
       .then(v => {
         if (v) {
-          add.toBalance(v.div(10 ** (token.decimals - 6)))
+          if (token.tokenIndex !== 32) {
+            add.toBalance(v.div(10 ** (token.decimals - 6)))
+          }
           setBalance(ethers.utils.formatUnits(v, token.decimals))
         }
       })
