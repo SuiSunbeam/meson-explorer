@@ -246,6 +246,19 @@ function Profile ({ globalState, setGlobalState }) {
             </div>
           }
           {
+            isRoot &&
+            <div className='py-1'>
+              <Menu.Item>
+                <div
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => router.push('/pending/bonded')}
+                >
+                  Pending Swaps
+                </div>
+              </Menu.Item>
+            </div>
+          }
+          {
             (isRoot || isAdmin || isOperator) &&
             <div className='py-1'>
               <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
@@ -316,48 +329,6 @@ function Profile ({ globalState, setGlobalState }) {
                 </div>
               </Menu.Item>
             </div>
-          }
-          {
-            isRoot &&
-            <>
-              <div className='py-1'>
-                <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
-                  Pendings
-                </div>
-                <Menu.Item>
-                  <div
-                    className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                    onClick={() => router.push('/pending/bonded')}
-                  >
-                    Bonded
-                  </div>
-                </Menu.Item>
-                <Menu.Item>
-                  <div
-                    className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                    onClick={() => router.push('/pending/locked')}
-                  >
-                    Locked
-                  </div>
-                </Menu.Item>
-                <Menu.Item>
-                  <div
-                    className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                    onClick={() => router.push('/pending/conflict')}
-                  >
-                    Conflict
-                  </div>
-                </Menu.Item>
-                <Menu.Item>
-                  <div
-                    className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                    onClick={() => router.push('/pending/double')}
-                  >
-                    Double
-                  </div>
-                </Menu.Item>
-              </div>
-            </>
           }
         </Menu.Items>
       </Float>

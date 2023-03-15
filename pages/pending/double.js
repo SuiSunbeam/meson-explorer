@@ -1,13 +1,22 @@
 import React from 'react'
+import { useRouter } from 'next/router'
 
 import PagiCard from 'components/Pagi/PagiCard'
 import SwapRow from 'components/SwapRow'
 
 export default function DoubleReleaseList() {
+  const router = useRouter()
+
   return (
     <PagiCard
       title='Double Release'
       subtitle='Swaps that were released more than once'
+      tabs={[
+        { key: 'bonded', name: 'Bonded', onClick: () => router.push('/pending/bonded') },
+        { key: 'locked', name: 'Locked', onClick: () => router.push('/pending/locked') },
+        { key: 'conflict', name: 'Conflict', onClick: () => router.push('/pending/conflict') },
+        { key: 'double', name: 'Double', active: true }
+      ]}
       queryUrl='swap/double'
       fallback='/pending/double'
       tableHeaders={[
