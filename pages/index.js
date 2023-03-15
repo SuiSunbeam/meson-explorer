@@ -4,9 +4,7 @@ import { useRouter } from 'next/router'
 import { SearchIcon } from '@heroicons/react/outline'
 import { ethers } from 'ethers'
 
-import Card from 'components/Card'
-import PagiList from 'components/Pagi/PagiList'
-import Table from 'components/Table'
+import PagiCard from 'components/Pagi/PagiCard'
 import SwapRow from 'components/SwapRow'
 
 export default function SwapList() {
@@ -15,6 +13,14 @@ export default function SwapList() {
   const authorized = session?.user?.roles?.some(r => ['root', 'admin'].includes(r))
 
   const [search, setSearchValue] = React.useState('')
+
+  const { filter } = router.query
+  const tabs = !authorized ? undefined : [
+    { key: 'all', name: 'All', active: !filter, onClick: () => router.push('') },
+    { key: 'api', name: 'API', active: filter === 'api', onClick: () => router.push({ query: { filter: 'api' } }) },
+    { key: 'api', name: 'meson.to', active: filter === 'meson.to', onClick: () => router.push({ query: { filter: 'meson.to' } }) },
+  ]
+  const queryUrl = filter ? `swap?filter=${filter}` : 'swap'
 
   return (
     <div>
@@ -48,27 +54,25 @@ export default function SwapList() {
           </form>
         </div>
       </div>
-      <Card>
-        <PagiList
-          queryUrl='swap'
-          fallback='/'
-          isValid={page => page >= 10 && !authorized}
-          maxPage={authorized ? 0 : 10}
-        >
-          <Table headers={[
-            { name: 'swap id / time', width: '18%', className: 'pl-3 md:pl-4 hidden sm:table-cell' },
-            { name: 'swap id', width: '18%', className: 'pl-3 sm:hidden' },
-            { name: 'status', width: '10%', className: 'hidden sm:table-cell' },
-            { name: 'from', width: '18%' },
-            { name: 'to', width: '18%' },
-            { name: 'amount', width: '18%' },
-            { name: 'fee', width: '9%', className: 'hidden md:table-cell' },
-            { name: 'duration', width: '9%', className: 'hidden lg:table-cell' }
-          ]}>
-            {list => list.map(row => <SwapRow key={row._id} smMargin data={row} />)}
-          </Table>
-        </PagiList>
-      </Card>
+      <PagiCard
+        title='Latest Swaps'
+        tabs={tabs}
+        queryUrl={queryUrl}
+        fallback='/'
+        isValid={page => page >= 10 && !authorized}
+        maxPage={authorized ? 0 : 10}
+        tableHeaders={[
+          { name: 'swap id / time', width: '18%', className: 'hidden sm:table-cell' },
+          { name: 'swap id', width: '18%', className: 'pl-4 sm:hidden' },
+          { name: 'status', width: '10%', className: 'hidden sm:table-cell' },
+          { name: 'from', width: '18%' },
+          { name: 'to', width: '18%' },
+          { name: 'amount', width: '18%' },
+          { name: 'fee', width: '9%', className: 'hidden md:table-cell' },
+          { name: 'duration', width: '9%', className: 'hidden lg:table-cell' }
+        ]}
+        Row={SwapRow}
+      />
     </div>
   )
 }

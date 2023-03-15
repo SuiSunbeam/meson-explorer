@@ -24,7 +24,7 @@ export default function PagiList({ queryUrl, fallback, redirectFallback = () => 
     if (page * 10 > total) {
       router.replace('/')
     }
-    const onPageChange = page => router.push(`${fallback}?page=${page + 1}`)
+    const onPageChange = page => router.push({ query: { ...router.query, page: page + 1 } })
 
     return (
       <>
