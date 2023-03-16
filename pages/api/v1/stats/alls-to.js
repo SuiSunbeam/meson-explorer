@@ -1,7 +1,7 @@
 import { AllsTo } from 'lib/db'
 
 export default async function handler(req, res) {
-  const result = await AllsTo.find({}).sort({ n: -1 }).select('addr key name avatar networkId tokens clicks')
+  const result = await AllsTo.find({}).sort({ clicks: -1 }).select('addr key did name avatar networkId tokens clicks')
 
   if (result) {
     res.json({ result })

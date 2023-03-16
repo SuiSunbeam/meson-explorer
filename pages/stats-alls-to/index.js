@@ -50,8 +50,7 @@ export default function AllsToStats() {
 }
 
 function StatAllsToRow ({ data }) {
-  const { addr, key = '', name, avatar, networkId, tokens, clicks } = data
-  const [handle, did] = key.split('#')
+  const { addr, key, did, name, avatar, networkId, tokens, clicks } = data
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td size='lg'>
@@ -67,10 +66,10 @@ function StatAllsToRow ({ data }) {
       </Td>
       <Td className={classnames(
         'text-sm font-mono hover:underline hover:text-primary',
-        handle ? '' : 'text-gray-500'
+        key ? '' : 'text-gray-500'
       )}>
-        <a href={`https://alls.to/${handle || addr.substring(0, 12)}`} target='_blank' rel='noreferrer'>
-          {handle || addr.substring(0, 12)}
+        <a href={`https://alls.to/${key || addr.substring(0, 12)}`} target='_blank' rel='noreferrer'>
+          {key || addr.substring(0, 12)}
         </a>
       </Td>
       <Td className='text-sm'>{did}</Td>
