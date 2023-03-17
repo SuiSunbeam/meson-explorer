@@ -6,45 +6,36 @@ import useSWR from 'swr'
 import fetcher from 'lib/fetcher'
 import { abbreviate } from 'lib/swap'
 
-import Card, { CardTitle, CardBody, StatCard } from 'components/Card'
-import LoadingScreen from 'components/LoadingScreen'
-import Table, { Td } from 'components/Table'
+import { StatCard } from 'components/Card'
+import PagiCard from 'components/Pagi/PagiCard'
+import { Td } from 'components/Table'
 import TagNetwork from 'components/TagNetwork'
 import TagNetworkToken from 'components/TagNetworkToken'
 
 export default function AllsToStats() {
-  const { data, error } = useSWR(`stats/alls-to`, fetcher)
-
-  let body
-  if (error) {
-    body = <div className='py-6 px-4 sm:px-6 text-red-400'>{error.message}</div>
-  } else if (!data) {
-    body = <LoadingScreen />
-  } else {
-    body = (
-      <Table size='lg' headers={[
-        { name: 'recipient', width: '50%' },
-        { name: 'link', width: '20%' },
-        { name: 'did', width: '10%' },
-        { name: 'clicks', width: '10%' },
-        { name: 'will receive', width: '10%' },
-      ]}>
-        {data.map((row, index) => <StatAllsToRow key={`stat-table-row-${index}`} data={row} />)}
-      </Table>
-    )
-  }
+  const { data: generalData } = useSWR(`stats/alls-to/general`, fetcher)
 
   return (
     <>
       <div className='grid md:grid-cols-4 grid-cols-2 md:gap-5 gap-3 md:mb-5 mb-3'>
-        <StatCard title='# of Links' value={data?.length} />
+        <StatCard title='# of Links' value={generalData?.count} />
+        <StatCard title='# of Link3' value={generalData?.link3} />
+        <StatCard title='# of .bit' value={generalData?.dotbit} />
       </div>
-    <Card>
-      <CardTitle title='Stats for AllsTo' />
-      <CardBody>
-        {body}
-      </CardBody>
-    </Card>
+      <PagiCard
+        title='AllsTo Links'
+        queryUrl='stats/alls-to'
+        fallback='/stats-alls-to'
+        pageSize={100}
+        tableHeaders={[
+          { name: 'recipient', width: '50%' },
+          { name: 'link', width: '20%' },
+          { name: 'did', width: '10%' },
+          { name: 'clicks', width: '10%' },
+          { name: 'will receive', width: '10%' }
+        ]}
+        Row={StatAllsToRow}
+      />
     </>
   )
 }

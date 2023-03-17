@@ -7,9 +7,9 @@ import LoadingScreen from 'components/LoadingScreen'
 
 import Pagination from './Pagination'
 
-export default function PagiList({ queryUrl, fallback, redirectFallback = () => false, maxPage, children }) {
+export default function PagiList({ queryUrl, fallback, redirectFallback = () => false, pageSize = 10, maxPage, children }) {
   const router = useRouter()
-  const { data, error, page } = usePagination(queryUrl, router.query.page)
+  const { data, error, page } = usePagination(queryUrl, router.query.page, pageSize)
 
   if (Number.isNaN(page) || redirectFallback(error, page)) {
     router.replace(fallback)
@@ -21,7 +21,7 @@ export default function PagiList({ queryUrl, fallback, redirectFallback = () => 
     return <LoadingScreen />
   } else {
     const { total, list } = data
-    if (page * 10 > total) {
+    if (page * pageSize > total) {
       router.replace('/')
     }
     const onPageChange = page => router.push({ query: { ...router.query, page: page + 1 } })
@@ -29,7 +29,7 @@ export default function PagiList({ queryUrl, fallback, redirectFallback = () => 
     return (
       <>
         {React.cloneElement(children, { list })}
-        <Pagination size={10} page={page} total={total} maxPage={maxPage} onPageChange={onPageChange} />
+        <Pagination size={pageSize} page={page} total={total} maxPage={maxPage} onPageChange={onPageChange} />
       </>
     )
   }
