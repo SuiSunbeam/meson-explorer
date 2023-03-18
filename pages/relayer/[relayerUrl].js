@@ -1,6 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
+import { utils } from 'ethers'
 
 import Card, { CardTitle, CardBody } from 'components/Card'
 import LoadingScreen from 'components/LoadingScreen'
@@ -50,7 +51,9 @@ function RelayerStatus ({ relayerUrl }) {
         headers={[
           { name: 'Network', width: '10%' },
           { name: 'Node Url', width: '30%' },
-          { name: 'Details', width: '60%' },
+          { name: 'Status (latency)', width: '20%' },
+          { name: 'Blocks', width: '20%' },
+          { name: 'Gas Price', width: '20%' },
         ]}
       >
         {data.map((row, index) => <RelayerStatusRow key={`row-${index}`} {...row} />)}
@@ -59,10 +62,12 @@ function RelayerStatus ({ relayerUrl }) {
   }
 }
 
-function RelayerStatusRow ({ networkId, success, url, latency, block, error }) {
+const fmt = Intl.NumberFormat()
+
+function RelayerStatusRow ({ networkId, url, ...details }) {
   const network = presets.getNetwork(networkId)
   return (
-    <tr className='odd:bg-white even:bg-gray-50'>
+    <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1 text-sm'>
         <div className='flex'>
           <TagNetwork size='sm' network={network} iconOnly className='mr-1' />
@@ -74,14 +79,25 @@ function RelayerStatusRow ({ networkId, success, url, latency, block, error }) {
           <div className=''>{url}</div>
         </div>
       </Td>
-      <Td size='sm' wrap>
-      {success ? '🟢 ' : '🔴 '}
-      {
-        success
-          ? `${block} / ${latency}ms`
-          : <span>{error}</span>
-      }
-      </Td>
+      <TdRelayerDetails {...details} />
     </tr>
+  )
+}
+
+function TdRelayerDetails ({ success, latency, block, gasPrice, error }) {
+  if (!success) {
+    return (
+      <Td size='sm' colSpan={3} wrap>
+        🔴 <span>{error}</span>
+      </Td>
+    )
+  }
+  
+  return (
+    <>
+      <Td size='sm'>🟢 {latency} ms</Td>
+      <Td size='sm'>{fmt.format(block)}</Td>
+      <Td size='sm'>{gasPrice && `${fmt.format(utils.formatUnits(gasPrice, 9))} Gwei`}</Td>
+    </>
   )
 }

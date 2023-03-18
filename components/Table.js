@@ -36,9 +36,9 @@ export function Th({ size = 'md', width, className, children }) {
   )
 }
 
-export function Td({ className, size = 'md', wrap, children }) {
+export function Td({ colSpan, className, size = 'md', wrap, children }) {
   return (
-    <td className={classnames(
+    <td colSpan={colSpan} className={classnames(
       !wrap && 'whitespace-nowrap',
       size === 'lg' && 'pl-4 pr-3 sm:pl-6 py-2',
       size === 'md' && 'px-2 md:px-3 sm:py-4 py-2',
