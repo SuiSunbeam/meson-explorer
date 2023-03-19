@@ -48,11 +48,13 @@ export default function SwapRuleList() {
     body = (
       <Table size='lg' headers={[
         { name: 'route / prio', width: '10%', className: 'pl-4 md:pl-6' },
-        { name: 'limit', width: '8%' },
-        { name: 'fee rule', width: '10%' },
-        { name: '', width: '5%' },
-        { name: 'initiator', width: '55%' },
+        { name: 'limit', width: '7%' },
+        { name: 'factor', width: '7%' },
+        { name: 'fee rule', width: '8%' },
+        { name: '', width: '2%' },
+        { name: 'initiator', width: '50%' },
         { name: 'mark', width: '8%' },
+        { name: 'premium', width: '4%' },
         { name: 'edit', width: '4%', className: 'text-right' },
       ]}>
         {data.map((d, i) => <SwapRule key={i} d={d} onOpenModal={d => setModalData(d)} />)}
@@ -91,6 +93,7 @@ function SwapRuleModal ({ data, onClose }) {
 
   const [priority, setPriority] = React.useState(0)
   const [limit, setLimit] = React.useState('')
+  const [factor, setFactor] = React.useState('')
   const [initiator, setInitiator] = React.useState('')
   const [mark, setMark] = React.useState('')
   const [fee, setFee] = React.useState('')
@@ -105,6 +108,7 @@ function SwapRuleModal ({ data, onClose }) {
       setToToken(toToken)
       setPriority(data.priority || 0)
       setLimit(typeof data.limit === 'number' ? data.limit : '')
+      setFactor(typeof data.factor === 'number' ? data.factor : '')
       setInitiator(data.initiator || '')
       setMark(data.mark || '')
       setFee(JSON.stringify(data.fee, null, 2) || '[\n]')
@@ -117,6 +121,7 @@ function SwapRuleModal ({ data, onClose }) {
       to: toToken === '*' ? toChain : `${toChain}:${toToken}`,
       priority,
       limit,
+      factor,
       initiator,
       mark,
       fee: JSON.parse(fee)
@@ -187,7 +192,7 @@ function SwapRuleModal ({ data, onClose }) {
         </div>
 
         <Input
-          className='col-span-3'
+          className='col-span-6'
           id='priority'
           label='Priority'
           type='number'
@@ -201,6 +206,14 @@ function SwapRuleModal ({ data, onClose }) {
           type='number'
           value={limit}
           onChange={setLimit}
+        />
+        <Input
+          className='col-span-3'
+          id='factor'
+          label='Factor'
+          type='number'
+          value={factor}
+          onChange={setFactor}
         />
         <Input
           className='col-span-6'
@@ -248,10 +261,12 @@ function SwapRule ({ d, onOpenModal }) {
         </div>
       </Td>
       <Td size='sm'>{d.limit}</Td>
+      <Td size='sm'>{d.factor}</Td>
       <Td size='sm'>{d.fee?.map((item, i) => <FeeRule key={i} {...item} />)}</Td>
       <Td></Td>
       <Td size='sm' wrap><span className='break-all'>{d.initiator}</span></Td>
       <Td size='sm'>{d.mark}</Td>
+      <Td size='sm'>{d.premium ? 'XX' : ''}</Td>
       <Td size='sm' className='text-right'>
         <Button rounded size='xs' color='info' onClick={() => onOpenModal(d)}>
           <PencilIcon className='w-4 h-4' aria-hidden='true' />
