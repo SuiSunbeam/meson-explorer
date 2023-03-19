@@ -70,7 +70,9 @@ export default function LpPage() {
         subtitle={address}
         tabs={[
           { key: 'liquidity', name: 'Liquidity', active: true },
-          { key: 'rules', name: 'Swap Rules', onClick: () => router.push(`/lp/${address}/rules`) }
+          { key: 'rules-gas', name: 'Rules (Gas)', onClick: () => router.push(`/lp/${address}/rules-gas`) },
+          { key: 'rules-token', name: 'Rules (Token)', onClick: () => router.push(`/lp/${address}/rules-token`) },
+          { key: 'rules-address', name: 'Rules (Address)', onClick: () => router.push(`/lp/${address}/rules-address`) }
         ]}
         right={
           <div className='flex gap-1'>

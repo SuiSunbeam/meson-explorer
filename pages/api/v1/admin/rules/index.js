@@ -2,7 +2,12 @@ import { Rules } from 'lib/db'
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
-    const result = await Rules.find().sort({ priority: -1 }).exec()
+    const type = req.query.type
+    const query = {}
+    if (type) {
+      query.type = type
+    }
+    const result = await Rules.find(query).sort({ priority: -1 }).exec()
     if (result) {
       res.json({ result })
     } else {

@@ -1,4 +1,5 @@
 module.exports = {
+  pageExtensions: ['js', 'ts'],
   reactStrictMode: true,
   poweredByHeader: false,
   async headers() {

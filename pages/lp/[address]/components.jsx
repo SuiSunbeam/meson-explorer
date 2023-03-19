@@ -1,17 +1,12 @@
 import React from 'react'
 import { PencilIcon } from '@heroicons/react/solid'
 
-import { useRouter } from 'next/router'
-import useSWR from 'swr'
-
 import { ethers } from 'ethers'
 
-import LoadingScreen from 'components/LoadingScreen'
-import Card, { CardTitle, CardBody } from 'components/Card'
 import Modal from 'components/Modal'
 import Input from 'components/Input'
 import Select from 'components/Select'
-import Table, { Td } from 'components/Table'
+import { Td } from 'components/Table'
 import Button from 'components/Button'
 import TagNetwork from 'components/TagNetwork'
 import TagNetworkToken from 'components/TagNetworkToken'
@@ -32,60 +27,7 @@ const tokens = [
   { id: 'UCT', name: 'UCT', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'UCT' }} /> }
 ]
 
-export default function SwapRuleList() {
-  const router = useRouter()
-  const { address } = router.query
-
-  const { data, error, mutate } = useSWR('admin/rules', fetcher)
-  const [modalData, setModalData] = React.useState()
-
-  let body = null
-  if (error) {
-    body = <div className='py-6 px-4 sm:px-6 text-red-400'>{error.message}</div>
-  } else if (!data) {
-    body = <LoadingScreen />
-  } else {
-    body = (
-      <Table size='lg' headers={[
-        { name: 'route / prio', width: '10%', className: 'pl-4 md:pl-6' },
-        { name: 'limit', width: '7%' },
-        { name: 'factor', width: '7%' },
-        { name: 'fee rule', width: '8%' },
-        { name: '', width: '2%' },
-        { name: 'initiator', width: '50%' },
-        { name: 'mark', width: '8%' },
-        { name: 'premium', width: '4%' },
-        { name: 'edit', width: '4%', className: 'text-right' },
-      ]}>
-        {data.map((d, i) => <SwapRule key={i} d={d} onOpenModal={d => setModalData(d)} />)}
-      </Table>
-    )
-  }
-
-  return (
-    <Card>
-      <CardTitle
-        title='LP'
-        subtitle={address}
-        right={<Button size='sm' color='primary' rounded onClick={() => setModalData({})}>New Swap Rule</Button>}
-        tabs={[
-          { key: 'liquidity', name: 'Liquidity', onClick: () => router.push(`/lp/${address}`) },
-          { key: 'rules', name: 'Swap Rules', active: true }
-        ]}
-      />
-      <CardBody>{body}</CardBody>
-      <SwapRuleModal
-        data={modalData}
-        onClose={refresh => {
-          setModalData()
-          refresh && mutate()
-        }}
-      />
-    </Card>
-  )
-}
-
-function SwapRuleModal ({ data, onClose }) {
+export function SwapRuleModal ({ hides, type, data, onClose }) {
   const [fromChain, setFromChain] = React.useState('*')
   const [fromToken, setFromToken] = React.useState('*')
   const [toChain, setToChain] = React.useState('*')
@@ -117,6 +59,7 @@ function SwapRuleModal ({ data, onClose }) {
 
   const onSave = async () => {
     const newData = {
+      type,
       from: fromToken === '*' ? fromChain : `${fromChain}:${fromToken}`,
       to: toToken === '*' ? toChain : `${toChain}:${toToken}`,
       priority,
@@ -207,29 +150,38 @@ function SwapRuleModal ({ data, onClose }) {
           value={limit}
           onChange={setLimit}
         />
-        <Input
-          className='col-span-3'
-          id='factor'
-          label='Factor'
-          type='number'
-          value={factor}
-          onChange={setFactor}
-        />
-        <Input
-          className='col-span-6'
-          id='initiator'
-          label='Initiator'
-          value={initiator}
-          onChange={setInitiator}
-        />
-        <Input
-          className='col-span-6'
-          id='rules'
-          label='Fee Rules'
-          type='textarea'
-          value={fee}
-          onChange={setFee}
-        />
+        {
+          !hides.includes('factor') &&
+          <Input
+            className='col-span-3'
+            id='factor'
+            label='Factor'
+            type='number'
+            value={factor}
+            onChange={setFactor}
+          />
+        }
+        {
+          !hides.includes('initiator') &&
+          <Input
+            className='col-span-6'
+            id='initiator'
+            label='Initiator'
+            value={initiator}
+            onChange={setInitiator}
+          />
+        }
+        {
+          !hides.includes('rules') &&
+          <Input
+            className='col-span-6'
+            id='rules'
+            label='Fee Rules'
+            type='textarea'
+            value={fee}
+            onChange={setFee}
+          />
+        }
         <Input
           className='col-span-6'
           id='mark'
@@ -247,7 +199,9 @@ function SwapRuleModal ({ data, onClose }) {
   )
 }
 
-function SwapRule ({ d, onOpenModal }) {
+const fmt = Intl.NumberFormat()
+
+export function RowSwapRule ({ d, onOpenModal, hides = [] }) {
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1'>
@@ -260,13 +214,18 @@ function SwapRule ({ d, onOpenModal }) {
           #{d.priority}
         </div>
       </Td>
-      <Td size='sm'>{d.limit}</Td>
-      <Td size='sm'>{d.factor}</Td>
-      <Td size='sm'>{d.fee?.map((item, i) => <FeeRule key={i} {...item} />)}</Td>
-      <Td></Td>
-      <Td size='sm' wrap><span className='break-all'>{d.initiator}</span></Td>
+      <Td size='sm'>{d.limit && fmt.format(d.limit)}</Td>
+      {!hides.includes('factor') && <Td size='sm'>{d.factor}</Td>}
+      {
+        !hides.includes('rules') &&
+        <>
+          <Td size='sm'>{d.fee?.map((item, i) => <FeeRule key={i} {...item} />)}</Td>
+          <Td></Td>
+        </>
+      }
+      {!hides.includes('initiator') && <Td size='sm' wrap><span className='break-all'>{d.initiator}</span></Td>}
+      {!hides.includes('premium') && <Td size='sm'>{d.premium ? '✅' : ''}</Td>}
       <Td size='sm'>{d.mark}</Td>
-      <Td size='sm'>{d.premium ? 'XX' : ''}</Td>
       <Td size='sm' className='text-right'>
         <Button rounded size='xs' color='info' onClick={() => onOpenModal(d)}>
           <PencilIcon className='w-4 h-4' aria-hidden='true' />
