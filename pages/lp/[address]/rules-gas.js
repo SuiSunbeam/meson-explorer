@@ -29,12 +29,25 @@ export default function RulesGas () {
     body = (
       <Table size='lg' headers={[
         { name: 'route / priority', width: '15%', className: 'pl-4 md:pl-6' },
-        { name: 'limit', width: '10%' },
+        { name: 'limit', width: '5%' },
         { name: 'fee rule', width: '10%' },
         { name: '', width: '5%' },
-        { name: 'gas fee = gas usage * gas price * token price', width: '40%' },
+        {
+          name: (
+            <div className='flex flex-row gap-2'>
+              <div className='flex-1 shrink-0'>gas fee</div>
+              <div>=</div>
+              <div className='flex-[1.2] shrink-0'>gas usage</div>
+              <div>*</div>
+              <div className='flex-[1.4] shrink-0'>gas price</div>
+              <div>*</div>
+              <div className='flex-[1.4] shrink-0'>token price</div>
+            </div>
+          ),
+          width: '50%'
+        },
         { name: 'premium', width: '5%' },
-        { name: 'mark', width: '10%' },
+        { name: 'mark', width: '5%' },
         { name: 'edit', width: '5%', className: 'text-right' },
       ]}>
         {data.rules.filter(r => r.type === 'gas').map((d, i) => <RowSwapRule key={i} d={d} hides={hides} onOpenModal={d => setModalData(d)} />)}

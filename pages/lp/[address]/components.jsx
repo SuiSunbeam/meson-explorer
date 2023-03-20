@@ -209,6 +209,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
 }
 
 const fmt = Intl.NumberFormat()
+const fmt2 = Intl.NumberFormat('en', { maximumSignificantDigits: 4 })
 
 export function RowSwapRule ({ d, onOpenModal, hides = [] }) {
   return (
@@ -223,7 +224,7 @@ export function RowSwapRule ({ d, onOpenModal, hides = [] }) {
           #{d.priority}
         </div>
       </Td>
-      <Td size='sm'>{d.limit && fmt.format(d.limit)}</Td>
+      <Td size='sm'>{d.limit && `${fmt.format(d.limit / 1000)}k`}</Td>
       {!hides.includes('factor') && <Td size='sm'>{d.factor}</Td>}
       {
         !hides.includes('rules') &&
@@ -306,11 +307,11 @@ function GasCalculation ({ gas, core, gasPrice }) {
       <div className='flex flex-row gap-2'>
         <div className='flex-1 shrink-0'>${fmt.format(core * gas * gasPrice / 1e18)}</div>
         <div>=</div>
-        <div className='flex-1 shrink-0'>{fmt.format(gas / 1000)}k</div>
+        <div className='flex-[1.2] shrink-0'>{fmt.format(gas / 1000)}k</div>
         <div>*</div>
-        <div className='flex-[2] shrink-0'>{fmt.format(gasPrice / 1e9)} Gwei</div>
+        <div className='flex-[1.4] shrink-0'>{fmt2.format(gasPrice / 1e9)} Gwei</div>
         <div>*</div>
-        <div className='flex-1 shrink-0'>${core}</div>
+        <div className='flex-[1.4] shrink-0'>${core}</div>
       </div>
     )
   }
