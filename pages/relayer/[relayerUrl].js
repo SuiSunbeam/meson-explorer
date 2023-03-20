@@ -35,7 +35,7 @@ export default function RelayerPage() {
 }
 
 function RelayerStatus ({ relayerUrl }) {
-  const { data, error } = useSWR(`${relayerUrl}/status`, fetcher)
+  const { data, error } = useSWR(`${relayerUrl}/status`, fetcher, { refreshInterval: 5_000 })
 
   if (error) {
     return (
@@ -51,9 +51,10 @@ function RelayerStatus ({ relayerUrl }) {
         headers={[
           { name: 'Network', width: '10%' },
           { name: 'Node Url', width: '30%' },
-          { name: 'Status (latency)', width: '20%' },
-          { name: 'Blocks', width: '20%' },
-          { name: 'Gas Price', width: '20%' },
+          { name: 'Status (latency)', width: '15%' },
+          { name: 'Update', width: '15%' },
+          { name: 'Blocks', width: '15%' },
+          { name: 'Gas Price', width: '15%' },
         ]}
       >
         {data.map((row, index) => <RelayerStatusRow key={`row-${index}`} {...row} />)}
@@ -84,7 +85,17 @@ function RelayerStatusRow ({ networkId, url, ...details }) {
   )
 }
 
-function TdRelayerDetails ({ success, latency, block, gasPrice, error }) {
+function TdRelayerDetails ({ ts, success, latency, block, gasPrice, error }) {
+  const [now, setNow] = React.useState(Date.now())
+
+  React.useEffect(() => {
+    const h = setInterval(() => {
+      setNow(Date.now())
+    }, 1000)
+
+    return () => clearInterval(h)
+  }, [])
+
   if (!success) {
     return (
       <Td size='sm' colSpan={3} wrap>
@@ -96,6 +107,7 @@ function TdRelayerDetails ({ success, latency, block, gasPrice, error }) {
   return (
     <>
       <Td size='sm'>🟢 {latency} ms</Td>
+      <Td size='sm'>{Math.floor(now / 1000 - ts)} sec ago</Td>
       <Td size='sm'>{fmt.format(block)}</Td>
       <Td size='sm'>{gasPrice && `${fmt.format(utils.formatUnits(gasPrice, 9))} Gwei`}</Td>
     </>
