@@ -98,7 +98,7 @@ function TdRelayerDetails ({ ts, success, latency, block, gasPrice, error }) {
 
   if (!success) {
     return (
-      <Td size='sm' colSpan={3} wrap>
+      <Td size='sm' colSpan={4} wrap>
         🔴 <span>{error}</span>
       </Td>
     )
