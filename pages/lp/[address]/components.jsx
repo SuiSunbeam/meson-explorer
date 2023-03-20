@@ -20,6 +20,7 @@ const chains = [
 ]
 const tokens = [
   { id: '*', name: 'Any Token' },
+  { id: 'x', name: 'Different' },
   { id: 'USDC', name: 'USDC', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'USDC' }} /> },
   { id: 'USDT', name: 'USDT', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'USDT' }} /> },
   { id: 'BUSD', name: 'BUSD', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'BUSD' }} /> },
@@ -45,7 +46,11 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
       const [fromChain, fromToken = '*'] = (data.from || '').split(':')
       setFromChain(fromChain || '*')
       setFromToken(fromToken)
-      const [toChain, toToken = '*'] = (data.to || '').split(':')
+      let [toChain, toToken = '*'] = (data.to || '').split(':')
+      if (data.to === 'x') {
+        toChain = '*'
+        toToken = 'x'
+      }
       setToChain(toChain || '*')
       setToToken(toToken)
       setPriority(data.priority || 0)
@@ -61,7 +66,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
     const newData = {
       type,
       from: fromToken === '*' ? fromChain : `${fromChain}:${fromToken}`,
-      to: toToken === '*' ? toChain : `${toChain}:${toToken}`,
+      to: toToken === 'x' ? 'x' : toToken === '*' ? toChain : `${toChain}:${toToken}`,
       priority,
       limit,
       factor,
@@ -238,6 +243,9 @@ export function RowSwapRule ({ d, onOpenModal, hides = [] }) {
 function SwapRuleRouteKey ({ routeKey = '' }) {
   if (routeKey === '*') {
     return 'any'
+  }
+  if (routeKey === 'x') {
+    return 'different token'
   }
   const [n, t = '*'] = routeKey.split(':')
   if (n === '*') {
