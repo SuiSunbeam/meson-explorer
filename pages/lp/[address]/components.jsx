@@ -205,6 +205,20 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
 }
 
 const fmt = Intl.NumberFormat()
+const gasPrice = {
+  eth: 12e9,
+  bnb: 5e9,
+  polygon: 112e9,
+  arb: 0.1e9,
+  opt: 0.001e9,
+  avax: 25e9,
+  ftm: 50e9,
+  aurora: 0.07e9,
+  cfx: 20e9,
+  movr: 1e9,
+  cronos: 4800e9,
+  beam: 100e9,
+}
 
 export function RowSwapRule ({ d, onOpenModal, hides = [] }) {
   return (
@@ -224,7 +238,7 @@ export function RowSwapRule ({ d, onOpenModal, hides = [] }) {
       {
         !hides.includes('rules') &&
         <>
-          <Td size='sm'>{d.fee?.map((item, i) => <FeeRule key={i} {...item} />)}</Td>
+          <Td size='sm'>{d.fee?.map((item, i) => <FeeRule key={i} {...item} gasPrice={gasPrice[d.to]} />)}</Td>
           <Td></Td>
         </>
       }
@@ -263,7 +277,7 @@ function SwapRuleRouteKey ({ routeKey = '' }) {
   )
 }
 
-function FeeRule ({ min, base, rate }) {
+function FeeRule ({ min, base, rate, gas, core, gasPrice }) {
   let minStr = min
   if (min > 1000) {
     minStr = (min / 1000) + 'k'
@@ -274,6 +288,9 @@ function FeeRule ({ min, base, rate }) {
   const rule = []
   if (base) {
     rule.push(`$${ethers.utils.formatUnits(base, 6)}`)
+    if (gas && core) {
+      rule[0] += ` ($${core} * ${fmt.format(gas/1000)}k * ⛽️ ≈ $${fmt.format(core * gas * gasPrice / 1e18)})`
+    }
   }
   if (rate) {
     rule.push(`${rate/10000}%`)
