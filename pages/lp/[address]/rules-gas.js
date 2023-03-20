@@ -38,9 +38,9 @@ export default function RulesGas () {
               <div className='flex-1 shrink-0'>gas fee</div>
               <div>=</div>
               <div className='flex-[1.2] shrink-0'>gas usage</div>
-              <div>*</div>
+              <div>×</div>
               <div className='flex-[1.4] shrink-0'>gas price</div>
-              <div>*</div>
+              <div>×</div>
               <div className='flex-[1.4] shrink-0'>token price</div>
             </div>
           ),

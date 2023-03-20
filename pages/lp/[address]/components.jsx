@@ -308,9 +308,9 @@ function GasCalculation ({ gas, core, gasPrice }) {
         <div className='flex-1 shrink-0'>${fmt.format(core * gas * gasPrice / 1e18)}</div>
         <div>=</div>
         <div className='flex-[1.2] shrink-0'>{fmt.format(gas / 1000)}k</div>
-        <div>*</div>
+        <div>×</div>
         <div className='flex-[1.4] shrink-0'>{fmt2.format(gasPrice / 1e9)} Gwei</div>
-        <div>*</div>
+        <div>×</div>
         <div className='flex-[1.4] shrink-0'>${core}</div>
       </div>
     )
