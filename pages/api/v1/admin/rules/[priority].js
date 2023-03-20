@@ -19,10 +19,11 @@ export default async function handler(req, res) {
       res.status(400).json({ error: { code: -32602, message: 'Failed to modify rule' } })
     }
   } else if (req.method === 'DELETE') {
-    const result = await Rules.deleteOne({ priority })
-    if (result) {
+    try {
+      const result = await Rules.deleteOne({ priority })
       res.json({ result })
-    } else {
+    } catch (e) {
+      console.warn(e)
       res.status(400).json({ error: { code: -32602, message: 'Failed to delete rule' } })
     }
   } else {

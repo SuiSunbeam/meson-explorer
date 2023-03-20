@@ -88,7 +88,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
   }
 
   const onDelete = async () => {
-    await fetcher.delete(`admin/rules/${data._id}`)
+    await fetcher.delete(`admin/rules/${data.priority}`)
     onClose(true)
   }
 
