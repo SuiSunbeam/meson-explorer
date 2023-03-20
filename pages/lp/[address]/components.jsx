@@ -29,6 +29,8 @@ const tokens = [
 ]
 
 export function SwapRuleModal ({ hides, type, data, onClose }) {
+  const [create, setCreate] = React.useState(false)
+
   const [fromChain, setFromChain] = React.useState('*')
   const [fromToken, setFromToken] = React.useState('*')
   const [toChain, setToChain] = React.useState('*')
@@ -43,6 +45,8 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
 
   React.useEffect(() => {
     if (data) {
+      setCreate(!Object.keys(data).length)
+
       const [fromChain, fromToken = '*'] = (data.from || '').split(':')
       setFromChain(fromChain || '*')
       setFromToken(fromToken)
@@ -63,7 +67,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
   }, [data])
 
   const onSave = async () => {
-    const newData = {
+    const dataToSave = {
       type,
       from: fromToken === '*' ? fromChain : `${fromChain}:${fromToken}`,
       to: toToken === 'x' ? 'x' : toToken === '*' ? toChain : `${toChain}:${toToken}`,
@@ -75,10 +79,10 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
       fee: JSON.parse(fee)
     }
 
-    if (data._id) {
-      await fetcher.put(`admin/rules/${data._id}`, newData)
+    if (create) {
+      await fetcher.post(`admin/rules`, dataToSave)
     } else {
-      await fetcher.post(`admin/rules`, newData)
+      await fetcher.put(`admin/rules/${priority}`, dataToSave)
     }
     onClose(true)
   }
@@ -205,20 +209,6 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
 }
 
 const fmt = Intl.NumberFormat()
-const gasPrice = {
-  eth: 12e9,
-  bnb: 5e9,
-  polygon: 112e9,
-  arb: 0.1e9,
-  opt: 0.001e9,
-  avax: 25e9,
-  ftm: 50e9,
-  aurora: 0.07e9,
-  cfx: 20e9,
-  movr: 1e9,
-  cronos: 4800e9,
-  beam: 100e9,
-}
 
 export function RowSwapRule ({ d, onOpenModal, hides = [] }) {
   return (
@@ -238,9 +228,13 @@ export function RowSwapRule ({ d, onOpenModal, hides = [] }) {
       {
         !hides.includes('rules') &&
         <>
-          <Td size='sm'>{d.fee?.map((item, i) => <FeeRule key={i} {...item} gasPrice={gasPrice[d.to]} />)}</Td>
-          <Td></Td>
+          <Td size='sm'>{d.fee?.map((item, i) => <FeeRule key={i} {...item} />)}</Td>
+          <Td size='sm'></Td>
         </>
+      }
+      {
+        !hides.includes('gas') &&
+        <Td size='sm'>{d.fee?.map((item, i) => <GasCalculation key={i} {...item} gasPrice={d.gasPrice} />)}</Td>
       }
       {!hides.includes('initiator') && <Td size='sm' wrap><span className='break-all'>{d.initiator}</span></Td>}
       {!hides.includes('premium') && <Td size='sm'>{d.premium ? '✅' : ''}</Td>}
@@ -277,7 +271,7 @@ function SwapRuleRouteKey ({ routeKey = '' }) {
   )
 }
 
-function FeeRule ({ min, base, rate, gas, core, gasPrice }) {
+function FeeRule ({ min, base, gasFee, rate }) {
   let minStr = min
   if (min > 1000) {
     minStr = (min / 1000) + 'k'
@@ -288,9 +282,9 @@ function FeeRule ({ min, base, rate, gas, core, gasPrice }) {
   const rule = []
   if (base) {
     rule.push(`$${ethers.utils.formatUnits(base, 6)}`)
-    if (gas && core) {
-      rule[0] += ` ($${core} * ${fmt.format(gas/1000)}k * ⛽️ ≈ $${fmt.format(core * gas * gasPrice / 1e18)})`
-    }
+  }
+  if (gasFee) {
+    rule.push(`$${ethers.utils.formatUnits(gasFee, 6)}`)
   }
   if (rate) {
     rule.push(`${rate/10000}%`)
@@ -304,4 +298,21 @@ function FeeRule ({ min, base, rate, gas, core, gasPrice }) {
       <div>{rule.join(' + ')}</div>
     </div>
   )
+}
+
+function GasCalculation ({ gas, core, gasPrice }) {
+  if (gas && core && gasPrice) {
+    return (
+      <div className='flex flex-row gap-2'>
+        <div className='flex-1 shrink-0'>${fmt.format(core * gas * gasPrice / 1e18)}</div>
+        <div>=</div>
+        <div className='flex-1 shrink-0'>{fmt.format(gas / 1000)}k</div>
+        <div>*</div>
+        <div className='flex-[2] shrink-0'>{fmt.format(gasPrice / 1e9)} Gwei</div>
+        <div>*</div>
+        <div className='flex-1 shrink-0'>${core}</div>
+      </div>
+    )
+  }
+  return ''
 }

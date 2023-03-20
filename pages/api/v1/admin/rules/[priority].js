@@ -1,7 +1,7 @@
 import { Rules } from 'lib/db'
 
 export default async function handler(req, res) {
-  const id = req.query.id
+  const { priority } = req.query
   if (req.method === 'PUT') {
     const update = { $set: req.body }
     if (!req.body.limit && req.body.limit !== 0) {
@@ -12,14 +12,14 @@ export default async function handler(req, res) {
       delete update.$set.factor
       update.$unset = { factor: true }
     }
-    const result = await Rules.findByIdAndUpdate(id, update, { new: true })
+    const result = await Rules.findOneAndUpdate({ priority }, update, { new: true })
     if (result) {
       res.json({ result })
     } else {
       res.status(400).json({ error: { code: -32602, message: 'Failed to modify rule' } })
     }
   } else if (req.method === 'DELETE') {
-    const result = await Rules.deleteOne({ _id: id })
+    const result = await Rules.deleteOne({ priority })
     if (result) {
       res.json({ result })
     } else {

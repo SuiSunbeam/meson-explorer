@@ -17,7 +17,7 @@ export default function RulesGas () {
   const router = useRouter()
   const { address } = router.query
 
-  const { data, error, mutate } = useSWR('admin/rules?type=gas', fetcher)
+  const { data, error, mutate } = useSWR('https://relayer.meson.fi/api/v1/rules/0x666d6b8a44d226150ca9058beebafe0e3ac065a2', fetcher)
   const [modalData, setModalData] = React.useState()
 
   let body = null
@@ -28,15 +28,16 @@ export default function RulesGas () {
   } else {
     body = (
       <Table size='lg' headers={[
-        { name: 'route / priority', width: '20%', className: 'pl-4 md:pl-6' },
-        { name: 'limit', width: '20%' },
-        { name: 'fee rule', width: '15%' },
+        { name: 'route / priority', width: '15%', className: 'pl-4 md:pl-6' },
+        { name: 'limit', width: '10%' },
+        { name: 'fee rule', width: '10%' },
         { name: '', width: '5%' },
-        { name: 'premium', width: '10%' },
+        { name: 'gas fee = gas usage * gas price * token price', width: '40%' },
+        { name: 'premium', width: '5%' },
         { name: 'mark', width: '10%' },
-        { name: 'edit', width: '20%', className: 'text-right' },
+        { name: 'edit', width: '5%', className: 'text-right' },
       ]}>
-        {data.map((d, i) => <RowSwapRule key={i} d={d} hides={hides} onOpenModal={d => setModalData(d)} />)}
+        {data.rules.filter(r => r.type === 'gas').map((d, i) => <RowSwapRule key={i} d={d} hides={hides} onOpenModal={d => setModalData(d)} />)}
       </Table>
     )
   }
