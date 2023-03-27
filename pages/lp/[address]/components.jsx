@@ -235,7 +235,9 @@ export function RowSwapRule ({ d, onOpenModal, hides = [] }) {
       }
       {
         !hides.includes('gas') &&
-        <Td size='sm'>{d.fee?.map((item, i) => <GasCalculation key={i} {...item} gasPrice={d.gasPrice} />)}</Td>
+        <Td size='sm'>
+          {d.fee?.map((item, i) => <GasCalculation key={i} {...item} gasPrice={d.gasPrice} gasPriceL0={d.gasPriceL0} />)}
+        </Td>
       }
       {!hides.includes('initiator') && <Td size='sm' wrap><span className='break-all'>{d.initiator}</span></Td>}
       {!hides.includes('premium') && <Td size='sm'>{d.premium ? '✅' : ''}</Td>}
@@ -301,19 +303,43 @@ function FeeRule ({ min, base, gasFee, rate }) {
   )
 }
 
-function GasCalculation ({ gas, core, gasPrice }) {
-  if (gas && core && gasPrice) {
-    return (
-      <div className='flex flex-row gap-2'>
-        <div className='flex-1 shrink-0'>${fmt.format(core * gas * gasPrice / 1e18)}</div>
-        <div>=</div>
-        <div className='flex-[1.2] shrink-0'>{fmt.format(gas / 1000)}k</div>
-        <div>×</div>
-        <div className='flex-[1.4] shrink-0'>{fmt2.format(gasPrice / 1e9)} Gwei</div>
-        <div>×</div>
+function GasCalculation ({ gas, core, gasPrice, gasL0, gasPriceL0 }) {
+  if (!(gas && core && gasPrice)) {
+    return ''
+  }
+
+  let gasUsed = gas * gasPrice
+  if (gasL0 && gasPriceL0) {
+    gasUsed += gasL0 * gasPriceL0
+  }
+
+  return (
+    <div>
+      <div className='flex flex-row items-center gap-2'>
+        <div className='flex-1 shrink-0'>${fmt.format(core * gasUsed / 1e18)}</div>
+        <div className='text-xs text-gray-500'>=</div>
+        <div className='flex-[1.2] shrink-0 flex flex-row items-center'>
+          {gasL0 && gasPriceL0 && <div className='text-2xl font-extralight text-gray-300 mr-1'>(</div>}
+          <div>
+            <div>{fmt.format(gas / 1000)}k</div>
+            {gasL0 && gasPriceL0 && <div>{fmt.format(gasL0 / 1000)}k</div>}
+          </div>
+        </div>
+        <div>
+          <div className='text-xs leading-5 text-gray-500'>x</div>
+          {gasL0 && gasPriceL0 && <div className='text-xs leading-5 text-gray-500'>x</div>}
+        </div>
+        <div className='flex-[1.4] shrink-0 flex flex-row items-center'>
+          <div>
+            <div>{fmt2.format(gasPrice / 1e9)} Gwei</div>
+            {gasL0 && gasPriceL0 && <div>{fmt2.format(gasPriceL0 / 1e9)} Gwei</div>}
+          </div>
+          {gasL0 && gasPriceL0 && <div className='text-2xl font-extralight text-gray-300 ml-2'>)</div>}
+
+        </div>
+        <div className='text-xs text-gray-500'>×</div>
         <div className='flex-[1.4] shrink-0'>${core}</div>
       </div>
-    )
-  }
-  return ''
+    </div>
+  )
 }
