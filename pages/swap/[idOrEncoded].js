@@ -140,12 +140,12 @@ function CorrectSwap({ data: raw }) {
         </ListRow>
         <ListRow title='From'>
           <TagNetwork network={from.network} address={fromAddress} />
-          <div className='flex items-center text-normal truncate'>
+          <div className='flex items-center text-normal'>
             {
               data.fromContract && 
-              <DocumentTextIcon className='w-4 text-gray-500 mr-0.5' aria-hidden='true' />
+              <DocumentTextIcon className='w-4 shrink-0 text-gray-500 mr-0.5' aria-hidden='true' />
             }
-            <span className='hover:underline hover:text-primary'>
+            <span className='truncate hover:underline hover:text-primary'>
               <Link href={`/address/${fromAddress}`}>{fromAddress}</Link>
             </span>
           </div>
