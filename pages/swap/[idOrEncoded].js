@@ -6,6 +6,7 @@ import Link from 'next/link'
 import useSWR from 'swr'
 
 import { XCircleIcon } from '@heroicons/react/solid'
+import { DocumentTextIcon } from '@heroicons/react/outline'
 import { ethers } from 'ethers'
 
 import fetcher from 'lib/fetcher'
@@ -139,7 +140,11 @@ function CorrectSwap({ data: raw }) {
         </ListRow>
         <ListRow title='From'>
           <TagNetwork network={from.network} address={fromAddress} />
-          <div className='text-normal truncate'>
+          <div className='flex items-center text-normal truncate'>
+            {
+              data.fromContract && 
+              <DocumentTextIcon className='w-4 text-gray-500 mr-0.5' aria-hidden='true' />
+            }
             <span className='hover:underline hover:text-primary'>
               <Link href={`/address/${fromAddress}`}>{fromAddress}</Link>
             </span>
