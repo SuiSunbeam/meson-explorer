@@ -152,8 +152,12 @@ function CorrectSwap({ data: raw }) {
         </ListRow>
         <ListRow title='To'>
           <TagNetwork network={to.network} address={recipient} />
-          <div className='text-normal truncate'>
-            <span className='hover:underline hover:text-primary'>
+          <div className='flex items-center text-normal'>
+            {
+              ['6', '2'].includes(swap.salt[2]) && 
+              <DocumentTextIcon className='w-4 shrink-0 text-gray-500 mr-0.5' aria-hidden='true' />
+            }
+            <span className='truncate hover:underline hover:text-primary'>
               <Link href={`/address/${recipient}`}>{recipient}</Link>
             </span>
           </div>
