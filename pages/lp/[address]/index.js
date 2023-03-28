@@ -37,6 +37,7 @@ const CORE_ALERT = {
   one: 10,
   movr: 0.05,
   beam: 0.1,
+  zksync: 0.05,
 }
 
 export default function LpPage() {
