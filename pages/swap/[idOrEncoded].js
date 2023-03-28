@@ -87,9 +87,7 @@ function CorrectSwap({ data: raw }) {
         } else if (status === 'EXECUTED') {
           updates.executed = data.ts * 1000
         }
-        if (data.provider) {
-          updates.provider = data.provider
-        } else if (data.provider) {
+        if (data.recipient) {
           updates.fromTo = [prev.fromTo[0], data.recipient]
         }
       }
@@ -189,7 +187,6 @@ function CorrectSwap({ data: raw }) {
         <ListRow title='Requested at'>
           {new Date(data.created).toLocaleString()}
         </ListRow>
-        {data.provider && <ListRow title='Provider'><div className='truncate'>{data.provider}</div></ListRow>}
         <SwapTimes data={data} swap={swap} />
 
         <ListRow title='Process'>

@@ -54,9 +54,7 @@ export default function SwapRow({ data: raw, smMargin }) {
         } else if (status === 'EXECUTED') {
           updates.executed = data.ts * 1000
         }
-        if (data.provider) {
-          updates.provider = data.provider
-        } else if (data.provider) {
+        if (data.recipient) {
           updates.fromTo = [prev.fromTo[0], data.recipient]
         }
       }
