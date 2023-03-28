@@ -611,10 +611,10 @@
     eventemitter3 "^4.0.7"
     lodash "^4.17.21"
 
-"@mesonfi/presets@^1.7.0":
-  version "1.7.0"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.7.0/08b531aedde7ace071982b86e19badb79a4c6d51#08b531aedde7ace071982b86e19badb79a4c6d51"
-  integrity sha512-wdduKsGfTALEgBzlY2ORoSWXI+8uwcAzIVo77/gB0OZchqC2Q1rDQSzoqLOCPmRQMRtWWDA7N7XFrlR0wXrYkg==
+"@mesonfi/presets@^1.7.1":
+  version "1.7.1"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.7.1/880cf220ff273007a652b097aec58b53713bdbf1#880cf220ff273007a652b097aec58b53713bdbf1"
+  integrity sha512-BTcK2CN811IBUh/zvCL/cz93GU26vUtiJkoizTIW8mgDLR7R4Z2GouEq6pQPZGe0/Qsx9+xx6i5dmET/3lw/Aw==
   dependencies:
     "@mesonfi/contract-abis" "^1.7.0"
     "@mesonfi/sdk" "^1.7.0"
