@@ -342,7 +342,7 @@ function SwapStepInfo({ index, hash, recipient, name, fromAddress, from, to }) {
       <div className='truncate'>
         <ExternalLink
           size='sm'
-          href={getExplorerTxLink(([3, 4, 7].includes(index) ? to : from).network, hash)}
+          href={getExplorerTxLink(([3, 4, 8].includes(index) ? to : from).network, hash)}
         >
           {hash}
         </ExternalLink>
