@@ -325,9 +325,9 @@ function GasCalculation ({ gas, core, gasPrice, gasL0, gasPriceL0 }) {
             {gasL0 && gasPriceL0 && <div>{fmt.format(gasL0 / 1000)}k</div>}
           </div>
         </div>
-        <div>
-          <div className='text-xs leading-5 text-gray-500'>x</div>
-          {gasL0 && gasPriceL0 && <div className='text-xs leading-5 text-gray-500'>x</div>}
+        <div className='flex flex-col text-xs text-gray-500 items-center'>
+          <div className='leading-5'>×</div>
+          {gasL0 && gasPriceL0 && <div className='leading-5'>×</div>}
         </div>
         <div className='flex-[1.4] shrink-0 flex flex-row items-center'>
           <div>
