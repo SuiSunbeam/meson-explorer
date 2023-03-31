@@ -11,7 +11,7 @@
     "@headlessui/react": "^1.6.5",
     "@heroicons/react": "^1.0.6",
     "@mesonfi/extensions": "^0.5.0",
-    "@mesonfi/presets": "^1.7.1",
+    "@mesonfi/presets": "^1.7.2",
     "@mesonfi/sdk": "^1.7.0",
     "@mesonfi/web3-jwt": "^0.5.0",
     "@next-auth/mongodb-adapter": "^1.0.3",
