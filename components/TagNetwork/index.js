@@ -41,7 +41,6 @@ export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly
           {address && <ExternalIcon href={getExplorerAddressLink(network, address)} />}
         </div>
       }
-     
     </div>
   )
 }
