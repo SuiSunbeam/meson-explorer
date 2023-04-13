@@ -66,8 +66,7 @@ export default function SwapRow({ data: raw, smMargin }) {
   }, [])
 
   const { swap, from, to } = React.useMemo(() => presets.parseInOutNetworkTokens(data.encoded), [data.encoded])
-  const expired = swap?.expireTs < Date.now() / 1000
-  const status = getStatusFromEvents(data?.events, expired)
+  const status = getStatusFromEvents(data?.events, swap?.expireTs)
 
   const swapId = data?._id
   const noSubscribe = !from || !to || (data.released && data.events.find(e => e.name === 'EXECUTED'))
@@ -108,12 +107,12 @@ export default function SwapRow({ data: raw, smMargin }) {
           {new Date(data.created).toLocaleString()}
         </div>
         <div className='sm:hidden scale-75 origin-left'>
-          <SwapStatusBadge events={data.events} expired={expired} className='text-xs' />
+          <SwapStatusBadge events={data.events} expireTs={swap.expireTs} className='text-xs' />
         </div>
       </Td>
       <Td className='hidden sm:table-cell'>
         <div className='flex items-center'>
-          <SwapStatusBadge events={data.events} expired={expired} />
+          <SwapStatusBadge events={data.events} expireTs={swap.expireTs} />
           {
             data.locks &&
             <span className='text-xs text-gray-500 ml-2'>{data.releases},{data.unlocks} / {data.locks}</span>
