@@ -39,7 +39,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
   const [priority, setPriority] = React.useState(0)
   const [limit, setLimit] = React.useState('')
   const [factor, setFactor] = React.useState('')
-  const [initiator, setInitiator] = React.useState('')
+  const [initiators, setInitiators] = React.useState('')
   const [mark, setMark] = React.useState('')
   const [fee, setFee] = React.useState('')
 
@@ -60,7 +60,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
       setPriority(data.priority || 0)
       setLimit(typeof data.limit === 'number' ? data.limit : '')
       setFactor(typeof data.factor === 'number' ? data.factor : '')
-      setInitiator(data.initiator || '')
+      setInitiators(data.initiators?.map(i => i.note ? `${i.note}:${i.addr}` : i.addr).join('\n') || '')
       setMark(data.mark || '')
       setFee(JSON.stringify(data.fee, null, 2) || '[\n]')
     }
@@ -74,7 +74,10 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
       priority,
       limit,
       factor,
-      initiator,
+      initiators: initiators.split('\n').filter(Boolean).map(line => {
+        const [p1, p2] = line.split(':')
+        return p2 ? { note: p1.trim(), addr: p2.trim() } : { addr: p1.trim() }
+      }),
       mark,
       fee: JSON.parse(fee)
     }
@@ -171,13 +174,14 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
           />
         }
         {
-          !hides.includes('initiator') &&
+          !hides.includes('initiators') &&
           <Input
             className='col-span-6'
-            id='initiator'
-            label='Initiator'
-            value={initiator}
-            onChange={setInitiator}
+            id='initiators'
+            label='Initiators'
+            type='textarea'
+            value={initiators}
+            onChange={setInitiators}
           />
         }
         {
@@ -191,13 +195,16 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
             onChange={setFee}
           />
         }
-        <Input
-          className='col-span-6'
-          id='mark'
-          label='Mark'
-          value={mark}
-          onChange={setMark}
-        />
+        {
+          hides.includes('initiators') &&
+          <Input
+            className='col-span-6'
+            id='mark'
+            label='Mark'
+            value={mark}
+            onChange={setMark}
+          />
+        }
       </div>
 
       <div className='flex justify-between mt-6'>
@@ -239,9 +246,21 @@ export function RowSwapRule ({ d, onOpenModal, hides = [] }) {
           {d.fee?.map((item, i) => <GasCalculation key={i} {...item} gasPrice={d.gasPrice} gasPriceL0={d.gasPriceL0} />)}
         </Td>
       }
-      {!hides.includes('initiator') && <Td size='sm' wrap><span className='break-all'>{d.initiator}</span></Td>}
+      {
+        !hides.includes('initiators') &&
+        <Td size='sm' wrap>
+        {
+          d.initiators?.map((line, i) => (
+            <div key={`initiator-${i}`} className='flex flex-row items-center text-xs'>
+              <div className='w-20 mr-2 font-medium text-gray-500 overflow-hidden flex-shrink-0'>{line.note}</div>
+              <div className='font-mono break-all'>{line.addr}</div>
+            </div>
+          ))
+        }
+        </Td>
+      }
       {!hides.includes('premium') && <Td size='sm'>{d.premium ? '✅' : ''}</Td>}
-      <Td size='sm'>{d.mark}</Td>
+      {hides.includes('initiators') && <Td size='sm'>{d.mark}</Td>}
       <Td size='sm' className='text-right'>
         <Button rounded size='xs' color='info' onClick={() => onOpenModal(d)}>
           <PencilIcon className='w-4 h-4' aria-hidden='true' />

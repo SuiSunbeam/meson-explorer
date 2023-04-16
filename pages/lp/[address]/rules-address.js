@@ -33,8 +33,7 @@ export default function RulesAddress () {
         { name: 'factor', width: '7%' },
         { name: 'fee rule', width: '10%' },
         { name: '', width: '0%' },
-        { name: 'initiator', width: '50%' },
-        { name: 'mark', width: '10%' },
+        { name: 'initiators', width: '60%' },
         { name: 'edit', width: '5%', className: 'text-right' },
       ]}>
         {data.map((d, i) => <RowSwapRule key={i} d={d} hides={hides} onOpenModal={d => setModalData(d)} />)}

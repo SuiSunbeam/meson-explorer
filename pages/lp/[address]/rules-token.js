@@ -12,7 +12,7 @@ import fetcher from 'lib/fetcher'
 
 import { SwapRuleModal, RowSwapRule } from './components'
 
-const hides = ['rules', 'initiator']
+const hides = ['rules', 'initiators']
 export default function RulesToken () {
   const router = useRouter()
   const { address } = router.query
