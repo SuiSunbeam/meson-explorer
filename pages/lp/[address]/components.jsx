@@ -74,10 +74,10 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
       priority,
       limit,
       factor,
-      initiators: initiators.split('\n').filter(Boolean).map(line => {
+      initiators: type === 'address' ? initiators.split('\n').filter(Boolean).map(line => {
         const [p1, p2] = line.split(':')
         return p2 ? { note: p1.trim(), addr: p2.trim() } : { addr: p1.trim() }
-      }),
+      }) : undefined,
       mark,
       fee: JSON.parse(fee)
     }
