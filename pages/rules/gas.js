@@ -58,7 +58,7 @@ export default function RulesGas () {
     <Card>
       <CardTitle
         title='Swap Rules'
-        right={<Button size='sm' color='primary' rounded onClick={() => setModalData({})}>New Swap Rule</Button>}
+        right={<Button size='sm' color='primary' rounded onClick={() => setModalData({})}>New Rule</Button>}
         tabs={[
           { key: 'gas', name: 'Gas', active: true },
           { key: 'token', name: 'Token', onClick: () => router.push(`/rules/token`) },

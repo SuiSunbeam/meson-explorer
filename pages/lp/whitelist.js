@@ -45,7 +45,7 @@ export default function LpWhitelist() {
           { key: 'whitelist', name: 'Whitelist', active: true }
         ]}
         right={
-          <Button size='sm' color='info' rounded onClick={() => newAddrToWhitelist()}>New</Button>
+          <Button size='sm' color='primary' rounded onClick={() => newAddrToWhitelist()}>New</Button>
         }
       />
       {body}
@@ -59,11 +59,10 @@ function TableWhitelist ({ data }) {
       fixed
       size='lg'
       headers={[
-        { name: 'Address', width: '50%' },
-        { name: 'Note', width: '15%' },
-        { name: 'Quota', width: '15%' },
-        { name: 'Deposit', width: '15%' },
-        { name: 'Edit', width: '5%', className: 'text-right' },
+        { name: 'Account', width: '50%' },
+        { name: 'Quota', width: '20%' },
+        { name: 'Deposit', width: '20%' },
+        { name: 'Edit', width: '10%', className: 'text-right' },
       ]}
     >
       {data.map((row, index) => <WhitelistedAddrRow key={`row-${index}`} {...row} />)}
@@ -76,20 +75,19 @@ const fmt = Intl.NumberFormat()
 function WhitelistedAddrRow (props) {
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
-      <Td size='' className='pl-4 pr-3 sm:pl-6'>
+      <Td size='' className='pl-4 pr-3 sm:pl-6 py-2'>
+        {props.note}
         <ExternalLink
           size='xs'
           href={`/address/${props._id}`}
           className='flex items-center font-mono'
         >
           {props._id}
-
         </ExternalLink>
       </Td>
-      <Td size='sm'>{props.note}</Td>
-      <Td size='sm'>{fmt.format(utils.formatUnits(props.quota, 6))}</Td>
-      <Td size='sm'>{fmt.format(utils.formatUnits(props.deposit || '0', 6))}</Td>
-      <Td  size='sm' className='text-right'>
+      <Td>{fmt.format(utils.formatUnits(props.quota, 6))}</Td>
+      <Td>{fmt.format(utils.formatUnits(props.deposit || '0', 6))}</Td>
+      <Td className='text-right'>
         <Button rounded size='xs' color='info' onClick={() => onOpenModal(d)}>
           <PencilIcon className='w-4 h-4' aria-hidden='true' />
         </Button>
