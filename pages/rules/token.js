@@ -34,7 +34,7 @@ export default function RulesToken () {
         { name: 'mark', width: '10%' },
         { name: 'edit', width: '20%', className: 'text-right' },
       ]}>
-        {data.map((d, i) => <RowSwapRule key={i} d={d} hides={hides} onOpenModal={d => setModalData(d)} />)}
+        {data.map((d, i) => <RowSwapRule key={i} d={d} hides={hides} onOpenModal={setModalData} />)}
       </Table>
     )
   }

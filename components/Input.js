@@ -9,7 +9,7 @@ export default function Input({ className, id, label, ...props }) {
   )
 }
 
-function TypedInput ({ id, type = 'text', placeholder, value, onChange }) {
+function TypedInput ({ id, type = 'text', placeholder, value, onChange, ...props }) {
   if (type === 'textarea') {
     return (
       <textarea
@@ -20,6 +20,7 @@ function TypedInput ({ id, type = 'text', placeholder, value, onChange }) {
         placeholder={placeholder}
         value={value}
         onChange={evt => onChange(evt.target.value)}
+        {...props}
       />
     )
   }
@@ -33,6 +34,7 @@ function TypedInput ({ id, type = 'text', placeholder, value, onChange }) {
       placeholder={placeholder}
       value={value}
       onChange={evt => onChange(evt.target.value)}
+      {...props}
     />
   )
 }

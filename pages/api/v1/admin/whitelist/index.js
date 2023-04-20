@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     if (result) {
       res.json({ result })
     } else {
-      res.status(400).json({ error: { code: -32602, message: 'Failed to get lp whitelist' } })
+      res.status(400).json({ error: { code: -32602, message: 'Failed to get whitelist' } })
     }
   } else if (req.method === 'POST') {
     try {
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       res.json({ result })
     } catch (e) {
       console.warn(e)
-      res.status(400).json({ error: { code: -32602, message: 'Failed to add new entry to lp whitelist' } })
+      res.status(400).json({ error: { code: -32602, message: 'Failed to add whitelist entry' } })
     }
   } else {
     res.status(404).send()

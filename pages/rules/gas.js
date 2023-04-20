@@ -49,7 +49,7 @@ export default function RulesGas () {
         { name: 'mark', width: '5%' },
         { name: 'edit', width: '5%', className: 'text-right' },
       ]}>
-        {data.rules.filter(r => r.type === 'gas').map((d, i) => <RowSwapRule key={i} d={d} hides={hides} onOpenModal={d => setModalData(d)} />)}
+        {data.rules.filter(r => r.type === 'gas').map((d, i) => <RowSwapRule key={i} d={d} hides={hides} onOpenModal={setModalData} />)}
       </Table>
     )
   }
