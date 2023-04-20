@@ -15,7 +15,6 @@ import { SwapRuleModal, RowSwapRule } from './components'
 const hides = ['factor', 'initiators']
 export default function RulesGas () {
   const router = useRouter()
-  const { address } = router.query
 
   const { data, error, mutate } = useSWR('https://relayer.meson.fi/api/v1/rules/0x666d6b8a44d226150ca9058beebafe0e3ac065a2', fetcher)
   const [modalData, setModalData] = React.useState()
@@ -58,14 +57,12 @@ export default function RulesGas () {
   return (
     <Card>
       <CardTitle
-        title='LP'
-        subtitle={address}
+        title='Swap Rules'
         right={<Button size='sm' color='primary' rounded onClick={() => setModalData({})}>New Swap Rule</Button>}
         tabs={[
-          { key: 'liquidity', name: 'Liquidity', onClick: () => router.push(`/lp/${address}`) },
-          { key: 'rules-gas', name: 'Rules (Gas)', active: true },
-          { key: 'rules-token', name: 'Rules (Token)', onClick: () => router.push(`/lp/${address}/rules-token`) },
-          { key: 'rules-address', name: 'Rules (Address)', onClick: () => router.push(`/lp/${address}/rules-address`) }
+          { key: 'gas', name: 'Gas', active: true },
+          { key: 'token', name: 'Token', onClick: () => router.push(`/rules/token`) },
+          { key: 'address', name: 'Address', onClick: () => router.push(`/rules/address`) }
         ]}
       />
       <CardBody>{body}</CardBody>

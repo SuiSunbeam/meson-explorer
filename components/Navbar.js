@@ -14,7 +14,6 @@ import { abbreviate } from 'lib/swap'
 
 const signingMessage = process.env.NEXT_PUBLIC_SIGNING_MESSAGE
 const testnetMode = Boolean(process.env.NEXT_PUBLIC_TESTNET)
-const lps = process.env.NEXT_PUBLIC_LPS?.split(',') || []
 const relayers = process.env.NEXT_PUBLIC_SERVER_URL.split(',')
 
 const navigation = [
@@ -262,20 +261,24 @@ function Profile ({ globalState, setGlobalState }) {
             (isRoot || isAdmin || isOperator) &&
             <div className='py-1'>
               <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
-                LPs
+                Settings
               </div>
-              {
-                lps.map((lp, index) => (
-                  <Menu.Item key={`lp-${index}`}>
-                    <div
-                      className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer overflow-hidden truncate'
-                      onClick={() => router.push(`/lp/${lp}`)}
-                    >
-                      {lp}
-                    </div>
-                  </Menu.Item>
-                ))
-              }
+              <Menu.Item>
+                <div
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => router.push('/lp')}
+                >
+                  Liquidity Providers
+                </div>
+              </Menu.Item>
+              <Menu.Item>
+                <div
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => router.push('/rules/gas')}
+                >
+                  Swap Rules
+                </div>
+              </Menu.Item>
             </div>
           }
           {

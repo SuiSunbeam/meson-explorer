@@ -15,7 +15,6 @@ import { SwapRuleModal, RowSwapRule } from './components'
 const hides = ['rules', 'initiators']
 export default function RulesToken () {
   const router = useRouter()
-  const { address } = router.query
 
   const { data, error, mutate } = useSWR('admin/rules?type=token', fetcher)
   const [modalData, setModalData] = React.useState()
@@ -43,14 +42,12 @@ export default function RulesToken () {
   return (
     <Card>
       <CardTitle
-        title='LP'
-        subtitle={address}
+        title='Swap Rules'
         right={<Button size='sm' color='primary' rounded onClick={() => setModalData({})}>New Swap Rule</Button>}
         tabs={[
-          { key: 'liquidity', name: 'Liquidity', onClick: () => router.push(`/lp/${address}`) },
-          { key: 'rules-gas', name: 'Rules (Gas)', onClick: () => router.push(`/lp/${address}/rules-gas`) },
-          { key: 'rules-token', name: 'Rules (Token)', active: true },
-          { key: 'rules-address', name: 'Rules (Address)', onClick: () => router.push(`/lp/${address}/rules-address`) }
+          { key: 'gas', name: 'Gas', onClick: () => router.push(`/rules/gas`) },
+          { key: 'token', name: 'Token', active: true },
+          { key: 'address', name: 'Address', onClick: () => router.push(`/rules/address`) }
         ]}
       />
       <CardBody>{body}</CardBody>

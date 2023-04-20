@@ -14,8 +14,9 @@ import TagNetwork from 'components/TagNetwork'
 import TagNetworkToken from 'components/TagNetworkToken'
 import ExternalLink from 'components/ExternalLink'
 
+import { LPS } from 'lib/const'
 import fetcher from 'lib/fetcher'
-import { presets, getAllNetworks, getExplorerAddressLink } from 'lib/swap'
+import { presets, getAllNetworks, getExplorerAddressLink, abbreviate } from 'lib/swap'
 
 let JsonRpcs = {}
 try {
@@ -67,13 +68,16 @@ export default function LpPage() {
   return (
     <Card>
       <CardTitle
-        title='LP'
+        title='Liquidity Providers'
         subtitle={address}
         tabs={[
-          { key: 'liquidity', name: 'Liquidity', active: true },
-          { key: 'rules-gas', name: 'Rules (Gas)', onClick: () => router.push(`/lp/${address}/rules-gas`) },
-          { key: 'rules-token', name: 'Rules (Token)', onClick: () => router.push(`/lp/${address}/rules-token`) },
-          { key: 'rules-address', name: 'Rules (Address)', onClick: () => router.push(`/lp/${address}/rules-address`) }
+          ...LPS.map(lp => ({
+            key: lp,
+            name: abbreviate(lp, 4, 0),
+            active: address === lp,
+            onClick: () => router.push(`/lp/${lp}`)
+          })),
+          { key: 'whitelist', name: 'Whitelist', onClick: () => router.push(`/lp/whitelist`) }
         ]}
         right={
           <div className='flex gap-1'>
