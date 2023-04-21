@@ -72,7 +72,7 @@ export default function LpWhitelist() {
   )
 }
 
-const fmt = Intl.NumberFormat()
+const fmt = Intl.NumberFormat('en', { minimumFractionDigits: 6 })
 
 function WhitelistedAddrRow ({ _id: addr, name, quota = 0, deposit = 0, onOpenModal }) {
   return (
