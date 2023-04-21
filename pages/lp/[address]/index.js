@@ -13,6 +13,7 @@ import ListRow from 'components/ListRow'
 import TagNetwork from 'components/TagNetwork'
 import TagNetworkToken from 'components/TagNetworkToken'
 import ExternalLink from 'components/ExternalLink'
+import NumberDisplay from 'components/NumberDisplay'
 
 import { LPS } from 'lib/const'
 import fetcher from 'lib/fetcher'
@@ -126,20 +127,6 @@ function LpContent ({ address }) {
           .map(n => <LpContentRow key={n.id} address={address} network={n} add={add} />)
       }
     </dl>
-  )
-}
-
-function NumberDisplay ({ value, classNames }) {
-  if (!value) {
-    return <span className='ml-[100px] mr-[6px]'><Loading /></span>
-  }
-
-  const [i, d = ''] = value.split('.')
-  return (
-    <pre className={classnames('text-sm font-mono mr-1', classNames)}>
-      <span>{i.padStart(7, ' ')}</span>
-      <span className='opacity-40'>.{d.padEnd(6, '0').substring(0, 6)}</span>
-    </pre>
   )
 }
 

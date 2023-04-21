@@ -9,6 +9,7 @@ import LoadingScreen from 'components/LoadingScreen'
 import Table, { Td } from 'components/Table'
 import Button from 'components/Button'
 import ExternalLink from 'components/ExternalLink'
+import NumberDisplay from 'components/NumberDisplay'
 import Modal from 'components/Modal'
 import Input from 'components/Input'
 
@@ -86,8 +87,8 @@ function WhitelistedAddrRow ({ _id: addr, name, quota = 0, deposit = 0, onOpenMo
           {addr}
         </ExternalLink>
       </Td>
-      <Td>{fmt.format(utils.formatUnits(quota, 6))}</Td>
-      <Td>{fmt.format(utils.formatUnits(deposit, 6))}</Td>
+      <Td><NumberDisplay value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} /></Td>
+      <Td><NumberDisplay value={fmt.format(utils.formatUnits(deposit, 6))} /></Td>
       <Td className='text-right'>
         <Button rounded size='xs' color='info' onClick={onOpenModal}>
           <PencilIcon className='w-4 h-4' aria-hidden='true' />
