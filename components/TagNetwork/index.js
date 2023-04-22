@@ -20,11 +20,12 @@ import beam from './beam.png'
 import eos from './eos.png'
 import tron from './tron.png'
 import aptos from './aptos.png'
+import sui from './sui.png'
 import zksync from './zksync.png'
 import zkevm from './zkevm.png'
 import cronos from './cronos.png'
 
-const logos = { eth, ropsten: eth, bnb, avax, polygon, ftm, arb, opt, one, aurora, cfx, evmos, movr, beam, eos, tron, aptos, zksync, zkevm, cronos }
+const logos = { eth, ropsten: eth, bnb, avax, polygon, ftm, arb, opt, one, aurora, cfx, evmos, movr, beam, eos, tron, aptos, sui, zksync, zkevm, cronos }
 
 export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly, address, className }) {
   const id = network.id.split('-')[0]
