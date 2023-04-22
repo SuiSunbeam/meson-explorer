@@ -601,10 +601,10 @@
   resolved "https://npm.pkg.github.com/download/@MesonFi/contract-types/1.7.0/a901416c55dc930f6db8c4c832cca687d37fef33#a901416c55dc930f6db8c4c832cca687d37fef33"
   integrity sha512-7kFzv55LsFLI2OCq8k2VlRBR99wfrh9gYkXEctLH+XNzOE+0hjfWCAOg8FVUIVWN66EtQH6Zw2RE7PgQENwXVQ==
 
-"@mesonfi/dealer@^0.8.0-beta.2":
-  version "0.8.0-beta.2"
-  resolved "https://npm.pkg.github.com/download/@mesonfi/dealer/0.8.0-beta.2/568849380280511532d6a2ab5b91e65125353d4e#568849380280511532d6a2ab5b91e65125353d4e"
-  integrity sha512-w1LOkhmiTMQ7+sg3oQhgfwm++DuYvNleijyIgucl6oSocBX8t7TTbnmodEIRj68Jux8ScMdkXcxI5qQNWGHDAg==
+"@mesonfi/dealer@^0.8.0-beta.3":
+  version "0.8.0-beta.3"
+  resolved "https://npm.pkg.github.com/download/@mesonfi/dealer/0.8.0-beta.3/8df150ffacb02d1ae2827cf937f999326299e616#8df150ffacb02d1ae2827cf937f999326299e616"
+  integrity sha512-PO4LoCNK6xmOlRXHBu+Q80CN6IGKG9ZualgQHoe/N7RLoaobb3PYE2cMXs44YqYFJcik0rGhfxXPba7E0v/JKA==
   dependencies:
     "@mesonfi/sdk" "^1.8.0-beta.4"
     cross-fetch "^3.1.5"
