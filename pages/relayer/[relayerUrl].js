@@ -1,4 +1,5 @@
 import React from 'react'
+import classnames from 'classnames'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { utils } from 'ethers'
@@ -50,10 +51,10 @@ function RelayerStatus ({ relayerUrl }) {
         size='lg'
         headers={[
           { name: 'Network', width: '10%' },
-          { name: 'Node Url', width: '30%' },
+          { name: 'Node Url', width: '40%' },
           { name: 'Status (latency)', width: '15%' },
-          { name: 'Update', width: '15%' },
-          { name: 'Blocks', width: '15%' },
+          { name: 'Update', width: '10%' },
+          { name: 'Blocks', width: '10%' },
           { name: 'Gas Price', width: '15%' },
         ]}
       >
@@ -65,7 +66,7 @@ function RelayerStatus ({ relayerUrl }) {
 
 const fmt = Intl.NumberFormat()
 
-function RelayerStatusRow ({ networkId, url, ...details }) {
+function RelayerStatusRow ({ networkId, url, current, ...details }) {
   const network = presets.getNetwork(networkId)
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
@@ -76,8 +77,8 @@ function RelayerStatusRow ({ networkId, url, ...details }) {
         </div>
       </Td>
       <Td size='sm' wrap>
-        <div className='w-full overflow-x-auto'>
-          <div className=''>{url}</div>
+        <div className={classnames(current ? 'text-indigo-500': '')}>
+          {url}
         </div>
       </Td>
       <TdRelayerDetails {...details} />
