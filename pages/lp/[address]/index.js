@@ -5,6 +5,8 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 
 import { RefreshIcon } from '@heroicons/react/solid'
 import { BigNumber, ethers } from 'ethers'
+import { DealerClient } from '@mesonfi/dealer'
+import useSWR from 'swr'
 
 import Card, { CardTitle, CardBody } from 'components/Card'
 import LoadingScreen, { Loading } from 'components/LoadingScreen'
@@ -19,10 +21,7 @@ import { LPS } from 'lib/const'
 import fetcher from 'lib/fetcher'
 import { presets, getAllNetworks, getExplorerAddressLink, abbreviate } from 'lib/swap'
 
-let JsonRpcs = {}
-try {
-  JsonRpcs = JSON.parse(process.env.NEXT_PUBLIC_JSON_RPCS)
-} catch {}
+const relayer = process.env.NEXT_PUBLIC_SERVER_URL.split(',')[0]
 
 const CORE_ALERT = {
   eth: 0.01,
@@ -46,11 +45,19 @@ export default function LpPage() {
   const router = useRouter()
   const { address } = router.query
 
+  const { data: rpcs } = useSWR(`${relayer}/rpcs`, fetcher)
+
+  const dealer = React.useMemo(() => {
+    if (rpcs) {
+      return new DealerClient(presets, { rpcs, WebSocket: ReconnectingWebSocket, threshold: 1 })
+    }
+  }, [rpcs])
+
   let body = <CardBody><LoadingScreen /></CardBody>
-  if (address) {
+  if (address && dealer) {
     body = (
       <CardBody border={false}>
-        <LpContent address={address} />
+        <LpContent address={address} dealer={dealer} />
       </CardBody>
     )
   }
@@ -92,7 +99,7 @@ export default function LpPage() {
   )
 }
 
-function LpContent ({ address }) {
+function LpContent ({ address, dealer }) {
   const [totalDeposit, setTotalDeposit] = React.useState(BigNumber.from(0))
   const [totalBalance, setTotalBalance] = React.useState(BigNumber.from(0))
 
@@ -124,49 +131,21 @@ function LpContent ({ address }) {
             (address.length === 66 && n.id.startsWith('aptos')) ||
             (address.length === 42 && !n.id.startsWith('aptos'))
           ))
-          .map(n => <LpContentRow key={n.id} address={address} network={n} add={add} />)
+          .map(n => <LpContentRow key={n.id} address={address} dealer={dealer} network={n} add={add} />)
       }
     </dl>
   )
 }
 
-function LpContentRow ({ address, network, add }) {
-  const { id, url } = network
+function LpContentRow ({ address, dealer, network, add }) {
   const [core, setCore] = React.useState(<Loading />)
 
   const mesonClient = React.useMemo(() => {
-    let urls = [url.replace('${INFURA_API_KEY}', process.env.NEXT_PUBLIC_INFURA_PROJECT_ID)]
-    if (JsonRpcs[id]) {
-      if (typeof JsonRpcs[id] === 'string') {
-        urls = JsonRpcs[id].split(';')
-      } else if (Array.isArray(JsonRpcs[id])) {
-        urls = JsonRpcs[id]
-      }
-    }
-  
-    let client
-    if (id.startsWith('tron')) {
-      client = presets.createNetworkClient({ id, url: urls[0] })
-    } else if (id.startsWith('aptos')) {
-      client = presets.createNetworkClient({ id, url: urls[0] })
-    } else {
-      client = presets.createNetworkClient({
-        id,
-        quorum: {
-          threshold: 1,
-          list: urls.map((url, index) => {
-            if (url.startsWith('ws')) {
-              const ws = new ReconnectingWebSocket(url)
-              return { ws, priority: index, stallTimeout: 400, weight: 1 }
-            } else {
-              return { url, priority: index, stallTimeout: 400, weight: 1 }
-            }
-          })
-        }
-      })
-    }
-    return presets.createMesonClient(id, client)
-  }, [id, url])
+    return dealer._createMesonClient({
+      id: network.id,
+      url: network.url.replace('${INFURA_API_KEY}', process.env.NEXT_PUBLIC_INFURA_PROJECT_ID)
+    })
+  }, [dealer, network])
 
   const nativeDecimals = network.nativeCurrency?.decimals || 18
   React.useEffect(() => {
