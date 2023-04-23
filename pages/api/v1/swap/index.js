@@ -1,5 +1,6 @@
 import { Swaps } from 'lib/db'
 import { listHandler } from 'lib/api'
+import { presets } from 'lib/swap'
 
 export default listHandler({
   collection: Swaps,
@@ -7,11 +8,17 @@ export default listHandler({
     const query = { disabled: { $ne: true }, hide: { $ne: true } }
     if (roles?.some(r => ['root', 'admin'].includes(r)) || headerRoles.includes('data')) {
       delete query.hide
-      const filter = req.query.filter
-      if (filter === 'api') {
+      const { category, from, to } = req.query
+      if (category === 'api') {
         query.salt = { $regex : /^0x[d9]/ }
-      } else if (filter === 'meson.to') {
+      } else if (category === 'meson.to') {
         query.salt = { $regex : /^0x[ea62]/ }
+      }
+      if (from) {
+        query.inChain = presets.getNetwork(from).shortSlip44
+      }
+      if (to) {
+        query.outChain = presets.getNetwork(to).shortSlip44
       }
     }
     return query

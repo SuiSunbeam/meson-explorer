@@ -14,13 +14,25 @@ export default function SwapList() {
 
   const [search, setSearchValue] = React.useState('')
 
-  const { filter } = router.query
+  const { page: _, category, ...rest } = router.query
   const tabs = !authorized ? undefined : [
-    { key: 'all', name: 'All', active: !filter, onClick: () => router.push('') },
-    { key: 'api', name: 'API', active: filter === 'api', onClick: () => router.push({ query: { filter: 'api' } }) },
-    { key: 'api', name: 'meson.to', active: filter === 'meson.to', onClick: () => router.push({ query: { filter: 'meson.to' } }) },
+    { key: 'all', name: 'All', active: !category, onClick: () => router.push('') },
+    { key: 'api', name: 'API', active: category === 'api', onClick: () => router.push({ query: { category: 'api', ...rest } }) },
+    { key: 'api', name: 'meson.to', active: category === 'meson.to', onClick: () => router.push({ query: { category: 'meson.to', ...rest } }) },
   ]
-  const queryUrl = filter ? `swap?filter=${filter}` : 'swap'
+
+  const queryUrlParamList = []
+  if (category) {
+    queryUrlParamList.push(`category=${category}`)
+  }
+  if (rest.from) {
+    queryUrlParamList.push(`from=${rest.from}`)
+  }
+  if (rest.to) {
+    queryUrlParamList.push(`to=${rest.to}`)
+  }
+  const queryUrlParam = queryUrlParamList.join('&')
+  const queryUrl = `swap` + (queryUrlParam && `?${queryUrlParam}`)
 
   return (
     <div>
