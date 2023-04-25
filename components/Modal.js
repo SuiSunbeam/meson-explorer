@@ -1,6 +1,9 @@
 import React from 'react'
 import classnames from 'classnames'
 import { Dialog, Transition } from '@headlessui/react'
+import { XIcon } from '@heroicons/react/solid'
+
+import Button from './Button'
 
 export default function Modal ({ isOpen = false, size = 'md', title, children, onClose = () => {} }) {
   return (
@@ -36,8 +39,12 @@ export default function Modal ({ isOpen = false, size = 'md', title, children, o
                 size === 'lg' && 'max-w-4xl'
               )}>
                 <div className='flex flex-col'>
-                  <Dialog.Title as='h3' className='mb-5 text-lg leading-6 font-medium text-gray-900'>
-                    {title}
+                  <Dialog.Title as='h3' className='flex justify-between items-center mb-5'>
+                    <div className='text-lg leading-6 font-medium text-gray-900'>{title}</div>
+                    {
+                      onClose && 
+                      <XIcon className='w-4 text-gray-500 hover:text-gray-900 cursor-pointer' onClick={onClose} />
+                    }
                   </Dialog.Title>
                   {children}
                 </div>
