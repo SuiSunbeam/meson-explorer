@@ -36,7 +36,7 @@ export default function Banners () {
         { name: 'status / id / title', width: '60%', className: 'pl-4 md:pl-6' },
         { name: 'params', width: '25%' },
         { name: 'modals', width: '5%' },
-        { name: 'priority', width: '5%' },
+        { name: 'reward', width: '5%' },
         { name: 'edit', width: '5%', className: 'text-right' },
       ]}>
         {data.map((d, i) => <RowBanner key={i} {...d} onOpenModal={() => setModalData(d)} />)}
@@ -62,11 +62,11 @@ export default function Banners () {
   )
 }
 
-function RowBanner({ _id, icon, title, params = {}, modals, priority, online, disabled, onOpenModal }) {
+function RowBanner({ _id, priority, icon, title, params = {}, rewardTo, modals, online, disabled, onOpenModal }) {
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1 text-sm' wrap>
-        <div className='text-xs text-gray-500'>{disabled ? '🚫' : online ? '🟢' : '🟠'} {_id}</div>
+        <div className='text-xs text-gray-500'>{disabled ? '🚫' : online ? '🟢' : '🟠'} {priority ? `[${priority}] ` : ''}{_id}</div>
         <div>[{iconOptions.find(item => item.id === icon)?.name}] {title}</div>
       </Td>
       <Td size='sm' className='font-mono text-xs'>
@@ -77,7 +77,7 @@ function RowBanner({ _id, icon, title, params = {}, modals, priority, online, di
       }
       </Td>
       <Td>{modals?.length}</Td>
-      <Td>{priority}</Td>
+      <Td>{rewardTo}</Td>
       <Td className='text-right'>
         <Button rounded size='xs' color='info' onClick={onOpenModal}>
           <PencilIcon className='w-4 h-4' aria-hidden='true' />
@@ -91,6 +91,8 @@ function EditBannerModal ({ data, onClose }) {
   const [create, setCreate] = React.useState(false)
 
   const [bannerId, setBannerId] = React.useState('')
+  const [priority, setPriority] = React.useState('')
+  const [rewardTo, setRewardTo] = React.useState('')
   const [status, setStatus] = React.useState(0)
   const [icon, setIcon] = React.useState('')
   const [title, setTitle] = React.useState('')
@@ -104,6 +106,8 @@ function EditBannerModal ({ data, onClose }) {
       setCreate(!Object.keys(data).length)
 
       setBannerId(data._id || '')
+      setPriority(data.priority || '')
+      setRewardTo(data.rewardTo || '')
       setStatus(data.disabled ? 0 : data.online ? 2 : 1)
       setIcon(data.icon || '')
       setTitle(data.title || '')
@@ -121,9 +125,13 @@ function EditBannerModal ({ data, onClose }) {
       icon,
       title,
       modals,
+      rewardTo,
       params,
       online: status === 2,
       disabled: status === 0,
+    }
+    if (priority) {
+      dataToSave.priority = Number(priority)
     }
 
     if (create) {
@@ -149,14 +157,33 @@ function EditBannerModal ({ data, onClose }) {
     >
       <div className='grid grid-cols-8 gap-x-4 gap-y-4'>
         <Input
-          className='col-span-5'
+          className='col-span-2'
           id='bannerId'
           label='ID'
           value={bannerId}
           onChange={setBannerId}
           disabled={!create}
         />
-        <div className='col-span-3'>
+        <Input
+          className='col-span-2'
+          id='priority'
+          label='Priority'
+          value={priority}
+          onChange={setPriority}
+        />
+        <div className='col-span-2'>
+          <label className='block text-sm font-medium text-gray-700'>Reward to</label>
+          <div className='mt-1 flex border border-gray-300 shadow-sm rounded-md'>
+            <Select
+              className='w-full'
+              noBorder
+              options={[{ id: '', name: 'None' }, { id: 'sender', name: 'Sender' }, { id: 'recipient', name: 'Recipient' }]}
+              value={rewardTo}
+              onChange={setRewardTo}
+            />
+          </div>
+        </div>
+        <div className='col-span-2'>
           <label className='block text-sm font-medium text-gray-700'>Status</label>
           <div className='mt-1 flex border border-gray-300 shadow-sm rounded-md'>
             <Select
