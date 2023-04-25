@@ -255,8 +255,6 @@ function EditBannerModalModal ({ data, onClose, onChange }) {
       buttons,
     }
 
-    console.log(newData)
-
     if (create) {
       onChange(prev => [...prev, newData])
     } else {
