@@ -3,8 +3,6 @@ import classnames from 'classnames'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/solid'
 
-import Button from './Button'
-
 export default function Modal ({ isOpen = false, size = 'md', title, children, onClose = () => {} }) {
   return (
     <Transition show={isOpen} as={React.Fragment}>
