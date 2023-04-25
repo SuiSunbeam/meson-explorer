@@ -30,7 +30,9 @@ const getPageAccessRoles = pathname => {
   } else if (
     pathname.startsWith('/relayer') ||
     pathname.startsWith('/premium') ||
-    pathname.startsWith('/stats')
+    pathname.startsWith('/stats') ||
+    pathname.startsWith('/rules') ||
+    pathname.startsWith('/banners')
   ) {
     return ['root', 'admin']
   } else if (

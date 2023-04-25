@@ -232,27 +232,41 @@ function Profile ({ globalState, setGlobalState }) {
           }
           </div>
           {
-            (isRoot || isAdmin) &&
-            <div className='py-1'>
-              <Menu.Item>
-                <div
-                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                  onClick={() => router.push('/premium')}
-                >
-                  Premiums
-                </div>
-              </Menu.Item>
-            </div>
-          }
-          {
             isRoot &&
             <div className='py-1'>
+              <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
+                Root
+              </div>
               <Menu.Item>
                 <div
                   className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
                   onClick={() => router.push('/pending/bonded')}
                 >
                   Pending Swaps
+                </div>
+              </Menu.Item>
+            </div>
+          }
+          {
+            (isRoot || isAdmin) &&
+            <div className='py-1'>
+              <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
+                Operations
+              </div>
+              <Menu.Item>
+                <div
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => router.push('/banners')}
+                >
+                  Banners
+                </div>
+              </Menu.Item>
+              <Menu.Item>
+                <div
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => router.push('/premium')}
+                >
+                  Premiums
                 </div>
               </Menu.Item>
             </div>
