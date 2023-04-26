@@ -62,7 +62,7 @@ export default function Banners () {
   )
 }
 
-function RowBanner({ _id, priority, icon, title, params = {}, rewardTo, modals, online, disabled, onOpenModal }) {
+function RowBanner({ _id, priority, icon, title, params = {}, reward, modals, online, disabled, onOpenModal }) {
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1 text-sm' wrap>
@@ -77,7 +77,7 @@ function RowBanner({ _id, priority, icon, title, params = {}, rewardTo, modals, 
       }
       </Td>
       <Td>{modals?.length}</Td>
-      <Td>{rewardTo}</Td>
+      <Td>{reward ? '✅' : ''}</Td>
       <Td className='text-right'>
         <Button rounded size='xs' color='info' onClick={onOpenModal}>
           <PencilIcon className='w-4 h-4' aria-hidden='true' />
@@ -92,13 +92,14 @@ function EditBannerModal ({ data, onClose }) {
 
   const [bannerId, setBannerId] = React.useState('')
   const [priority, setPriority] = React.useState('')
-  const [rewardTo, setRewardTo] = React.useState('')
+  const [reward, setReward] = React.useState('')
   const [status, setStatus] = React.useState(0)
   const [icon, setIcon] = React.useState('')
   const [title, setTitle] = React.useState('')
   const [modals, setModals] = React.useState([])
   const [paramsValue, setParamsValue] = React.useState('')
 
+  const [bannerRewardData, setBannerRewardData] = React.useState(null)
   const [bannerModalData, setBanenrModalData] = React.useState(null)
 
   React.useEffect(() => {
@@ -107,7 +108,7 @@ function EditBannerModal ({ data, onClose }) {
 
       setBannerId(data._id || '')
       setPriority(data.priority || '')
-      setRewardTo(data.rewardTo || '')
+      setReward(data.reward || null)
       setStatus(data.disabled ? 0 : data.online ? 2 : 1)
       setIcon(data.icon || '')
       setTitle(data.title || '')
@@ -125,7 +126,7 @@ function EditBannerModal ({ data, onClose }) {
       icon,
       title,
       modals,
-      rewardTo,
+      reward,
       params,
       online: status === 2,
       disabled: status === 0,
@@ -172,15 +173,14 @@ function EditBannerModal ({ data, onClose }) {
           onChange={setPriority}
         />
         <div className='col-span-2'>
-          <label className='block text-sm font-medium text-gray-700'>Reward to</label>
-          <div className='mt-1 flex border border-gray-300 shadow-sm rounded-md'>
-            <Select
-              className='w-full'
-              noBorder
-              options={[{ id: '', name: 'None' }, { id: 'sender', name: 'Sender' }, { id: 'recipient', name: 'Recipient' }]}
-              value={rewardTo}
-              onChange={setRewardTo}
-            />
+          <label className='block text-sm font-medium text-gray-700'>Reward</label>
+          <div className='mt-1 flex shadow-sm rounded-md'>
+            <Button
+              rounded
+              className='w-full font-normal'
+              onClick={() => setBannerRewardData(reward || {})}
+              // color='info'
+            >{reward ? 'Edit Reward' : '+ Create'}</Button>
           </div>
         </div>
         <div className='col-span-2'>
@@ -245,7 +245,123 @@ function EditBannerModal ({ data, onClose }) {
         <Button rounded color='info' onClick={onSave}>Save</Button>
       </div>
 
+      <EditBannerRewardModal data={bannerRewardData} onClose={() => setBannerRewardData()} onChange={setReward} />
       <EditBannerModalModal data={bannerModalData} onClose={() => setBanenrModalData()} onChange={setModals} />
+    </Modal>
+  )
+}
+
+function EditBannerRewardModal ({ data, onClose, onChange }) {
+  const [create, setCreate] = React.useState(false)
+
+  const [to, setTo] = React.useState('')
+  const [condition, setCondition] = React.useState('')
+  const [posterId, setPosterId] = React.useState('')
+  const [posterTemplate, setPosterTemplate] = React.useState('')
+  const [posterUndertext, setPosterUndertext] = React.useState('')
+  const [posterShareText, setPosterShareText] = React.useState('')
+
+  React.useEffect(() => {
+    if (data) {
+      setCreate(!Object.keys(data).length)
+
+      setTo(data.to || '')
+      setCondition(data.condition || '')
+      setPosterId(data.posterId || '')
+      setPosterTemplate(data.posterTemplate || '')
+      setPosterUndertext(data.posterUndertext || '')
+      setPosterShareText(data.posterShareText || '')
+    }
+  }, [data])
+
+  const onSave = async () => {
+    const newData = { to }
+    if (condition) {
+      newData.condition = condition
+    }
+    if (posterId) {
+      newData.posterId = posterId
+      newData.posterTemplate = posterTemplate
+      newData.posterUndertext = posterUndertext
+      newData.posterShareText = posterShareText
+    }
+
+    onChange(newData)
+    onClose(true)
+  }
+
+  const onDelete = () => {
+    onChange(null)
+    onClose(true)
+  }
+
+  return (
+    <Modal
+      size='lg'
+      isOpen={!!data}
+      title={(create ? 'Create' : 'Edit') + ' Banner Reward'}
+      onClose={onClose}
+    >
+      <div className='grid grid-cols-6 gap-x-4 gap-y-4'>
+        <div className='col-span-3'>
+          <label className='block text-sm font-medium text-gray-700'>Reward To</label>
+          <div className='mt-1 flex border border-gray-300 shadow-sm rounded-md'>
+            <Select
+              className='w-full'
+              noBorder
+              options={[{ id: '', name: 'None' }, { id: 'sender', name: 'Sender' }, { id: 'recipient', name: 'Recipient' }]}
+              value={to}
+              onChange={setTo}
+            />
+          </div>
+        </div>
+
+        <Input
+          className='col-span-6'
+          id='condition'
+          label='Condition'
+          value={condition}
+          onChange={setCondition}
+        />
+
+        <Input
+          className='col-span-3'
+          id='posterId'
+          label='Poster ID'
+          value={posterId}
+          onChange={setPosterId}
+        />
+        <Input
+          className='col-span-3'
+          id='posterTemplate'
+          label='Poster Template'
+          value={posterTemplate}
+          onChange={setPosterTemplate}
+        />
+        <Input
+          className='col-span-3'
+          id='posterUndertext'
+          label='Poster Undertext'
+          type='textarea'
+          rows={10}
+          value={posterUndertext}
+          onChange={setPosterUndertext}
+        />
+        <Input
+          className='col-span-3'
+          id='posterShareText'
+          label='Poster ShareText'
+          type='textarea'
+          rows={10}
+          value={posterShareText}
+          onChange={setPosterShareText}
+        />
+      </div>
+
+      <div className='flex justify-between mt-6'>
+        <Button rounded color='error' onClick={onDelete}>Delete</Button>
+        <Button rounded color='info' onClick={onSave}>Save</Button>
+      </div>
     </Modal>
   )
 }
