@@ -257,7 +257,6 @@ function EditBannerRewardModal ({ data, onClose, onChange }) {
   const [to, setTo] = React.useState('')
   const [condition, setCondition] = React.useState('')
   const [posterId, setPosterId] = React.useState('')
-  const [posterTemplate, setPosterTemplate] = React.useState('')
   const [posterUndertext, setPosterUndertext] = React.useState('')
   const [posterShareText, setPosterShareText] = React.useState('')
 
@@ -268,7 +267,6 @@ function EditBannerRewardModal ({ data, onClose, onChange }) {
       setTo(data.to || '')
       setCondition(data.condition || '')
       setPosterId(data.posterId || '')
-      setPosterTemplate(data.posterTemplate || '')
       setPosterUndertext(data.posterUndertext || '')
       setPosterShareText(data.posterShareText || '')
     }
@@ -281,7 +279,6 @@ function EditBannerRewardModal ({ data, onClose, onChange }) {
     }
     if (posterId) {
       newData.posterId = posterId
-      newData.posterTemplate = posterTemplate
       newData.posterUndertext = posterUndertext
       newData.posterShareText = posterShareText
     }
@@ -303,7 +300,7 @@ function EditBannerRewardModal ({ data, onClose, onChange }) {
       onClose={onClose}
     >
       <div className='grid grid-cols-6 gap-x-4 gap-y-4'>
-        <div className='col-span-3'>
+        <div className='col-span-2'>
           <label className='block text-sm font-medium text-gray-700'>Reward To</label>
           <div className='mt-1 flex border border-gray-300 shadow-sm rounded-md'>
             <Select
@@ -317,7 +314,7 @@ function EditBannerRewardModal ({ data, onClose, onChange }) {
         </div>
 
         <Input
-          className='col-span-6'
+          className='col-span-4'
           id='condition'
           label='Condition'
           value={condition}
@@ -325,18 +322,11 @@ function EditBannerRewardModal ({ data, onClose, onChange }) {
         />
 
         <Input
-          className='col-span-3'
+          className='col-span-6'
           id='posterId'
           label='Poster ID'
           value={posterId}
           onChange={setPosterId}
-        />
-        <Input
-          className='col-span-3'
-          id='posterTemplate'
-          label='Poster Template'
-          value={posterTemplate}
-          onChange={setPosterTemplate}
         />
         <Input
           className='col-span-3'
