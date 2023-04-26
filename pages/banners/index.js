@@ -62,7 +62,7 @@ export default function Banners () {
   )
 }
 
-function RowBanner({ _id, priority, icon, title, params = {}, reward, modals, online, disabled, onOpenModal }) {
+function RowBanner({ _id, priority, icon, title, params = {}, modals, reward, metadata, online, disabled, onOpenModal }) {
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1 text-sm' wrap>
@@ -77,7 +77,7 @@ function RowBanner({ _id, priority, icon, title, params = {}, reward, modals, on
       }
       </Td>
       <Td>{modals?.length}</Td>
-      <Td>{reward ? '✅' : ''}</Td>
+      <Td>{reward ? `✅ ${metadata.length}` : ''}</Td>
       <Td className='text-right'>
         <Button rounded size='xs' color='info' onClick={onOpenModal}>
           <PencilIcon className='w-4 h-4' aria-hidden='true' />
