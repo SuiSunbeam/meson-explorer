@@ -128,8 +128,8 @@ function LpContent ({ address, dealer }) {
       {
         getAllNetworks()
           .filter(n => (
-            (address.length === 66 && n.id.startsWith('aptos')) ||
-            (address.length === 42 && !n.id.startsWith('aptos'))
+            (address.length === 66 && ['aptos', 'sui'].find(prefix => n.id.startsWith(prefix))) ||
+            (address.length === 42 && !['aptos', 'sui'].find(prefix => n.id.startsWith(prefix)))
           ))
           .map(n => <LpContentRow key={n.id} address={address} dealer={dealer} network={n} add={add} />)
       }
