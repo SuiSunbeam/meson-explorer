@@ -19,7 +19,7 @@ export default function AllsToStats() {
     <>
       <div className='grid md:grid-cols-4 grid-cols-2 md:gap-5 gap-3 md:mb-5 mb-3'>
         <StatCard title='# of Links' value={generalData?.count} />
-        <StatCard title='# of Link3' value={generalData?.link3} />
+        <StatCard title='# of CyberProfiles' value={generalData?.cyber} />
         <StatCard title='# of .bit' value={generalData?.dotbit} />
       </div>
       <PagiCard

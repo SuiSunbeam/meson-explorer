@@ -6,7 +6,7 @@ export default async function handler(req, res) {
       $group: {
         _id: '',
         count: { $sum: 1 },
-        link3: { $sum: { $cond: [{ $eq: ['$did', 'link3'] }, 1, 0] } },
+        cyber: { $sum: { $cond: [{ $eq: ['$did', 'cyber'] }, 1, 0] } },
         dotbit: { $sum: { $cond: [{ $eq: ['$did', 'dotbit'] }, 1, 0] } },
       }
     }
