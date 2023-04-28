@@ -2,7 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { utils } from 'ethers'
-import { PencilIcon } from '@heroicons/react/solid'
+import { AtSymbolIcon, MinusCircleIcon, ChatIcon, PencilIcon } from '@heroicons/react/solid'
 
 import Card, { CardTitle, CardBody } from 'components/Card'
 import LoadingScreen from 'components/LoadingScreen'
@@ -25,18 +25,25 @@ export default function LpWhitelist() {
 
   let body = <CardBody><LoadingScreen /></CardBody>
   if (data) {
+    const total = data.filter(d => !d.test).reduce(({ quota, deposit }, row) => ({
+      quota: row.quota + quota,
+      deposit: row.deposit + deposit,
+    }), { quota: 0, deposit: 0 })
     body = (
       <CardBody>
         <Table
-          fixed
           size='lg'
           headers={[
-            { name: 'Account', width: '50%' },
-            { name: 'Quota', width: '20%' },
-            { name: 'Deposit', width: '20%' },
-            { name: 'Edit', width: '10%', className: 'text-right' },
+            { name: 'Account', width: '40%' },
+            { name: 'Quota', width: '10%' },
+            { name: 'Deposit', width: '10%' },
+            { name: 'Contact', width: '20%' },
+            { name: 'Country', width: '10%' },
+            { name: 'Note', width: '5%' },
+            { name: 'Edit', width: '5%', className: 'text-right' },
           ]}
         >
+          <WhitelistedTotal quota={total.quota} deposit={total.deposit} />
           {data.map((d, index) => <WhitelistedAddrRow key={`row-${index}`} {...d} onOpenModal={() => setModalData(d)} />)}
         </Table>
       </CardBody>
@@ -74,11 +81,30 @@ export default function LpWhitelist() {
 
 const fmt = Intl.NumberFormat('en', { minimumFractionDigits: 6 })
 
-function WhitelistedAddrRow ({ _id: addr, name, quota = 0, deposit = 0, onOpenModal }) {
+function WhitelistedTotal ({ quota, deposit }) {
+  return (
+    <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
+      <Td size='' className='pl-4 pr-3 sm:pl-6 py-2 font-medium'>
+        Total
+      </Td>
+      <Td className='font-bold'><NumberDisplay value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} /></Td>
+      <Td className='font-bold'><NumberDisplay value={fmt.format(utils.formatUnits(deposit, 6))} /></Td>
+      <Td></Td>
+      <Td></Td>
+      <Td></Td>
+      <Td></Td>
+    </tr>
+  )
+}
+
+function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, kyc, onOpenModal }) {
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-2'>
-        {name}
+        <div className='flex items-center'>
+          {test && <MinusCircleIcon className='w-4 h-4 text-gray-500 mr-1' aria-hidden='true' />}
+          {name}
+        </div>
         <ExternalLink
           size='xs'
           href={`/address/${addr}`}
@@ -89,6 +115,24 @@ function WhitelistedAddrRow ({ _id: addr, name, quota = 0, deposit = 0, onOpenMo
       </Td>
       <Td><NumberDisplay value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} /></Td>
       <Td><NumberDisplay value={fmt.format(utils.formatUnits(deposit, 6))} /></Td>
+      <Td>
+      {
+        kyc?.email &&
+        <div className='flex items-center'>
+          <AtSymbolIcon className='w-4 h-4 text-gray-500 mr-1' aria-hidden='true' />
+          {kyc?.email}
+        </div>
+      }
+      {
+        kyc?.discord &&
+        <div className='flex items-center'>
+          <ChatIcon className='w-4 h-4 text-gray-500 mr-1' aria-hidden='true' />
+          {kyc?.discord}
+        </div>
+      }
+      </Td>
+      <Td>{kyc?.country}</Td>
+      <Td>{kyc?.note}</Td>
       <Td className='text-right'>
         <Button rounded size='xs' color='info' onClick={onOpenModal}>
           <PencilIcon className='w-4 h-4' aria-hidden='true' />
@@ -105,6 +149,11 @@ function WhitelistEntryModal ({ data, onClose }) {
   const [name, setName] = React.useState('')
   const [quota, setQuota] = React.useState(0)
 
+  const [email, setEmail] = React.useState('')
+  const [discord, setDiscord] = React.useState('')
+  const [country, setCountry] = React.useState('')
+  const [note, setNote] = React.useState('')
+
   React.useEffect(() => {
     if (data) {
       setCreate(!Object.keys(data).length)
@@ -112,13 +161,19 @@ function WhitelistEntryModal ({ data, onClose }) {
       setAddress(data._id || '')
       setName(data.name || '')
       setQuota(utils.formatUnits(data.quota || 0, 9))
+
+      setEmail(data.kyc?.email || '')
+      setDiscord(data.kyc?.discord || '')
+      setCountry(data.kyc?.country || '')
+      setNote(data.kyc?.note || '')
     }
   }, [data])
 
   const onSave = async () => {
     const dataToSave = {
       name,
-      quota: utils.parseUnits(quota, 9).toString()
+      quota: utils.parseUnits(quota, 9).toString(),
+      kyc: { email, discord, country, note }
     }
 
     if (create) {
@@ -165,6 +220,31 @@ function WhitelistEntryModal ({ data, onClose }) {
           />
           <div className='absolute top-6 right-10 h-[38px] text-sm flex items-center'>× 1000</div>
         </div>
+
+        <Input
+          id='email'
+          label='Email'
+          value={email}
+          onChange={setEmail}
+        />
+        <Input
+          id='discord'
+          label='Discord'
+          value={discord}
+          onChange={setDiscord}
+        />
+        <Input
+          id='country'
+          label='Country'
+          value={country}
+          onChange={setCountry}
+        />
+        <Input
+          id='note'
+          label='Extra Note'
+          value={note}
+          onChange={setNote}
+        />
       </div>
 
       <div className='flex justify-between mt-6'>
