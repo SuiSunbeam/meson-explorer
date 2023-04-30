@@ -59,11 +59,11 @@ export default function LpWhitelist() {
           size='lg'
           headers={[
             { name: 'Account', width: '30%' },
-            { name: 'Deposit / Quota', width: '13%' },
-            { name: 'Onchain Balance', width: '13%' },
-            { name: 'Contact', width: '20%' },
-            { name: 'Country', width: '10%' },
-            { name: 'Note', width: '7%' },
+            { name: 'Deposit / Quota', width: '18%' },
+            { name: 'Onchain Balance', width: '18%' },
+            { name: 'Contact', width: '15%' },
+            { name: 'Country', width: '7%' },
+            { name: 'Note', width: '5%' },
             { name: 'Edit', width: '7%', className: 'text-right' },
           ]}
         >
@@ -112,8 +112,8 @@ function WhitelistedTotal ({ quota, deposit }) {
         Total
       </Td>
       <Td className='font-bold'>
-        <NumberDisplay className='text-xs underline' value={fmt.format(utils.formatUnits(deposit, 6))} length={9} />
-        <NumberDisplay className='text-xs' value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} />
+        <NumberDisplay className='underline' value={fmt.format(utils.formatUnits(deposit, 6))} length={9} />
+        <NumberDisplay value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} />
       </Td>
       <Td className='font-bold'>
       </Td>
@@ -163,24 +163,24 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
         </ExternalLink>
       </Td>
       <Td>
-        <NumberDisplay className='text-xs underline' value={fmt.format(utils.formatUnits(deposit, 6))} length={9} />
-        <NumberDisplay className='text-xs' value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} />
+        <NumberDisplay className='underline' value={fmt.format(utils.formatUnits(deposit, 6))} length={9} />
+        <NumberDisplay value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} />
       </Td>
       <Td>
         <div className='flex items-center'>
-          <CurrencyDollarIcon className='w-3.5 h-3.5 text-gray-500 mr-1' />
-          <NumberDisplay className='text-xs' value={fmt.format(utils.formatUnits(podBalance || '0', 6))} length={7} />
+          <CurrencyDollarIcon className='w-4 h-4 text-gray-500 mr-1' />
+          <NumberDisplay value={fmt.format(utils.formatUnits(podBalance || '0', 6))} length={7} />
         </div>
         <div className='flex items-center'>
-          <LockClosedIcon className='w-3.5 h-3.5 text-gray-500 mr-1' />
-          <NumberDisplay className='text-xs' value={fmt.format(utils.formatUnits(lockedBalance || '0', 6))} length={7} />
+          <LockClosedIcon className='w-4 h-4 text-gray-500 mr-1' />
+          <NumberDisplay value={fmt.format(utils.formatUnits(lockedBalance || '0', 6))} length={7} />
         </div>
         <div className='flex items-center'>
-          <GiftIcon className='w-3.5 h-3.5 text-gray-500 mr-1' />
-          <NumberDisplay className='text-xs' value={fmt.format(utils.formatUnits(rewardsBalance || '0', 6))} length={7} />
+          <GiftIcon className='w-4 h-4 text-gray-500 mr-1' />
+          <NumberDisplay value={fmt.format(utils.formatUnits(rewardsBalance || '0', 6))} length={7} />
         </div>
       </Td>
-      <Td>
+      <Td size='sm'>
       {
         kyc?.email &&
         <div className='flex items-center'>
@@ -196,8 +196,8 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
         </div>
       }
       </Td>
-      <Td>{kyc?.country}</Td>
-      <Td>{kyc?.note}</Td>
+      <Td size='sm'>{kyc?.country}</Td>
+      <Td size='sm'>{kyc?.note}</Td>
       <Td className='text-right'>
         <Button rounded size='xs' color='info' onClick={onOpenModal}>
           <PencilIcon className='w-4 h-4' aria-hidden='true' />
