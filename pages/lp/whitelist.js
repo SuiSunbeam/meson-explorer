@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { utils } from 'ethers'
-import { MinusCircleIcon, CheckCircleIcon, LockClosedIcon, PencilIcon } from '@heroicons/react/solid'
+import { MinusCircleIcon, ExclamationCircleIcon, CheckCircleIcon, LockClosedIcon, PencilIcon } from '@heroicons/react/solid'
 import {
   CurrencyDollarIcon,
   LockOpenIcon,
@@ -145,6 +145,7 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
       .catch(err => console.warn(err))
   }, [podContract, addr])
 
+  const ratio = deposit / quota
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-2'>
@@ -162,10 +163,11 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
       </Td>
       <Td size='sm'>
         <div className='flex items-center'>
-          {!test && deposit / quota > 0.9 && <CheckCircleIcon className='w-4 h-4 mr-px text-green-500' />}
+          {!test && ratio > 0.9 && <CheckCircleIcon className='w-4 h-4 mr-px text-green-500' />}
+          {!test && ratio < 0.1 && <ExclamationCircleIcon className='w-4 h-4 mr-px text-red-500' />}
           <NumberDisplay
-            length={deposit / quota > 0.9 ? 7 : 9}
-            className={classnames('mr-0', !test && deposit / quota < 0.1 && 'bg-red-200')}
+            length={(ratio > 0.9 || ratio < 0.1) ? 7 : 9}
+            className='mr-0'
             value={fmt.format(utils.formatUnits(deposit, 6))}
           />
         </div>
