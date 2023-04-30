@@ -111,7 +111,7 @@ function WhitelistedTotal ({ quota, deposit }) {
       </Td>
       <Td size='sm' className='font-bold'>
         <NumberDisplay className='mr-0' value={fmt.format(utils.formatUnits(deposit, 6))} length={9} />
-        <div className='h-0.5 my-px w-full bg-black' />
+        <div className='h-0.5 my-px w-full w-[136px] bg-black' />
         <NumberDisplay value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} />
       </Td>
       <Td className='font-bold'>
@@ -160,7 +160,7 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
           {addr}
         </ExternalLink>
       </Td>
-      <Td size='sm' className='flex flex-col items-start'>
+      <Td size='sm'>
         <div className='flex items-center'>
           {!test && deposit / quota > 0.9 && <CheckCircleIcon className='w-4 h-4 mr-px text-green-500' />}
           <NumberDisplay
