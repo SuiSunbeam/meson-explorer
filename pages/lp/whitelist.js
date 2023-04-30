@@ -163,7 +163,7 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
         <NumberDisplay className='underline' value={fmt.format(utils.formatUnits(deposit, 6))} length={9} />
         <NumberDisplay value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} />
       </Td>
-      <Td>
+      <Td size='sm'>
         <div className='flex items-center'>
           <CurrencyDollarIcon className='w-4 h-4 text-gray-500 mr-1' />
           <NumberDisplay value={fmt.format(utils.formatUnits(podBalance || '0', 6))} length={7} />
