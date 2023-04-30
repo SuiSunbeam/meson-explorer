@@ -1,14 +1,16 @@
 import React from 'react'
+import classnames from 'classnames'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { utils } from 'ethers'
-import { MinusCircleIcon, PencilIcon } from '@heroicons/react/solid'
+import { MinusCircleIcon, CheckCircleIcon, LockClosedIcon, PencilIcon } from '@heroicons/react/solid'
 import {
   CurrencyDollarIcon,
-  LockClosedIcon,
+  LockOpenIcon,
   GiftIcon,
   AtSymbolIcon,
   ChatIcon,
+  GlobeAltIcon,
 } from '@heroicons/react/outline'
 
 import Card, { CardTitle, CardBody } from 'components/Card'
@@ -56,12 +58,11 @@ export default function LpWhitelist() {
           size='lg'
           headers={[
             { name: 'Account', width: '30%' },
-            { name: 'Deposit / Quota', width: '18%' },
-            { name: 'Onchain Balance', width: '18%' },
+            { name: 'Deposit / Quota', width: '20%' },
+            { name: 'Onchain Balance', width: '20%' },
             { name: 'Contact', width: '15%' },
-            { name: 'Country', width: '7%' },
-            { name: 'Note', width: '5%' },
-            { name: 'Edit', width: '7%', className: 'text-right' },
+            { name: 'Note', width: '7%' },
+            { name: 'Edit', width: '8%', className: 'text-right' },
           ]}
         >
           <WhitelistedTotal quota={total.quota} deposit={total.deposit} />
@@ -108,13 +109,13 @@ function WhitelistedTotal ({ quota, deposit }) {
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-2 font-medium'>
         Total
       </Td>
-      <Td className='font-bold'>
-        <NumberDisplay className='underline' value={fmt.format(utils.formatUnits(deposit, 6))} length={9} />
+      <Td size='sm' className='font-bold'>
+        <NumberDisplay className='mr-0' value={fmt.format(utils.formatUnits(deposit, 6))} length={9} />
+        <div className='h-0.5 my-px w-full bg-black' />
         <NumberDisplay value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} />
       </Td>
       <Td className='font-bold'>
       </Td>
-      <Td></Td>
       <Td></Td>
       <Td></Td>
       <Td></Td>
@@ -159,8 +160,16 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
           {addr}
         </ExternalLink>
       </Td>
-      <Td>
-        <NumberDisplay className='underline' value={fmt.format(utils.formatUnits(deposit, 6))} length={9} />
+      <Td size='sm' className='flex flex-col items-start'>
+        <div className='flex items-center'>
+          {!test && deposit / quota > 0.9 && <CheckCircleIcon className='w-4 h-4 mr-px text-green-500' />}
+          <NumberDisplay
+            length={deposit / quota > 0.9 ? 7 : 9}
+            className={classnames('mr-0', !test && deposit / quota < 0.1 && 'bg-red-200')}
+            value={fmt.format(utils.formatUnits(deposit, 6))}
+          />
+        </div>
+        <div className='h-px my-0.5 w-[136px] bg-black' />
         <NumberDisplay value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} />
       </Td>
       <Td size='sm'>
@@ -169,7 +178,11 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
           <NumberDisplay value={fmt.format(utils.formatUnits(podBalance || '0', 6))} length={7} />
         </div>
         <div className='flex items-center'>
-          <LockClosedIcon className='w-4 h-4 text-gray-500 mr-1' />
+          {
+            lockedBalance?.eq(deposit) && lockedBalance?.gt(0)
+              ? <LockClosedIcon className='w-4 h-4 text-green-500 mr-1' />
+              : <LockOpenIcon className='w-4 h-4 text-gray-500 mr-1' />
+          }
           <NumberDisplay value={fmt.format(utils.formatUnits(lockedBalance || '0', 6))} length={7} />
         </div>
         <div className='flex items-center'>
@@ -192,8 +205,14 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
           {kyc?.discord}
         </div>
       }
+      {
+        kyc?.country &&
+        <div className='flex items-center'>
+          <GlobeAltIcon className='w-4 h-4 text-gray-500 mr-1' aria-hidden='true' />
+          {kyc?.country}
+        </div>
+      }
       </Td>
-      <Td size='sm'>{kyc?.country}</Td>
       <Td size='sm'>{kyc?.note}</Td>
       <Td className='text-right'>
         <Button rounded size='xs' color='info' onClick={onOpenModal}>
