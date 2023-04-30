@@ -1,12 +1,9 @@
 import React from 'react'
 import classnames from 'classnames'
 import { useRouter } from 'next/router'
-import ReconnectingWebSocket from 'reconnecting-websocket'
 
 import { RefreshIcon } from '@heroicons/react/solid'
 import { BigNumber, ethers } from 'ethers'
-import { DealerClient } from '@mesonfi/dealer'
-import useSWR from 'swr'
 
 import Card, { CardTitle, CardBody } from 'components/Card'
 import LoadingScreen, { Loading } from 'components/LoadingScreen'
@@ -19,9 +16,8 @@ import NumberDisplay from 'components/NumberDisplay'
 
 import { LPS } from 'lib/const'
 import fetcher from 'lib/fetcher'
-import { presets, getAllNetworks, getExplorerAddressLink, abbreviate } from 'lib/swap'
-
-const relayer = process.env.NEXT_PUBLIC_SERVER_URL.split(',')[0]
+import { getAllNetworks, getExplorerAddressLink, abbreviate } from 'lib/swap'
+import useDealer from 'lib/useDealer'
 
 const CORE_ALERT = {
   eth: 0.01,
@@ -45,13 +41,7 @@ export default function LpPage() {
   const router = useRouter()
   const { address } = router.query
 
-  const { data: rpcs } = useSWR(`${relayer}/rpcs`, fetcher)
-
-  const dealer = React.useMemo(() => {
-    if (rpcs) {
-      return new DealerClient(presets, { rpcs, WebSocket: ReconnectingWebSocket, threshold: 1 })
-    }
-  }, [rpcs])
+  const dealer = useDealer()
 
   let body = <CardBody><LoadingScreen /></CardBody>
   if (address && dealer) {
@@ -264,7 +254,7 @@ function TokenAmount ({ mesonClient, address, token, explorer, add }) {
         )}>
           <NumberDisplay
             value={deposit}
-            classNames={(token.gray || token.disabled) ? 'text-gray-300' : classnames(
+            className={(token.gray || token.disabled) ? 'text-gray-300' : classnames(
               deposit <= 1000 && 'bg-red-500 text-white',
               deposit > 1000 && deposit <= 5000 && 'text-red-500',
               deposit > 5000 && deposit <= 10000 && 'text-warning',
@@ -282,7 +272,7 @@ function TokenAmount ({ mesonClient, address, token, explorer, add }) {
         )}>
           <NumberDisplay
             value={balance}
-            classNames={classnames((balance < 1 || token.disabled) && 'text-gray-300')}
+            className={classnames((balance < 1 || token.disabled) && 'text-gray-300')}
           />
           <TagNetworkToken explorer={explorer} token={token} iconOnly />
         </div>

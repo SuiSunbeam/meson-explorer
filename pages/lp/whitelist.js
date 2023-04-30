@@ -15,13 +15,26 @@ import Input from 'components/Input'
 
 import { LPS } from 'lib/const'
 import fetcher from 'lib/fetcher'
-import { abbreviate } from 'lib/swap'
+import { abbreviate, presets } from 'lib/swap'
+import useDealer from 'lib/useDealer'
+
+import PodAbi from './abi/Pod.json'
 
 export default function LpWhitelist() {
   const router = useRouter()
 
   const { data, mutate } = useSWR(`admin/whitelist`, fetcher)
   const [modalData, setModalData] = React.useState()
+  const dealer = useDealer()
+
+  const podContract = React.useMemo(() => {
+    if (dealer) {
+      const cfxNetwork = presets.getNetwork('cfx')
+      const mesonClient = dealer._createMesonClient(cfxNetwork)
+      const podToken = presets.getTokenByCategory('cfx', 'pod')
+      return mesonClient.getContractInstance(podToken.addr, PodAbi)
+    }
+  }, [dealer])
 
   let body = <CardBody><LoadingScreen /></CardBody>
   if (data) {
@@ -32,19 +45,20 @@ export default function LpWhitelist() {
     body = (
       <CardBody>
         <Table
+          fixed
           size='lg'
           headers={[
             { name: 'Account', width: '30%' },
-            { name: 'Quota', width: '10%' },
-            { name: 'Deposit', width: '10%' },
-            { name: 'Contact', width: '25%' },
+            { name: 'Deposit / Quota', width: '13%' },
+            { name: 'Onchain Balance', width: '13%' },
+            { name: 'Contact', width: '20%' },
             { name: 'Country', width: '10%' },
             { name: 'Note', width: '7%' },
-            { name: 'Edit', width: '8%', className: 'text-right' },
+            { name: 'Edit', width: '7%', className: 'text-right' },
           ]}
         >
           <WhitelistedTotal quota={total.quota} deposit={total.deposit} />
-          {data.map((d, index) => <WhitelistedAddrRow key={`row-${index}`} {...d} onOpenModal={() => setModalData(d)} />)}
+          {data.map((d, index) => <WhitelistedAddrRow key={`row-${index}`} {...d} podContract={podContract} onOpenModal={() => setModalData(d)} />)}
         </Table>
       </CardBody>
     )
@@ -87,8 +101,12 @@ function WhitelistedTotal ({ quota, deposit }) {
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-2 font-medium'>
         Total
       </Td>
-      <Td className='font-bold'><NumberDisplay value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} /></Td>
-      <Td className='font-bold'><NumberDisplay value={fmt.format(utils.formatUnits(deposit, 6))} /></Td>
+      <Td className='font-bold'>
+        <NumberDisplay className='text-xs underline' value={fmt.format(utils.formatUnits(deposit, 6))} length={9} />
+        <NumberDisplay className='text-xs' value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} />
+      </Td>
+      <Td className='font-bold'>
+      </Td>
       <Td></Td>
       <Td></Td>
       <Td></Td>
@@ -97,7 +115,28 @@ function WhitelistedTotal ({ quota, deposit }) {
   )
 }
 
-function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, kyc, onOpenModal }) {
+function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, kyc, podContract, onOpenModal }) {
+  const [podBalance, setPodBalance] = React.useState()
+  const [lockedBalance, setLockedBalance] = React.useState()
+  const [rewardsBalance, setRewardsBalance] = React.useState()
+
+  React.useEffect(() => {
+    if (!podContract) {
+      return
+    }
+
+    podContract.balanceOf(addr)
+      .then(setPodBalance)
+
+    podContract.getLockedBalance(addr)
+      .then(setLockedBalance)
+      .catch(err => console.warn(err))
+    
+    podContract.getTotalRewards(addr)
+      .then(setRewardsBalance)
+      .catch(err => console.warn(err))
+  }, [podContract, addr])
+
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-2'>
@@ -113,8 +152,15 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
           {addr}
         </ExternalLink>
       </Td>
-      <Td><NumberDisplay value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} /></Td>
-      <Td><NumberDisplay value={fmt.format(utils.formatUnits(deposit, 6))} /></Td>
+      <Td>
+        <NumberDisplay className='text-xs underline' value={fmt.format(utils.formatUnits(deposit, 6))} length={9} />
+        <NumberDisplay className='text-xs' value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} />
+      </Td>
+      <Td>
+        <NumberDisplay className='text-xs' value={fmt.format(utils.formatUnits(podBalance || '0', 6))} length={9} />
+        <NumberDisplay className='text-xs' value={fmt.format(utils.formatUnits(lockedBalance || '0', 6))} length={9} />
+        <NumberDisplay className='text-xs' value={fmt.format(utils.formatUnits(rewardsBalance || '0', 6))} length={9} />
+      </Td>
       <Td>
       {
         kyc?.email &&

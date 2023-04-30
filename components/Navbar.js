@@ -1,4 +1,5 @@
 import React from 'react'
+import classnames from 'classnames'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useSession, signIn, signOut } from 'next-auth/react'
@@ -19,10 +20,6 @@ const relayers = process.env.NEXT_PUBLIC_SERVER_URL.split(',')
 const navigation = [
   // { name: 'Swaps', href: '#', current: true },
 ]
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
 
 export default function Navbar({ globalState, setGlobalState }) {
   return (
@@ -63,7 +60,7 @@ export default function Navbar({ globalState, setGlobalState }) {
                       <a
                         key={item.name}
                         href={item.href}
-                        className={classNames(
+                        className={classnames(
                           item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                           'px-3 py-1.5 rounded-md text-sm font-medium'
                         )}
@@ -89,7 +86,7 @@ export default function Navbar({ globalState, setGlobalState }) {
                   key={item.name}
                   as='a'
                   href={item.href}
-                  className={classNames(
+                  className={classnames(
                     item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                     'block px-3 py-1.5 rounded-md text-base font-medium'
                   )}
