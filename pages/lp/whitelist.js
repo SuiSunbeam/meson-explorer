@@ -1,5 +1,4 @@
 import React from 'react'
-import classnames from 'classnames'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { utils } from 'ethers'
@@ -29,6 +28,8 @@ import useDealer from 'lib/useDealer'
 
 import PodAbi from './abi/Pod.json'
 
+const cfxNetwork = presets.getNetwork('cfx')
+
 export default function LpWhitelist() {
   const router = useRouter()
 
@@ -38,7 +39,6 @@ export default function LpWhitelist() {
 
   const podContract = React.useMemo(() => {
     if (dealer) {
-      const cfxNetwork = presets.getNetwork('cfx')
       const mesonClient = dealer._createMesonClient(cfxNetwork)
       const podToken = presets.getTokenByCategory('cfx', 'pod')
       return mesonClient.getContractInstance(podToken.addr, PodAbi)
@@ -155,7 +155,7 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
         </div>
         <ExternalLink
           size='xs'
-          href={`/address/${addr}`}
+          href={`${cfxNetwork.explorer}/address/${addr}`}
           className='flex items-center font-mono'
         >
           {addr}
