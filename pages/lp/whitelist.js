@@ -34,13 +34,13 @@ export default function LpWhitelist() {
         <Table
           size='lg'
           headers={[
-            { name: 'Account', width: '40%' },
+            { name: 'Account', width: '30%' },
             { name: 'Quota', width: '10%' },
             { name: 'Deposit', width: '10%' },
-            { name: 'Contact', width: '20%' },
+            { name: 'Contact', width: '25%' },
             { name: 'Country', width: '10%' },
-            { name: 'Note', width: '5%' },
-            { name: 'Edit', width: '5%', className: 'text-right' },
+            { name: 'Note', width: '7%' },
+            { name: 'Edit', width: '8%', className: 'text-right' },
           ]}
         >
           <WhitelistedTotal quota={total.quota} deposit={total.deposit} />
