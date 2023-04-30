@@ -2,7 +2,17 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { utils } from 'ethers'
-import { AtSymbolIcon, MinusCircleIcon, ChatIcon, PencilIcon } from '@heroicons/react/solid'
+import {
+  MinusCircleIcon,
+  AtSymbolIcon,
+  ChatIcon,
+  PencilIcon
+} from '@heroicons/react/solid'
+import {
+  CurrencyDollarIcon,
+  LockClosedIcon,
+  GiftIcon,
+} from '@heroicons/react/outline'
 
 import Card, { CardTitle, CardBody } from 'components/Card'
 import LoadingScreen from 'components/LoadingScreen'
@@ -157,9 +167,18 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
         <NumberDisplay className='text-xs' value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} />
       </Td>
       <Td>
-        <NumberDisplay className='text-xs' value={fmt.format(utils.formatUnits(podBalance || '0', 6))} length={9} />
-        <NumberDisplay className='text-xs' value={fmt.format(utils.formatUnits(lockedBalance || '0', 6))} length={9} />
-        <NumberDisplay className='text-xs' value={fmt.format(utils.formatUnits(rewardsBalance || '0', 6))} length={9} />
+        <div className='flex items-center'>
+          <CurrencyDollarIcon className='w-3.5 h-3.5 text-gray-500 mr-1' />
+          <NumberDisplay className='text-xs' value={fmt.format(utils.formatUnits(podBalance || '0', 6))} length={7} />
+        </div>
+        <div className='flex items-center'>
+          <LockClosedIcon className='w-3.5 h-3.5 text-gray-500 mr-1' />
+          <NumberDisplay className='text-xs' value={fmt.format(utils.formatUnits(lockedBalance || '0', 6))} length={7} />
+        </div>
+        <div className='flex items-center'>
+          <GiftIcon className='w-3.5 h-3.5 text-gray-500 mr-1' />
+          <NumberDisplay className='text-xs' value={fmt.format(utils.formatUnits(rewardsBalance || '0', 6))} length={7} />
+        </div>
       </Td>
       <Td>
       {
