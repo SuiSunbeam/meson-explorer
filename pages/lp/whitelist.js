@@ -2,16 +2,13 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { utils } from 'ethers'
-import {
-  MinusCircleIcon,
-  AtSymbolIcon,
-  ChatIcon,
-  PencilIcon
-} from '@heroicons/react/solid'
+import { MinusCircleIcon, PencilIcon } from '@heroicons/react/solid'
 import {
   CurrencyDollarIcon,
   LockClosedIcon,
   GiftIcon,
+  AtSymbolIcon,
+  ChatIcon,
 } from '@heroicons/react/outline'
 
 import Card, { CardTitle, CardBody } from 'components/Card'
