@@ -180,7 +180,7 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
           <NumberDisplay
             length={7}
             className={podBalance?.eq(0) && 'text-gray-300'}
-            value={fmt.format(utils.formatUnits(podBalance || '0', 6))}
+            value={podBalance && fmt.format(utils.formatUnits(podBalance, 6))}
           />
         </div>
         <div className='flex items-center'>
@@ -192,7 +192,7 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
           <NumberDisplay
             length={7}
             className={lockedBalance?.eq(0) && 'text-gray-300'}
-            value={fmt.format(utils.formatUnits(lockedBalance || '0', 6))}
+            value={lockedBalance && fmt.format(utils.formatUnits(lockedBalance, 6))}
           />
         </div>
         <div className='flex items-center'>
@@ -200,7 +200,7 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
           <NumberDisplay
             length={7}
             className={rewardsBalance?.eq(0) && 'text-gray-300'}
-            value={fmt.format(utils.formatUnits(rewardsBalance || '0', 6))}
+            value={rewardsBalance && fmt.format(utils.formatUnits(rewardsBalance, 6))}
           />
         </div>
       </Td>

@@ -4,7 +4,7 @@ import { Loading } from 'components/LoadingScreen'
 
 export default function NumberDisplay ({ value, decimals = 6, length = 7, className }) {
   if (!value) {
-    return <span className='ml-[100px] mr-[6px]'><Loading /></span>
+    return <div className='flex items-center h-5 ml-[100px] mr-[6px]'><Loading /></div>
   }
 
   const [i, d = ''] = value.split('.')
