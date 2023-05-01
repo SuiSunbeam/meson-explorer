@@ -59,7 +59,7 @@ export default function LpWhitelist() {
           headers={[
             { name: 'Account', width: '30%' },
             { name: 'Deposit / Quota', width: '20%' },
-            { name: 'Onchain Balance', width: '20%' },
+            { name: 'Onchain Balances', width: '20%' },
             { name: 'Contact', width: '15%' },
             { name: 'Note', width: '7%' },
             { name: 'Edit', width: '8%', className: 'text-right' },
