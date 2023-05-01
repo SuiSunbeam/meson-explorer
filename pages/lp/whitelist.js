@@ -177,7 +177,11 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
       <Td size='sm'>
         <div className='flex items-center'>
           <CurrencyDollarIcon className='w-4 h-4 text-gray-500 mr-1' />
-          <NumberDisplay value={fmt.format(utils.formatUnits(podBalance || '0', 6))} length={7} />
+          <NumberDisplay
+            length={7}
+            className={podBalance?.eq(0) && 'text-gray-300'}
+            value={fmt.format(utils.formatUnits(podBalance || '0', 6))}
+          />
         </div>
         <div className='flex items-center'>
           {
@@ -185,11 +189,19 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
               ? <LockClosedIcon className='w-4 h-4 text-green-500 mr-1' />
               : <LockOpenIcon className='w-4 h-4 text-gray-500 mr-1' />
           }
-          <NumberDisplay value={fmt.format(utils.formatUnits(lockedBalance || '0', 6))} length={7} />
+          <NumberDisplay
+            length={7}
+            className={lockedBalance?.eq(0) && 'text-gray-300'}
+            value={fmt.format(utils.formatUnits(lockedBalance || '0', 6))}
+          />
         </div>
         <div className='flex items-center'>
           <GiftIcon className='w-4 h-4 text-gray-500 mr-1' />
-          <NumberDisplay value={fmt.format(utils.formatUnits(rewardsBalance || '0', 6))} length={7} />
+          <NumberDisplay
+            length={7}
+            className={rewardsBalance?.eq(0) && 'text-gray-300'}
+            value={fmt.format(utils.formatUnits(rewardsBalance || '0', 6))}
+          />
         </div>
       </Td>
       <Td size='sm'>
