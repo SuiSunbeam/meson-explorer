@@ -45,12 +45,36 @@ export default function LpWhitelist() {
     }
   }, [dealer])
 
-  let body = <CardBody><LoadingScreen /></CardBody>
-  if (data) {
-    const total = data.filter(d => !d.test).reduce(({ quota, deposit }, row) => ({
+  const sortedData = React.useMemo(() => {
+    if (!data) {
+      return
+    }
+    return data.sort((x, y) => {
+      if (x.test !== y.test) {
+        return (y.test || 0) - (x.test || 0)
+      } else if (x.quota !== y.quota) {
+        return y.quota - x.quota
+      } else if (x.deposit !== y.deposit) {
+        return y.deposit - x.deposit
+      } else {
+        return y.name.toLowerCase() > x.name.toLowerCase() ? -1 : 1
+      }
+    })
+  }, [data])
+
+  const total = React.useMemo(() => {
+    if (!data) {
+      return
+    }
+    return data.filter(d => !d.test).reduce(({ quota, deposit }, row) => ({
       quota: row.quota + quota,
       deposit: row.deposit + deposit,
     }), { quota: 0, deposit: 0 })
+  }, [data])
+
+  let body = <CardBody><LoadingScreen /></CardBody>
+  if (data) {
+    
     body = (
       <CardBody>
         <Table
@@ -66,7 +90,7 @@ export default function LpWhitelist() {
           ]}
         >
           <WhitelistedTotal quota={total.quota} deposit={total.deposit} />
-          {data.map((d, index) => <WhitelistedAddrRow key={`row-${index}`} {...d} podContract={podContract} onOpenModal={() => setModalData(d)} />)}
+          {sortedData.map((d, index) => <WhitelistedAddrRow key={`row-${index}`} {...d} podContract={podContract} onOpenModal={() => setModalData(d)} />)}
         </Table>
       </CardBody>
     )
