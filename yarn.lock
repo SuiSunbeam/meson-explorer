@@ -621,14 +621,14 @@
     eventemitter3 "^4.0.7"
     lodash "^4.17.21"
 
-"@mesonfi/presets@^1.9.0-beta.4":
-  version "1.9.0-beta.4"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.9.0-beta.4/3697c4b2e13dcce49c880ff49f03b36eda7a4edf#3697c4b2e13dcce49c880ff49f03b36eda7a4edf"
-  integrity sha512-X8VLm53XKnpawLM33ttYGqJdn+CGduc4iqig88w74JxLhP1lBljteM1ZBD2hIcsbvDjEBmmjwa9m/GLcWzlyjw==
+"@mesonfi/presets@^1.9.0-rc.1":
+  version "1.9.0-rc.1"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.9.0-rc.1/8030d205a326e923f447896cae0e0226e2d9383b#8030d205a326e923f447896cae0e0226e2d9383b"
+  integrity sha512-v0pEFCpYVDdLzvl9V4TWTs4LIWtkPJx/FZlICAkAdwJlrQ7H8TkIbP0TRIKo64EZw+95aAiqB7jij2l91FHKig==
   dependencies:
     "@mesonfi/contract-abis" "^1.9.0"
-    "@mesonfi/sdk" "^1.9.0-beta.4"
-    "@mysten/sui.js" "^0.32.1"
+    "@mesonfi/sdk" "^1.9.0-rc.1"
+    "@mysten/sui.js" "^0.33.0"
     aptos "^1.3.16"
     ethers "^5.7.1"
     lodash "^4.17.21"
@@ -642,6 +642,21 @@
     "@mesonfi/contract-abis" "^1.9.0"
     "@mesonfi/contract-types" "^1.9.0"
     "@mysten/sui.js" "^0.32.1"
+    aptos "^1.3.16"
+    cross-fetch "^3.1.5"
+    ethers "^5.7.1"
+    lodash "^4.17.21"
+    tronweb "^4.3.0"
+    zksync-web3 "^0.13.4"
+
+"@mesonfi/sdk@^1.9.0-rc.1":
+  version "1.9.0-rc.1"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.9.0-rc.1/19f4525f1385cd491aae03c2b842003a0edae7be#19f4525f1385cd491aae03c2b842003a0edae7be"
+  integrity sha512-pXcbU7wo0xHwUWnDDAOl067vEVCfp5cCLhvGzc1+Pj8FiOk/RveISBskVkkSjH6UnZGuFYmA75taEqTfUcLc/A==
+  dependencies:
+    "@mesonfi/contract-abis" "^1.9.0"
+    "@mesonfi/contract-types" "^1.9.0"
+    "@mysten/sui.js" "^0.33.0"
     aptos "^1.3.16"
     cross-fetch "^3.1.5"
     ethers "^5.7.1"
@@ -690,6 +705,13 @@
   dependencies:
     bs58 "^5.0.0"
 
+"@mysten/bcs@0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@mysten/bcs/-/bcs-0.7.1.tgz#e8db25718143e2a15688ea858470970b743f7248"
+  integrity sha512-wFPb8bkhwrbiStfZMV5rFM7J+umpke59/dNjDp+UYJKykNlW23LCk2ePyEUvGdb62HGJM1jyOJ8g4egE3OmdKA==
+  dependencies:
+    bs58 "^5.0.0"
+
 "@mysten/sui.js@^0.32.1":
   version "0.32.1"
   resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.32.1.tgz#d1ba3f324ef3335abde352be5d5fea131b9196ba"
@@ -703,6 +725,22 @@
     "@suchipi/femver" "^1.0.0"
     jayson "^4.0.0"
     msw "^1.2.1"
+    rpc-websockets "^7.5.1"
+    superstruct "^1.0.3"
+    tweetnacl "^1.0.3"
+
+"@mysten/sui.js@^0.33.0":
+  version "0.33.0"
+  resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.33.0.tgz#3ed0831d733fffb65430c3949fd00eaa7510e462"
+  integrity sha512-vPswzowPoxYmexN+jKrSQ5uKWv8AoX30c11t8VAODCCXeCziq7Y27TEcYFsQmWJBIMU/hYw75kGj9oorJyXyKw==
+  dependencies:
+    "@mysten/bcs" "0.7.1"
+    "@noble/curves" "^1.0.0"
+    "@noble/hashes" "^1.3.0"
+    "@scure/bip32" "^1.3.0"
+    "@scure/bip39" "^1.2.0"
+    "@suchipi/femver" "^1.0.0"
+    jayson "^4.0.0"
     rpc-websockets "^7.5.1"
     superstruct "^1.0.3"
     tweetnacl "^1.0.3"
@@ -796,7 +834,7 @@
   dependencies:
     "@noble/hashes" "1.3.0"
 
-"@noble/curves@~1.0.0":
+"@noble/curves@^1.0.0", "@noble/curves@~1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@noble/curves/-/curves-1.0.0.tgz#e40be8c7daf088aaf291887cbc73f43464a92932"
   integrity sha512-2upgEu0iLiDVDZkNLeFV2+ht0BAVgQnEmCk6JsOch9Rp8xfkMCbvbAZlA2pBHQc73dbl+vFOXfqkf4uemdn0bw==
@@ -859,7 +897,7 @@
   resolved "https://registry.yarnpkg.com/@scure/base/-/base-1.1.1.tgz#ebb651ee52ff84f420097055f4bf46cfba403938"
   integrity sha512-ZxOhsSyxYwLJj3pLZCefNitxsj093tb2vq90mp2txoYeBqbcjDjqFhyM8eUjq/uFm6zJ+mUuqxlS2FkuSY1MTA==
 
-"@scure/bip32@^1.2.0":
+"@scure/bip32@^1.2.0", "@scure/bip32@^1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@scure/bip32/-/bip32-1.3.0.tgz#6c8d980ef3f290987736acd0ee2e0f0d50068d87"
   integrity sha512-bcKpo1oj54hGholplGLpqPHRbIsnbixFtc06nwuNM5/dwSXOq/AAYoIBRsBmnZJSdfeNW5rnff7NTAz3ZCqR9Q==
