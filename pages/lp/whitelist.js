@@ -209,7 +209,7 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
         </div>
         <div className='flex items-center'>
           {
-            lockedBalance?.eq(deposit) && lockedBalance?.gt(0)
+            lockedBalance?.gte(deposit) && lockedBalance?.gt(0)
               ? <LockClosedIcon className='w-4 h-4 text-green-500 mr-1' />
               : <LockOpenIcon className='w-4 h-4 text-gray-500 mr-1' />
           }
