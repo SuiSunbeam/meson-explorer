@@ -81,12 +81,12 @@ export default function LpWhitelist() {
           fixed
           size='lg'
           headers={[
-            { name: 'Account', width: '30%' },
+            { name: 'Account', width: '25%' },
             { name: 'Deposit / Quota', width: '20%' },
             { name: 'Onchain Balances', width: '20%' },
-            { name: 'Contact', width: '15%' },
-            { name: 'Note', width: '7%' },
-            { name: 'Edit', width: '8%', className: 'text-right' },
+            { name: 'Contact', width: '20%' },
+            { name: 'Note', width: '10%' },
+            { name: 'Edit', width: '5%', className: 'text-right' },
           ]}
         >
           <WhitelistedTotal quota={total.quota} deposit={total.deposit} />
@@ -138,8 +138,7 @@ function WhitelistedTotal ({ quota, deposit }) {
         <div className='h-0.5 my-px w-full w-[136px] bg-black' />
         <NumberDisplay value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} />
       </Td>
-      <Td className='font-bold'>
-      </Td>
+      <Td></Td>
       <Td></Td>
       <Td></Td>
       <Td></Td>
@@ -178,11 +177,10 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
           {name}
         </div>
         <ExternalLink
-          size='xs'
           href={`${cfxNetwork.explorer}/address/${addr}`}
-          className='flex items-center font-mono'
+          className='flex items-center'
         >
-          {addr}
+          {abbreviate(addr, 8)}
         </ExternalLink>
       </Td>
       <Td size='sm'>
@@ -251,7 +249,7 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
         </div>
       }
       </Td>
-      <Td size='sm'>{kyc?.note}</Td>
+      <Td>{kyc?.note}</Td>
       <Td className='text-right'>
         <Button rounded size='xs' color='info' onClick={onOpenModal}>
           <PencilIcon className='w-4 h-4' aria-hidden='true' />

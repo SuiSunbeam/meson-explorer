@@ -9,7 +9,7 @@ export function ExternalIcon({ href }) {
   )
 }
 
-export default function ExternalLink({ size = 'xs', href, className, children }) {
+export default function ExternalLink({ size = 'sm', href, className, children }) {
   return (
     <a
       className={classnames('text-gray-500 hover:text-primary hover:underline cursor-pointer', `text-${size}`, className)}

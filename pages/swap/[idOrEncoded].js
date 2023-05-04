@@ -331,18 +331,15 @@ function SwapStepName({ index, name }) {
 
 function SwapStepInfo({ index, hash, recipient, name, fromAddress, from, to }) {
   if (index === 0) {
-    return <ExternalLink size='sm' href={getExplorerAddressLink(from.network, fromAddress)}>{fromAddress}</ExternalLink>
+    return <ExternalLink href={getExplorerAddressLink(from.network, fromAddress)}>{fromAddress}</ExternalLink>
   } else if (index === 5) {
-    return <ExternalLink size='sm' href={getExplorerAddressLink(to.network, recipient)}>{recipient}</ExternalLink>
+    return <ExternalLink href={getExplorerAddressLink(to.network, recipient)}>{recipient}</ExternalLink>
   }
   return (
     <div className='flex items-center'>
       {name.endsWith(':FAILED') && <FailedIcon />}
       <div className='truncate'>
-        <ExternalLink
-          size='sm'
-          href={getExplorerTxLink(([3, 4, 8].includes(index) ? to : from).network, hash)}
-        >
+        <ExternalLink href={getExplorerTxLink(([3, 4, 8].includes(index) ? to : from).network, hash)}>
           {hash}
         </ExternalLink>
       </div>
