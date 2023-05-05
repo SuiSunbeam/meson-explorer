@@ -634,10 +634,10 @@
     lodash "^4.17.21"
     tronweb "^4.3.0"
 
-"@mesonfi/sdk@^1.8.0-beta.4", "@mesonfi/sdk@^1.9.0-rc.1":
-  version "1.9.0-rc.1"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.9.0-rc.1/12f87c5ff456b30fa6155898c64eed33e820fd1a#12f87c5ff456b30fa6155898c64eed33e820fd1a"
-  integrity sha512-ew8AM31VdOM3EQV7OO1XQvbLhWio3nPfQK9IbfnfAF74IEfTsD/8rS8hanKHU7t2p3LYcsR4KGT2rzGg2IX9jA==
+"@mesonfi/sdk@^1.8.0-beta.4", "@mesonfi/sdk@^1.9.0-rc.1", "@mesonfi/sdk@^1.9.0-rc.2":
+  version "1.9.0-rc.2"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.9.0-rc.2/4d3fef4c9c05712cd0b18bfcd0029544fdbbf904#4d3fef4c9c05712cd0b18bfcd0029544fdbbf904"
+  integrity sha512-atzzmTlx4gVdXcn6wxnd/uy70bCikAVJMnF0GVxNPEfrCLZ3oBESX++LK5iS/eoo+dnmYVvlrdZnSGEazezX3w==
   dependencies:
     "@mesonfi/contract-abis" "^1.9.0"
     "@mesonfi/contract-types" "^1.9.0"
