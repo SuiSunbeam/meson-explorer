@@ -21,7 +21,7 @@ import NumberDisplay from 'components/NumberDisplay'
 import Modal from 'components/Modal'
 import Input from 'components/Input'
 
-import { LPS } from 'lib/const'
+import { EXTRA_LPS } from 'lib/const'
 import fetcher from 'lib/fetcher'
 import { abbreviate, presets } from 'lib/swap'
 import useDealer from 'lib/useDealer'
@@ -99,10 +99,11 @@ export default function LpWhitelist() {
   return (
     <Card>
       <CardTitle
-        title='Liquidity Providers'
+        title='Liquidity Provider'
         subtitle='Addresses allowed to join liquidity providing'
         tabs={[
-          ...LPS.map(lp => ({
+          { key: 'general', name: 'General', onClick: () => router.push(`/lp`) },
+          ...EXTRA_LPS.map(lp => ({
             key: lp,
             name: abbreviate(lp, 4, 0),
             onClick: () => router.push(`/lp/${lp}`)
@@ -188,7 +189,7 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
           {!test && ratio > 0.9 && <CheckCircleIcon className='w-4 h-4 mr-px text-green-500' />}
           {!test && ratio < 0.1 && <ExclamationCircleIcon className='w-4 h-4 mr-px text-red-500' />}
           <NumberDisplay
-            length={(ratio > 0.9 || ratio < 0.1) ? 7 : 9}
+            length={!test && (ratio > 0.9 || ratio < 0.1) ? 7 : 9}
             className='mr-0'
             value={fmt.format(utils.formatUnits(deposit, 6))}
           />
