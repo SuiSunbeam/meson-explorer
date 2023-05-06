@@ -40,7 +40,7 @@ export default function LpPage() {
     <Card>
       <CardTitle
         title='Liquidity Providers'
-        subtitle='All LPs across different chains'
+        subtitle='General view of LP addresses with different formats'
         tabs={[
           { key: 'general', name: 'General', active: true },
           ...EXTRA_LPS.map(lp => ({
