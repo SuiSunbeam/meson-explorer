@@ -74,8 +74,9 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
       return keys
         .map(k => [
           <ListRowWrapper key={k} size='sm'>
-            <div className='col-span-3 text-sm font-medium text-gray-500 truncate'>
-              [{k.toUpperCase()}] {addressByNetwork[k]}
+            <div className='col-span-3 text-gray-500'>
+              <div className='font-medium text-sm'>{k[0].toUpperCase()}{k.substring(1)}</div>
+              <div className='truncate text-sm'>{addressByNetwork[k]}</div>
             </div>
           </ListRowWrapper>,
           ...networkRowsByType[k]
