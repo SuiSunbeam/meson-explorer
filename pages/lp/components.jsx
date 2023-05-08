@@ -1,6 +1,7 @@
 import React from 'react'
 import classnames from 'classnames'
 
+import { useSession } from 'next-auth/react'
 import { RefreshIcon } from '@heroicons/react/solid'
 import { BigNumber, ethers } from 'ethers'
 
@@ -33,20 +34,26 @@ const CORE_ALERT = {
 }
 
 export function LpContent ({ address, addressByNetwork, dealer }) {
+  const { data: session } = useSession()
+  const checkDifference = !address && session?.user?.roles?.some(r => ['root'].includes(r))
+
   const [totalDeposit, setTotalDeposit] = React.useState(BigNumber.from(0))
   const [totalBalance, setTotalBalance] = React.useState(BigNumber.from(0))
   const [totalSrFeeCollected, setTotalSrFeeCollected] = React.useState(BigNumber.from(0))
+  const [totalInContractDiff, setTotalInContractDiff] = React.useState(BigNumber.from(0))
 
   React.useEffect(() => {
     setTotalDeposit(BigNumber.from(0))
     setTotalBalance(BigNumber.from(0))
     setTotalSrFeeCollected(BigNumber.from(0))
+    setTotalInContractDiff(BigNumber.from(0))
   }, [address])
 
   const add = React.useMemo(() => ({
     toDeposit: delta => setTotalDeposit(v => v.add(delta)),
     toBalance: delta => setTotalBalance(v => v.add(delta)),
     toSrFee: delta => setTotalSrFeeCollected(v => v.add(delta)),
+    toInContractDiff: delta => setTotalInContractDiff(v => v.add(delta)),
   }), [setTotalDeposit, setTotalBalance])
 
   const networkRows = React.useMemo(() => {
@@ -66,18 +73,18 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
         const matchKey = keys.find(k => n.id.startsWith(k))
         if (matchKey) {
           networkRowsByType[matchKey].push(
-            <LpContentRow key={n.id} withSrFee address={addressByNetwork[matchKey]} dealer={dealer} network={n} add={add} />
+            <LpContentRow key={n.id} address={addressByNetwork[matchKey]} withSrFee checkDifference={checkDifference} dealer={dealer} network={n} add={add} />
           )
         } else {
           networkRowsByType.default.push(
-            <LpContentRow key={n.id} withSrFee address={defaultAddress} dealer={dealer} network={n} add={add} />
+            <LpContentRow key={n.id} address={defaultAddress} withSrFee checkDifference={checkDifference} dealer={dealer} network={n} add={add} />
           )
         }
       })
       return keys
         .map(k => [
-          <ListRowWrapper key={k} size='sm'>
-            <div className='col-span-3 text-gray-500'>
+          <ListRowWrapper key={k} size='xs'>
+            <div className='text-gray-500'>
               <div className='font-medium text-sm'>{k[0].toUpperCase()}{k.substring(1)}</div>
               <div className='truncate text-sm'>{addressByNetwork[k]}</div>
             </div>
@@ -86,12 +93,12 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
         ])
         .flat()
     }
-  }, [address, addressByNetwork, dealer, add])
+  }, [address, addressByNetwork, checkDifference, dealer, add])
 
   return (
-    <dl className={!address && 'min-w-[440px]'}>
+    <dl className={!address && (checkDifference ? 'min-w-[600px]' : 'min-w-[440px]')}>
       <ListRowWrapper size='sm'>
-        <dt>
+        <dt className='flex-1'>
           <div className='flex flex-1 flex-col'>
             <div className='text-xs font-medium text-gray-500 uppercase'>Total</div>
             <NumberDisplay
@@ -100,14 +107,14 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
             />
           </div>
         </dt>
-        <dd className='mt-1 text-gray-900 sm:mt-0 sm:col-span-2'>
+        <dd className='md:flex-[2] mt-1 md:mt-0 md:min-w-[540px]'>
           <div className='flex items-center'>
             <div className='flex flex-1 flex-col'>
               <div className='text-xs font-medium text-gray-500 uppercase'>Pool Balance</div>
               <NumberDisplay value={ethers.utils.formatUnits(totalDeposit, 6)} />
             </div>
             <div className='flex flex-1 flex-col'>
-              <div className='text-xs font-medium text-gray-500 uppercase'>Address Balance</div>
+              <div className='text-xs font-medium text-gray-500 uppercase'>Balance</div>
               <NumberDisplay value={ethers.utils.formatUnits(totalBalance, 6)} />
             </div>
             {
@@ -117,6 +124,18 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
                 <NumberDisplay value={ethers.utils.formatUnits(totalSrFeeCollected, 6)} />
               </div>
             }
+            {
+              !address && checkDifference &&
+              <>
+                <div className='flex flex-1 flex-col min-w-[142.5px]'>
+                  <div className='text-xs font-medium text-gray-500 uppercase'>Difference</div>
+                  <div className='flex'>
+                    <div className='ml-1 text-sm font-mono'>+</div>
+                    <NumberDisplay value={ethers.utils.formatUnits(totalInContractDiff, 6)} />
+                  </div>
+                </div>
+              </>
+            }
           </div>
         </dd>
       </ListRowWrapper>
@@ -125,7 +144,7 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
   )
 }
 
-function LpContentRow ({ withSrFee, address, dealer, network, add }) {
+function LpContentRow ({ address, withSrFee, checkDifference, dealer, network, add }) {
   const [core, setCore] = React.useState(<Loading />)
 
   const mesonClient = React.useMemo(() => {
@@ -173,7 +192,7 @@ function LpContentRow ({ withSrFee, address, dealer, network, add }) {
     <ListRow
       size='sm'
       title={
-        <div className='flex flex-row sm:flex-col align-start justify-between'>
+        <div className='flex flex-row md:flex-col align-start justify-between'>
           <div className='self-start flex flex-row items-center'>
             <ExternalLink
               size='md'
@@ -201,9 +220,10 @@ function LpContentRow ({ withSrFee, address, dealer, network, add }) {
       {tokens.map(t => (
         <TokenAmount
           key={t.addr}
-          withSrFee={withSrFee}
-          mesonClient={mesonClient}
           address={address}
+          mesonClient={mesonClient}
+          withSrFee={withSrFee}
+          checkDifference={checkDifference}
           token={t}
           explorer={network.explorer}
           add={add}
@@ -213,49 +233,60 @@ function LpContentRow ({ withSrFee, address, dealer, network, add }) {
   )
 }
 
-function TokenAmount ({ withSrFee, mesonClient, address, token, explorer, add }) {
+function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token, explorer, add }) {
   const [deposit, setDeposit] = React.useState()
   const [balance, setBalance] = React.useState()
   const [srFeeCollected, setSrFeeCollected] = React.useState()
+  const [inContractDiff, setInContractDiff] = React.useState()
 
   React.useEffect(() => {
     if (!address) {
       return
     }
-    mesonClient.poolTokenBalance(token.addr, address, { from: address })
-      .catch(() => {})
-      .then(v => {
-        if (v) {
-          if (token.tokenIndex !== 32) {
-            add.toDeposit(v)
-          }
-          setDeposit(ethers.utils.formatUnits(v, 6))
+
+    (async function () {
+      await mesonClient._getSupportedTokens({ from: address }).catch(() => {})
+
+      const deposit = await mesonClient.poolTokenBalance(token.addr, address, { from: address }).catch(() => {})
+      if (deposit) {
+        if (token.tokenIndex !== 32) {
+          add.toDeposit(deposit)
         }
-      })
-    
-    mesonClient.getTokenContract(token.addr).balanceOf(address, { from: address })
-      .catch(() => {})
-      .then(v => {
-        if (v) {
-          if (token.tokenIndex !== 32) {
-            add.toBalance(v.div(10 ** (token.decimals - 6)))
-          }
-          setBalance(ethers.utils.formatUnits(v, token.decimals))
+        setDeposit(deposit)
+      }
+      
+      const tokenBalance = await mesonClient.getTokenBalance(address, token.tokenIndex).catch(() => {})
+      if (tokenBalance) {
+        if (token.tokenIndex !== 32) {
+          add.toBalance(tokenBalance.value)
         }
-      })
-    
-    if (withSrFee) {
-      mesonClient.mesonInstance.serviceFeeCollected(token.tokenIndex, { from: address })
-        .catch(() => {})
-        .then(v => {
-          if (v) {
-            if (token.tokenIndex !== 32) {
-              add.toSrFee(v)
+        setBalance(tokenBalance.value)
+      }
+      
+      if (withSrFee) {
+        const srFee = await mesonClient.serviceFeeCollected(token.addr, { from: address }).catch(() => {})
+        if (srFee) {
+          if (token.tokenIndex !== 32) {
+            add.toSrFee(srFee)
+          }
+          setSrFeeCollected(srFee)
+        }
+
+        if (checkDifference) {
+          const inContractBalance = await mesonClient.inContractTokenBalance(token.tokenIndex, { from: address }).catch(() => {})
+          if (inContractBalance) {
+            let diff = inContractBalance.value.sub(deposit).sub(srFee || 0)
+            if (diff.lt(0)) {
+              diff = BigNumber.from(0)
             }
-            setSrFeeCollected(ethers.utils.formatUnits(v, 6))
+            if (token.tokenIndex !== 32) {
+              add.toInContractDiff(diff)
+            }
+            setInContractDiff(diff)
           }
-        })
-    }
+        }
+      }
+    })()
   }, [address]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -266,12 +297,12 @@ function TokenAmount ({ withSrFee, mesonClient, address, token, explorer, add })
           token.disabled && 'after:block after:absolute after:w-full after:h-0.5 after:bg-gray-500'
         )}>
           <NumberDisplay
-            value={deposit}
+            value={deposit && ethers.utils.formatUnits(deposit, 6)}
             className={(token.gray || token.disabled) ? 'text-gray-300' : classnames(
-              deposit <= 1000 && 'bg-red-500 text-white',
-              deposit > 1000 && deposit <= 5000 && 'text-red-500',
-              deposit > 5000 && deposit <= 10000 && 'text-warning',
-              deposit > 10000 && deposit <= 20000 && 'text-indigo-500'
+              deposit?.lte(1000e6) && 'bg-red-500 text-white',
+              deposit?.gt(1000e6) && deposit?.lte(5000e6) && 'text-red-500',
+              deposit?.gt(5000e6) && deposit?.lte(10000e6) && 'text-warning',
+              deposit?.gt(10000e6) && deposit?.lte(20000e6) && 'text-indigo-500'
             )}
           />
           <TagNetworkToken explorer={explorer} token={token} iconOnly />
@@ -284,13 +315,12 @@ function TokenAmount ({ withSrFee, mesonClient, address, token, explorer, add })
           token.disabled && 'after:block after:absolute after:w-full after:h-0.5 after:bg-gray-500'
         )}>
           <NumberDisplay
-            value={balance}
-            className={classnames((balance < 1 || token.disabled) && 'text-gray-300')}
+            value={balance && ethers.utils.formatUnits(balance, 6)}
+            className={classnames((balance?.lt(1e6) || token.disabled) && 'text-gray-300')}
           />
           <TagNetworkToken explorer={explorer} token={token} iconOnly />
         </div>
       </div>
-
       {
         withSrFee &&
         <div className='flex flex-1 items-center h-5'>
@@ -299,12 +329,30 @@ function TokenAmount ({ withSrFee, mesonClient, address, token, explorer, add })
             token.disabled && 'after:block after:absolute after:w-full after:h-0.5 after:bg-gray-500'
           )}>
             <NumberDisplay
-              value={srFeeCollected}
-              className={classnames((srFeeCollected < 1 || token.disabled) && 'text-gray-300')}
+              value={srFeeCollected && ethers.utils.formatUnits(srFeeCollected, 6)}
+              className={classnames((srFeeCollected?.lt(1e6) || token.disabled) && 'text-gray-300')}
             />
             <TagNetworkToken explorer={explorer} token={token} iconOnly />
           </div>
         </div>
+      }
+      {
+        checkDifference &&
+        <>
+          <div className='flex flex-1 items-center h-5'>
+            <div className={classnames('ml-1 w-2 text-sm font-mono', token.disabled ? 'text-transparent' : 'text-gray-500')}>+</div>
+            <div className={classnames(
+              'flex items-center relative',
+              token.disabled && 'after:block after:absolute after:w-full after:h-0.5 after:bg-gray-500'
+            )}>
+              <NumberDisplay
+                value={inContractDiff && ethers.utils.formatUnits(inContractDiff, 6)}
+                className={classnames((inContractDiff?.lt(1e6) || token.disabled) && 'text-gray-300')}
+              />
+              <TagNetworkToken explorer={explorer} token={token} iconOnly />
+            </div>
+          </div>
+        </>
       }
     </div>
   )
