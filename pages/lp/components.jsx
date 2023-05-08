@@ -90,25 +90,36 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
 
   return (
     <dl className={!address && 'min-w-[440px]'}>
-      <ListRow size='sm' title='Total'>
-        <div className='flex items-center'>
+      <ListRowWrapper size='sm'>
+        <dt>
           <div className='flex flex-1 flex-col'>
-            <div className='text-xs font-medium text-gray-500 uppercase'>Pool Balance</div>
-            <NumberDisplay value={ethers.utils.formatUnits(totalDeposit, 6)} />
+            <div className='text-xs font-medium text-gray-500 uppercase'>Total</div>
+            <NumberDisplay
+              className='font-bold'
+              value={ethers.utils.formatUnits(totalDeposit.add(totalBalance).add(totalSrFeeCollected), 6)}
+            />
           </div>
-          <div className='flex flex-1 flex-col'>
-            <div className='text-xs font-medium text-gray-500 uppercase'>Address Balance</div>
-            <NumberDisplay value={ethers.utils.formatUnits(totalBalance, 6)} />
-          </div>
-          {
-            !address &&
+        </dt>
+        <dd className='mt-1 text-gray-900 sm:mt-0 sm:col-span-2'>
+          <div className='flex items-center'>
             <div className='flex flex-1 flex-col'>
-              <div className='text-xs font-medium text-gray-500 uppercase'>Fee Collected</div>
-              <NumberDisplay value={ethers.utils.formatUnits(totalSrFeeCollected, 6)} />
+              <div className='text-xs font-medium text-gray-500 uppercase'>Pool Balance</div>
+              <NumberDisplay value={ethers.utils.formatUnits(totalDeposit, 6)} />
             </div>
-          }
-        </div>
-      </ListRow>
+            <div className='flex flex-1 flex-col'>
+              <div className='text-xs font-medium text-gray-500 uppercase'>Address Balance</div>
+              <NumberDisplay value={ethers.utils.formatUnits(totalBalance, 6)} />
+            </div>
+            {
+              !address &&
+              <div className='flex flex-1 flex-col'>
+                <div className='text-xs font-medium text-gray-500 uppercase'>Fee Collected</div>
+                <NumberDisplay value={ethers.utils.formatUnits(totalSrFeeCollected, 6)} />
+              </div>
+            }
+          </div>
+        </dd>
+      </ListRowWrapper>
       {networkRows}
     </dl>
   )
