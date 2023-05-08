@@ -5,6 +5,9 @@ export default listHandler({
   collection: Swaps,
   getAggregator: () => [
     {
+      $match: { disabled: { $ne: true } }
+    },
+    {
       $addFields: {
         locks: {
           $size: { 

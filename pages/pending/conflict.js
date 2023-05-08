@@ -15,7 +15,8 @@ export default function ConflictSwapList() {
         { key: 'bonded', name: 'Bonded', onClick: () => router.push('/pending/bonded') },
         { key: 'locked', name: 'Locked', onClick: () => router.push('/pending/locked') },
         { key: 'conflict', name: 'Conflict', active: true },
-        { key: 'double', name: 'Double', onClick: () => router.push('/pending/double') }
+        { key: 'double', name: 'Double', onClick: () => router.push('/pending/double') },
+        { key: 'dup-hash', name: 'Dup Hash', onClick: () => router.push('/pending/dup-hash') }
       ]}
       queryUrl='swap/conflict'
       fallback='/pending/conflict'

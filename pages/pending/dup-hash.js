@@ -9,17 +9,17 @@ export default function DoubleReleaseList() {
 
   return (
     <PagiCard
-      title='Double Release'
-      subtitle='Swaps that were released more than once'
+      title='Duplicated Hashes'
+      subtitle='Swaps that have events with same hashes'
       tabs={[
         { key: 'bonded', name: 'Bonded', onClick: () => router.push('/pending/bonded') },
         { key: 'locked', name: 'Locked', onClick: () => router.push('/pending/locked') },
         { key: 'conflict', name: 'Conflict', onClick: () => router.push('/pending/conflict') },
-        { key: 'double', name: 'Double', active: true },
-        { key: 'dup-hash', name: 'Dup Hash', onClick: () => router.push('/pending/dup-hash') }
+        { key: 'double', name: 'Double', onClick: () => router.push('/pending/double') },
+        { key: 'dup-hash', name: 'Dup Hash', active: true }
       ]}
-      queryUrl='swap/double'
-      fallback='/pending/double'
+      queryUrl='swap/dup-hash'
+      fallback='/pending/dup-hash'
       tableHeaders={[
         { name: 'swap id / time', width: '18%', className: 'hidden sm:table-cell' },
         { name: 'swap id', width: '18%', className: 'pl-4 sm:hidden' },

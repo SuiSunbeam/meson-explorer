@@ -15,7 +15,8 @@ export default function BondedSwapList() {
         { key: 'bonded', name: 'Bonded', active: true },
         { key: 'locked', name: 'Locked', onClick: () => router.push('/pending/locked') },
         { key: 'conflict', name: 'Conflict', onClick: () => router.push('/pending/conflict') },
-        { key: 'double', name: 'Double', onClick: () => router.push('/pending/double') }
+        { key: 'double', name: 'Double', onClick: () => router.push('/pending/double') },
+        { key: 'dup-hash', name: 'Dup Hash', onClick: () => router.push('/pending/dup-hash') }
       ]}
       queryUrl='swap/bonded'
       fallback='/pending/bonded'
