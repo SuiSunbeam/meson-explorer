@@ -7,7 +7,7 @@ import LoadingScreen from 'components/LoadingScreen'
 
 import Pagination from './Pagination'
 
-export default function PagiList({ queryUrl, fallback, redirectFallback = () => false, pageSize = 10, maxPage, children }) {
+export default function PagiList({ queryUrl, fallback, redirectFallback = () => false, reducer, pageSize = 10, maxPage, children }) {
   const router = useRouter()
   const { data, error, page } = usePagination(queryUrl, router.query.page, pageSize)
 
@@ -21,6 +21,9 @@ export default function PagiList({ queryUrl, fallback, redirectFallback = () => 
     return <LoadingScreen />
   } else {
     const { total, list } = data
+    if (reducer) {
+      console.log(list.reduce(reducer, 0))
+    }
     if (page * pageSize > total) {
       router.replace('/')
     }

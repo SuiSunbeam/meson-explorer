@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 
 import PagiCard from 'components/Pagi/PagiCard'
 import SwapRow from 'components/SwapRow'
+import { presets } from 'lib/swap'
 
 export default function DoubleReleaseList() {
   const router = useRouter()
@@ -32,6 +33,7 @@ export default function DoubleReleaseList() {
       queryUrl={queryUrl}
       fallback='/pending/dup-hash'
       pageSize={20}
+      reducer={(prev, item) => (BigInt(Math.round(prev * 1e6)) + BigInt(presets.parseInOutNetworkTokens(item.encoded).swap.amount)).toString() / 1e6}
       tableHeaders={[
         { name: 'swap id / time', width: '18%', className: 'hidden sm:table-cell' },
         { name: 'swap id', width: '18%', className: 'pl-4 sm:hidden' },

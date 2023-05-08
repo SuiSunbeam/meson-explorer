@@ -4,6 +4,7 @@ import { presets } from 'lib/swap'
 
 export default listHandler({
   collection: Swaps,
+  maxPageSize: 100,
   getAggregator: req => {
     const { from, to } = req.query
     const aggregator = [

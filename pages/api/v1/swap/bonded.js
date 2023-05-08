@@ -4,10 +4,11 @@ import { presets } from 'lib/swap'
 
 export default listHandler({
   collection: Swaps,
+  maxPageSize: 100,
   getQuery: req => {
     const { from, to } = req.query
     const query = {
-      'events.name': { $eq: 'BONDED', $nin: ['EXECUTED', 'CANCELLED'] },
+      'events.name': { $in: ['BONDED', 'POSTED'], $nin: ['EXECUTED', 'CANCELLED'] },
       disabled: { $ne: true }
     }
     if (from) {
