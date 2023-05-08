@@ -17,7 +17,8 @@ const API_HOSTS = {
   cfx: 'https://evmapi.confluxscan.net/api',
   movr: 'https://api-moonriver.moonscan.io/api',
   beam: 'https://api-moonbeam.moonscan.io/api',
-  aptos: 'https://indexer.mainnet.aptoslabs.com/v1/graphql'
+  aptos: 'https://indexer.mainnet.aptoslabs.com/v1/graphql',
+  zksync: 'https://zksync2-mainnet-explorer.zksync.io/transactions'
 }
 
 export default async function handler(req, res) {
@@ -32,7 +33,7 @@ async function post(req, res) {
   const { networkId, encoded, page = 1, size = 100 } = req.body
 
   if (networkId === 'aptos') {
-    const txs = await retrieveAptos()
+    const txs = await retrieveAptos(page, size)
     await Promise.all(txs.map(version => postTx(networkId, version)))
     res.json({ result: txs })
     return
@@ -46,6 +47,13 @@ async function post(req, res) {
   const host = API_HOSTS[networkId]
   if (!host) {
     res.status(404).send()
+    return
+  }
+
+  if (networkId === 'zksync') {
+    const txs = await retrieveZksync(network.mesonAddress, page, size)
+    await Promise.all(txs.map(hash => postTx(networkId, hash)))
+    res.json({ result: txs })
     return
   }
 
@@ -70,6 +78,17 @@ async function postTx(networkId, hash) {
     body: JSON.stringify({ networkId, hash })
   })
   await response.json()
+}
+
+async function retrieveZksync(address, page, size) {
+  const query = `?limit=${size}&direction=older&contractAddress=${address}&offset=${(page - 1) * size}`
+  const url = API_HOSTS.zksync + query
+  const response = await fetch(url)
+  const json = await response.json()
+  const txs = json.list
+    .map(tx => tx.transactionHash)
+
+  return txs
 }
 
 async function retrieveAptos() {
