@@ -19,7 +19,7 @@ export default function LpPage() {
   let body = <CardBody><LoadingScreen /></CardBody>
   if (dealer) {
     body = (
-      <CardBody border={false}>
+      <CardBody border={false} className='overflow-x-auto'>
         <LpContent addressByNetwork={LPS_BY_NETWORK} dealer={dealer} />
       </CardBody>
     )

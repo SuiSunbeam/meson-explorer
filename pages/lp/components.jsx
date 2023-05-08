@@ -35,15 +35,18 @@ const CORE_ALERT = {
 export function LpContent ({ address, addressByNetwork, dealer }) {
   const [totalDeposit, setTotalDeposit] = React.useState(BigNumber.from(0))
   const [totalBalance, setTotalBalance] = React.useState(BigNumber.from(0))
+  const [totalSrFeeCollected, setTotalSrFeeCollected] = React.useState(BigNumber.from(0))
 
   React.useEffect(() => {
     setTotalDeposit(BigNumber.from(0))
     setTotalBalance(BigNumber.from(0))
+    setTotalSrFeeCollected(BigNumber.from(0))
   }, [address])
 
   const add = React.useMemo(() => ({
     toDeposit: delta => setTotalDeposit(v => v.add(delta)),
-    toBalance: delta => setTotalBalance(v => v.add(delta))
+    toBalance: delta => setTotalBalance(v => v.add(delta)),
+    toSrFee: delta => setTotalSrFeeCollected(v => v.add(delta)),
   }), [setTotalDeposit, setTotalBalance])
 
   const networkRows = React.useMemo(() => {
@@ -63,11 +66,11 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
         const matchKey = keys.find(k => n.id.startsWith(k))
         if (matchKey) {
           networkRowsByType[matchKey].push(
-            <LpContentRow key={n.id} address={addressByNetwork[matchKey]} dealer={dealer} network={n} add={add} />
+            <LpContentRow key={n.id} withSrFee address={addressByNetwork[matchKey]} dealer={dealer} network={n} add={add} />
           )
         } else {
           networkRowsByType.default.push(
-            <LpContentRow key={n.id} address={defaultAddress} dealer={dealer} network={n} add={add} />
+            <LpContentRow key={n.id} withSrFee address={defaultAddress} dealer={dealer} network={n} add={add} />
           )
         }
       })
@@ -86,15 +89,24 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
   }, [address, addressByNetwork, dealer, add])
 
   return (
-    <dl>
+    <dl className={!address && 'min-w-[440px]'}>
       <ListRow size='sm' title='Total'>
         <div className='flex items-center'>
-          <div className='flex flex-1 items-center h-5'>
+          <div className='flex flex-1 flex-col'>
+            <div className='text-xs font-medium text-gray-500 uppercase'>Pool Balance</div>
             <NumberDisplay value={ethers.utils.formatUnits(totalDeposit, 6)} />
           </div>
-          <div className='flex flex-1 items-center h-5'>
+          <div className='flex flex-1 flex-col'>
+            <div className='text-xs font-medium text-gray-500 uppercase'>Address Balance</div>
             <NumberDisplay value={ethers.utils.formatUnits(totalBalance, 6)} />
           </div>
+          {
+            !address &&
+            <div className='flex flex-1 flex-col'>
+              <div className='text-xs font-medium text-gray-500 uppercase'>Fee Collected</div>
+              <NumberDisplay value={ethers.utils.formatUnits(totalSrFeeCollected, 6)} />
+            </div>
+          }
         </div>
       </ListRow>
       {networkRows}
@@ -102,7 +114,7 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
   )
 }
 
-function LpContentRow ({ address, dealer, network, add }) {
+function LpContentRow ({ withSrFee, address, dealer, network, add }) {
   const [core, setCore] = React.useState(<Loading />)
 
   const mesonClient = React.useMemo(() => {
@@ -178,6 +190,7 @@ function LpContentRow ({ address, dealer, network, add }) {
       {tokens.map(t => (
         <TokenAmount
           key={t.addr}
+          withSrFee={withSrFee}
           mesonClient={mesonClient}
           address={address}
           token={t}
@@ -189,9 +202,10 @@ function LpContentRow ({ address, dealer, network, add }) {
   )
 }
 
-function TokenAmount ({ mesonClient, address, token, explorer, add }) {
+function TokenAmount ({ withSrFee, mesonClient, address, token, explorer, add }) {
   const [deposit, setDeposit] = React.useState()
   const [balance, setBalance] = React.useState()
+  const [srFeeCollected, setSrFeeCollected] = React.useState()
 
   React.useEffect(() => {
     if (!address) {
@@ -218,6 +232,19 @@ function TokenAmount ({ mesonClient, address, token, explorer, add }) {
           setBalance(ethers.utils.formatUnits(v, token.decimals))
         }
       })
+    
+    if (withSrFee) {
+      mesonClient.mesonInstance.serviceFeeCollected(token.tokenIndex, { from: address })
+        .catch(() => {})
+        .then(v => {
+          if (v) {
+            if (token.tokenIndex !== 32) {
+              add.toSrFee(v)
+            }
+            setSrFeeCollected(ethers.utils.formatUnits(v, 6))
+          }
+        })
+    }
   }, [address]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -252,6 +279,22 @@ function TokenAmount ({ mesonClient, address, token, explorer, add }) {
           <TagNetworkToken explorer={explorer} token={token} iconOnly />
         </div>
       </div>
+
+      {
+        withSrFee &&
+        <div className='flex flex-1 items-center h-5'>
+          <div className={classnames(
+            'flex items-center relative',
+            token.disabled && 'after:block after:absolute after:w-full after:h-0.5 after:bg-gray-500'
+          )}>
+            <NumberDisplay
+              value={srFeeCollected}
+              className={classnames((srFeeCollected < 1 || token.disabled) && 'text-gray-300')}
+            />
+            <TagNetworkToken explorer={explorer} token={token} iconOnly />
+          </div>
+        </div>
+      }
     </div>
   )
 }

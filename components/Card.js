@@ -47,9 +47,9 @@ export function CardTitle({ title, subtitle, badge, right = [], tabs = [] }) {
   )
 }
 
-export function CardBody({ border = true, children }) {
+export function CardBody({ border = true, children, className }) {
   return (
-    <div className={classnames(border && 'border-t border-gray-200')}>
+    <div className={classnames(border && 'border-t border-gray-200', className)}>
       {children}
     </div>
   )
