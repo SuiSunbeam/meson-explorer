@@ -7,6 +7,17 @@ import SwapRow from 'components/SwapRow'
 export default function DoubleReleaseList() {
   const router = useRouter()
 
+  const { from, to } = router.query
+  const queryUrlParamList = []
+  if (from) {
+    queryUrlParamList.push(`from=${from}`)
+  }
+  if (to) {
+    queryUrlParamList.push(`to=${to}`)
+  }
+  const queryUrlParam = queryUrlParamList.join('&')
+  const queryUrl = `swap/dup-hash` + (queryUrlParam && `?${queryUrlParam}`)
+
   return (
     <PagiCard
       title='Duplicated Hashes'
@@ -18,8 +29,9 @@ export default function DoubleReleaseList() {
         { key: 'double', name: 'Double', onClick: () => router.push('/pending/double') },
         { key: 'dup-hash', name: 'Dup Hash', active: true }
       ]}
-      queryUrl='swap/dup-hash'
+      queryUrl={queryUrl}
       fallback='/pending/dup-hash'
+      pageSize={20}
       tableHeaders={[
         { name: 'swap id / time', width: '18%', className: 'hidden sm:table-cell' },
         { name: 'swap id', width: '18%', className: 'pl-4 sm:hidden' },

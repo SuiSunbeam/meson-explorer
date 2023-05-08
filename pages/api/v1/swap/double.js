@@ -1,49 +1,60 @@
 import { Swaps } from 'lib/db'
 import { listHandler } from 'lib/api'
+import { presets } from 'lib/swap'
 
 export default listHandler({
   collection: Swaps,
-  getAggregator: () => [
-    {
-      $match: { disabled: { $ne: true } }
-    },
-    {
-      $addFields: {
-        locks: {
-          $size: { 
-            $filter: {
-              input: '$events.name',
-              cond: { $in: [ '$$this', ['LOCKED'] ] }
+  getAggregator: req => {
+    const { from, to } = req.query
+    const aggregator = [
+      {
+        $match: { disabled: { $ne: true } }
+      },
+      {
+        $addFields: {
+          locks: {
+            $size: { 
+              $filter: {
+                input: '$events.name',
+                cond: { $in: [ '$$this', ['LOCKED'] ] }
+              }
             }
-          }
-        },
-        unlocks: {
-          $size: { 
-            $filter: {
-              input: '$events.name',
-              cond: { $in: [ '$$this', ['UNLOCKED'] ] }
+          },
+          unlocks: {
+            $size: { 
+              $filter: {
+                input: '$events.name',
+                cond: { $in: [ '$$this', ['UNLOCKED'] ] }
+              }
             }
-          }
-        },
-        releases: {
-          $size: { 
-            $filter: {
-              input: '$events.name',
-              cond: { $in: [ '$$this', ['RELEASED'] ] }
+          },
+          releases: {
+            $size: { 
+              $filter: {
+                input: '$events.name',
+                cond: { $in: [ '$$this', ['RELEASED'] ] }
+              }
             }
           }
         }
+      },
+      {
+        $addFields: {
+          extra: { $subtract: ['$locks', { $sum: ['$unlocks', '$releases'] }] }
+        }
+      },
+      {
+        $match: { extra: { $gt: 0 }, locks: { $gt: 1 } }
       }
-    },
-    {
-      $addFields: {
-        extra: { $subtract: ['$locks', { $sum: ['$unlocks', '$releases'] }] }
-      }
-    },
-    {
-      $match: { extra: { $gt: 0 }, locks: { $gt: 1 } }
+    ]
+    if (from) {
+      aggregator[0].$match.inChain = presets.getNetwork(from).shortSlip44
     }
-  ],
+    if (to) {
+      aggregator[0].$match.outChain = presets.getNetwork(to).shortSlip44
+    }
+    return aggregator
+  },
   sort: { created: -1 },
   select: 'encoded events initiator fromTo created released locks unlocks releases'
 })
