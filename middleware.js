@@ -5,9 +5,7 @@ const { NODE_ENV } = process.env
 
 const getApiAccessRoles = pathname => {
   if (
-    pathname.startsWith('/api/v1/swap/bonded') ||
-    pathname.startsWith('/api/v1/swap/locked') ||
-    pathname.startsWith('/api/v1/swap/conflict')
+    pathname.startsWith('/api/v1/swap/pending')
   ) {
     return ['root']
   } else if (
