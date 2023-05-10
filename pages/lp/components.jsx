@@ -273,16 +273,26 @@ function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token,
         }
 
         if (checkDifference) {
-          const inContractBalance = await mesonClient.inContractTokenBalance(token.tokenIndex, { from: address }).catch(() => {})
-          if (inContractBalance) {
-            let diff = inContractBalance.value.sub(deposit).sub(srFee || 0)
-            if (diff.lt(0)) {
-              diff = BigNumber.from(0)
+          if (address.length === 66) {
+            const diff = await mesonClient.pendingTokenBalance(token.tokenIndex, { from: address }).catch(() => {})
+            if (diff) {
+              if (token.tokenIndex !== 32) {
+                add.toInContractDiff(diff)
+              }
+              setInContractDiff(diff)
             }
-            if (token.tokenIndex !== 32) {
-              add.toInContractDiff(diff)
+          } else {
+            const inContractBalance = await mesonClient.inContractTokenBalance(token.tokenIndex, { from: address }).catch(() => {})
+            if (inContractBalance) {
+              let diff = inContractBalance.value.sub(deposit).sub(srFee || 0)
+              if (diff.lt(0)) {
+                diff = BigNumber.from(0)
+              }
+              if (token.tokenIndex !== 32) {
+                add.toInContractDiff(diff)
+              }
+              setInContractDiff(diff)
             }
-            setInContractDiff(diff)
           }
         }
       }
