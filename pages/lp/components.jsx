@@ -271,33 +271,37 @@ function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token,
           }
           setSrFeeCollected(srFee)
         }
+      }
+    })()
+  }, [address]) // eslint-disable-line react-hooks/exhaustive-deps
 
-        if (checkDifference) {
-          if (address.length === 66) {
-            const diff = await mesonClient.pendingTokenBalance(token.tokenIndex, { from: address }).catch(() => {})
-            if (diff) {
-              if (token.tokenIndex !== 32) {
-                add.toInContractDiff(diff)
-              }
-              setInContractDiff(diff)
+  React.useEffect(() => {
+    if (!address || !deposit || !srFeeCollected) {
+      return
+    }
+    (async () => {
+      if (checkDifference) {
+        if (address.length === 66) {
+          const diff = await mesonClient.pendingTokenBalance(token.tokenIndex, { from: address }).catch(() => {})
+          if (diff) {
+            if (token.tokenIndex !== 32) {
+              add.toInContractDiff(diff)
             }
-          } else {
-            const inContractBalance = await mesonClient.inContractTokenBalance(token.tokenIndex, { from: address }).catch(() => {})
-            if (inContractBalance) {
-              let diff = inContractBalance.value.sub(deposit).sub(srFee || 0)
-              if (diff.lt(0)) {
-                diff = BigNumber.from(0)
-              }
-              if (token.tokenIndex !== 32) {
-                add.toInContractDiff(diff)
-              }
-              setInContractDiff(diff)
+            setInContractDiff(diff)
+          }
+        } else {
+          const inContractBalance = await mesonClient.inContractTokenBalance(token.tokenIndex, { from: address }).catch(() => {})
+          if (inContractBalance) {
+            const diff = inContractBalance.value.sub(deposit).sub(srFeeCollected)
+            if (token.tokenIndex !== 32) {
+              add.toInContractDiff(diff)
             }
+            setInContractDiff(diff)
           }
         }
       }
     })()
-  }, [address]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [address, checkDifference, deposit, srFeeCollected]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className='flex items-center'>
