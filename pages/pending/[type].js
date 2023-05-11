@@ -34,8 +34,7 @@ const tabs = [
 export default function PendingSwapList() {
   const router = useRouter()
 
-  const { type, from, to } = router.query
-  console.log(type)
+  const { type, from, to, size = 10 } = router.query
 
   React.useEffect(() => {
     if (!titles[type]) {
@@ -68,6 +67,7 @@ export default function PendingSwapList() {
       }))}
       queryUrl={queryUrl}
       fallback={`/pending/${type}`}
+      pageSize={size}
       reducer={(prev, item) => (BigInt(Math.round(prev * 1e6)) + BigInt(presets.parseInOutNetworkTokens(item.encoded).swap.amount)).toString() / 1e6}
       tableHeaders={[
         { name: 'swap id / time', width: '18%', className: 'hidden sm:table-cell' },
