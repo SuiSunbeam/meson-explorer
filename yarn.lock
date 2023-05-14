@@ -623,8 +623,8 @@
 
 "@mesonfi/presets@^1.9.0-rc.5":
   version "1.9.0-rc.5"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.9.0-rc.5/2660ee764885286d17617c861c665d2fc4ea667b#2660ee764885286d17617c861c665d2fc4ea667b"
-  integrity sha512-R0V+2rxCaoQ8M6QFHvJQmzBZu+a8hxURGI0s6Om1IHrJB0JJeRRrQq5bP/3qiw+2hoWlCx4fV0m0thn8BN9j5A==
+  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.9.0-rc.5/8fea1080b5482820fba38ff9a8de1b7619a7b02e#8fea1080b5482820fba38ff9a8de1b7619a7b02e"
+  integrity sha512-imh+mznnAOS4kvazBwXg8rrpCoZ6rfS4qrxLNOGRwWA8ML+krBuwnTyw85qrttl9HKWz2Pbw0aB/w2oJNwzDxw==
   dependencies:
     "@mesonfi/contract-abis" "^1.9.0"
     "@mesonfi/sdk" "^1.9.0-rc.5"
