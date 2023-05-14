@@ -5,6 +5,7 @@ import { ExternalIcon } from 'components/ExternalLink'
 import { getExplorerAddressLink } from 'lib/swap'
 
 import eth from './eth.png'
+import sepolia from './sepolia.png'
 import bnb from './bnb.png'
 import avax from './avax.png'
 import polygon from './polygon.png'
@@ -25,7 +26,7 @@ import zksync from './zksync.png'
 import zkevm from './zkevm.png'
 import cronos from './cronos.png'
 
-const logos = { eth, ropsten: eth, bnb, avax, polygon, ftm, arb, opt, one, aurora, cfx, evmos, movr, beam, eos, tron, aptos, sui, zksync, zkevm, cronos }
+const logos = { eth, goerli: eth, sepolia, bnb, avax, polygon, ftm, arb, opt, one, aurora, cfx, evmos, movr, beam, eos, tron, aptos, sui, zksync, zkevm, cronos }
 
 export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly, address, className }) {
   const id = network.id.split('-')[0]

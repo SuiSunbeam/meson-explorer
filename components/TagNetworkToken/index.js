@@ -6,6 +6,7 @@ import { getExplorerTokenLink } from 'lib/swap'
 import usdc from './usdc.png'
 import usdt from './usdt.png'
 import busd from './busd.png'
+import dai from './dai.png'
 import pod from './pod.png'
 import uct from './uct.png'
 
@@ -16,6 +17,8 @@ function getTokenLogo(symbol) {
     return usdt
   } else if (symbol.indexOf('BUSD') > -1) {
     return busd
+  } else if (symbol.indexOf('DAI') > -1) {
+    return dai
   } else if (symbol.indexOf('PoD') > -1) {
     return pod
   } else if (symbol.indexOf('UCT') > -1) {
