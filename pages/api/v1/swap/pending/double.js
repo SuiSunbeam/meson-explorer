@@ -9,7 +9,11 @@ export default listHandler({
     const { from, to } = req.query
     const aggregator = [
       {
-        $match: { disabled: { $ne: true } }
+        $match: {
+          errorConfirmed: { $ne: true },
+          modified: { $ne: true },
+          disabled: { $ne: true }
+        }
       },
       {
         $addFields: {

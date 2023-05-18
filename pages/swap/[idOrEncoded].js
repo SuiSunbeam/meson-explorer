@@ -71,6 +71,7 @@ export default function SwapDetail() {
 
 function CorrectSwap({ data: raw }) {
   const { data: session } = useSession()
+  const isRoot = session?.user?.roles?.some(r => r === 'root')
   const authorized = session?.user?.roles?.some(r => ['root', 'admin'].includes(r))
 
   const [data, setData] = React.useState(raw)
@@ -224,7 +225,9 @@ function CorrectSwap({ data: raw }) {
         badge={(
           <div className='flex flex-row items-center'>
             <SwapStatusBadge events={data?.events} expireTs={swap?.expireTs} />
-            {authorized && <Badge className='ml-2'>{data?.hide ? 'HIDE' : ''}</Badge>}
+            {authorized && data?.hide && <Badge className='ml-2'>HIDE</Badge>}
+            {isRoot && data?.modified && <Badge type='warning' className='ml-2'>MODIFIED</Badge>}
+            {isRoot && data?.errorConfirmed && <Badge type='warning' className='ml-2'>ERROR CONFIRMED</Badge>}
           </div>
         )}
         subtitle={StatusDesc[status?.replace('*', '')]}

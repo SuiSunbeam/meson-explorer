@@ -7,12 +7,7 @@ export default listHandler({
   maxPageSize: 100,
   getQuery: req => {
     const { from, to } = req.query
-    const query = {
-      'events.name': { $eq: 'LOCKED', $nin: ['RELEASED', 'UNLOCKED'] },
-      errorConfirmed: { $ne: true },
-      modified: { $ne: true },
-      disabled: { $ne: true }
-    }
+    const query = { disabled: true }
     if (from) {
       query.inChain = presets.getNetwork(from).shortSlip44
     }

@@ -9,6 +9,8 @@ export default listHandler({
     const { from, to } = req.query
     const query = {
       'events.name': { $eq: 'RELEASED', $ne: 'EXECUTED' },
+      errorConfirmed: { $ne: true },
+      modified: { $ne: true },
       disabled: { $ne: true }
     }
     if (from) {

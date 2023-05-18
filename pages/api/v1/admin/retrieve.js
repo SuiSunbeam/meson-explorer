@@ -17,8 +17,9 @@ const API_HOSTS = {
   cfx: 'https://evmapi.confluxscan.net/api',
   movr: 'https://api-moonriver.moonscan.io/api',
   beam: 'https://api-moonbeam.moonscan.io/api',
+  zksync: 'https://zksync2-mainnet-explorer.zksync.io/transactions',
   aptos: 'https://indexer.mainnet.aptoslabs.com/v1/graphql',
-  zksync: 'https://zksync2-mainnet-explorer.zksync.io/transactions'
+  sui: 'https://explorer-rpc.mainnet.sui.io/',
 }
 
 export default async function handler(req, res) {
@@ -35,6 +36,11 @@ async function post(req, res) {
   if (networkId === 'aptos') {
     const txs = await retrieveAptos(page, size)
     await Promise.all(txs.map(version => postTx(networkId, version)))
+    res.json({ result: txs })
+    return
+  } else if (networkId === 'sui') {
+    const txs = await retrieveSui(page, size)
+    await Promise.all(txs.map(hash => postTx(networkId, hash)))
     res.json({ result: txs })
     return
   }
@@ -74,10 +80,10 @@ async function postTx(networkId, hash) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-    },  
+    },
     body: JSON.stringify({ networkId, hash })
   })
-  await response.json()
+  return await response.json()
 }
 
 async function retrieveZksync(address, page, size) {
@@ -91,12 +97,12 @@ async function retrieveZksync(address, page, size) {
   return txs
 }
 
-async function retrieveAptos() {
+async function retrieveAptos(page, size) {
   const body = {
     "operationName": "AccountTransactionsData",
     "variables": {
       "address": "0x8f572e334b2f8db2cb95be76962c71a19bbb3565e5b83e27b75ade87011a913b",
-      "limit": 100,
+      "limit": size,
       "offset": 700
     },
     "query": "query AccountTransactionsData($address: String, $limit: Int, $offset: Int) {\n  move_resources(\n    where: {address: {_eq: $address}}\n    order_by: {transaction_version: desc}\n    distinct_on: transaction_version\n    limit: $limit\n    offset: $offset\n  ) {\n    transaction_version\n    __typename\n  }\n}"
@@ -110,4 +116,36 @@ async function retrieveAptos() {
   })
   const json = await response.json()
   return json.data.move_resources.map(item => item.transaction_version)
+}
+
+async function retrieveSui(page, size) {
+  const body = {
+    "jsonrpc": "2.0",
+    "id": "",
+    "method": "suix_queryTransactionBlocks",
+    "params": [
+      {
+        "filter": {
+          "FromAddress": "0xead52c0562a126c43fbc5e5a9d37757274e1c9d11531a23c0fc521a94bb0b5bc"
+        },
+        "options": {
+          "showEffects": true,
+          "showBalanceChanges": true,
+          "showInput": true
+        }
+      },
+      null,
+      size,
+      true
+    ],
+  }
+  const response = await fetch(API_HOSTS.sui, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  })
+  const json = await response.json()
+  return json.result.data.map(item => item.digest)
 }

@@ -10,7 +10,9 @@ export default listHandler({
     const query = {
       $and: [{ 'events.name': 'RELEASED' }, { 'events.name': { $ne: 'UNLOCKED' } }],
       released: { $exists: false },
-      v: 1
+      errorConfirmed: { $ne: true },
+      modified: { $ne: true },
+      disabled: { $ne: true }
     }
     if (from) {
       query.inChain = presets.getNetwork(from).shortSlip44

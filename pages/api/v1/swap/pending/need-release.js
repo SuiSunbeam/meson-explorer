@@ -8,7 +8,9 @@ export default listHandler({
   getQuery: req => {
     const { from, to } = req.query
     const query = {
-      'events.name': { $eq: 'EXECUTED', $ne: 'RELEASED' },
+      'events.name': { $eq: 'EXECUTED', $nin: ['RELEASED', 'CANCELLED'] },
+      errorConfirmed: { $ne: true },
+      modified: { $ne: true },
       disabled: { $ne: true }
     }
     if (from) {

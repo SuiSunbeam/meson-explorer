@@ -13,6 +13,9 @@ const titles = {
   'need-unlock': 'Need Unlock',
   double: 'Double Release',
   'dup-hash': 'Duplicated Hashes',
+  'error-confirmed': 'Error Confirmed',
+  modified: 'Modified',
+  disabled: 'Disabled',
 }
 const subtitles = {
   bonded: 'Swaps that were bonded but not executed or cancelled',
@@ -28,7 +31,10 @@ const tabs = [
   { key: 'need-release', name: 'Releasing*' },
   { key: 'need-execute', name: 'Released' },
   { key: 'need-unlock', name: 'Need Unlock' },
-  { key: 'dup-hash', name: 'Dup Hash' }
+  { key: 'dup-hash', name: 'Dup Hash' },
+  { key: 'error-confirmed', name: 'Error Confirmed' },
+  { key: 'modified', name: 'Modified' },
+  { key: 'disabled', name: 'Disabled' },
 ]
 
 export default function PendingSwapList() {
