@@ -31,7 +31,7 @@ export default async function handler(req, res) {
 }
 
 async function post(req, res) {
-  const { networkId, encoded, page = 1, size = 100 } = req.body
+  const { networkId, encoded, page = 1, size = 100, cursor = null } = req.body
 
   if (networkId === 'aptos') {
     const txs = await retrieveAptos(page, size)
@@ -39,7 +39,7 @@ async function post(req, res) {
     res.json({ result: txs })
     return
   } else if (networkId === 'sui') {
-    const txs = await retrieveSui(page, size)
+    const txs = await retrieveSui(page, size, cursor)
     await Promise.all(txs.map(hash => postTx(networkId, hash)))
     res.json({ result: txs })
     return
@@ -118,7 +118,7 @@ async function retrieveAptos(page, size) {
   return json.data.move_resources.map(item => item.transaction_version)
 }
 
-async function retrieveSui(page, size) {
+async function retrieveSui(page, size, cursor) {
   const body = {
     "jsonrpc": "2.0",
     "id": "",
@@ -126,15 +126,11 @@ async function retrieveSui(page, size) {
     "params": [
       {
         "filter": {
-          "FromAddress": "0xead52c0562a126c43fbc5e5a9d37757274e1c9d11531a23c0fc521a94bb0b5bc"
+          "InputObject": "0x099e8c0dbaea06147fde6a32ab899152c79024a6f52a7f8d9777ca27acac7011"
         },
-        "options": {
-          "showEffects": true,
-          "showBalanceChanges": true,
-          "showInput": true
-        }
+        "options": {}
       },
-      null,
+      cursor,
       size,
       true
     ],

@@ -175,11 +175,16 @@ function LpContentRow ({ address, withSrFee, checkDifference, dealer, network, a
     tokens.push({ symbol: 'UCT', addr: network.uctAddress, decimals: 6, gray: true })
   }
 
+  const [cursor, setCursor] = React.useState(null)
   const [retrievePage, setRetrievePage] = React.useState('')
   const retrieve = async () => {
     const page = retrievePage || 1
+    const txs = await fetcher.post(`admin/retrieve`, { networkId: network.id, page, cursor })
+    const nextCursor = txs && txs[txs.length - 1]
     setRetrievePage(page + 1)
-    await fetcher.post(`admin/retrieve`, { networkId: network.id, page })
+    if (nextCursor) {
+      setCursor(nextCursor)
+    }
   }
   const retrieveButton = (
     <div className='ml-1 flex items-center cursor-pointer hover:text-indigo-500' onClick={retrieve}>
