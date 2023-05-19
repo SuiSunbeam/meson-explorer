@@ -164,7 +164,7 @@ export default function SwapRow({ data: raw, smMargin }) {
       {
         !CancelledStatus.includes(status) &&
         <div className='flex items-center lg:flex-col lg:items-start'>
-          <div className='mr-1'><AmountDisplay value={swap.totalFee} /></div>
+          <div className='mr-1'><AmountDisplay value={(raw.srFee || 0) + (raw.lpFee || 0)} /></div>
           <TagNetworkToken responsive explorer={to.network.explorer} token={to.token} />
         </div>
       }

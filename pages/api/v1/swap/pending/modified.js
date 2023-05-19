@@ -20,5 +20,5 @@ export default listHandler({
     return query
   },
   sort: { created: -1 },
-  select: 'encoded events initiator fromTo created released'
+  select: 'encoded events initiator fromTo created released srFee lpFee'
 })

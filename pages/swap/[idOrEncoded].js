@@ -120,9 +120,10 @@ function CorrectSwap({ data: raw }) {
   } else {
     const fromAddress = data.fromTo[0] || data.initiator
     const recipient = data.fromTo[1] || ''
+    const { srFee = 0, lpFee = 0 } = data
 
     let inAmount = ethers.utils.formatUnits(swap.amount, swap.inToken === 255 ? 4 : 6)
-    let outAmount = ethers.utils.formatUnits(swap.amount.sub(swap.totalFee), 6)
+    let outAmount = ethers.utils.formatUnits(swap.amount.sub(srFee + lpFee), 6)
     if (swap.deprecatedEncoding) {
       inAmount = ethers.utils.formatUnits(swap.amount.add(swap.fee), swap.inToken === 255 ? 4 : 6)
       outAmount = ethers.utils.formatUnits(swap.amount, 6)
@@ -185,11 +186,11 @@ function CorrectSwap({ data: raw }) {
           !FailedStatus.includes(status) &&
           <ListRow title='Fee'>
             <div className='flex items-center'>
-              <div className='mr-1'>{ethers.utils.formatUnits(swap.totalFee, 6)}</div>
+              <div className='mr-1'>{ethers.utils.formatUnits(srFee + lpFee, 6)}</div>
               <TagNetworkToken explorer={feeSide.network.explorer} token={feeSide.token} />
             </div>
-            <div className={classnames('text-sm text-gray-500', swap.totalFee.gt(0) ? '' : 'hidden')}>
-              {ethers.utils.formatUnits(swap.serviceFee, 6)} Service fee + {ethers.utils.formatUnits(swap.fee, 6)} LP fee
+            <div className={classnames('text-sm text-gray-500', srFee + lpFee > 0 ? '' : 'hidden')}>
+              {ethers.utils.formatUnits(srFee, 6)} Service fee + {ethers.utils.formatUnits(lpFee, 6)} LP fee
             </div>
           </ListRow>
         }

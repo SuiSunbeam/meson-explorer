@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   }
   
   const rawList = await Swaps.find(query)
-    .select('encoded events initiator fromTo created released inToken amount')
+    .select('encoded events initiator fromTo created released srFee lpFee inToken amount')
     .sort({ created: -1 })
     .exec()
   
