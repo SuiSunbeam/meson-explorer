@@ -56,7 +56,7 @@ export default function StatsByChain() {
   } else if (!data) {
     body = <LoadingScreen />
   } else {
-    const total = data.reduce(({ count, success, apiCount, apiSuccess, m2Count, m2Success, a2Count, a2Success, srFee, lpFee }, row) => ({
+    const total = data.reduce(({ count, success, apiCount, apiSuccess, m2Count, m2Success, a2Count, a2Success, volume, srFee, lpFee }, row) => ({
       count: row.count + count,
       success: row.success + success,
       apiCount: row.apiCount + apiCount,
@@ -65,10 +65,11 @@ export default function StatsByChain() {
       m2Success: row.m2Success + m2Success,
       a2Count: row.a2Count + a2Count,
       a2Success: row.a2Success + a2Success,
+      volume: row.volume + volume,
       srFee: row.srFee + srFee,
       lpFee: row.lpFee + lpFee,
       duration: 0
-    }), { count: 0, success: 0, apiCount: 0, apiSuccess: 0, m2Count: 0, m2Success: 0, a2Count: 0, a2Success: 0, srFee: 0, lpFee: 0, duration: 0 })
+    }), { count: 0, success: 0, apiCount: 0, apiSuccess: 0, m2Count: 0, m2Success: 0, a2Count: 0, a2Success: 0, volume: 0, srFee: 0, lpFee: 0, duration: 0 })
     body = (
       <Table
         size='lg'
