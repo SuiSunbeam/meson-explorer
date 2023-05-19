@@ -18,7 +18,8 @@ export default function SwapList() {
   const tabs = !authorized ? undefined : [
     { key: 'all', name: 'All', active: !category, onClick: () => router.push('') },
     { key: 'api', name: 'API', active: category === 'api', onClick: () => router.push({ query: { category: 'api', ...rest } }) },
-    { key: 'api', name: 'meson.to', active: category === 'meson.to', onClick: () => router.push({ query: { category: 'meson.to', ...rest } }) },
+    { key: 'meson-to', name: 'meson.to', active: category === 'meson.to', onClick: () => router.push({ query: { category: 'meson.to', ...rest } }) },
+    { key: 'contract', name: 'From Contract', active: category === 'contract', onClick: () => router.push({ query: { category: 'contract', ...rest } }) },
   ]
 
   const queryUrlParamList = []

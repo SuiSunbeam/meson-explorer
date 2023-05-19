@@ -13,6 +13,8 @@ export default listHandler({
         query.salt = { $regex : /^0x[d9]/ }
       } else if (category === 'meson.to') {
         query.salt = { $regex : /^0x[ea62]/ }
+      } else if (category === 'contract') {
+        query.fromContract = true
       }
       if (from) {
         query.inChain = presets.getNetwork(from).shortSlip44
