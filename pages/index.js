@@ -20,6 +20,7 @@ export default function SwapList() {
     { key: 'api', name: 'API', active: category === 'api', onClick: () => router.push({ query: { category: 'api', ...rest } }) },
     { key: 'meson-to', name: 'meson.to', active: category === 'meson.to', onClick: () => router.push({ query: { category: 'meson.to', ...rest } }) },
     { key: 'contract', name: 'From Contract', active: category === 'contract', onClick: () => router.push({ query: { category: 'contract', ...rest } }) },
+    { key: 'campaign', name: 'Campaign', active: category === 'campaign', onClick: () => router.push({ query: { category: 'campaign', ...rest } }) },
   ]
 
   const queryUrlParamList = []

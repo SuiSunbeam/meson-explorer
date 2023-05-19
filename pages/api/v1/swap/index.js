@@ -15,6 +15,8 @@ export default listHandler({
         query.salt = { $regex : /^0x[ea62]/ }
       } else if (category === 'contract') {
         query.fromContract = true
+      } else if (category === 'campaign') {
+        query.salt = { $regex : /^0x[0-8a-f]{2}f/ }
       }
       if (from) {
         query.inChain = presets.getNetwork(from).shortSlip44
