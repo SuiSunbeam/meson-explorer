@@ -1,4 +1,5 @@
 import React from 'react'
+import classnames from 'classnames'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { utils } from 'ethers'
@@ -147,7 +148,7 @@ function WhitelistedTotal ({ quota, deposit }) {
   )
 }
 
-function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, kyc, podContract, onOpenModal }) {
+function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, kyc, swapOnly, podContract, onOpenModal }) {
   const [podBalance, setPodBalance] = React.useState()
   const [lockedBalance, setLockedBalance] = React.useState()
   const [rewardsBalance, setRewardsBalance] = React.useState()
@@ -206,7 +207,10 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
             value={podBalance && fmt.format(utils.formatUnits(podBalance, 6))}
           />
         </div>
-        <div className='flex items-center'>
+        <div className={classnames(
+          'relative w-full flex items-center',
+          swapOnly && 'opacity-30 after:block after:absolute after:w-full after:h-0.5 after:bg-gray-600'
+        )}>
           {
             lockedBalance?.gte(deposit) && lockedBalance?.gt(0)
               ? <LockClosedIcon className='w-4 h-4 text-green-500 mr-1' />
@@ -218,7 +222,10 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
             value={lockedBalance && fmt.format(utils.formatUnits(lockedBalance, 6))}
           />
         </div>
-        <div className='flex items-center'>
+        <div className={classnames(
+          'relative w-full flex items-center',
+          swapOnly && 'opacity-30 after:block after:absolute after:w-full after:h-0.5 after:bg-gray-600'
+        )}>
           <GiftIcon className='w-4 h-4 text-gray-500 mr-1' />
           <NumberDisplay
             length={7}
