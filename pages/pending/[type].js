@@ -27,7 +27,6 @@ const subtitles = {
 const tabs = [
   { key: 'bonded', name: 'Bonded',  },
   { key: 'locked', name: 'Locked' },
-  { key: 'double', name: 'Double' },
   { key: 'need-release', name: 'Releasing*' },
   { key: 'need-execute', name: 'Released' },
   { key: 'need-unlock', name: 'Need Unlock' },
@@ -35,6 +34,7 @@ const tabs = [
   { key: 'error-confirmed', name: 'Error Confirmed' },
   { key: 'modified', name: 'Modified' },
   { key: 'disabled', name: 'Disabled' },
+  { key: 'double', name: 'Double' },
 ]
 
 export default function PendingSwapList() {

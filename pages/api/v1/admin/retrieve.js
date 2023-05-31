@@ -35,7 +35,7 @@ async function post(req, res) {
 
   if (networkId === 'aptos') {
     const txs = await retrieveAptos(page, size)
-    await Promise.all(txs.map(version => postTx(networkId, version)))
+    await Promise.all(txs.map(version => postTx(networkId, version.toString())))
     res.json({ result: txs })
     return
   } else if (networkId === 'sui') {
@@ -103,7 +103,7 @@ async function retrieveAptos(page, size) {
     "variables": {
       "address": "0x8f572e334b2f8db2cb95be76962c71a19bbb3565e5b83e27b75ade87011a913b",
       "limit": size,
-      "offset": 700
+      "offset": (page - 1) * size
     },
     "query": "query AccountTransactionsData($address: String, $limit: Int, $offset: Int) {\n  move_resources(\n    where: {address: {_eq: $address}}\n    order_by: {transaction_version: desc}\n    distinct_on: transaction_version\n    limit: $limit\n    offset: $offset\n  ) {\n    transaction_version\n    __typename\n  }\n}"
   }
