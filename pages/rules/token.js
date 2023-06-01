@@ -27,9 +27,10 @@ export default function RulesToken () {
   } else {
     body = (
       <Table size='lg' headers={[
-        { name: 'route / priority', width: '20%', className: 'pl-4 md:pl-6' },
-        { name: 'limit', width: '20%' },
-        { name: 'factor', width: '20%' },
+        { name: 'route / priority', width: '15%', className: 'pl-4 md:pl-6' },
+        { name: 'limit', width: '15%' },
+        { name: 'factor', width: '15%' },
+        { name: 'minimum', width: '15%' },
         { name: 'premium', width: '10%' },
         { name: 'mark', width: '10%' },
         { name: 'edit', width: '20%', className: 'text-right' },

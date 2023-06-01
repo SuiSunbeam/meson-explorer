@@ -39,6 +39,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
   const [priority, setPriority] = React.useState(0)
   const [limit, setLimit] = React.useState('')
   const [factor, setFactor] = React.useState('')
+  const [minimum, setMinimum] = React.useState('')
   const [initiators, setInitiators] = React.useState('')
   const [mark, setMark] = React.useState('')
   const [fee, setFee] = React.useState('')
@@ -60,6 +61,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
       setPriority(data.priority || 0)
       setLimit(typeof data.limit === 'number' ? data.limit : '')
       setFactor(typeof data.factor === 'number' ? data.factor : '')
+      setMinimum(typeof data.minimum === 'number' ? ethers.utils.formatUnits(data.minimum, 6) : '')
       setInitiators(data.initiators?.map(i => i.note ? `${i.note}:${i.addr}` : i.addr).join('\n') || '')
       setMark(data.mark || '')
       setFee(JSON.stringify(data.fee, null, 2) || '[\n]')
@@ -74,6 +76,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
       priority,
       limit,
       factor,
+      minimum: minimum && ethers.utils.parseUnits(minimum, 6).toNumber(),
       initiators: type === 'address' ? initiators.split('\n').filter(Boolean).map(line => {
         const [p1, p2] = line.split(':')
         return p2 ? { note: p1.trim(), addr: p2.trim() } : { addr: p1.trim() }
@@ -147,7 +150,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
         </div>
 
         <Input
-          className='col-span-6'
+          className='col-span-3'
           id='priority'
           label='Priority'
           type='number'
@@ -171,6 +174,17 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
             type='number'
             value={factor}
             onChange={setFactor}
+          />
+        }
+        {
+          !hides.includes('minimum') &&
+          <Input
+            className='col-span-3'
+            id='minimum'
+            label='Minimum'
+            type='number'
+            value={minimum}
+            onChange={setMinimum}
           />
         }
         {
@@ -233,6 +247,7 @@ export function RowSwapRule ({ d, onOpenModal, hides = [] }) {
       </Td>
       <Td size='sm'>{d.limit && `${fmt.format(d.limit / 1000)}k`}</Td>
       {!hides.includes('factor') && <Td size='sm'>{d.factor}</Td>}
+      {!hides.includes('minimum') && <Td size='sm'>{d.minimum && `$${ethers.utils.formatUnits(d.minimum, 6)}`}</Td>}
       {
         !hides.includes('rules') &&
         <>

@@ -12,7 +12,7 @@ import fetcher from 'lib/fetcher'
 
 import { SwapRuleModal, RowSwapRule } from './components'
 
-const hides = ['factor', 'initiators']
+const hides = ['factor', 'minimum', 'initiators']
 export default function RulesGas () {
   const router = useRouter()
 
