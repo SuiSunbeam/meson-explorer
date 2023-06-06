@@ -40,9 +40,9 @@ async function get(initiator, withId = false) {
 
 async function post(initiator) {
   const freePremium = await Banners.findOneAndUpdate({
-    text: 'banner|free-premium',
-    address: initiator,
-  }, { $addToSet: { meta: { address: initiator } } }).select('text')
+    _id: 'free-premium',
+    'metadata.address': initiator,
+  }, { $set: { meta: { 'metadata.$[el].confirmed': true } } }, { arrayFilters: [{ 'el.address': initiator }] })
   if (!freePremium) {
     throw new Error('Not eligible to claim Meson Premium')
   }
