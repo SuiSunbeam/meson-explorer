@@ -529,8 +529,7 @@ function EditBannerModalButtonModal ({ data, onClose, onChange }) {
   const [text, setText] = React.useState('')
   const [size, setSize] = React.useState('')
   const [color, setColor] = React.useState('')
-  const [href, setHref] = React.useState('')
-  const [modal, setModal] = React.useState('')
+  const [onclick, setOnclick] = React.useState('')
 
   React.useEffect(() => {
     if (data) {
@@ -539,8 +538,7 @@ function EditBannerModalButtonModal ({ data, onClose, onChange }) {
       setText(data.text || '')
       setSize(data.size || '')
       setColor(data.color || '')
-      setHref(data.href || '')
-      setModal(typeof data.modal === 'number' ? data.modal.toString() : '')
+      setOnclick(data.onclick || '')
     }
   }, [data])
 
@@ -619,18 +617,10 @@ function EditBannerModalButtonModal ({ data, onClose, onChange }) {
 
         <Input
           className='col-span-6'
-          id='href'
-          label='Open link on click'
-          value={href}
-          onChange={setHref}
-        />
-
-        <Input
-          className='col-span-6'
-          id='modal'
-          label='Open another modal on click (provide index)'
-          value={modal}
-          onChange={setModal}
+          id='onclick'
+          label='On click'
+          value={onclick}
+          onChange={setOnclick}
         />
       </div>
 
