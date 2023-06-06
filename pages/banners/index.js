@@ -62,12 +62,14 @@ export default function Banners () {
   )
 }
 
-function RowBanner({ _id, priority, icon, title, params = {}, modals, reward, metadata, online, disabled, onOpenModal }) {
+function RowBanner({ _id, priority, icon, title, hide, params = {}, modals, reward, metadata, online, disabled, onOpenModal }) {
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1 text-sm' wrap>
         <div className='text-xs text-gray-500'>{disabled ? '🚫' : online ? '🟢' : '🟠'} {priority ? `[${priority}] ` : ''}{_id}</div>
-        <div>[{iconOptions.find(item => item.id === icon)?.name}] {title}</div>
+        <div className={hide ? 'text-gray-500' : ''}>
+          [{iconOptions.find(item => item.id === icon)?.name}] {title}
+        </div>
       </Td>
       <Td size='sm' className='font-mono text-xs'>
       {
@@ -96,6 +98,8 @@ function EditBannerModal ({ data, onClose }) {
   const [status, setStatus] = React.useState(0)
   const [icon, setIcon] = React.useState('')
   const [title, setTitle] = React.useState('')
+  const [limited, setLimited] = React.useState(false)
+  const [hide, setHide] = React.useState(false)
   const [modals, setModals] = React.useState([])
   const [paramsValue, setParamsValue] = React.useState('')
 
@@ -112,6 +116,8 @@ function EditBannerModal ({ data, onClose }) {
       setStatus(data.disabled ? 0 : data.online ? 2 : 1)
       setIcon(data.icon || '')
       setTitle(data.title || '')
+      setLimited(data.limited || false)
+      setHide(data.hide || false)
       setModals(data.modals || [])
       setParamsValue(Object.entries(data.params || {}).map(([k, v]) => `${k}: ${v}`).join('\n'))
     }
@@ -125,6 +131,8 @@ function EditBannerModal ({ data, onClose }) {
     const dataToSave = {
       icon,
       title,
+      limited,
+      hide,
       modals,
       reward,
       params,
@@ -216,17 +224,43 @@ function EditBannerModal ({ data, onClose }) {
           onChange={setTitle}
         />
 
-        <div className='col-span-4'>
-          <label className='block text-sm font-medium text-gray-700'>Modals</label>
-          <div className='mt-1 flex flex-row gap-2'>
-            {
-              modals?.map((data, i) => (
-                <Button key={`modal-${i}`} rounded size='sm' color='info' onClick={() => setBanenrModalData(data)}>
-                  {data._id || `Modal ${i}`}
-                </Button>
-              ))
-            }
-            <Button rounded size='sm' color='primary' onClick={() => setBanenrModalData({})}>Add</Button>
+        <div className='col-span-4 grid grid-cols-2 gap-x-4 gap-y-4'>
+          <div>
+            <label className='block text-sm font-medium text-gray-700'>Limited</label>
+            <div className='mt-1 flex border border-gray-300 shadow-sm rounded-md'>
+              <Select
+                className='w-full'
+                noBorder
+                options={[{ id: false, name: 'false' }, { id: true, name: 'true' }]}
+                value={limited}
+                onChange={setLimited}
+              />
+            </div>
+          </div>
+          <div>
+            <label className='block text-sm font-medium text-gray-700'>Hide</label>
+            <div className='mt-1 flex border border-gray-300 shadow-sm rounded-md'>
+              <Select
+                className='w-full'
+                noBorder
+                options={[{ id: false, name: 'false' }, { id: true, name: 'true' }]}
+                value={hide}
+                onChange={setHide}
+              />
+            </div>
+          </div>
+          <div className='col-span-2'>
+            <label className='block text-sm font-medium text-gray-700'>Modals</label>
+            <div className='mt-1 flex flex-row gap-2'>
+              {
+                modals?.map((data, i) => (
+                  <Button key={`modal-${i}`} rounded size='sm' color='info' onClick={() => setBanenrModalData(data)}>
+                    {data._id || `Modal ${i}`}
+                  </Button>
+                ))
+              }
+              <Button rounded size='sm' color='primary' onClick={() => setBanenrModalData({})}>Add</Button>
+            </div>
           </div>
         </div>
 
@@ -360,6 +394,7 @@ function EditBannerModalModal ({ data, onClose, onChange }) {
   const [create, setCreate] = React.useState(false)
 
   const [modalId, setModalId] = React.useState('')
+  const [open, setOpen] = React.useState('')
   const [title, setTitle] = React.useState('')
   const [image, setImage] = React.useState('')
   const [content, setContent] = React.useState('')
@@ -372,6 +407,7 @@ function EditBannerModalModal ({ data, onClose, onChange }) {
       setCreate(!Object.keys(data).length)
 
       setModalId(data._id || '')
+      setOpen(data.open || '')
       setTitle(data.title || '')
       setImage(data.image || '')
       setContent(data.content || '')
@@ -382,6 +418,7 @@ function EditBannerModalModal ({ data, onClose, onChange }) {
   const onSave = async () => {
     const newData = {
       _id: modalId,
+      open,
       title,
       image,
       content,
@@ -408,7 +445,7 @@ function EditBannerModalModal ({ data, onClose, onChange }) {
       title='Edit/Create a Banner Modal'
       onClose={onClose}
     >
-      <div className='grid grid-cols-6 gap-x-4 gap-y-4'>
+      <div className='grid grid-cols-8 gap-x-4 gap-y-4'>
         <Input
           className='col-span-2'
           id='modalId'
@@ -416,6 +453,24 @@ function EditBannerModalModal ({ data, onClose, onChange }) {
           value={modalId}
           onChange={setModalId}
         />
+
+        <div className='col-span-2'>
+          <label className='block text-sm font-medium text-gray-700'>Open</label>
+          <div className='mt-1 flex border border-gray-300 shadow-sm rounded-md'>
+            <Select
+              className='w-full'
+              noBorder
+              options={[
+                { id: '', name: 'None' },
+                { id: 'auto', name: 'Auto' },
+                { id: 'metadata-confirmed', name: 'Metadata confirmed' },
+                { id: 'metadata-not-confirmed', name: 'Metadata not confirmed' },
+              ]}
+              value={open}
+              onChange={setOpen}
+            />
+          </div>
+        </div>
 
         <Input
           className='col-span-4'
@@ -426,7 +481,7 @@ function EditBannerModalModal ({ data, onClose, onChange }) {
         />
 
         <Input
-          className='col-span-6'
+          className='col-span-8'
           id='title'
           label='Title'
           value={title}
@@ -434,7 +489,7 @@ function EditBannerModalModal ({ data, onClose, onChange }) {
         />
 
         <Input
-          className='col-span-6'
+          className='col-span-8'
           id='content'
           label='Content'
           type='textarea'

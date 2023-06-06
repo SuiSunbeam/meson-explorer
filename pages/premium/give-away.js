@@ -68,7 +68,7 @@ export default function GiveAwayList() {
 }
 
 function GiveAwayRow ({ data, onDelete }) {
-  const { address, redeemed } = data
+  const { address, confirmed } = data
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1'>
@@ -76,7 +76,7 @@ function GiveAwayRow ({ data, onDelete }) {
           <Link href={`/premium/${address}`}>{abbreviate(address, 6)}</Link>
         </div>
       </Td>
-      <Td size='sm'>{redeemed && <Badge type='info'>REDEEMED</Badge>}</Td>
+      <Td size='sm'>{confirmed && <Badge type='info'>REDEEMED</Badge>}</Td>
       <Td size='sm' className='text-right'>
         <Button rounded size='xs' color='error' onClick={() => onDelete(address)}>
           <TrashIcon className='w-4 h-4' aria-hidden='true' />
