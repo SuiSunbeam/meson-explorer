@@ -550,15 +550,8 @@ function EditBannerModalButtonModal ({ data, onClose, onChange }) {
     if (color) {
       newData.color = color
     }
-    if (href) {
-      newData.href = href
-      if (modal) {
-        window.alert('Cannot not set open modal on click when a link is given')
-        return
-      }
-    }
-    if (modal) {
-      newData.modal = Number(modal)
+    if (onclick) {
+      newData.onclick = onclick
     }
 
     if (create) {
