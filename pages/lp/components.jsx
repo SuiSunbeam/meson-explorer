@@ -172,7 +172,7 @@ function LpContentRow ({ address, withSrFee, checkDifference, dealer, network, a
   const alert = CORE_ALERT[network.id]
   const tokens = [...network.tokens]
   if (network.uctAddress) {
-    tokens.push({ symbol: 'UCT', addr: network.uctAddress, decimals: 6, gray: true })
+    tokens.push({ symbol: 'UCT', addr: network.uctAddress, decimals: 6, tokenIndex: 255, gray: true })
   }
 
   const [cursor, setCursor] = React.useState(null)
@@ -250,14 +250,14 @@ function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token,
     }
 
     (async function () {
-      await mesonClient._getSupportedTokens({ from: address }).catch(() => {})
+      await mesonClient.ready({ from: address }).catch(() => {})
 
-      const deposit = await mesonClient.poolTokenBalance(token.addr, address, { from: address }).catch(() => {})
+      const deposit = await mesonClient.getBalanceInPool(address, token.tokenIndex).catch(() => {})
       if (deposit) {
         if (token.tokenIndex !== 32) {
-          add.toDeposit(deposit)
+          add.toDeposit(deposit.value)
         }
-        setDeposit(deposit)
+        setDeposit(deposit.value)
       }
       
       const tokenBalance = await mesonClient.getTokenBalance(address, token.tokenIndex).catch(() => {})
@@ -269,12 +269,12 @@ function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token,
       }
       
       if (withSrFee) {
-        const srFee = await mesonClient.serviceFeeCollected(token.addr, { from: address }).catch(() => {})
+        const srFee = await mesonClient.serviceFeeCollected(token.tokenIndex, { from: address }).catch(() => {})
         if (srFee) {
           if (token.tokenIndex !== 32) {
-            add.toSrFee(srFee)
+            add.toSrFee(srFee.value)
           }
-          setSrFeeCollected(srFee)
+          setSrFeeCollected(srFee.value)
         }
       }
     })()
@@ -287,12 +287,12 @@ function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token,
     (async () => {
       if (checkDifference) {
         if (address.length === 66) {
-          const diff = await mesonClient.pendingTokenBalance(token.tokenIndex, { from: address }).catch(() => {})
+          const diff = await mesonClient.pendingTokenBalance(token.tokenIndex).catch(() => {})
           if (diff) {
             if (token.tokenIndex !== 32) {
-              add.toInContractDiff(diff)
+              add.toInContractDiff(diff.value)
             }
-            setInContractDiff(diff)
+            setInContractDiff(diff.value)
           }
         } else {
           const inContractBalance = await mesonClient.inContractTokenBalance(token.tokenIndex, { from: address }).catch(() => {})
