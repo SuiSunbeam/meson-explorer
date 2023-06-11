@@ -159,9 +159,12 @@ export default function SwapRow({ data: raw, smMargin }) {
             </div>
           </div>
         </div>
-        <div className='md:hidden text-xs text-gray-500'>
-          Fee: <AmountDisplay size='xs' value={(raw.srFee || 0) + (raw.lpFee || 0)} />
-        </div>
+        {
+          !CancelledStatus.includes(status) &&
+          <div className='md:hidden text-xs text-gray-500'>
+            Fee: <AmountDisplay size='xs' value={(raw.srFee || 0) + (raw.lpFee || 0)} />
+          </div>
+        }
       </Td>
       <Td className='hidden md:table-cell'>
       {
