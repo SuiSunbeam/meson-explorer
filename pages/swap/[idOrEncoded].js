@@ -326,7 +326,7 @@ function SwapSaltBadges({ swap }) {
 function SwapStepName({ index, name }) {
   if (index === 0) {
     return 'Request by'
-  } else if (index === 5) {
+  } else if (index === 6) {
     return 'Release to'
   } else {
     return <span className='capitalize'>{name.split(':')[0].toLowerCase()}</span>
