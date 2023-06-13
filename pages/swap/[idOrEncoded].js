@@ -278,6 +278,11 @@ function SwapActionButton({ data, swap, status, from, to }) {
     case 'RELEASED':
       actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.execute(swap, data.releaseSignature, recipient)}>Execute</Button>
       break;
+    case 'RELEASING*':
+      if (unlocks >= locks) {
+        actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.simpleRelease(swap, recipient)}>SimpleRelease</Button>
+        break
+      }
     default:
       if (locks > releases + unlocks) {
         if (swap.expired) {
