@@ -251,7 +251,7 @@ function SwapActionButton({ data, swap, status, from, to }) {
   const releases = data.events.filter(e => e.name === 'RELEASED').length
   const executed = data.events.filter(e => e.name === 'EXECUTED').length
 
-  if (executed && locks && (releases + unlocks - locks === 0)) {
+  if (executed && releases && locks && (releases + unlocks - locks === 0)) {
     return null
   }
 
