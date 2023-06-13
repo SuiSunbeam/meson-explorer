@@ -241,7 +241,7 @@ function CorrectSwap({ data: raw }) {
   )
 }
 
-function SwapActionButton({ data, swap, status, from, to }) {
+function SwapActionButton({ data, swap, status }) {
   if (!data) {
     return null
   }
