@@ -622,23 +622,23 @@
     eventemitter3 "^4.0.7"
     lodash "^4.17.21"
 
-"@mesonfi/presets@^1.10.0-rc.1":
-  version "1.10.0-rc.1"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.10.0-rc.1/ed06e705f79def6dae828c3d63bf8c1152ad44a6#ed06e705f79def6dae828c3d63bf8c1152ad44a6"
-  integrity sha512-o4H6eW+zJO3d6hOQ1wRog3LsBAM/JdhNZ+VRoRpslK6Q4EkpWzx5tgJquvG7FX4ISn32s/dQUg8SSCi6s8K4eg==
+"@mesonfi/presets@^1.10.0":
+  version "1.10.0"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.10.0/90022c82818f8215d2e9728ded0a39feeed84fca#90022c82818f8215d2e9728ded0a39feeed84fca"
+  integrity sha512-lRl+8A4wKAFu0HJ7het2mRhIm8Jw+CPs3kfTgvaxlgx03VuHVvJAMopf/LOX/BQl2wAIr+YKl5xEaHiJXLsgJA==
   dependencies:
     "@mesonfi/contract-abis" "^1.10.0"
-    "@mesonfi/sdk" "^1.10.0-rc.1"
+    "@mesonfi/sdk" "^1.10.0"
     "@mysten/sui.js" "^0.33.0"
     aptos "^1.3.16"
     ethers "^5.7.1"
     lodash "^4.17.21"
     tronweb "^4.3.0"
 
-"@mesonfi/sdk@^1.10.0-rc.1":
-  version "1.10.0-rc.1"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.10.0-rc.1/6b6f6f8f8d1dd2c2f43eb8a9161d162c21b10710#6b6f6f8f8d1dd2c2f43eb8a9161d162c21b10710"
-  integrity sha512-bz3v9kBlc/ZfPDM1Klsg0IO1D+4qPJBnqj9veqG7RGMYf5iZZQOVlIuNs49Z78NorSw03aeCG9xbypfsRY3Sfw==
+"@mesonfi/sdk@^1.10.0", "@mesonfi/sdk@^1.10.0-rc.1":
+  version "1.10.0"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.10.0/d5adee4d23c3bfe578e829233a2fb9cf506fc02e#d5adee4d23c3bfe578e829233a2fb9cf506fc02e"
+  integrity sha512-W1GSQepBUO+xAKMkIo+UMkVfHNlCFkwUyHFmTD7Z56DzAfQQgpVpJau2o68nMtsC/KLprv0A/Ht7PDMhjbb8qw==
   dependencies:
     "@mesonfi/contract-abis" "^1.10.0"
     "@mesonfi/contract-types" "^1.10.0"
