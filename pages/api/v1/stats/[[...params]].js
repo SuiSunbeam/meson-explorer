@@ -5,6 +5,11 @@ export default async function handler(req, res) {
 
   const pipeline = [
     {
+      $match: {
+        disabled: { $ne: true }
+      }
+    },
+    {
       $project: {
         success: { $in: ['RELEASED', '$events.name'] },
         amount: { $toLong: '$amount' },
