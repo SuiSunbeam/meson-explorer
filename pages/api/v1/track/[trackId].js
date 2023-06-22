@@ -15,8 +15,7 @@ async function get(req, res) {
     return
   }
   const regex = new RegExp(`^0x[0-9a-f]{3}${trackId}`, 'i')
-  const swaps = await Swaps.find({ salt: { $regex: regex } }).select('_id inChain outChain')
-  const from = swaps.filter(s => s.inChain === '0x0324').map(s => s._id)
-  const to = swaps.filter(s => s.inChain === '0x0324').map(s => s._id)
+  const from = await Swaps.count({ salt: { $regex: regex }, inChain: '0x0324' })
+  const to = await Swaps.count({ salt: { $regex: regex }, outChain: '0x0324' })
   res.json({ result: { from, to } })
 }
