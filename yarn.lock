@@ -603,8 +603,8 @@
 
 "@mesonfi/dealer@^0.10.0":
   version "0.10.0"
-  resolved "https://npm.pkg.github.com/download/@mesonfi/dealer/0.10.0/ca7a65573dfb6abbfc8f5c8d43f1f140ee14d18d#ca7a65573dfb6abbfc8f5c8d43f1f140ee14d18d"
-  integrity sha512-h90SutYTikm82eO+TjuvJfxPf4iHheiQegYerNjqMiHA+RGWSyshbF1BcBbyue/474A2Y+W7a2BsXg3Qri4mOQ==
+  resolved "https://npm.pkg.github.com/download/@mesonfi/dealer/0.10.0/8c7baea2a8d5f19330f471a5fc7c0c30470bc7b1#8c7baea2a8d5f19330f471a5fc7c0c30470bc7b1"
+  integrity sha512-yrKX7SjQ7C5jLu/k23mhvCwHsy8MKxu8i8Bt21qj5rjg/JNMHg6ZRrt4IW+2LpAq+O6B4xpQa0jKAvENsYCP8w==
   dependencies:
     "@mesonfi/sdk" "^1.10.0"
     cross-fetch "^3.1.5"
