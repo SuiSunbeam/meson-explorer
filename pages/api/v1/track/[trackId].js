@@ -15,7 +15,7 @@ async function get(req, res) {
     return
   }
   const regex = new RegExp(`^0x[0-9a-f]{3}${trackId}`, 'i')
-  const from = await Swaps.count({ salt: { $regex: regex }, inChain: '0x0324' })
-  const to = await Swaps.count({ salt: { $regex: regex }, outChain: '0x0324' })
+  const from = await Swaps.count({ salt: { $regex: regex }, inChain: '0x0324', 'events.name': 'RELEASED' })
+  const to = await Swaps.count({ salt: { $regex: regex }, outChain: '0x0324', 'events.name': 'RELEASED' })
   res.json({ result: { from, to } })
 }
