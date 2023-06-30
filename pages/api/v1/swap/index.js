@@ -13,6 +13,8 @@ export default listHandler({
         query.salt = { $regex : /^0x[d9]/ }
       } else if (category === 'meson.to') {
         query.salt = { $regex : /^0x[ea62]/ }
+      } else if (category === 'track:3') {
+        query.salt = { $regex : /^0x[0-9a-f]{3}3/ }
       } else if (category === 'contract') {
         query.fromContract = true
       } else if (category === 'campaign') {
