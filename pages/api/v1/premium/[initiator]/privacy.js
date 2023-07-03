@@ -1,9 +1,9 @@
-import { Premiums, Swaps } from 'lib/db'
+import { PremiumAccounts, Swaps } from 'lib/db'
 
 export default async function handler(req, res) {
-  const initiator = req.query.initiator.toLowerCase()
+  const premiumId = req.query.initiator
   if (req.method === 'PUT') {
-    const result = await _updatePrivacy(initiator, req.body)
+    const result = await _updatePrivacy(premiumId, req.body)
     res.json({ result })
   } else if (req.method === 'OPTIONS') {
     res.end()
@@ -12,9 +12,10 @@ export default async function handler(req, res) {
   }
 }
 
-async function _updatePrivacy(initiator, body) {
+async function _updatePrivacy(premiumId, body) {
   if (typeof body.hideTxsOnExplorer === 'boolean') {
-    await Premiums.update({ initiator, quota: { $gt: 0 } }, { hide: body.hideTxsOnExplorer }, { multi: true })
-    await Swaps.update({ $or: [{ 'fromTo.0': initiator }, { initiator }] }, { hide: body.hideTxsOnExplorer }, { multi: true })
+    const premiumAccount = await PremiumAccounts.findByIdAndUpdate(premiumId, { 'params.hide': body.hideTxsOnExplorer }, { new: true })
+    const fromAddressList = premiumAccount.address.map(addr => addr.split(':')[1])
+    await Swaps.update({ 'fromTo.0': { $in: fromAddressList } }, { hide: body.hideTxsOnExplorer }, { multi: true })
   }
 }
