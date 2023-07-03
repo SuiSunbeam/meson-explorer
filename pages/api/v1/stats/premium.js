@@ -1,22 +1,21 @@
-import { Premiums } from 'lib/db'
+import { PremiumRecords } from 'lib/db'
 
 export default async function handler(req, res) {
   const pipeline = [
+    { $unwind: '$txs' },
     {
       $project: {
-        paid: { $gt: ['$meta', null] },
-        since: '$since',
-        ts: { $toDate: { $multiply: [{ $ifNull: ['$meta.ts', { $toLong: 0 }] }, 1000] } }
+        ts: { $convert: { input: { $multiply: [{ $ifNull: ['$txs.ts', 0] }, 1000] }, to: 'date', onError: new Date(0) } }
       }
     },
     {
       $project: {
         date: {
-          $dateToString: { date: { $cond: ['$paid', '$ts', '$since'] }, format: '%Y-%m-%d' }
+          $dateToString: { date: '$ts', format: '%Y-%m-%d' }
         },
-        buy: { $cond: [{ $and: ['$paid', { $gt: ['$since', null] }, { $gte: ['$ts', '$since'] }] }, 1, 0] },
-        extra: { $cond: [{ $lte: ['$since', null] }, 1, 0] },
-        renew: { $cond: [{ $and: ['$paid', { $gt: ['$since', null] }, { $lt: ['$ts', '$since'] }] }, 1, 0] },
+        buy: { $cond: ['$paid', 0, 1] },
+        buy: { $cond: ['$paid', 0, 1] },
+        renew: { $cond: ['$paid', 0, 1] },
         redeem: { $cond: ['$paid', 0, 1] }
       }
     },
@@ -31,7 +30,7 @@ export default async function handler(req, res) {
     },
     { $sort: { _id: -1 } }
   ]
-  const result = await Premiums.aggregate(pipeline).exec()
+  const result = await PremiumRecords.aggregate(pipeline)
 
   if (result) {
     res.json({ result })
