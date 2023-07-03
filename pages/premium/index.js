@@ -50,7 +50,7 @@ export default function StatsPremium() {
           title='Premiums'
           tabs={[
             { key: 'stats', name: 'Daily Stats', active: true },
-            { key: 'payment', name: 'Payments', onClick: () => router.push('/premium/payments') },
+            { key: 'list', name: 'List', onClick: () => router.push('/premium/list') },
             { key: 'redeem', name: 'Redeems', onClick: () => router.push('/premium/redeem') },
             { key: 'giveaway', name: 'Give Aways', onClick: () => router.push('/premium/give-away') }
           ]}

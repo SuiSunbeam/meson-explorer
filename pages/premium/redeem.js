@@ -16,7 +16,7 @@ export default function RedeemList() {
       title='Premiums'
       tabs={[
         { key: 'stats', name: 'Daily Stats', onClick: () => router.push('/premium') },
-        { key: 'payment', name: 'Payments', onClick: () => router.push('/premium/payments') },
+        { key: 'list', name: 'List', onClick: () => router.push('/premium/list') },
         { key: 'redeem', name: 'Redeems', active: true },
         { key: 'giveaway', name: 'Give Aways', onClick: () => router.push('/premium/give-away') }
       ]}

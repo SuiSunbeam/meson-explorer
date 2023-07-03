@@ -50,7 +50,7 @@ export default function GiveAwayList() {
         right={<Button size='sm' color='primary' rounded onClick={() => setModalOpen(true)}>Add</Button>}
         tabs={[
           { key: 'stats', name: 'Daily Stats', onClick: () => router.push('/premium') },
-          { key: 'payment', name: 'Payments', onClick: () => router.push('/premium/payments') },
+          { key: 'list', name: 'List', onClick: () => router.push('/premium/list') },
           { key: 'redeem', name: 'Redeems', onClick: () => router.push('/premium/redeem') },
           { key: 'giveaway', name: 'Give Aways', active: true }
         ]}

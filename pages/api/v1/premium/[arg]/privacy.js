@@ -1,7 +1,7 @@
 import { PremiumAccounts, Swaps } from 'lib/db'
 
 export default async function handler(req, res) {
-  const premiumId = req.query.initiator
+  const premiumId = req.query.arg
   if (req.method === 'PUT') {
     const result = await _updatePrivacy(premiumId, req.body)
     res.json({ result })
