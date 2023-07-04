@@ -16,7 +16,7 @@ const hides = ['factor', 'minimum', 'initiators']
 export default function RulesGas () {
   const router = useRouter()
 
-  const { data, error, mutate } = useSWR('https://relayer.meson.fi/api/v1/rules/0x666d6b8a44d226150ca9058beebafe0e3ac065a2', fetcher)
+  const { data, error, mutate } = useSWR('https://relayer.meson.fi/api/v1/rules/ethers:0x666d6b8a44d226150ca9058beebafe0e3ac065a2', fetcher)
   const [modalData, setModalData] = React.useState()
 
   let body = null
