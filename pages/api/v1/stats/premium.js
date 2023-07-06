@@ -2,12 +2,7 @@ import { PremiumRecords } from 'lib/db'
 
 export default async function handler(req, res) {
   const pipeline = [
-    {
-      $addFields: {
-        txs: { $concatArrays: ['$txs', [null]] }
-      }
-    },
-    { $unwind: '$txs' },
+    { $unwind: { path: '$txs', includeArrayIndex: 'txIndex', preserveNullAndEmptyArrays: true } },
     {
       $project: {
         ts: {
@@ -17,17 +12,16 @@ export default async function handler(req, res) {
             new Date(0),
           ]
         },
-        isPremium: { $cond: ['$txs', { $eq: ['$plan', 'premium'] }, false] },
-        isPlus: { $cond: ['$txs', { $eq: ['$plan', 'premium-plus'] }, false] },
-        isLite: { $cond: ['$txs', false, { $eq: ['$plan', 'premium-lite-0'] }] },
+        isPremium: { $and: [{ $eq: ['$plan', 'premium'] }, { $lt: ['$txIndex', 1] }] },
+        isPlus: { $and: [{ $eq: ['$plan', 'premium-plus'] }, { $lt: ['$txIndex', 1] }] },
+        isLite: { $and: [{ $eq: ['$plan', 'premium-lite-0'] }, { $lt: ['$txIndex', 1] }] },
         isExtra: { $eq: ['$txs.erc20Value', '4990000'] },
+        // isExtra: { $gt: ['$txIndex', 0] },
       }
     },
     {
       $project: {
-        date: {
-          $dateToString: { date: '$ts', format: '%Y-%m-%d' }
-        },
+        date: { $dateToString: { date: '$ts', format: '%Y-%m-%d' } },
         premium: { $cond: ['$isPremium', 1, 0] },
         plus: { $cond: ['$isPlus', 1, 0] },
         lite: { $cond: ['$isLite', 1, 0] },
