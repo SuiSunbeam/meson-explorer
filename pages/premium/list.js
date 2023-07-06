@@ -45,6 +45,9 @@ export function PaidPremiumRow ({ data, linkPrefix = 'premium' }) {
   if (plan === 'premium-plus') {
     badgeText = 'PLUS'
     badgeType = 'success'
+  } else if (plan === 'premium-lite-0') {
+    badgeText = 'LITE'
+    badgeType = 'default'
   }
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
@@ -73,7 +76,7 @@ export function PaidPremiumRow ({ data, linkPrefix = 'premium' }) {
           const network = presets.getNetwork(tx.network)
           return (
             <div key={tx.hash} className='flex items-center'>
-              <TagNetwork iconOnly network={network} />
+              {network && <TagNetwork iconOnly network={network} />}
               <ExternalLink size='md' className='ml-1' href={getExplorerTxLink(network, tx.hash)}>
                 {abbreviate(tx.hash, 6)}
               </ExternalLink>
