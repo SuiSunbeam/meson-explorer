@@ -19,19 +19,19 @@ export default function StatsPremium() {
   } else if (!data) {
     body = <LoadingScreen />
   } else {
-    const total = data.reduce(({ buy, extra, renew, redeem }, row) => ({
-      buy: row.buy + buy,
-      extra: row.extra + extra,
-      renew: row.renew + renew,
-      redeem: row.redeem + redeem
-    }), { buy: 0, extra: 0, renew: 0, redeem: 0 })
+    const total = data.reduce(({ premium, plus, lite, extra }, row) => ({
+      premium: row.premium + premium,
+      plus: row.plus + plus,
+      lite: row.lite + lite,
+      extra: row.extra + extra
+    }), { premium: 0, plus: 0, lite: 0, extra: 0 })
     body = (
       <Table size='lg' headers={[
         { name: 'date', width: '28%' },
-        { name: 'buy', width: '18%' },
-        { name: 'extra', width: '18%' },
-        { name: 'renew', width: '18%' },
-        { name: 'redeem', width: '18%' }
+        { name: 'premium', width: '18%' },
+        { name: 'plus', width: '18%' },
+        { name: 'lite', width: '18%' },
+        { name: 'extra', width: '18%' }
       ]}>
         <StatPremiumRow _id='Total' {...total} />
         {data.map((row, index) => <StatPremiumRow key={`stat-table-row-${index}`} {...row} />)}
@@ -63,14 +63,14 @@ export default function StatsPremium() {
   )
 }
 
-function StatPremiumRow ({ _id: date, buy, extra, renew, redeem }) {
+function StatPremiumRow ({ _id: date, premium, plus, lite, extra }) {
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
       <Td size='lg'>{date}</Td>
-      <Td>{buy}</Td>
+      <Td>{premium}</Td>
+      <Td>{plus}</Td>
+      <Td>{lite}</Td>
       <Td>{extra}</Td>
-      <Td>{renew}</Td>
-      <Td>{redeem}</Td>
     </tr>
   )
 }
