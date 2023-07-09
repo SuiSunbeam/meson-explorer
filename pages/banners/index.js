@@ -34,9 +34,9 @@ export default function Banners () {
     body = (
       <Table size='lg' headers={[
         { name: 'status / id / title', width: '60%', className: 'pl-4 md:pl-6' },
-        { name: 'params', width: '25%' },
+        { name: 'params', width: '20%' },
         { name: 'modals', width: '5%' },
-        { name: 'reward', width: '5%' },
+        { name: 'reward', width: '10%' },
         { name: 'edit', width: '5%', className: 'text-right' },
       ]}>
         {data.map((d, i) => <RowBanner key={i} {...d} onOpenModal={() => setModalData(d)} />)}
@@ -62,7 +62,14 @@ export default function Banners () {
   )
 }
 
-function RowBanner({ _id, priority, icon, title, hide, params = {}, modals, reward, metadata, online, disabled, onOpenModal }) {
+function RowBanner({ _id, priority, icon, title, hide, params = {}, modals, metadata, online, disabled, onOpenModal }) {
+  const confirmed = metadata?.filter(x => x.confirmed).length
+  let rewardStr
+  if (confirmed) {
+    rewardStr = `${confirmed} / ${metadata.length}`
+  } else if (metadata.length) {
+    rewardStr = metadata.length
+  }
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1 text-sm' wrap>
@@ -79,7 +86,15 @@ function RowBanner({ _id, priority, icon, title, hide, params = {}, modals, rewa
       }
       </Td>
       <Td>{modals?.length}</Td>
-      <Td>{reward ? `✅ ${metadata.length}` : ''}</Td>
+      <Td>
+      {
+        rewardStr &&
+        <div className='flex items-center'>
+          <span className='text-xs mt-0.5 mr-1'>✅</span>
+          {rewardStr}
+        </div>
+      }
+      </Td>
       <Td className='text-right'>
         <Button rounded size='xs' color='info' onClick={onOpenModal}>
           <PencilIcon className='w-4 h-4' aria-hidden='true' />
