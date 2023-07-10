@@ -21,7 +21,10 @@ export default function PaidPremiumList() {
         !data ? addr :
         <div>
           {data.address.map(addr => <div key={addr} className='flex items-center'><Badge type='info' className='mr-1'>{addr.split(':')[0]}</Badge>{addr.split(':')[1]}</div>)}
-          {data.params?.hide && <div className='mt-1'><Badge type='warning'>HIDE</Badge></div>}
+          <div className='mt-1 flex'>
+            {data.params?.hide && <Badge type='warning'>HIDE</Badge>}
+            {data.params?.discordId && <Badge type='warning' className='ml-1'>Discord: {data.params.discordId}</Badge>}
+          </div>
         </div>
       } 
       queryUrl={`admin/premium/${addr}`}
