@@ -1,19 +1,7 @@
-import { Premiums, PremiumAccounts, PremiumRecords, Banners } from 'lib/db'
+import { PremiumAccounts, PremiumRecords, Banners } from 'lib/db'
 
 export default async function handler(req, res) {
-  if (req.method === 'GET') {
-    const addr = req.query.arg
-    let addressList
-    if (addr.startsWith('T')) {
-      addressList = [`tron:${addr}`]
-    } else if (addr.length === 42) {
-      addressList = [`ethers:${addr.toLowerCase()}`]
-    } else {
-      addressList = [`aptos:${addr}`, `sui:${addr}`]
-    }
-    const result = await PremiumAccounts.findOne({ address: { $in: addressList } })
-    res.json({ result })
-  } else if (req.method === 'POST') {
+  if (req.method === 'POST') {
     // Claim a premium lite
     try {
       const result = await post(req.query.arg)
@@ -21,9 +9,25 @@ export default async function handler(req, res) {
     } catch (e) {
       res.status(400).json({ error: { code: -32602, message: `Failed to claim premium: ${e.message}` } })
     }
+    return
+  }
+
+  const addr = req.query.arg
+  let addressWithFormat
+  if (addr.startsWith('T')) {
+    addressWithFormat = `tron:${addr}`
+  } else if (addr.length === 42) {
+    addressWithFormat = `ethers:${addr.toLowerCase()}`
+  } else {
+    addressWithFormat = { $in: [`aptos:${addr}`, `sui:${addr}`] }
+  }
+
+  if (req.method === 'GET') {
+    const result = await getPremium(addressWithFormat)
+    res.json({ result })
   } else if (req.method === 'PUT') {
     try {
-      const result = await _updatePremiumRoleClaim(addr, req.body)
+      const result = await _updatePremiumRoleClaim(addressWithFormat, req.body)
       res.json({ result })
     } catch (e) {
       res.status(400).json({ error: { code: -32602, message: `Failed to update premium: ${e.message}` } })
@@ -91,16 +95,17 @@ async function post(addressWithFormat) {
   return premiumAccount
 }
 
-async function _updatePremiumRoleClaim(initiator, body) {
+async function _updatePremiumRoleClaim(addressWithFormat, body) {
   // TODO: add the limit to invoke
   if (!body.discordId) {
     throw new Error('Update premium error')
   }
 
-  const premiums = await get(initiator)
-  if (!premiums?.length) {
+  const premiumAccount = await getPremium(addressWithFormat)
+  if (!premiumAccount) {
     throw new Error('The address is not Meson Premium')
   }
+  await PremiumAccounts.findByIdAndUpdate(premiumAccount._id, { params: { roleClaimed: body.claim, discordId: body.discordId } })
 
-  return await Premiums.findOneAndUpdate({ initiator }, { params: { roleClaimed: body.claim, discordId: body.discordId } }, { sort: { since: -1 } })
+  return premiumAccount
 }
