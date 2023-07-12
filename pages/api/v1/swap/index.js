@@ -13,8 +13,13 @@ export default listHandler({
         query.salt = { $regex : /^0x[d9]/ }
       } else if (category === 'meson.to') {
         query.salt = { $regex : /^0x[ea62]/ }
-      } else if (category === 'track:3') {
-        query.salt = { $regex : /^0x[0-9a-f]{3}3/ }
+      } else if (category?.startsWith('track:')) {
+        const [_, trackIdStr] = category.split(':')
+        const trackId = Number(trackIdStr)
+        if (trackId) {
+          const regex = new RegExp(`^0x[0-9a-f]{3}${trackId}`)
+          query.salt = { $regex: regex }
+        }
       } else if (category === 'contract') {
         query.fromContract = true
       } else if (category === 'campaign') {
