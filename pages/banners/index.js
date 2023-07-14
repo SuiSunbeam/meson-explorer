@@ -478,6 +478,7 @@ function EditBannerModalModal ({ data, onClose, onChange }) {
               options={[
                 { id: '', name: 'None' },
                 { id: 'auto', name: 'Auto' },
+                { id: 'auto-no-close', name: 'Auto (no close)' },
                 { id: 'link', name: 'Match Link' },
                 { id: 'metadata-confirmed', name: 'Metadata confirmed' },
                 { id: 'metadata-not-confirmed', name: 'Metadata not confirmed' },
