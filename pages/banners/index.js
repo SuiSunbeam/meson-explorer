@@ -479,6 +479,7 @@ function EditBannerModalModal ({ data, onClose, onChange }) {
                 { id: '', name: 'None' },
                 { id: 'auto', name: 'Auto' },
                 { id: 'auto-no-close', name: 'Auto (no close)' },
+                { id: 'wallet', name: 'Match Wallet' },
                 { id: 'link', name: 'Match Link' },
                 { id: 'metadata-confirmed', name: 'Metadata confirmed' },
                 { id: 'metadata-not-confirmed', name: 'Metadata not confirmed' },
