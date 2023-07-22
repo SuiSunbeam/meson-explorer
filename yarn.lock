@@ -635,22 +635,7 @@
     lodash "^4.17.21"
     tronweb "^4.3.0"
 
-"@mesonfi/sdk@^1.10.0":
-  version "1.10.0"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.10.0/343c852b9bc97d1fd9eb41f96fdb3b690f7187cf#343c852b9bc97d1fd9eb41f96fdb3b690f7187cf"
-  integrity sha512-pzaSnG7LfAsabhs0SHOAXxxiwFFeXsPZbOIiCxMycHip87WfaBn9XDBHmTNjYXCAo4TSLy0q6+Jo0+wjRv+iCA==
-  dependencies:
-    "@mesonfi/contract-abis" "^1.10.0"
-    "@mesonfi/contract-types" "^1.10.0"
-    "@mysten/sui.js" "^0.33.0"
-    aptos "^1.3.16"
-    cross-fetch "^3.1.5"
-    ethers "^5.7.1"
-    lodash "^4.17.21"
-    tronweb "^4.3.0"
-    zksync-web3 "^0.13.4"
-
-"@mesonfi/sdk@^1.10.1":
+"@mesonfi/sdk@^1.10.0", "@mesonfi/sdk@^1.10.1":
   version "1.10.1"
   resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.10.1/0e620010ad4eeaa4cab43cfa1a5b9ec2849fce75#0e620010ad4eeaa4cab43cfa1a5b9ec2849fce75"
   integrity sha512-Ww4n7Yd3CgaZ2PVx84Hsekj+fof7z/c+KriezAKgdbVym375GldbxBhBqbVEsXFz3RIpNPiv6yBZcDGbaYsjrg==
