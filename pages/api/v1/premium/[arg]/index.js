@@ -54,14 +54,6 @@ async function getPremium(addressWithFormat, txs = false) {
 async function post(addressWithFormat) {
   const [format, address] = addressWithFormat.split(':')
 
-  const freePremium = await Banners.findOneAndUpdate({
-    _id: 'free-premium',
-    'metadata.address': address,
-  }, { $set: { 'metadata.$[el].confirmed': true } }, { arrayFilters: [{ 'el.address': address }] })
-  if (!freePremium) {
-    throw new Error('Not eligible to claim Meson Premium')
-  }
-
   let premiumAccount = await getPremium(addressWithFormat)
   if (!premiumAccount) {
     const acc = await PremiumAccounts.create({
@@ -74,6 +66,14 @@ async function post(addressWithFormat) {
 
   if (premiumAccount.records.length) {
     return premiumAccount
+  }
+
+  const freePremium = await Banners.findOneAndUpdate({
+    _id: 'free-premium',
+    'metadata.address': address,
+  }, { $set: { 'metadata.$[el].confirmed': true } }, { arrayFilters: [{ 'el.address': address }] })
+  if (!freePremium) {
+    throw new Error('Not eligible to claim Meson Premium')
   }
 
   const since = new Date()
