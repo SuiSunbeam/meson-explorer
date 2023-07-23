@@ -21,12 +21,13 @@ import one from './one.png'
 import opt from './opt.png'
 import polygon from './polygon.png'
 import sepolia from './sepolia.png'
+import skale from './skale.png'
 import sui from './sui.png'
 import tron from './tron.png'
 import zkevm from './zkevm.png'
 import zksync from './zksync.png'
 
-const icons = { eth, goerli: eth, sepolia, bnb, avax, polygon, ftm, arb, opt, one, aurora, cfx, evmos, movr, beam, eos, tron, aptos, sui, zksync, zkevm, cronos }
+const icons = { aptos, arb, aurora, avax, beam, bnb, cfx, cronos, eos, eth, goerli: eth, evmos, ftm, movr, one, opt, polygon, sepolia, skale, sui, tron, zkevm, zksync }
 
 export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly, address, className }) {
   const id = network.id.split('-')[0]
