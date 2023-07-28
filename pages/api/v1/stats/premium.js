@@ -14,7 +14,7 @@ export default async function handler(req, res) {
         },
         isPremium: { $and: [{ $eq: ['$plan', 'premium'] }, { $lt: ['$txIndex', 1] }] },
         isPlus: { $and: [{ $eq: ['$plan', 'premium-plus'] }, { $lt: ['$txIndex', 1] }] },
-        isLite: { $and: [{ $eq: ['$plan', 'premium-lite-0'] }, { $lt: ['$txIndex', 1] }] },
+        isLite: { $and: [{ $eq: [{ $substrBytes: ['$plan', 0, 13] }, 'premium-lite-'] }, { $lt: ['$txIndex', 1] }] },
         isExtra: { $eq: ['$txs.erc20Value', '4990000'] },
         // isExtra: { $gt: ['$txIndex', 0] },
       }

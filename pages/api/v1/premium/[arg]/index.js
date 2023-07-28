@@ -68,13 +68,13 @@ async function post(addressWithFormat) {
     return premiumAccount
   }
 
-  const freePremium = await Banners.findOneAndUpdate({
-    _id: 'free-premium',
-    'metadata.address': address,
-  }, { $set: { 'metadata.$[el].confirmed': true } }, { arrayFilters: [{ 'el.address': address }] })
-  if (!freePremium) {
-    throw new Error('Not eligible to claim Meson Premium')
-  }
+  // const freePremium = await Banners.findOneAndUpdate({
+  //   _id: 'free-premium',
+  //   'metadata.address': address,
+  // }, { $set: { 'metadata.$[el].confirmed': true } }, { arrayFilters: [{ 'el.address': address }] })
+  // if (!freePremium) {
+  //   throw new Error('Not eligible to claim Meson Premium')
+  // }
 
   const since = new Date()
   since.setUTCHours(0, 0, 0, 0)
@@ -82,10 +82,10 @@ async function post(addressWithFormat) {
   const record = await PremiumRecords.create({
     _id: `${premiumAccount._id}:${until / 1000}`,
     fromAddress: address,
-    plan: 'premium-lite-0',
+    plan: 'premium-lite-2023-08-01',
     paid: Number(0),
     used: 0,
-    quota: 100_000_000_000,
+    quota: 21_000_000_000,
     since,
     until: new Date(until),
     txs: [],

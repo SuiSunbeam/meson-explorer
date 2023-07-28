@@ -45,7 +45,7 @@ export function PaidPremiumRow ({ data, linkPrefix = 'premium' }) {
   if (plan === 'premium-plus') {
     badgeText = 'PLUS'
     badgeType = 'success'
-  } else if (plan === 'premium-lite-0') {
+  } else if (plan.startsWith('premium-lite-')) {
     badgeText = 'LITE'
     badgeType = 'default'
   }
