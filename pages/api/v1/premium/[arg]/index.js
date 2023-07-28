@@ -78,7 +78,7 @@ async function post(addressWithFormat) {
 
   const since = new Date()
   since.setUTCHours(0, 0, 0, 0)
-  const until = since.valueOf() + 30 * 86400_000 - 1000
+  const until = since.valueOf() + 7 * 86400_000 - 1000
   const record = await PremiumRecords.create({
     _id: `${premiumAccount._id}:${until / 1000}`,
     fromAddress: address,
