@@ -56,20 +56,29 @@ export default function StatsByChain() {
   } else if (!data) {
     body = <LoadingScreen />
   } else {
-    const total = data.reduce(({ count, success, apiCount, apiSuccess, m2Count, m2Success, a2Count, a2Success, volume, srFee, lpFee }, row) => ({
-      count: row.count + count,
-      success: row.success + success,
-      apiCount: row.apiCount + apiCount,
-      apiSuccess: row.apiSuccess + apiSuccess,
-      m2Count: row.m2Count + m2Count,
-      m2Success: row.m2Success + m2Success,
-      a2Count: row.a2Count + a2Count,
-      a2Success: row.a2Success + a2Success,
-      volume: row.volume + volume,
-      srFee: row.srFee + srFee,
-      lpFee: row.lpFee + lpFee,
+    const init = {
+      count: 0,
+      success: 0,
+      api: { count: 0, success: 0 },
+      auto: { count: 0, success: 0 },
+      m2: { count: 0, success: 0 },
+      a2: { count: 0, success: 0 },
+      volume: 0,
+      srFee: 0,
+      lpFee: 0,
+    }
+    const total = data.reduce(({ count, success, api, auto, m2, a2, volume, srFee, lpFee }, prev) => ({
+      count: (prev.count || 0) + count,
+      success: prev.success + success,
+      api: { count: prev.api.count + api.count, success: prev.api.success + api.success },
+      auto: { count: prev.auto.count + auto.count, success: prev.auto.success + auto.success },
+      m2: { count: prev.m2.count + m2.count, success: prev.m2.success + m2.success },
+      a2: { count: prev.a2.count + a2.count, success: prev.a2.success + a2.success },
+      volume: prev.volume + volume,
+      srFee: prev.srFee + srFee,
+      lpFee: prev.lpFee + lpFee,
       duration: 0
-    }), { count: 0, success: 0, apiCount: 0, apiSuccess: 0, m2Count: 0, m2Success: 0, a2Count: 0, a2Success: 0, volume: 0, srFee: 0, lpFee: 0, duration: 0 })
+    }), init)
     body = (
       <Table
         size='lg'
@@ -77,6 +86,7 @@ export default function StatsByChain() {
           { name: 'Date', width: '10%' },
           { name: '# success / total', width: '15%' },
           { name: '# API swaps', width: '10%' },
+          { name: '# Auto swaps', width: '10%' },
           { name: '# meson.to swaps', width: '10%' },
           { name: '# alls.to swaps', width: '10%' },
           { name: 'Volume', width: '12%' },
@@ -152,7 +162,7 @@ function SwapCount({ count, success }) {
   return <>{successStr} <span className='text-gray-500'>/</span> {countStr} <span className='text-gray-500 text-sm'>({Math.floor(success / count * 1000) / 10}%)</span></>
 }
 
-function StatTableRow({ _id: date, count, success, apiCount, apiSuccess, m2Count, m2Success, a2Count, a2Success, volume, srFee, lpFee, addresses, duration }) {
+function StatTableRow({ _id: date, count, success, api, auto, m2, a2, volume, srFee, lpFee, addresses, duration }) {
   const volumeStr = volume ? `$${fmt.format(Math.floor(ethers.utils.formatUnits(volume, 6)))}` : ''
   const srFeeStr = formatFee(srFee)
   const lpFeeStr = formatFee(lpFee)
@@ -160,16 +170,17 @@ function StatTableRow({ _id: date, count, success, apiCount, apiSuccess, m2Count
 
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
-      <Td size='lg'>{date}</Td>
-      <Td><SwapCount count={count} success={success} /></Td>
-      <Td><SwapCount count={apiCount} success={apiSuccess} /></Td>
-      <Td><SwapCount count={m2Count} success={m2Success} /></Td>
-      <Td><SwapCount count={a2Count} success={a2Success} /></Td>
-      <Td>{volumeStr}</Td>
-      <Td>{addresses}</Td>
-      <Td>${srFeeStr} <span className='text-gray-500'>|</span> ${lpFeeStr}</Td>
-      <Td>{avgSwapAmount}</Td>
-      <Td>{formatDuration(duration * 1000)}</Td>
+      <Td size='' className='pl-4 pr-3 sm:pl-6 py-1 text-sm'>{date}</Td>
+      <Td size='sm'><SwapCount count={count} success={success} /></Td>
+      <Td size='sm'><SwapCount {...api} /></Td>
+      <Td size='sm'><SwapCount {...auto} /></Td>
+      <Td size='sm'><SwapCount {...m2} /></Td>
+      <Td size='sm'><SwapCount {...a2} /></Td>
+      <Td size='sm'>{volumeStr}</Td>
+      <Td size='sm'>{addresses}</Td>
+      <Td size='sm'>${srFeeStr} <span className='text-gray-500'>|</span> ${lpFeeStr}</Td>
+      <Td size='sm'>{avgSwapAmount}</Td>
+      <Td size='sm'>{formatDuration(duration * 1000)}</Td>
     </tr>
   )
 }
