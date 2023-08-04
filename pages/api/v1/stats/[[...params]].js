@@ -18,8 +18,14 @@ export default async function handler(req, res) {
         duration: { $toLong: { $divide: [{ $subtract: ['$released', '$created'] }, 1000] } },
         date: { $dateToString: { date: '$created', format: '%Y-%m-%d' } },
         fromAddress: { $arrayElemAt: ['$fromTo', 0] },
-        api: { $and: [{ $in: [{ $substr: ['$salt', 2, 1 ] }, ['d', '9']] }, { $ne: [{ $arrayElemAt: ['$fromTo', 0] }, '0x666d6b8a44d226150ca9058beebafe0e3ac065a2'] }]},
-        auto: { $and: [{ $in: [{ $substr: ['$salt', 2, 1 ] }, ['d', '9']] }, { $eq: [{ $arrayElemAt: ['$fromTo', 0] }, '0x666d6b8a44d226150ca9058beebafe0e3ac065a2'] }]},
+        api: { $and: [
+          { $in: [{ $substr: ['$salt', 2, 1 ] }, ['d', '9']] },
+          { $not: { $in: [{ $arrayElemAt: ['$fromTo', 0] }, ['0x666d6b8a44d226150ca9058beebafe0e3ac065a2', '0x4fc928e89435f13b3dbf49598f9ffe20c4439cad']] } }
+        ]},
+        auto: { $and: [
+          { $in: [{ $substr: ['$salt', 2, 1 ] }, ['d', '9']] },
+          { $in: [{ $arrayElemAt: ['$fromTo', 0] }, ['0x666d6b8a44d226150ca9058beebafe0e3ac065a2', '0x4fc928e89435f13b3dbf49598f9ffe20c4439cad']] }
+        ]},
         m2: { $in: [{ $substr: ['$salt', 2, 1 ] }, ['e', 'a', '6', '2']] },
         a2: { $in: [{ $substr: ['$salt', 2, 1 ] }, ['e', 'a']] },
       }
