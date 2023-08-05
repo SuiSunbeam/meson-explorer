@@ -34,6 +34,9 @@ export default function SwapList() {
   if (rest.to) {
     queryUrlParamList.push(`to=${rest.to}`)
   }
+  if (rest.failed) {
+    queryUrlParamList.push(`failed=true`)
+  }
   const queryUrlParam = queryUrlParamList.join('&')
   const queryUrl = `swap` + (queryUrlParam && `?${queryUrlParam}`)
 
