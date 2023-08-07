@@ -11,10 +11,10 @@ export default listHandler({
       const { category, from, to, failed } = req.query
       if (category === 'api') {
         query.salt = { $regex : /^0x[d9]/ }
-        query['fromTo.0'] = { $ne: '0x666d6b8a44d226150ca9058beebafe0e3ac065a2' }
+        query['fromTo.0'] = { $nin: ['0x666d6b8a44d226150ca9058beebafe0e3ac065a2', '0x4fc928e89435f13b3dbf49598f9ffe20c4439cad'] }
       } else if (category === 'auto') {
         query.salt = { $regex : /^0x[d9]/ }
-        query['fromTo.0'] = '0x666d6b8a44d226150ca9058beebafe0e3ac065a2'
+        query['fromTo.0'] = { $in: ['0x666d6b8a44d226150ca9058beebafe0e3ac065a2', '0x4fc928e89435f13b3dbf49598f9ffe20c4439cad'] }
       } else if (category === 'meson.to') {
         query.salt = { $regex : /^0x[ea62]/ }
       } else if (category?.startsWith('track:')) {
