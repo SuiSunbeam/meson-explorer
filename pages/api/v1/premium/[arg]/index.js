@@ -70,7 +70,7 @@ async function post(addressWithFormat) {
 
   await Banners.findOneAndUpdate(
     { _id: 'claim-esd-lite', 'metadata.address': { $ne: address } },
-    { $push: { address } }
+    { $push: { metadata: { address } } }
   )
 
   // const freePremium = await Banners.findOneAndUpdate({
