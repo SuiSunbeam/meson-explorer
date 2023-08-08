@@ -319,7 +319,7 @@ function SwapSaltBadges({ swap }) {
     badges.push('alls.to')
   }
   if (['f'].includes(swap.salt[4])) {
-    badges.push('Cashback')
+    badges.push('Event Qulified')
   }
   return (
     <div className='flex gap-1'>
