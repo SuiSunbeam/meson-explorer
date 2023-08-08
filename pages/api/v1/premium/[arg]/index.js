@@ -68,6 +68,11 @@ async function post(addressWithFormat) {
     return premiumAccount
   }
 
+  await Banners.findOneAndUpdate(
+    { _id: 'claim-esd-lite', 'metadata.address': { $ne: address } },
+    { $push: { address } }
+  )
+
   // const freePremium = await Banners.findOneAndUpdate({
   //   _id: 'free-premium',
   //   'metadata.address': address,
