@@ -624,8 +624,8 @@
 
 "@mesonfi/presets@^1.11.0-alpha.1":
   version "1.11.0-alpha.1"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.11.0-alpha.1/8aafb35e8d7c96b461f9205a6c304454cefeebbe#8aafb35e8d7c96b461f9205a6c304454cefeebbe"
-  integrity sha512-CuTz5xn6HatlwhEAvmaRDFH/f1SJkdowkIGoCpaFmAcmv4uSSJK8DQl7EZE5o8eS+OjlfHyj3RQ0ob275y9Nbw==
+  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.11.0-alpha.1/069db86e29fc4f24435e6a25e6db1b0e7624df48#069db86e29fc4f24435e6a25e6db1b0e7624df48"
+  integrity sha512-hMX+BHmTfN7iphNMzZpPe8GH6grZLMLIABbP6MV+YlJC9aLvl0Z9Bu5+rKFd0L8ZQY0hmcw5QdlSF6dw4oMfgA==
   dependencies:
     "@mesonfi/contract-abis" "^1.11.0"
     "@mesonfi/sdk" "^1.11.0-alpha.1"
@@ -635,10 +635,10 @@
     lodash "^4.17.21"
     tronweb "^4.3.0"
 
-"@mesonfi/sdk@^1.10.0", "@mesonfi/sdk@^1.11.0-alpha.1":
-  version "1.11.0-alpha.1"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.11.0-alpha.1/42355eac4ac20780323af7233d7775afbbb598c9#42355eac4ac20780323af7233d7775afbbb598c9"
-  integrity sha512-78kYSw5sgnsjnsFS4xu1iO7cFhrw/ICHZs9Gf7BeddOvuQcZXPDIDU4yqjK/YfzUQcYbjut8DFda5MjOFn23Yg==
+"@mesonfi/sdk@^1.10.0", "@mesonfi/sdk@^1.11.0-alpha.1", "@mesonfi/sdk@^1.11.0-alpha.2":
+  version "1.11.0-alpha.2"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.11.0-alpha.2/b65d18520ebf17540838a3c381dd5b50bdbf9698#b65d18520ebf17540838a3c381dd5b50bdbf9698"
+  integrity sha512-9Eo8cSPGAgpU0vNUm69bopt6FTKDq1DaCaT/xyNjnyktGvKxSVBtHytZwpEmO+v6Tjsd6IifIJGFFSStuQYoLA==
   dependencies:
     "@mesonfi/contract-abis" "^1.11.0"
     "@mesonfi/contract-types" "^1.11.0"
