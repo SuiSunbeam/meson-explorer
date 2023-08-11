@@ -172,7 +172,7 @@ function LpContentRow ({ address, withSrFee, checkDifference, dealer, network, a
   const alert = CORE_ALERT[network.id]
   const tokens = [...network.tokens].sort((t1, t2) => (t1.tokenIndex + 2) % 256 - (t2.tokenIndex + 2) % 256)
   if (network.uctAddress) {
-    tokens.push({ symbol: 'UCT', addr: network.uctAddress, decimals: 6, tokenIndex: 255, gray: true })
+    tokens.push({ symbol: 'UCT', addr: network.uctAddress, decimals: 6, tokenIndex: 255, disabled: true })
   }
 
   const [cursor, setCursor] = React.useState(null)
@@ -383,7 +383,7 @@ function getAmountClassName (token, amount) {
 }
 
 function getDepositAmountClassName (token, deposit) {
-  if (token.gray || token.disabled) {
+  if (token.disabled) {
     return 'text-gray-300'
   } else if (token.tokenIndex >= 254) {
     return classnames(
