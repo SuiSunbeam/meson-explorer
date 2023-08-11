@@ -3,6 +3,7 @@ import Image from 'next/image'
 
 import { getExplorerTokenLink } from 'lib/swap'
 
+import eth from './eth.png'
 import usdc from './usdc.png'
 import usdt from './usdt.png'
 import busd from './busd.png'
@@ -11,7 +12,9 @@ import pod from './pod.png'
 import uct from './uct.png'
 
 function getTokenLogo(symbol) {
-  if (symbol.indexOf('USDC') > -1) {
+  if (symbol.indexOf('ETH') > -1) {
+    return eth
+  } else if (symbol.indexOf('USDC') > -1) {
     return usdc
   } else if (symbol.indexOf('USDT') > -1) {
     return usdt

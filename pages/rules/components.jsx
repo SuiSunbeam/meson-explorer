@@ -21,6 +21,7 @@ const chains = [
 const tokens = [
   { id: '*', name: 'Any Token' },
   { id: 'x', name: 'Different' },
+  { id: 'ETH', name: 'ETH', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'ETH' }} /> },
   { id: 'USDC', name: 'USDC', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'USDC' }} /> },
   { id: 'USDT', name: 'USDT', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'USDT' }} /> },
   { id: 'BUSD', name: 'BUSD', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'BUSD' }} /> },

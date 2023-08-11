@@ -170,7 +170,7 @@ function LpContentRow ({ address, withSrFee, checkDifference, dealer, network, a
   }, [mesonClient, address, nativeDecimals])
 
   const alert = CORE_ALERT[network.id]
-  const tokens = [...network.tokens]
+  const tokens = [...network.tokens].sort((t1, t2) => (t1.tokenIndex + 2) % 256 - (t2.tokenIndex + 2) % 256)
   if (network.uctAddress) {
     tokens.push({ symbol: 'UCT', addr: network.uctAddress, decimals: 6, tokenIndex: 255, gray: true })
   }
@@ -317,12 +317,7 @@ function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token,
         )}>
           <NumberDisplay
             value={deposit && ethers.utils.formatUnits(deposit, 6)}
-            className={(token.gray || token.disabled) ? 'text-gray-300' : classnames(
-              deposit?.lte(1000e6) && 'bg-red-500 text-white',
-              deposit?.gt(1000e6) && deposit?.lte(5000e6) && 'text-red-500',
-              deposit?.gt(5000e6) && deposit?.lte(10000e6) && 'text-warning',
-              deposit?.gt(10000e6) && deposit?.lte(20000e6) && 'text-indigo-500'
-            )}
+            className={getDepositAmountClassName(token, deposit)}
           />
           <TagNetworkToken explorer={explorer} token={token} iconOnly />
         </div>
@@ -335,7 +330,7 @@ function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token,
         )}>
           <NumberDisplay
             value={balance && ethers.utils.formatUnits(balance, 6)}
-            className={classnames((balance?.lt(1e6) || token.disabled) && 'text-gray-300')}
+            className={getAmountClassName(token, balance)}
           />
           <TagNetworkToken explorer={explorer} token={token} iconOnly />
         </div>
@@ -349,7 +344,7 @@ function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token,
           )}>
             <NumberDisplay
               value={srFeeCollected && ethers.utils.formatUnits(srFeeCollected, 6)}
-              className={classnames((srFeeCollected?.lt(1e6) || token.disabled) && 'text-gray-300')}
+              className={getAmountClassName(token, srFeeCollected)}
             />
             <TagNetworkToken explorer={explorer} token={token} iconOnly />
           </div>
@@ -366,7 +361,7 @@ function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token,
             )}>
               <NumberDisplay
                 value={inContractDiff && ethers.utils.formatUnits(inContractDiff, 6)}
-                className={classnames((inContractDiff?.lt(1e6) || token.disabled) && 'text-gray-300')}
+                className={getAmountClassName(token, inContractDiff)}
               />
               <TagNetworkToken explorer={explorer} token={token} iconOnly />
             </div>
@@ -375,4 +370,34 @@ function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token,
       }
     </div>
   )
+}
+
+function getAmountClassName (token, amount) {
+  if (token.disabled) {
+    return 'text-gray-300'
+  } else if (token.tokenIndex >= 254) {
+    return classnames(amount?.lt(1e3) && 'text-gray-300')
+  } else {
+    return classnames(amount?.lt(1e6) && 'text-gray-300')
+  }
+}
+
+function getDepositAmountClassName (token, deposit) {
+  if (token.gray || token.disabled) {
+    return 'text-gray-300'
+  } else if (token.tokenIndex >= 254) {
+    return classnames(
+      deposit?.lte(1e6) && 'bg-red-500 text-white',
+      deposit?.gt(1e6) && deposit?.lte(5e6) && 'text-red-500',
+      deposit?.gt(5e6) && deposit?.lte(10e6) && 'text-warning',
+      deposit?.gt(10e6) && deposit?.lte(20e6) && 'text-indigo-500'
+    )
+  } else {
+    return classnames(
+      deposit?.lte(1000e6) && 'bg-red-500 text-white',
+      deposit?.gt(1000e6) && deposit?.lte(5000e6) && 'text-red-500',
+      deposit?.gt(5000e6) && deposit?.lte(10000e6) && 'text-warning',
+      deposit?.gt(10000e6) && deposit?.lte(20000e6) && 'text-indigo-500'
+    )
+  }
 }

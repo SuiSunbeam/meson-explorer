@@ -149,7 +149,7 @@ export default function SwapRow({ data: raw, smMargin }) {
             'relative flex items-center self-start mr-1',
             CancelledStatus.includes(status) && 'opacity-30 before:block before:absolute before:w-full before:h-0.5 before:bg-black before:z-10'
           )}>
-            <AmountDisplay value={swap.amount} decimals={swap.inToken === 255 ? 4 : 6} />
+            <AmountDisplay value={swap.amount} decimals={swap._isUCT() ? 4 : 6} />
           </div>
           <div className='flex items-center'>
             <TagNetworkToken responsive explorer={from.network.explorer} token={from.token} />

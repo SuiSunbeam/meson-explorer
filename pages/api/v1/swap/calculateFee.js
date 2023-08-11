@@ -1,10 +1,7 @@
 import mesonPresets from '@mesonfi/presets'
+import { MesonClient } from '@mesonfi/sdk'
 import { BigNumber, ethers } from 'ethers'
 import { Rules, FeeWaives } from 'lib/db'
-
-const fromValue = (value) => {
-  return ethers.utils.formatUnits(value || '0', 6).replace(/\.0*$/, '')
-}
 
 const _matchNetworkToken = (rule, [n1, t1]) => {
   let n0, t0
@@ -126,9 +123,9 @@ export default async function handler(req, res) {
     if (!rule || amount.eq(0)) {
       return res.json({
         data: {
-          totalFee: Number(fromValue(totalFee)),
-          originalFee: Number(fromValue(originalFee)),
-          lpFee: Number(fromValue(lpFee)),
+          totalFee: Number(MesonClient.fromSwapValue(totalFee)),
+          originalFee: Number(MesonClient.fromSwapValue(originalFee)),
+          lpFee: Number(MesonClient.fromSwapValue(lpFee)),
         },
         code: 200
       })
@@ -153,9 +150,9 @@ export default async function handler(req, res) {
     
     return res.json({
       data: {
-        totalFee: Number(fromValue(totalFee)),
-        originalFee: Number(fromValue(originalFee)),
-        lpFee: Number(fromValue(lpFee)),
+        totalFee: Number(MesonClient.fromSwapValue(totalFee)),
+        originalFee: Number(MesonClient.fromSwapValue(originalFee)),
+        lpFee: Number(MesonClient.fromSwapValue(lpFee)),
       },
       code: 200
     })
