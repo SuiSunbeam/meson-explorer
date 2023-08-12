@@ -10,7 +10,7 @@
   "dependencies": {
     "@headlessui/react": "^1.6.5",
     "@heroicons/react": "^1.0.6",
-    "@mesonfi/dealer": "^0.10.0",
+    "@mesonfi/dealer": "^0.11.0",
     "@mesonfi/extensions": "^0.9.0",
     "@mesonfi/presets": "^1.11.0-alpha.1",
     "@mesonfi/sdk": "^1.11.0-alpha.2",
