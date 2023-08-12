@@ -172,8 +172,14 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
                   <div className='text-xs font-medium text-gray-500 uppercase'>Difference</div>
                   <div className='flex'>
                     <div className='ml-1 text-sm font-mono'>+</div>
-                    <NumberDisplay value={ethers.utils.formatUnits(totalETHInContractDiff, 6)} />
-                    <NumberDisplay value={ethers.utils.formatUnits(totalInContractDiff, 6)} />
+                    <div className='flex items-center'>
+                      <NumberDisplay value={ethers.utils.formatUnits(totalETHInContractDiff, 6)} />
+                      <TagNetworkToken token={{ symbol: 'ETH' }} iconOnly />
+                    </div>
+                    <div className='flex items-center'>
+                      <NumberDisplay value={ethers.utils.formatUnits(totalInContractDiff, 6)} />
+                      <TagNetworkToken token={{ symbol: 'USD' }} iconOnly />
+                    </div>
                   </div>
                 </div>
               </>
