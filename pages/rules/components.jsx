@@ -1,4 +1,5 @@
 import React from 'react'
+import classnames from 'classnames'
 import { PencilIcon } from '@heroicons/react/solid'
 
 import { ethers } from 'ethers'
@@ -234,6 +235,7 @@ const fmt = Intl.NumberFormat()
 const fmt2 = Intl.NumberFormat('en', { maximumSignificantDigits: 4 })
 
 export function RowSwapRule ({ d, onOpenModal, hides = [] }) {
+  const isETH = d.to.endsWith('ETH')
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1'>
@@ -246,20 +248,20 @@ export function RowSwapRule ({ d, onOpenModal, hides = [] }) {
           #{d.priority}
         </div>
       </Td>
-      <Td size='sm'>{d.limit && `${fmt.format(d.limit / 1000)}k`}</Td>
+      <Td size='sm'>{d.limit && (isETH ? d.limit : `${fmt.format(d.limit / 1000)}k`)}</Td>
       {!hides.includes('factor') && <Td size='sm'>{d.factor}</Td>}
-      {!hides.includes('minimum') && <Td size='sm'>{d.minimum && `$${ethers.utils.formatUnits(d.minimum, 6)}`}</Td>}
+      {!hides.includes('minimum') && <Td size='sm'>{d.minimum && `${isETH ? '' : '$'}${ethers.utils.formatUnits(d.minimum, 6)}`}</Td>}
       {
         !hides.includes('rules') &&
         <>
-          <Td size='sm'>{d.fee?.map((item, i) => <FeeRule key={i} {...item} />)}</Td>
+          <Td size='sm'>{d.fee?.map((item, i) => <FeeRule key={i} {...item} isETH={isETH} />)}</Td>
           <Td size='sm'></Td>
         </>
       }
       {
         !hides.includes('gas') &&
         <Td size='sm'>
-          {d.fee?.map((item, i) => <GasCalculation key={i} {...item} gasPrice={d.gasPrice} gasPriceL0={d.gasPriceL0} />)}
+          {d.fee?.map((item, i) => <GasCalculation key={i} {...item} isETH={isETH} gasPrice={d.gasPrice} gasPriceL0={d.gasPriceL0} />)}
         </Td>
       }
       {
@@ -309,7 +311,7 @@ function SwapRuleRouteKey ({ routeKey = '' }) {
   )
 }
 
-function FeeRule ({ min, base, gasFee, rate }) {
+function FeeRule ({ min, base, gasFee, rate, isETH }) {
   let minStr = min
   if (min > 1000) {
     minStr = (min / 1000) + 'k'
@@ -319,10 +321,10 @@ function FeeRule ({ min, base, gasFee, rate }) {
 
   const rule = []
   if (base) {
-    rule.push(`$${ethers.utils.formatUnits(base, 6)}`)
+    rule.push(`${isETH ? '' : '$'}${ethers.utils.formatUnits(base, 6)}`)
   }
   if (gasFee) {
-    rule.push(`$${ethers.utils.formatUnits(gasFee, 6)}`)
+    rule.push(`${isETH ? '' : '$'}${ethers.utils.formatUnits(gasFee, 6)}`)
   }
   if (rate) {
     rule.push(`${rate/10000}%`)
@@ -338,7 +340,7 @@ function FeeRule ({ min, base, gasFee, rate }) {
   )
 }
 
-function GasCalculation ({ gas, core, gasPrice, gasL0, gasPriceL0 }) {
+function GasCalculation ({ gas, core, isETH, gasPrice, gasL0, gasPriceL0 }) {
   if (!(gas && core && gasPrice)) {
     return ''
   }
@@ -351,7 +353,7 @@ function GasCalculation ({ gas, core, gasPrice, gasL0, gasPriceL0 }) {
   return (
     <div>
       <div className='flex flex-row items-center gap-2'>
-        <div className='flex-1 shrink-0'>${fmt.format(core * gasUsed / 1e18)}</div>
+        <div className='flex-1 shrink-0'>{isETH ? '' : '$'}{fmt.format(core * gasUsed / 1e18)}</div>
         <div className='text-xs text-gray-500'>=</div>
         <div className='flex-[1.2] shrink-0 flex flex-row items-center'>
           {gasL0 && gasPriceL0 && <div className='text-2xl font-extralight text-gray-300 mr-1'>(</div>}
@@ -372,8 +374,8 @@ function GasCalculation ({ gas, core, gasPrice, gasL0, gasPriceL0 }) {
           {gasL0 && gasPriceL0 && <div className='text-2xl font-extralight text-gray-300 ml-2'>)</div>}
 
         </div>
-        <div className='text-xs text-gray-500'>×</div>
-        <div className='flex-[1.4] shrink-0'>${core}</div>
+        <div className={classnames('text-xs', isETH ? 'text-transparent' : 'text-gray-500')}>×</div>
+        <div className='flex-[1.4] shrink-0'>{isETH ? '' : `$${core}`}</div>
       </div>
     </div>
   )
