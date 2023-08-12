@@ -37,12 +37,22 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
   const { data: session } = useSession()
   const checkDifference = !address && session?.user?.roles?.some(r => ['root'].includes(r))
 
+  const [totalETHDeposit, setTotalETHDeposit] = React.useState(BigNumber.from(0))
+  const [totalETHBalance, setTotalETHBalance] = React.useState(BigNumber.from(0))
+  const [totalETHSrFeeCollected, setTotalETHSrFeeCollected] = React.useState(BigNumber.from(0))
+  const [totalETHInContractDiff, setTotalETHInContractDiff] = React.useState(BigNumber.from(0))
+
   const [totalDeposit, setTotalDeposit] = React.useState(BigNumber.from(0))
   const [totalBalance, setTotalBalance] = React.useState(BigNumber.from(0))
   const [totalSrFeeCollected, setTotalSrFeeCollected] = React.useState(BigNumber.from(0))
   const [totalInContractDiff, setTotalInContractDiff] = React.useState(BigNumber.from(0))
 
   React.useEffect(() => {
+    setTotalETHDeposit(BigNumber.from(0))
+    setTotalETHBalance(BigNumber.from(0))
+    setTotalETHSrFeeCollected(BigNumber.from(0))
+    setTotalETHInContractDiff(BigNumber.from(0))
+
     setTotalDeposit(BigNumber.from(0))
     setTotalBalance(BigNumber.from(0))
     setTotalSrFeeCollected(BigNumber.from(0))
@@ -50,11 +60,11 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
   }, [address])
 
   const add = React.useMemo(() => ({
-    toDeposit: delta => setTotalDeposit(v => v.add(delta)),
-    toBalance: delta => setTotalBalance(v => v.add(delta)),
-    toSrFee: delta => setTotalSrFeeCollected(v => v.add(delta)),
-    toInContractDiff: delta => setTotalInContractDiff(v => v.add(delta)),
-  }), [setTotalDeposit, setTotalBalance])
+    toDeposit: (delta, isETH) => (isETH ? setTotalETHDeposit: setTotalDeposit)(v => v.add(delta)),
+    toBalance: (delta, isETH) => (isETH ? setTotalETHBalance: setTotalBalance)(v => v.add(delta)),
+    toSrFee: (delta, isETH) => (isETH ? setTotalETHSrFeeCollected: setTotalSrFeeCollected)(v => v.add(delta)),
+    toInContractDiff: (delta, isETH) => (isETH ? setTotalETHInContractDiff: setTotalInContractDiff)(v => v.add(delta)),
+  }), [])
 
   const networkRows = React.useMemo(() => {
     if (address) {
@@ -101,27 +111,58 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
         <dt className='flex-1'>
           <div className='flex flex-1 flex-col'>
             <div className='text-xs font-medium text-gray-500 uppercase'>Total</div>
-            <NumberDisplay
-              className='font-bold'
-              value={ethers.utils.formatUnits(totalDeposit.add(totalBalance).add(totalSrFeeCollected), 6)}
-            />
+            <div className='flex items-center'>
+              <NumberDisplay
+                className='font-bold'
+                value={ethers.utils.formatUnits(totalETHDeposit.add(totalETHBalance).add(totalETHSrFeeCollected), 6)}
+              />
+              <TagNetworkToken token={{ symbol: 'ETH' }} iconOnly />
+            </div>
+            <div className='flex items-center'>
+              <NumberDisplay
+                className='font-bold'
+                value={ethers.utils.formatUnits(totalDeposit.add(totalBalance).add(totalSrFeeCollected), 6)}
+              />
+              <TagNetworkToken token={{ symbol: 'USD' }} iconOnly />
+            </div>
           </div>
         </dt>
         <dd className='md:flex-[2] mt-1 md:mt-0 md:min-w-[540px]'>
           <div className='flex items-center'>
             <div className='flex flex-1 flex-col'>
               <div className='text-xs font-medium text-gray-500 uppercase'>Pool Balance</div>
-              <NumberDisplay value={ethers.utils.formatUnits(totalDeposit, 6)} />
+              <div className='flex items-center'>
+                <NumberDisplay value={ethers.utils.formatUnits(totalETHDeposit, 6)} />
+                <TagNetworkToken token={{ symbol: 'ETH' }} iconOnly />
+              </div>
+              <div className='flex items-center'>
+                <NumberDisplay value={ethers.utils.formatUnits(totalDeposit, 6)} />
+                <TagNetworkToken token={{ symbol: 'USD' }} iconOnly />
+              </div>
             </div>
             <div className='flex flex-1 flex-col'>
               <div className='text-xs font-medium text-gray-500 uppercase'>Balance</div>
-              <NumberDisplay value={ethers.utils.formatUnits(totalBalance, 6)} />
+              <div className='flex items-center'>
+                <NumberDisplay value={ethers.utils.formatUnits(totalETHBalance, 6)} />
+                <TagNetworkToken token={{ symbol: 'ETH' }} iconOnly />
+              </div>
+              <div className='flex items-center'>
+                <NumberDisplay value={ethers.utils.formatUnits(totalBalance, 6)} />
+                <TagNetworkToken token={{ symbol: 'USD' }} iconOnly />
+              </div>
             </div>
             {
               !address &&
               <div className='flex flex-1 flex-col'>
                 <div className='text-xs font-medium text-gray-500 uppercase'>Fee Collected</div>
-                <NumberDisplay value={ethers.utils.formatUnits(totalSrFeeCollected, 6)} />
+                <div className='flex items-center'>
+                  <NumberDisplay value={ethers.utils.formatUnits(totalETHSrFeeCollected, 6)} />
+                  <TagNetworkToken token={{ symbol: 'ETH' }} iconOnly />
+                </div>
+                <div className='flex items-center'>
+                  <NumberDisplay value={ethers.utils.formatUnits(totalSrFeeCollected, 6)} />
+                  <TagNetworkToken token={{ symbol: 'USD' }} iconOnly />
+                </div>
               </div>
             }
             {
@@ -131,6 +172,7 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
                   <div className='text-xs font-medium text-gray-500 uppercase'>Difference</div>
                   <div className='flex'>
                     <div className='ml-1 text-sm font-mono'>+</div>
+                    <NumberDisplay value={ethers.utils.formatUnits(totalETHInContractDiff, 6)} />
                     <NumberDisplay value={ethers.utils.formatUnits(totalInContractDiff, 6)} />
                   </div>
                 </div>
@@ -255,24 +297,28 @@ function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token,
       const deposit = await mesonClient.getBalanceInPool(address, token.tokenIndex).catch(() => {})
       if (deposit) {
         if (token.tokenIndex !== 32) {
-          add.toDeposit(deposit.value)
+          add.toDeposit(deposit.value, token.tokenIndex >= 254)
         }
         setDeposit(deposit.value)
       }
       
-      const tokenBalance = await mesonClient.getTokenBalance(address, token.tokenIndex).catch(() => {})
-      if (tokenBalance) {
-        if (token.tokenIndex !== 32) {
-          add.toBalance(tokenBalance.value)
+      if (token.symbol !== 'UCT') {
+        const tokenBalance = await mesonClient.getTokenBalance(address, token.tokenIndex).catch(() => {})
+        if (tokenBalance) {
+          if (token.tokenIndex !== 32) {
+            add.toBalance(tokenBalance.value, token.tokenIndex >= 254)
+          }
+          setBalance(tokenBalance.value)
         }
-        setBalance(tokenBalance.value)
+      } else {
+        setBalance(BigNumber.from(0))
       }
       
       if (withSrFee) {
         const srFee = await mesonClient.serviceFeeCollected(token.tokenIndex, { from: address }).catch(() => {})
         if (srFee) {
           if (token.tokenIndex !== 32) {
-            add.toSrFee(srFee.value)
+            add.toSrFee(srFee.value, token.tokenIndex >= 254)
           }
           setSrFeeCollected(srFee.value)
         }
@@ -290,7 +336,7 @@ function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token,
           const diff = await mesonClient.pendingTokenBalance(token.tokenIndex).catch(() => {})
           if (diff) {
             if (token.tokenIndex !== 32) {
-              add.toInContractDiff(diff.value)
+              add.toInContractDiff(diff.value, token.tokenIndex >= 254)
             }
             setInContractDiff(diff.value)
           }
@@ -299,7 +345,7 @@ function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token,
           if (inContractBalance) {
             const diff = inContractBalance.value.sub(deposit).sub(srFeeCollected)
             if (token.tokenIndex !== 32) {
-              add.toInContractDiff(diff)
+              add.toInContractDiff(diff, token.tokenIndex >= 254)
             }
             setInContractDiff(diff)
           }
@@ -307,6 +353,10 @@ function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token,
       }
     })()
   }, [address, checkDifference, deposit, srFeeCollected]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (token.symbol === 'UCT' && !deposit) {
+    return null
+  }
 
   return (
     <div className='flex items-center'>

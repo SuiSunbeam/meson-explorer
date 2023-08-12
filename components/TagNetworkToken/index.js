@@ -11,7 +11,7 @@ import dai from './dai.png'
 import pod from './pod.png'
 import uct from './uct.png'
 
-function getTokenLogo(symbol) {
+function getTokenIcon(symbol) {
   if (symbol.indexOf('ETH') > -1) {
     return eth
   } else if (symbol.indexOf('USDC') > -1) {
@@ -22,10 +22,14 @@ function getTokenLogo(symbol) {
     return busd
   } else if (symbol.indexOf('DAI') > -1) {
     return dai
+  } else if (symbol.indexOf('USD') > -1) {
+    return { component: <div className='w-full h-full rounded-full bg-primary flex items-center justify-center text-xs font-light text-white'>$</div> }
   } else if (symbol.indexOf('PoD') > -1) {
     return pod
   } else if (symbol.indexOf('UCT') > -1) {
     return uct
+  } else {
+    return null
   }
 }
 
@@ -33,7 +37,7 @@ export default function TagNetworkToken ({ responsive, size = 'sm', explorer, to
   if (!token) {
     return null
   }
-  const logo = getTokenLogo(token.symbol)
+  const icon = getTokenIcon(token.symbol)
   const tokenLink = getExplorerTokenLink(token)
   const href = explorer && `${explorer}/${tokenLink}`
   return (
@@ -44,7 +48,7 @@ export default function TagNetworkToken ({ responsive, size = 'sm', explorer, to
         target='_blank'
         rel='noreferrer'
       >
-        {logo && <Image src={logo} alt='' />}
+        {icon?.component || <Image src={icon} alt='' />}
       </a>
       {
         !iconOnly &&
