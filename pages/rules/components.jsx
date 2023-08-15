@@ -374,8 +374,8 @@ function GasCalculation ({ gas, core, isETH, gasPrice, gasL0, gasPriceL0 }) {
           {gasL0 && gasPriceL0 && <div className='text-2xl font-extralight text-gray-300 ml-2'>)</div>}
 
         </div>
-        <div className={classnames('text-xs', isETH ? 'text-transparent' : 'text-gray-500')}>×</div>
-        <div className='flex-[1.4] shrink-0'>{isETH ? '' : `$${core}`}</div>
+        <div className={classnames('text-xs', (isETH && core === 1) ? 'text-transparent' : 'text-gray-500')}>×</div>
+        <div className='flex-[1.4] shrink-0'>{isETH ? (core !== 1 && core) : `$${core}`}</div>
       </div>
     </div>
   )
