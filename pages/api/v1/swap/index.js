@@ -37,6 +37,7 @@ export default listHandler({
       }
       if (token.toLowerCase() === 'eth') {
         query.inToken = { $in: [254, 255] }
+        query.expireTs = { $gt: new Date(1691700000 * 1000) }
       }
       if (failed) {
         query['events.name'] = { $ne: 'RELEASED' }
