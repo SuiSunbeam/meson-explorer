@@ -34,6 +34,9 @@ export default function SwapList() {
   if (rest.to) {
     queryUrlParamList.push(`to=${rest.to}`)
   }
+  if (rest.token) {
+    queryUrlParamList.push(`token=${rest.token}`)
+  }
   if (rest.failed) {
     queryUrlParamList.push(`failed=true`)
   }

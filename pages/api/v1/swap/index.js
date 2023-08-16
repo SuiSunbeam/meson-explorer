@@ -8,7 +8,7 @@ export default listHandler({
     const query = { disabled: { $ne: true }, hide: { $ne: true } }
     if (roles?.some(r => ['root', 'admin'].includes(r)) || headerRoles.includes('data')) {
       delete query.hide
-      const { category, from, to, failed } = req.query
+      const { category, from, to, token = '', failed } = req.query
       if (category === 'api') {
         query.salt = { $regex : /^0x[d9]/ }
         query['fromTo.0'] = { $nin: ['0x666d6b8a44d226150ca9058beebafe0e3ac065a2', '0x4fc928e89435f13b3dbf49598f9ffe20c4439cad'] }
@@ -34,6 +34,9 @@ export default listHandler({
       }
       if (to) {
         query.outChain = presets.getNetwork(to).shortSlip44
+      }
+      if (token.toLowerCase() === 'eth') {
+        query.inToken = { $in: [254, 255] }
       }
       if (failed) {
         query['events.name'] = { $ne: 'RELEASED' }
