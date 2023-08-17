@@ -14,9 +14,10 @@ export default function SwapList() {
 
   const [search, setSearchValue] = React.useState('')
 
-  const { page: _, category, ...rest } = router.query
+  const { page: _, category, token, ...rest } = router.query
   const tabs = !authorized ? undefined : [
     { key: 'all', name: 'All', active: !category, onClick: () => router.push('') },
+    { key: 'eth', name: 'ETH', active: token === 'eth', onClick: () => router.push({ query: { token: 'eth', ...rest } }) },
     { key: 'api', name: 'API', active: category === 'api', onClick: () => router.push({ query: { category: 'api', ...rest } }) },
     { key: 'auto', name: 'Auto', active: category === 'auto', onClick: () => router.push({ query: { category: 'auto', ...rest } }) },
     { key: 'meson-to', name: 'meson.to', active: category === 'meson.to', onClick: () => router.push({ query: { category: 'meson.to', ...rest } }) },
@@ -28,14 +29,14 @@ export default function SwapList() {
   if (category) {
     queryUrlParamList.push(`category=${category}`)
   }
+  if (token) {
+    queryUrlParamList.push(`token=${token}`)
+  }
   if (rest.from) {
     queryUrlParamList.push(`from=${rest.from}`)
   }
   if (rest.to) {
     queryUrlParamList.push(`to=${rest.to}`)
-  }
-  if (rest.token) {
-    queryUrlParamList.push(`token=${rest.token}`)
   }
   if (rest.failed) {
     queryUrlParamList.push(`failed=true`)
