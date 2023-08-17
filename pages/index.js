@@ -16,7 +16,7 @@ export default function SwapList() {
 
   const { page: _, category, token, ...rest } = router.query
   const tabs = !authorized ? undefined : [
-    { key: 'all', name: 'All', active: !category, onClick: () => router.push('') },
+    { key: 'all', name: 'All', active: !category && !token, onClick: () => router.push('') },
     { key: 'eth', name: 'ETH', active: token === 'eth', onClick: () => router.push({ query: { token: 'eth', ...rest } }) },
     { key: 'api', name: 'API', active: category === 'api', onClick: () => router.push({ query: { category: 'api', ...rest } }) },
     { key: 'auto', name: 'Auto', active: category === 'auto', onClick: () => router.push({ query: { category: 'auto', ...rest } }) },
