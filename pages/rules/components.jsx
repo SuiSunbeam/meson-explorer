@@ -328,7 +328,9 @@ function FeeRule ({ min, base, gasFee, rate, isETH }) {
       rule.push(
         <div className='flex items-center -mr-3'>
           {ethers.utils.formatUnits(gasFee, 3)}
-          <span className='text-xs text-gray-500'><span className='inline mx-0.5'>×</span>10<sup>-3</sup></span>
+          <div className='text-[10px] text-gray-500 mx-0.5'>×</div>
+          <div className='text-[10px] text-gray-500'>10<sup>-3</sup></div>
+          <div className='text-xs text-gray-500 ml-px pb-0.5'>⬨</div>
         </div>
       )
     } else {
@@ -362,7 +364,9 @@ function GasCalculation ({ gas, core = 1, multiplier = 1, isETH, gasPrice, gasL0
   const gasFee = isETH
     ? <div className='flex items-center'>
         {fmt.format(core * gasUsed * (multiplier || 1) / 1e15)}
-        <span className='text-xs text-gray-500'><span className='inline mx-0.5'>×</span>10<sup>-3</sup></span>
+        <div className='text-[10px] text-gray-500 mx-0.5'>×</div>
+        <div className='text-[10px] text-gray-500'>10<sup>-3</sup></div>
+        <div className='text-xs text-gray-500 ml-px pb-0.5'>⬨</div>
       </div>
     : `$${fmt.format(core * gasUsed * (multiplier || 1) / 1e18)}`
 
