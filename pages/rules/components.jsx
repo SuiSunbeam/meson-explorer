@@ -358,7 +358,10 @@ function GasCalculation ({ gas, core, multiplier = 1, isETH, ethPrice, gasPrice,
 
   const corePrice = core === 'ETH' ? ethPrice : (core || 1)
   const coreDisplay = core === 'ETH'
-    ? <div className='flex items-center'>${ethPrice}<div className='mx-0.5'>/</div><div className='pb-0.5'>⬨</div></div>
+    ? <div className='flex items-center'>
+        <div className='pb-1 !text-lg'>⬨</div>
+        <div className='ml-1 -mb-px text-xs text-gray-500'>${ethPrice}</div>
+      </div>
     : core && `$${core}`
 
   let gasUsed = gas * gasPrice
