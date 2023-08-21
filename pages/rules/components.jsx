@@ -234,7 +234,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
 const fmt = Intl.NumberFormat()
 const fmt2 = Intl.NumberFormat('en', { maximumSignificantDigits: 4 })
 
-export function RowSwapRule ({ d, onOpenModal, hides = [] }) {
+export function RowSwapRule ({ d, ethPrice, onOpenModal, hides = [] }) {
   const isETH = d.to.endsWith('ETH')
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
@@ -261,7 +261,7 @@ export function RowSwapRule ({ d, onOpenModal, hides = [] }) {
       {
         !hides.includes('gas') &&
         <Td size='sm'>
-          {d.fee?.map((item, i) => <GasCalculation key={i} {...item} isETH={isETH} gasPrice={d.gasPrice} gasPriceL0={d.gasPriceL0} />)}
+          {d.fee?.map((item, i) => <GasCalculation key={i} {...item} isETH={isETH} ethPrice={ethPrice} gasPrice={d.gasPrice} gasPriceL0={d.gasPriceL0} />)}
         </Td>
       }
       {
@@ -351,10 +351,15 @@ function FeeRule ({ min, base, gasFee, rate, isETH }) {
   )
 }
 
-function GasCalculation ({ gas, core = 1, multiplier = 1, isETH, gasPrice, gasL0, gasPriceL0 }) {
+function GasCalculation ({ gas, core, multiplier = 1, isETH, ethPrice, gasPrice, gasL0, gasPriceL0 }) {
   if (!(gas && gasPrice)) {
     return ''
   }
+
+  const corePrice = core === 'ETH' ? ethPrice : (core || 1)
+  const coreDisplay = core === 'ETH'
+    ? <div className='flex items-center'>${ethPrice}<div className='mx-0.5'>/</div><div className='pb-0.5'>⬨</div></div>
+    : core && `$${core}`
 
   let gasUsed = gas * gasPrice
   if (gasL0 && gasPriceL0) {
@@ -363,12 +368,12 @@ function GasCalculation ({ gas, core = 1, multiplier = 1, isETH, gasPrice, gasL0
 
   const gasFee = isETH
     ? <div className='flex items-center -ml-2'>
-        {fmt.format(core * gasUsed * (multiplier || 1) / 1e15)}
+        {fmt.format(corePrice * gasUsed * (multiplier || 1) / 1e15)}
         <div className='text-[10px] text-gray-500 mx-0.5'>×</div>
         <div className='text-[10px] text-gray-500'>10<sup>-3</sup></div>
         <div className='text-xs text-gray-500 ml-px pb-0.5'>⬨</div>
       </div>
-    : `$${fmt.format(core * gasUsed * (multiplier || 1) / 1e18)}`
+    : `$${fmt.format(corePrice * gasUsed * (multiplier || 1) / 1e18)}`
 
   return (
     <div>
@@ -394,7 +399,7 @@ function GasCalculation ({ gas, core = 1, multiplier = 1, isETH, gasPrice, gasL0
           {gasL0 && gasPriceL0 && <div className='text-2xl font-extralight text-gray-300 ml-2'>)</div>}
         </div>
         <div className={classnames('text-xs', isETH ? 'text-transparent' : 'text-gray-500')}>×</div>
-        <div className='flex-1 shrink-0'>{!isETH && `$${core}`}</div>
+        <div className='flex-1 shrink-0'>{coreDisplay}</div>
         <div className={classnames('text-xs', multiplier === 1 ? 'text-transparent' : 'text-gray-500')}>×</div>
         <div className='flex-1 shrink-0'>{multiplier !== 1 && multiplier}</div>
       </div>

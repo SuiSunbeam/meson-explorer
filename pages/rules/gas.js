@@ -41,7 +41,7 @@ export default function RulesGas () {
               <div>×</div>
               <div className='flex-[1.4] shrink-0'>gas price</div>
               <div>×</div>
-              <div className='flex-1 shrink-0'>token price</div>
+              <div className='flex-1 shrink-0'>core price</div>
               <div>×</div>
               <div className='flex-1 shrink-0'>multipier</div>
             </div>
@@ -52,7 +52,7 @@ export default function RulesGas () {
         { name: 'mark', width: '5%' },
         { name: 'edit', width: '5%', className: 'text-right' },
       ]}>
-        {data.rules.filter(r => r.type === 'gas').map((d, i) => <RowSwapRule key={i} d={d} hides={hides} onOpenModal={setModalData} />)}
+        {data.rules.filter(r => r.type === 'gas').map((d, i) => <RowSwapRule key={i} d={d} ethPrice={data.ethPrice} hides={hides} onOpenModal={setModalData} />)}
       </Table>
     )
   }
