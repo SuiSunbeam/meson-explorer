@@ -340,8 +340,8 @@ function FeeRule ({ min, base, gasFee, rate, isETH }) {
   )
 }
 
-function GasCalculation ({ gas, core, isETH, gasPrice, gasL0, gasPriceL0 }) {
-  if (!(gas && core && gasPrice)) {
+function GasCalculation ({ gas, core, multipier = 1, isETH, gasPrice, gasL0, gasPriceL0 }) {
+  if (!(gas && gasPrice)) {
     return ''
   }
 
@@ -372,10 +372,11 @@ function GasCalculation ({ gas, core, isETH, gasPrice, gasL0, gasPriceL0 }) {
             {gasL0 && gasPriceL0 && <div>{fmt2.format(gasPriceL0 / 1e9)} Gwei</div>}
           </div>
           {gasL0 && gasPriceL0 && <div className='text-2xl font-extralight text-gray-300 ml-2'>)</div>}
-
         </div>
-        <div className={classnames('text-xs', (isETH && core === 1) ? 'text-transparent' : 'text-gray-500')}>×</div>
-        <div className='flex-[1.4] shrink-0'>{isETH ? (core !== 1 && core) : `$${core}`}</div>
+        <div className={classnames('text-xs', isETH ? 'text-transparent' : 'text-gray-500')}>×</div>
+        <div className='flex-[1.4] shrink-0'>{!isETH && `$${core}`}</div>
+        <div className={classnames('text-xs', multipier === 1 ? 'text-transparent' : 'text-gray-500')}>×</div>
+        <div className='flex-1 shrink-0'>{multipier !== 1 && multipier}</div>
       </div>
     </div>
   )

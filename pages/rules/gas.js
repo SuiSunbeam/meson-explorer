@@ -28,9 +28,9 @@ export default function RulesGas () {
   } else {
     body = (
       <Table size='lg' headers={[
-        { name: 'route / priority', width: '15%', className: 'pl-4 md:pl-6' },
+        { name: 'route / priority', width: '10%', className: 'pl-4 md:pl-6' },
         { name: 'limit', width: '5%' },
-        { name: 'fee rule', width: '10%' },
+        { name: 'fee rule', width: '5%' },
         { name: '', width: '5%' },
         {
           name: (
@@ -42,9 +42,11 @@ export default function RulesGas () {
               <div className='flex-[1.4] shrink-0'>gas price</div>
               <div>×</div>
               <div className='flex-[1.4] shrink-0'>token price</div>
+              <div>×</div>
+              <div className='flex-1 shrink-0'>multipier</div>
             </div>
           ),
-          width: '50%'
+          width: '60%'
         },
         { name: 'premium', width: '5%' },
         { name: 'mark', width: '5%' },
