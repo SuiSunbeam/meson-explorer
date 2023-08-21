@@ -14,7 +14,7 @@ import uct from './uct.png'
 function getTokenIcon(symbol) {
   if (symbol.indexOf('ETH') > -1) {
     return eth
-  } else if (symbol.indexOf('USDC') > -1) {
+  } else if (symbol.indexOf('USDC') > -1 || symbol.indexOf('USDbC') > -1) {
     return usdc
   } else if (symbol.indexOf('USDT') > -1) {
     return usdt
