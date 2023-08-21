@@ -325,7 +325,12 @@ function FeeRule ({ min, base, gasFee, rate, isETH }) {
   }
   if (gasFee) {
     if (isETH) {
-      rule.push(`${ethers.utils.formatUnits(gasFee, 3)}m`)
+      rule.push(
+        <div className='flex items-center -mr-3'>
+          {ethers.utils.formatUnits(gasFee, 3)}
+          <span className='text-xs text-gray-500'><span className='inline mx-0.5'>×</span>10<sup>-3</sup></span>
+        </div>
+      )
     } else {
       rule.push(`$${ethers.utils.formatUnits(gasFee, 6)}`)
     }
@@ -339,7 +344,7 @@ function FeeRule ({ min, base, gasFee, rate, isETH }) {
   return (
     <div className='flex justify-between'>
       <div>{range}</div>
-      <div>{rule.join(' + ')}</div>
+      <div>{rule.length > 1 ? rule.join(' + ') : rule[0]}</div>
     </div>
   )
 }
@@ -355,7 +360,10 @@ function GasCalculation ({ gas, core = 1, multiplier = 1, isETH, gasPrice, gasL0
   }
 
   const gasFee = isETH
-    ? `${fmt.format(core * gasUsed * (multiplier || 1) / 1e15)} m`
+    ? <div className='flex items-center'>
+        {fmt.format(core * gasUsed * (multiplier || 1) / 1e15)}
+        <span className='text-xs text-gray-500'><span className='inline mx-0.5'>×</span>10<sup>-3</sup></span>
+      </div>
     : `$${fmt.format(core * gasUsed * (multiplier || 1) / 1e18)}`
 
   return (
