@@ -1,7 +1,8 @@
 import { Swaps } from 'lib/db'
 
 export default async function handler(req, res) {
-  const [chain, type] = req.query.params || []
+  const { token, params = [] } = req.query
+  const [chain, type] = params
 
   const pipeline = [
     {
@@ -67,15 +68,24 @@ export default async function handler(req, res) {
     },
     { $sort: { _id: -1 } }
   ]
+  if (token === 'usd') {
+    pipeline[0].$match.$and = [{
+      $or: [
+        { inToken: { $lt: 254 } },
+        { expireTs: { $lt: new Date(1691700000 * 1000) } }
+      ]
+    }]
+  } else if (token === 'eth') {
+    pipeline[0].$match.inToken = { $gte: 254 }
+    pipeline[0].$match.expireTs = { $gt: new Date(1691700000 * 1000) }
+  }
   if (chain) {
     if (type === 'from') {
-      pipeline.unshift({ $match: { inChain: chain } })
+      pipeline[0].$match.inChain = chain
     } else if (type === 'to') {
-      pipeline.unshift({ $match: { outChain: chain } })
+      pipeline[0].$match.outChain = chain
     } else if (!type || type === 'both') {
-      pipeline.unshift({ $match: { $or: [{ outChain: chain }, { inChain: chain }] } })
-    } else {
-      return []
+      pipeline[0].$match.$or = [{ outChain: chain }, { inChain: chain }]
     }
   }
   const result = await Swaps.aggregate(pipeline).exec()
