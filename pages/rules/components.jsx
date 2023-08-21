@@ -362,7 +362,7 @@ function GasCalculation ({ gas, core = 1, multiplier = 1, isETH, gasPrice, gasL0
   }
 
   const gasFee = isETH
-    ? <div className='flex items-center'>
+    ? <div className='flex items-center -ml-2'>
         {fmt.format(core * gasUsed * (multiplier || 1) / 1e15)}
         <div className='text-[10px] text-gray-500 mx-0.5'>×</div>
         <div className='text-[10px] text-gray-500'>10<sup>-3</sup></div>
