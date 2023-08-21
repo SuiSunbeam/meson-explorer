@@ -324,7 +324,11 @@ function FeeRule ({ min, base, gasFee, rate, isETH }) {
     rule.push(`${isETH ? '' : '$'}${ethers.utils.formatUnits(base, 6)}`)
   }
   if (gasFee) {
-    rule.push(`${isETH ? '' : '$'}${ethers.utils.formatUnits(gasFee, 6)}`)
+    if (isETH) {
+      rule.push(`${ethers.utils.formatUnits(gasFee, 3)}m`)
+    } else {
+      rule.push(`$${ethers.utils.formatUnits(gasFee, 6)}`)
+    }
   }
   if (rate) {
     rule.push(`${rate/10000}%`)
@@ -340,7 +344,7 @@ function FeeRule ({ min, base, gasFee, rate, isETH }) {
   )
 }
 
-function GasCalculation ({ gas, core, multipier = 1, isETH, gasPrice, gasL0, gasPriceL0 }) {
+function GasCalculation ({ gas, core = 1, multiplier = 1, isETH, gasPrice, gasL0, gasPriceL0 }) {
   if (!(gas && gasPrice)) {
     return ''
   }
@@ -350,10 +354,14 @@ function GasCalculation ({ gas, core, multipier = 1, isETH, gasPrice, gasL0, gas
     gasUsed += gasL0 * gasPriceL0
   }
 
+  const gasFee = isETH
+    ? `${fmt.format(core * gasUsed * (multiplier || 1) / 1e15)} m`
+    : `$${fmt.format(core * gasUsed * (multiplier || 1) / 1e18)}`
+
   return (
     <div>
       <div className='flex flex-row items-center gap-2'>
-        <div className='flex-1 shrink-0'>{isETH ? '' : '$'}{fmt.format(core * gasUsed / 1e18)}</div>
+        <div className='flex-1 shrink-0'>{gasFee}</div>
         <div className='text-xs text-gray-500'>=</div>
         <div className='flex-[1.2] shrink-0 flex flex-row items-center'>
           {gasL0 && gasPriceL0 && <div className='text-2xl font-extralight text-gray-300 mr-1'>(</div>}
@@ -374,9 +382,9 @@ function GasCalculation ({ gas, core, multipier = 1, isETH, gasPrice, gasL0, gas
           {gasL0 && gasPriceL0 && <div className='text-2xl font-extralight text-gray-300 ml-2'>)</div>}
         </div>
         <div className={classnames('text-xs', isETH ? 'text-transparent' : 'text-gray-500')}>×</div>
-        <div className='flex-[1.4] shrink-0'>{!isETH && `$${core}`}</div>
-        <div className={classnames('text-xs', multipier === 1 ? 'text-transparent' : 'text-gray-500')}>×</div>
-        <div className='flex-1 shrink-0'>{multipier !== 1 && multipier}</div>
+        <div className='flex-1 shrink-0'>{!isETH && `$${core}`}</div>
+        <div className={classnames('text-xs', multiplier === 1 ? 'text-transparent' : 'text-gray-500')}>×</div>
+        <div className='flex-1 shrink-0'>{multiplier !== 1 && multiplier}</div>
       </div>
     </div>
   )
