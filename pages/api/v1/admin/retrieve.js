@@ -1,7 +1,6 @@
 import fetch from 'node-fetch'
 import { presets } from 'lib/swap'
-
-const relayer = process.env.NEXT_PUBLIC_SERVER_URL.split(',')[0]
+import { RELAYERS } from 'lib/const'
 
 const query = (addr, page = 1, pageSize = 100) => `?module=account&action=txlist&address=${addr}&startblock=0&endblock=99999999&page=${page}&offset=${pageSize}&sort=desc`
 
@@ -76,7 +75,7 @@ async function post(req, res) {
 }
 
 async function postTx(networkId, hash) {
-  const response = await fetch(`${relayer}/transaction`, {
+  const response = await fetch(`${RELAYERS[0]}/transaction`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

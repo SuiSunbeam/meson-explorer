@@ -12,10 +12,10 @@ import { useWeb3Login } from '@mesonfi/web3-jwt/react'
 
 import extensions from 'lib/extensions'
 import { abbreviate } from 'lib/swap'
+import { RELAYERS } from 'lib/const'
 
 const signingMessage = process.env.NEXT_PUBLIC_SIGNING_MESSAGE
 const testnetMode = Boolean(process.env.NEXT_PUBLIC_TESTNET)
-const relayers = process.env.NEXT_PUBLIC_SERVER_URL.split(',')
 
 const navigation = [
   // { name: 'Swaps', href: '#', current: true },
@@ -299,7 +299,7 @@ function Profile ({ globalState, setGlobalState }) {
                 Relayers
               </div>
               {
-                relayers.map((relayer, index) => (
+                RELAYERS.map((relayer, index) => (
                   <Menu.Item key={`relayer-${index}`}>
                     <div
                       className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer overflow-hidden truncate'
