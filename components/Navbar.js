@@ -12,10 +12,9 @@ import { useWeb3Login } from '@mesonfi/web3-jwt/react'
 
 import extensions from 'lib/extensions'
 import { abbreviate } from 'lib/swap'
-import { RELAYERS } from 'lib/const'
+import { TESTNET, RELAYERS } from 'lib/const'
 
 const signingMessage = process.env.NEXT_PUBLIC_SIGNING_MESSAGE
-const testnetMode = Boolean(process.env.NEXT_PUBLIC_TESTNET)
 
 const navigation = [
   // { name: 'Swaps', href: '#', current: true },
@@ -48,7 +47,7 @@ export default function Navbar({ globalState, setGlobalState }) {
                         <img width={28} height={14} className='opacity-50' src='/logo.svg' alt='' />
                         <div className='inline-block ml-2 mb-1 text-2xl' style={{ fontFamily: `'Nunito', sans-serif` }}>
                           <span className='font-extrabold'>meson</span>
-                          <span className='font-semibold opacity-90'> explorer {testnetMode && ' testnet'}</span>
+                          <span className='font-semibold opacity-90'> explorer {TESTNET && ' testnet'}</span>
                         </div>
                       </a>
                     </Link>

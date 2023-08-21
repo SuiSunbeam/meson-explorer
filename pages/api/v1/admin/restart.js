@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
 
-const { NEXT_PUBLIC_TESTNET } = process.env
+import { TESTNET } from 'lib/const'
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -20,7 +20,7 @@ async function post(req, res) {
 }
 
 export async function restartService(service) {
-  const prefix = NEXT_PUBLIC_TESTNET ? 'meson-testnet' : 'meson'
+  const prefix = TESTNET ? 'meson-testnet' : 'meson'
   let url
   if (service === 'lp') {
     url = `https://api.heroku.com/apps/${prefix}-lp/dynos`
