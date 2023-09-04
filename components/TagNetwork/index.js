@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { ExternalIcon } from 'components/ExternalLink'
 import { getExplorerAddressLink } from 'lib/swap'
 
+import ancient8 from './ancient8.png'
 import aptos from './aptos.png'
 import arb from './arb.png'
 import aurora from './aurora.png'
@@ -30,7 +31,7 @@ import tron from './tron.png'
 import zkevm from './zkevm.png'
 import zksync from './zksync.png'
 
-const icons = { aptos, arb, aurora, avax, base, beam, bnb, cfx, cronos, eos, eth, goerli: eth, evmos, ftm, linea, movr, one, opt, polygon, scroll, sepolia, skale, sui, tron, zkevm, zksync }
+const icons = { ancient8, aptos, arb, aurora, avax, base, beam, bnb, cfx, cronos, eos, eth, goerli: eth, evmos, ftm, linea, movr, one, opt, polygon, scroll, sepolia, skale, sui, tron, zkevm, zksync }
 
 export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly, address, className }) {
   const id = network.id.split('-')[0]
