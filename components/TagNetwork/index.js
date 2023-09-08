@@ -29,16 +29,18 @@ import polygon from './polygon.png'
 import scroll from './scroll.png'
 import sepolia from './sepolia.png'
 import skale from './skale.png'
+import skaleEuropa from './skale-europa.png'
+import skaleNebula from './skale-nebula.png'
 import sui from './sui.png'
 import tron from './tron.png'
 import zkevm from './zkevm.png'
 import zksync from './zksync.png'
 
-const icons = { ancient8, aptos, arb, aurora, avax, base, beam, bnb, cfx, cronos, eos, eth, goerli: eth, evmos, ftm, kava, linea, manta, metis, movr, one, opt, polygon, scroll, sepolia, skale, sui, tron, zkevm, zksync }
+const icons = { ancient8, aptos, arb, aurora, avax, base, beam, bnb, cfx, cronos, eos, eth, goerli: eth, evmos, ftm, kava, linea, manta, metis, movr, one, opt, polygon, scroll, sepolia, skale, 'skale-europa': skaleEuropa, 'skale-nebula': skaleNebula, sui, tron, zkevm, zksync }
 
 export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly, address, className }) {
-  const id = network.id.split('-')[0]
-  const icon = icons[id]
+  const iconId = network.id.replace(/-(testnet|sepolia|goerli)/, '')
+  const icon = icons[iconId]
   return (
     <div className={classnames('flex items-center text-gray-500', size === 'sm' && 'text-xs', className)}>
       <div className={classnames('flex items-center rounded-full shadow', size === 'md' ? 'w-5 h-5' : 'w-4 h-4')}>
