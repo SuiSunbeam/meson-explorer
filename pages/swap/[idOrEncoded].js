@@ -122,8 +122,9 @@ function CorrectSwap({ data: raw }) {
     const recipient = data.fromTo[1] || ''
     const { srFee = 0, lpFee = 0 } = data
 
-    let inAmount = ethers.utils.formatUnits(swap.amount, swap._isUCT() ? 4 : 6)
-    let outAmount = ethers.utils.formatUnits(swap.amount.sub(srFee + lpFee), 6)
+    let inAmount = ethers.utils.formatUnits(swap.amount.sub(swap.amountForCoreToken), swap._isUCT() ? 4 : 6)
+    let outAmount = ethers.utils.formatUnits(swap.receive, 6)
+    const coreTokenAmount = ethers.utils.formatUnits(swap.coreTokenAmount, 6)
     if (swap.deprecatedEncoding) {
       inAmount = ethers.utils.formatUnits(swap.amount.add(swap.fee), swap._isUCT() ? 4 : 6)
       outAmount = ethers.utils.formatUnits(swap.amount, 6)
@@ -181,6 +182,21 @@ function CorrectSwap({ data: raw }) {
               </>
             }
           </div>
+          {
+            coreTokenAmount &&
+            <div className='flex items-center'>
+              <div className={classnames(
+                'relative flex items-center',
+                CancelledStatus.includes(status) && 'opacity-30 before:block before:absolute before:w-full before:h-0.5 before:bg-black before:z-10'
+              )}>
+                <div className='mr-1'>{ethers.utils.formatUnits(swap.amountForCoreToken, 6)}</div>
+                <TagNetworkToken explorer={from.network.explorer} token={from.token} className={CancelledStatus.includes(status) && 'text-black'}/>
+              </div>
+              <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
+              <div className='mr-1'>{coreTokenAmount}</div>
+              <TagNetworkToken explorer={to.network.explorer} token={{ symbol: 'ETH' }} />
+            </div>
+          }
         </ListRow>
         {
           !FailedStatus.includes(status) &&
