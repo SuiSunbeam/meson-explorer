@@ -4,7 +4,7 @@ import { presets } from 'lib/swap'
 
 export default listHandler({
   collection: Swaps,
-  getQuery: req => {
+  getQuery: (req, roles, headerRoles) => {
     const query = { fromTo: req.query.address, disabled: { $ne: true } }
     if (roles?.some(r => ['root', 'admin'].includes(r)) || headerRoles.includes('data')) {
       const { from, to } = req.query
