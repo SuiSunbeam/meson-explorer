@@ -183,7 +183,7 @@ function CorrectSwap({ data: raw }) {
             }
           </div>
           {
-            coreTokenAmount &&
+            coreTokenAmount > 0 &&
             <div className='flex items-center'>
               <div className={classnames(
                 'relative flex items-center',
