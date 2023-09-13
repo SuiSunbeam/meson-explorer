@@ -42,6 +42,21 @@ const StatusDesc = {
   UNLOCKED: `Swap didn't finish within valid time. Fund can be withdrawn after expire time.`
 }
 
+const FAUCET_ON_SWAP = [
+  {
+    networkId: 'skale-europa',
+    shortSlip44: '0x9296',
+    faucetAmount: 1,
+    symbol: 'sFUEL',
+  },
+  {
+    networkId: 'skale-nebula',
+    shortSlip44: '0xb4b1',
+    faucetAmount: 1,
+    symbol: 'sFUEL',
+  }
+]
+
 export default function SwapDetail() {
   const router = useRouter()
   const idOrEncoded = router.query.idOrEncoded
@@ -110,6 +125,12 @@ function CorrectSwap({ data: raw }) {
 
   let body
   const { swap, from, to } = React.useMemo(() => presets.parseInOutNetworkTokens(data?.encoded), [data?.encoded])
+  const faucet = React.useMemo(() => {
+    if (!swap.swapForCoreToken) {
+      return
+    }
+    return FAUCET_ON_SWAP.find(n => n.shortSlip44 === swap.outChain)
+  }, [swap.swapForCoreToken, swap.outChain])
 
   const status = getStatusFromEvents(data?.events, swap?.expireTs)
 
@@ -179,6 +200,14 @@ function CorrectSwap({ data: raw }) {
                 <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
                 <div className='mr-1'>{outAmount}</div>
                 <TagNetworkToken explorer={to.network.explorer} token={to.token} />
+                {
+                  faucet &&
+                  <>
+                    <div className='text-sm text-gray-500 mx-1'>+</div>
+                    <div className='mr-1'>{faucet.faucetAmount}</div>
+                    <TagNetworkToken token={{ symbol: faucet.symbol }} />
+                  </>
+                }
               </>
             }
           </div>
