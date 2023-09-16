@@ -126,11 +126,11 @@ function CorrectSwap({ data: raw }) {
   let body
   const { swap, from, to } = React.useMemo(() => presets.parseInOutNetworkTokens(data?.encoded), [data?.encoded])
   const faucet = React.useMemo(() => {
-    if (!swap?.swapForCoreToken) {
+    if (!swap.swapForCoreToken) {
       return
     }
     return FAUCET_ON_SWAP.find(n => n.shortSlip44 === swap.outChain)
-  }, [swap?.swapForCoreToken, swap?.outChain])
+  }, [swap.swapForCoreToken, swap.outChain])
 
   const status = getStatusFromEvents(data?.events, swap?.expireTs)
 
