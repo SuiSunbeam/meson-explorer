@@ -10,7 +10,6 @@ import busd from './busd.png'
 import dai from './dai.png'
 import pod from './pod.png'
 import uct from './uct.png'
-import sfuel from '../TagNetwork/skale.png'
 
 function getTokenIcon(symbol) {
   if (symbol.indexOf('ETH') > -1) {
@@ -29,8 +28,6 @@ function getTokenIcon(symbol) {
     return pod
   } else if (symbol.indexOf('UCT') > -1) {
     return uct
-  } else if (symbol.indexOf('sFUEL') > -1) {
-    return sfuel
   } else {
     return null
   }
