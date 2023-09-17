@@ -22,7 +22,9 @@ import kava from './kava.png'
 import linea from './linea.png'
 import manta from './manta.png'
 import metis from './metis.png'
+import mnt from './mnt.png'
 import movr from './movr.png'
+import naut from './naut.png'
 import one from './one.png'
 import opt from './opt.png'
 import polygon from './polygon.png'
@@ -36,7 +38,7 @@ import tron from './tron.png'
 import zkevm from './zkevm.png'
 import zksync from './zksync.png'
 
-const icons = { ancient8, aptos, arb, aurora, avax, base, beam, bnb, cfx, cronos, eos, eth, goerli: eth, evmos, ftm, kava, linea, manta, metis, movr, one, opt, polygon, scroll, sepolia, skale, 'skale-europa': skaleEuropa, 'skale-nebula': skaleNebula, sui, tron, zkevm, zksync }
+const icons = { ancient8, aptos, arb, aurora, avax, base, beam, bnb, cfx, cronos, eos, eth, goerli: eth, evmos, ftm, kava, linea, manta, mnt, metis, movr, naut, one, opt, polygon, scroll, sepolia, skale, 'skale-europa': skaleEuropa, 'skale-nebula': skaleNebula, sui, tron, zkevm, zksync }
 
 export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly, address, className }) {
   const iconId = network.id.replace(/-(testnet|sepolia|goerli)/, '')
