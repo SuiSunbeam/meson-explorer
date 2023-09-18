@@ -2,7 +2,7 @@ import React from 'react'
 import classnames from 'classnames'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
-import { utils } from 'ethers'
+import { utils, BigNumber } from 'ethers'
 import { MinusCircleIcon, ExclamationCircleIcon, CheckCircleIcon, LockClosedIcon, PencilIcon } from '@heroicons/react/solid'
 import {
   CurrencyDollarIcon,
@@ -73,9 +73,17 @@ export default function LpWhitelist() {
     }), { quota: 0, deposit: 0 })
   }, [data])
 
+  const [totalDeposit, setTotalDeposit] = React.useState(BigNumber.from(0))
+  const [totalLocked, setTotalLocked] = React.useState(BigNumber.from(0))
+
+  const addTo = React.useMemo(() => ({
+    deposit: v => setTotalDeposit(p => p.add(v)),
+    locked: v => setTotalLocked(p => p.add(v)),
+  }), [])
+
+
   let body = <CardBody><LoadingScreen /></CardBody>
   if (data) {
-    
     body = (
       <CardBody>
         <Table
@@ -90,8 +98,21 @@ export default function LpWhitelist() {
             { name: 'Edit', width: '5%', className: 'text-right' },
           ]}
         >
-          <WhitelistedTotal quota={total.quota} deposit={total.deposit} />
-          {sortedData.map((d, index) => <WhitelistedAddrRow key={`row-${index}`} {...d} podContract={podContract} onOpenModal={() => setModalData(d)} />)}
+          <WhitelistedTotal
+            quota={total.quota}
+            deposit={total.deposit}
+            totalDeposit={totalDeposit}
+            totalLocked={totalLocked}
+          />
+          {sortedData.map((d, index) => (
+            <WhitelistedAddrRow
+              key={`row-${index}`}
+              {...d}
+              podContract={podContract}
+              addTo={addTo}
+              onOpenModal={() => setModalData(d)}
+            />)
+          )}
         </Table>
       </CardBody>
     )
@@ -129,7 +150,7 @@ export default function LpWhitelist() {
 
 const fmt = Intl.NumberFormat('en', { minimumFractionDigits: 6 })
 
-function WhitelistedTotal ({ quota, deposit }) {
+function WhitelistedTotal ({ quota, deposit, totalDeposit, totalLocked }) {
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-2 font-medium'>
@@ -140,7 +161,22 @@ function WhitelistedTotal ({ quota, deposit }) {
         <div className='h-0.5 my-px w-full w-[136px] bg-black' />
         <NumberDisplay value={fmt.format(utils.formatUnits(quota, 6))} length={9} decimals={0} />
       </Td>
-      <Td></Td>
+      <Td size='sm' className='font-bold'>
+        <div className='flex items-center'>
+          <CurrencyDollarIcon className='w-4 h-4 text-gray-500 mr-1' />
+          <NumberDisplay
+            length={7}
+            value={fmt.format(utils.formatUnits(totalDeposit, 6))}
+          />
+        </div>
+        <div className='flex items-center'>
+          <LockClosedIcon className='w-4 h-4 text-gray-500 mr-1' />
+          <NumberDisplay
+            length={7}
+            value={fmt.format(utils.formatUnits(totalLocked, 6))}
+          />
+        </div>
+      </Td>
       <Td></Td>
       <Td></Td>
       <Td></Td>
@@ -148,7 +184,7 @@ function WhitelistedTotal ({ quota, deposit }) {
   )
 }
 
-function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, kyc, swapOnly, podContract, onOpenModal }) {
+function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, kyc, swapOnly, podContract, addTo, onOpenModal }) {
   const [podBalance, setPodBalance] = React.useState()
   const [lockedBalance, setLockedBalance] = React.useState()
   const [rewardsBalance, setRewardsBalance] = React.useState()
@@ -159,16 +195,22 @@ function WhitelistedAddrRow ({ _id: addr, test, name, quota = 0, deposit = 0, ky
     }
 
     podContract.balanceOf(addr)
-      .then(setPodBalance)
+      .then(v => {
+        setPodBalance(v)
+        !test && addTo.deposit(v)
+      })
 
     podContract.getLockedBalance(addr)
-      .then(setLockedBalance)
+      .then(v => {
+        setLockedBalance(v)
+        !test && addTo.locked(v)
+      })
       .catch(err => console.warn(err))
     
     podContract.getTotalRewards(addr)
       .then(setRewardsBalance)
       .catch(err => console.warn(err))
-  }, [podContract, addr])
+  }, [podContract, addr, addTo, test])
 
   const ratio = deposit / quota
   return (
