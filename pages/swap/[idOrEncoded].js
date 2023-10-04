@@ -262,6 +262,7 @@ function SwapActionButton({ data, swap, status }) {
     return null
   }
 
+  const directSwap = data.events.filter(e => e.name === 'DIRECT-SWAP').length
   const locks = data.events.filter(e => e.name === 'LOCKED').length
   const unlocks = data.events.filter(e => e.name === 'UNLOCKED').length
   const releases = data.events.filter(e => e.name === 'RELEASED').length
@@ -296,7 +297,16 @@ function SwapActionButton({ data, swap, status }) {
       break;
     case 'RELEASING*':
       if (unlocks >= locks) {
-        actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.simpleRelease(swap, recipient)}>SimpleRelease</Button>
+        if (directSwap) {
+          actionButton = (
+            <>
+              <Button size='sm' color='info' rounded onClick={() => extensions.transfer(swap, initiator, recipient)}>Transfer</Button>
+              <Button size='sm' color='info' rounded onClick={() => extensions.directRelease(swap, data.releaseSignature, initiator, recipient)}>DirectRelease</Button>
+            </>
+          )
+        } else {
+          actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.simpleRelease(swap, recipient)}>SimpleRelease</Button>
+        }
         break
       }
     default:
