@@ -18,6 +18,7 @@ const API_HOSTS = {
   beam: 'https://api-moonbeam.moonscan.io/api',
   zksync: 'https://zksync2-mainnet-explorer.zksync.io/transactions',
   zkevm: 'https://api-zkevm.polygonscan.com/api',
+  base: 'https://api.basescan.org/api',
   aptos: 'https://indexer.mainnet.aptoslabs.com/v1/graphql',
   sui: 'https://explorer-rpc.mainnet.sui.io/',
 }
