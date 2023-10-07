@@ -210,27 +210,35 @@ function CorrectSwap({ data: raw }) {
             </div>
           </ListRow>
         }
-        <ListRow title='Requested at'>
-          {new Date(data.created).toLocaleString()}
-        </ListRow>
+        {
+          data.tempAt
+          ? <ListRow title='Temporarily created'>
+              {new Date(data.tempAt).toLocaleString()}
+            </ListRow>
+          : <ListRow title='Requested at'>
+              {new Date(data.created).toLocaleString()}
+            </ListRow>
+        }
         <SwapTimes data={data} swap={swap} />
-
-        <ListRow title='Process'>
-          <ul role='list' className='border border-gray-200 rounded-md divide-y divide-gray-200 bg-white'>
-            {sortEvents(data.events).map((e, index) => (
-              <li key={`process-${index}`}>
-                <div className='lg:grid lg:grid-cols-4 sm:px-4 sm:py-3 px-3 py-2 text-sm'>
-                  <div><SwapStepName {...e} /></div>
-                  <div className='lg:col-span-3 lg:flex lg:flex-row lg:justify-end'>
-                    <div className='max-w-full truncate text-gray-500'>
-                      <SwapStepInfo {...e} fromAddress={fromAddress} from={from} to={to} />
+        {
+          !!data.events.length &&
+          <ListRow title='Process'>
+            <ul role='list' className='border border-gray-200 rounded-md divide-y divide-gray-200 bg-white'>
+              {sortEvents(data.events).map((e, index) => (
+                <li key={`process-${index}`}>
+                  <div className='lg:grid lg:grid-cols-4 sm:px-4 sm:py-3 px-3 py-2 text-sm'>
+                    <div><SwapStepName {...e} /></div>
+                    <div className='lg:col-span-3 lg:flex lg:flex-row lg:justify-end'>
+                      <div className='max-w-full truncate text-gray-500'>
+                        <SwapStepInfo {...e} fromAddress={fromAddress} from={from} to={to} />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </ListRow>
+                </li>
+              ))}
+            </ul>
+          </ListRow>
+        }
       </dl>
     )
   }
