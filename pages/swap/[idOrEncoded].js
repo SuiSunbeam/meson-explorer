@@ -84,7 +84,11 @@ function CorrectSwap({ data: raw }) {
         updates.events = [...prev.events, { name: status, ...data }]
       }
       if (!data.failed) {
-        if (status === 'RELEASED') {
+        if (status === 'POSTED') {
+          updates.posted = data.ts * 1000
+        } else if (status === 'BONDED') {
+          updates.bonded = data.ts * 1000
+        } else if (status === 'RELEASED') {
           updates.released = data.ts * 1000
         } else if (status === 'EXECUTED') {
           updates.executed = data.ts * 1000
