@@ -51,8 +51,12 @@ async function getPremium(addressWithFormat, txs = false) {
   return { ...acc.toJSON(), records }
 }
 
-async function post(addressWithFormat) {
-  const [format, address] = addressWithFormat.split(':')
+async function post(_addressWithFormat) {
+  let [format, address] = _addressWithFormat.split(':')
+  if (format === 'ethers') {
+    address = address.toLowerCase()
+  }
+  const addressWithFormat = `${format}:${address}`
 
   let premiumAccount = await getPremium(addressWithFormat)
   if (!premiumAccount) {
