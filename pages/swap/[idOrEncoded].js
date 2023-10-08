@@ -405,6 +405,13 @@ function SwapTimes({ data, swap }) {
       </>
     )
   }
+  if (!data.bonded && !data.posted) {
+    return (
+      <ListRow title='Will expire at'>
+        {new Date((swap.expireTs - 3600) * 1000).toLocaleString()}
+      </ListRow>
+    )
+  }
   return (
     <ListRow title={swap.expired ? 'Expired at' : 'Will expire at'}>
       {new Date(swap.expireTs * 1000).toLocaleString()}
