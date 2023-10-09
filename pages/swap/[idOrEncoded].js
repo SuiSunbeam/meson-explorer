@@ -303,6 +303,8 @@ function SwapActionButton({ data, swap, status }) {
     case 'EXPIRED':
       if (!data.fromContract) {
         actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.withdraw(swap)}>Withdraw</Button>
+      } else {
+        actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.withdrawTo(swap, data.fromTo[0])}>Withdraw To</Button>
       }
       break;
     case 'RELEASING':
