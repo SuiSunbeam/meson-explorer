@@ -169,14 +169,12 @@ function CorrectSwap({ data: raw }) {
           </div>
         </ListRow>
         <ListRow title='Amount'>
-          <div className='flex items-center'>
-            <div className={classnames(
-              'relative flex items-center',
+          <div className={classnames(
+              'w-fit relative flex items-center',
               CancelledStatus.includes(status) && 'opacity-30 before:block before:absolute before:w-full before:h-0.5 before:bg-black before:z-10'
             )}>
-              <div className='mr-1'>{inAmount}</div>
-              <TagNetworkToken explorer={from.network.explorer} token={from.token} className={CancelledStatus.includes(status) && 'text-black'}/>
-            </div>
+            <div className='mr-1'>{inAmount}</div>
+            <TagNetworkToken explorer={from.network.explorer} token={from.token} className={CancelledStatus.includes(status) && 'text-black'}/>
             {
               !FailedStatus.includes(status) &&
               <>
@@ -188,14 +186,12 @@ function CorrectSwap({ data: raw }) {
           </div>
           {
             coreTokenAmount > 0 &&
-            <div className='flex items-center'>
-              <div className={classnames(
-                'relative flex items-center',
-                CancelledStatus.includes(status) && 'opacity-30 before:block before:absolute before:w-full before:h-0.5 before:bg-black before:z-10'
-              )}>
-                <div className='mr-1'>{ethers.utils.formatUnits(swap.amountForCoreToken, 6)}</div>
-                <TagNetworkToken explorer={from.network.explorer} token={from.token} className={CancelledStatus.includes(status) && 'text-black'}/>
-              </div>
+            <div className={classnames(
+              'w-fit relative flex items-center',
+              CancelledStatus.includes(status) && 'opacity-30 before:block before:absolute before:w-full before:h-0.5 before:bg-black before:z-10'
+            )}>
+              <div className='mr-1'>{ethers.utils.formatUnits(swap.amountForCoreToken, 6)}</div>
+              <TagNetworkToken explorer={from.network.explorer} token={from.token} className={CancelledStatus.includes(status) && 'text-black'}/>
               <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
               <div className='mr-1'>{coreTokenAmount}</div>
               <TagNetworkToken explorer={to.network.explorer} token={{ symbol: 'ETH' }} />
