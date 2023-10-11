@@ -194,7 +194,7 @@ function CorrectSwap({ data: raw }) {
               <TagNetworkToken explorer={from.network.explorer} token={from.token} className={CancelledStatus.includes(status) && 'text-black'}/>
               <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
               <div className='mr-1'>{coreTokenAmount}</div>
-              <TagNetworkToken explorer={to.network.explorer} token={{ symbol: 'ETH' }} />
+              <TagNetworkToken explorer={to.network.explorer} token={{ symbol: 'ETH' }} className={CancelledStatus.includes(status) && 'text-black'}/>
             </div>
           }
         </ListRow>
