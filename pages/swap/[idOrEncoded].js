@@ -127,7 +127,7 @@ function CorrectSwap({ data: raw }) {
     const { srFee = 0, lpFee = 0 } = data
 
     let inAmount = ethers.utils.formatUnits(swap.amount.sub(swap.amountForCoreToken), swap._isUCT() ? 4 : 6)
-    let outAmount = ethers.utils.formatUnits(swap.receive, 6)
+    let outAmount = ethers.utils.formatUnits(swap.amount.sub(swap.amountForCoreToken).sub(srFee + lpFee), 6)
     const coreTokenAmount = ethers.utils.formatUnits(swap.coreTokenAmount, 6)
     if (swap.deprecatedEncoding) {
       inAmount = ethers.utils.formatUnits(swap.amount.add(swap.fee), swap._isUCT() ? 4 : 6)
