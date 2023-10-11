@@ -38,11 +38,6 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
   const { data: session } = useSession()
   const checkDifference = !address && session?.user?.roles?.some(r => ['root'].includes(r))
 
-  const [totalETHDeposit, setTotalETHDeposit] = React.useState(BigNumber.from(0))
-  const [totalETHBalance, setTotalETHBalance] = React.useState(BigNumber.from(0))
-  const [totalETHSrFeeCollected, setTotalETHSrFeeCollected] = React.useState(BigNumber.from(0))
-  const [totalETHInContractDiff, setTotalETHInContractDiff] = React.useState(BigNumber.from(0))
-
   const [totalDeposit, setTotalDeposit] = React.useState({})
   const [totalBalance, setTotalBalance] = React.useState({})
   const [totalSrFeeCollected, setTotalSrFeeCollected] = React.useState({})
@@ -354,28 +349,27 @@ function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token,
   }, [address]) // eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
-    if (!address || !deposit || !srFeeCollected) {
+    if (!checkDifference || !address || !deposit || !srFeeCollected) {
       return
     }
     (async () => {
-      if (checkDifference) {
-        if (address.length === 66) {
-          const diff = await mesonClient.pendingTokenBalance(token.tokenIndex).catch(() => {})
-          if (diff) {
-            if (token.tokenIndex !== 32) {
-              add.toInContractDiff(diff.value, tokenType)
-            }
-            setInContractDiff(diff.value)
+      const tokenType = MesonClient.tokenType(token.tokenIndex)
+      if (address.length === 66) {
+        const diff = await mesonClient.pendingTokenBalance(token.tokenIndex).catch(() => {})
+        if (diff) {
+          if (token.tokenIndex !== 32) {
+            add.toInContractDiff(diff.value, tokenType)
           }
-        } else {
-          const inContractBalance = await mesonClient.inContractTokenBalance(token.tokenIndex, { from: address }).catch(() => {})
-          if (inContractBalance) {
-            const diff = inContractBalance.value.sub(deposit).sub(srFeeCollected)
-            if (token.tokenIndex !== 32) {
-              add.toInContractDiff(diff, tokenType)
-            }
-            setInContractDiff(diff)
+          setInContractDiff(diff.value)
+        }
+      } else {
+        const inContractBalance = await mesonClient.inContractTokenBalance(token.tokenIndex, { from: address }).catch(() => {})
+        if (inContractBalance) {
+          const diff = inContractBalance.value.sub(deposit).sub(srFeeCollected)
+          if (token.tokenIndex !== 32) {
+            add.toInContractDiff(diff, tokenType)
           }
+          setInContractDiff(diff)
         }
       }
     })()
