@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { getExplorerTokenLink } from 'lib/swap'
 
 import eth from './eth.png'
+import bnb from '../TagNetwork/bnb.png'
 import usdc from './usdc.png'
 import usdt from './usdt.png'
 import busd from './busd.png'
@@ -14,6 +15,8 @@ import uct from './uct.png'
 function getTokenIcon(symbol) {
   if (symbol.indexOf('ETH') > -1) {
     return eth
+  } else if (symbol.indexOf('BNB') > -1) {
+    return bnb
   } else if (symbol.indexOf('USDC') > -1 || symbol.indexOf('USDbC') > -1) {
     return usdc
   } else if (symbol.indexOf('USDT') > -1) {
@@ -34,7 +37,7 @@ function getTokenIcon(symbol) {
 }
 
 export default function TagNetworkToken ({ responsive, size = 'sm', explorer, token, iconOnly, className }) {
-  if (!token) {
+  if (!token?.symbol) {
     return null
   }
   const icon = getTokenIcon(token.symbol)

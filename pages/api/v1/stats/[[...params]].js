@@ -71,13 +71,15 @@ export default async function handler(req, res) {
   if (token === 'usd') {
     pipeline[0].$match.$and = [{
       $or: [
-        { inToken: { $lt: 254 } },
+        { inToken: { $lte: 64 } },
         { expireTs: { $lt: new Date(1691700000 * 1000) } }
       ]
     }]
   } else if (token === 'eth') {
-    pipeline[0].$match.inToken = { $gte: 254 }
+    pipeline[0].$match.inToken = { $gte: 252 }
     pipeline[0].$match.expireTs = { $gt: new Date(1691700000 * 1000) }
+  } else if (token === 'bnb') {
+    pipeline[0].$match.inToken = { $gte: 248, $lt: 252 }
   }
   if (chain) {
     if (type === 'from') {

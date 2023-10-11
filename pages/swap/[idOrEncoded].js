@@ -129,6 +129,7 @@ function CorrectSwap({ data: raw }) {
     let inAmount = ethers.utils.formatUnits(swap.amount.sub(swap.amountForCoreToken), swap._isUCT() ? 4 : 6)
     let outAmount = ethers.utils.formatUnits(swap.amount.sub(swap.amountForCoreToken).sub(srFee + lpFee), 6)
     const coreTokenAmount = ethers.utils.formatUnits(swap.coreTokenAmount, 6)
+    const coreSymbol = presets.getCoreSymbol(to.network.id)
     if (swap.deprecatedEncoding) {
       inAmount = ethers.utils.formatUnits(swap.amount.add(swap.fee), swap._isUCT() ? 4 : 6)
       outAmount = ethers.utils.formatUnits(swap.amount, 6)
@@ -194,7 +195,7 @@ function CorrectSwap({ data: raw }) {
               <TagNetworkToken explorer={from.network.explorer} token={from.token} className={CancelledStatus.includes(status) && 'text-black'}/>
               <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
               <div className='mr-1'>{coreTokenAmount}</div>
-              <TagNetworkToken explorer={to.network.explorer} token={{ symbol: 'ETH' }} className={CancelledStatus.includes(status) && 'text-black'}/>
+              <TagNetworkToken explorer={to.network.explorer} token={{ symbol: coreSymbol }} className={CancelledStatus.includes(status) && 'text-black'}/>
             </div>
           }
         </ListRow>

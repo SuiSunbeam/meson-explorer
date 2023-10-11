@@ -36,8 +36,11 @@ export default listHandler({
         query.outChain = presets.getNetwork(to).shortSlip44
       }
       if (token.toLowerCase() === 'eth') {
-        query.inToken = { $in: [254, 255] }
+        query.inToken = { $gte: 252 }
         query.expireTs = { $gt: new Date(1691700000 * 1000) }
+      }
+      if (token.toLowerCase() === 'bnb') {
+        query.inToken = { $gte: 248, $lt: 252 }
       }
       if (failed) {
         query['events.name'] = { $ne: 'RELEASED' }

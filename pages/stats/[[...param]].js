@@ -158,7 +158,8 @@ export default function StatsByChain() {
               buttons={[
                 { key: '', text: `All` },
                 { key: 'usd', text: `Stablecoins` },
-                { key: 'eth', text: `ETH` }
+                { key: 'eth', text: `ETH` },
+                { key: 'bnb', text: `BNB` },
               ]}
               onChange={token => updatePathname(chain, type, token)}
             />
@@ -177,9 +178,11 @@ export default function StatsByChain() {
   )
 }
 
-function valueInStr (value = 0, isETH, k = false) {
-  if (isETH) {
+function valueInStr (value = 0, symbol, k = false) {
+  if (symbol === 'eth') {
     return `${fmt.format(ethers.utils.formatUnits(value, 6))}♢`
+  } else if (symbol === 'bnb') {
+    return `${fmt.format(ethers.utils.formatUnits(value, 6))}`
   }
   const amount = Math.floor(ethers.utils.formatUnits(value, 6))
   if (k && amount > 10000) {
@@ -198,11 +201,10 @@ function SwapCount({ count, success }) {
 }
 
 function StatTableRow({ _id: date, token, count, success, api, auto, m2, a2, volume = 0, srFee, lpFee, addresses, duration }) {
-  const isETH = token === 'eth'
-  const volumeStr = valueInStr(volume, isETH)
-  const srFeeStr = valueInStr(srFee, isETH, true)
-  const lpFeeStr = valueInStr(lpFee, isETH, true)
-  const avgSwapAmount = success ? valueInStr(Math.floor(volume / success), isETH) : ''
+  const volumeStr = valueInStr(volume, token)
+  const srFeeStr = valueInStr(srFee, token, true)
+  const lpFeeStr = valueInStr(lpFee, token, true)
+  const avgSwapAmount = success ? valueInStr(Math.floor(volume / success), token) : ''
 
   return (
     <tr className='odd:bg-white even:bg-gray-50'>
