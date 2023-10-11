@@ -317,7 +317,12 @@ function SwapActionButton({ data, swap, status }) {
             </>
           )
         } else {
-          actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.simpleRelease(swap, recipient)}>SimpleRelease</Button>
+          actionButton = (
+            <>
+              <Button size='sm' color='info' rounded onClick={() => extensions.manualWithdraw(swap, initiator, data.fromTo[0])}>ManualWithdraw</Button>
+              <Button size='sm' color='info' rounded onClick={() => extensions.simpleRelease(swap, recipient)}>SimpleRelease</Button>
+            </>
+          )
         }
         break
       }
