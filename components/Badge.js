@@ -9,7 +9,7 @@ const badgeClassnames = {
 
 export default function Badge({ type, className, onClick, children }) {
   return (
-    <div className='flex relative' onClick={onClick}>
+    <div className='flex relative flex-shrink-0' onClick={onClick}>
       <span className={classnames(
         'px-2 inline-flex text-sm leading-5 font-semibold rounded-full shadow-sm',
         badgeClassnames[type] || 'bg-gray-100 text-gray-500',

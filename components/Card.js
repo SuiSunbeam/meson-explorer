@@ -28,7 +28,7 @@ export function CardTitle({ title, subtitle, badge, right = [], tabs = [] }) {
         <div className='ml-2 flex-1'>{badge}</div>
         <div>{right}</div>
       </div>
-      <div className='max-w-2xl mt-1 text-gray-500 break-all'>{subtitle}</div>
+      <div className='mt-1 text-gray-500 break-all'>{subtitle}</div>
       <div className='max-w-screen text-gray-500 mt-4 flex overflow-auto -ml-1'>
       {
         tabs.map((t, index) => (
