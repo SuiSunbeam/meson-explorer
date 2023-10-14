@@ -593,13 +593,13 @@
 
 "@mesonfi/contract-abis@^1.13.0":
   version "1.13.0"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/contract-abis/1.13.0/182db681de34daccd23ea4df989be782ba7d32a1#182db681de34daccd23ea4df989be782ba7d32a1"
-  integrity sha512-prXjEL1GwVVg6YoiuL3VupDq5zze3m2JDhj+mOr7SROO3qWuvF5P6cfBpvE4tM3NaHB4Fl6o95hFiRh+k/4MZA==
+  resolved "https://npm.pkg.github.com/download/@MesonFi/contract-abis/1.13.0/c1d5ea7ddd8e2298698db45984319ebb1d2b3926#c1d5ea7ddd8e2298698db45984319ebb1d2b3926"
+  integrity sha512-Z+74CCbvGUGNJX18pQi9lfWv0PGCjQ3oGw1H0Nxr1JlW9bZvpVZWAFTLDd1E7UKK5Mk3YQnpKlSIcewvPJYnng==
 
 "@mesonfi/contract-types@^1.13.0":
   version "1.13.0"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/contract-types/1.13.0/b5460f33fd50b7563e5107a07101fc341df86840#b5460f33fd50b7563e5107a07101fc341df86840"
-  integrity sha512-vIET4Rn1vgrXz6mLkT5hE/k38DJac8RyVNi12fqF7IBr4J5NFkD/mdrw9stpBW+byzEB0fcsC3SIc11Cja3G3w==
+  resolved "https://npm.pkg.github.com/download/@MesonFi/contract-types/1.13.0/ebf2261e358b179a75c84dfe6ef5c4051d9a4165#ebf2261e358b179a75c84dfe6ef5c4051d9a4165"
+  integrity sha512-/o5nczohW2CW2MA2m+lA8SRzbEKu6ISk5x+32dz0Jvl/0etSOrm3os5A4fRkwGUlvc3GgTXrK4P9fPsALm40KQ==
 
 "@mesonfi/dealer@^0.13.0":
   version "0.13.0"
@@ -612,9 +612,9 @@
     lodash "^4.17.21"
 
 "@mesonfi/extensions@^0.9.0":
-  version "0.9.0"
-  resolved "https://npm.pkg.github.com/download/@mesonfi/extensions/0.9.0/ad8e5348bff93271fac2fa5bf6201fb2221b666b#ad8e5348bff93271fac2fa5bf6201fb2221b666b"
-  integrity sha512-Btn7hrFks7Fhhh32PSwlzHZWi0DKXOVGgX4R7A9XRnyBMcYT+pAAZ+2nEBQ5V2Dv88A8KobfCYI1VKd0G+Ea2g==
+  version "0.9.1"
+  resolved "https://npm.pkg.github.com/download/@mesonfi/extensions/0.9.1/be101bc5ffd3bbb1a159d6da60caf9bb4318e04d#be101bc5ffd3bbb1a159d6da60caf9bb4318e04d"
+  integrity sha512-030Fxrak0PcUMVjLfeASAjN44W5Hp0+Puq8W5qAMPvilqM04S1aGFqHPSDizdVU3S+41HUyHYxeS5oFS5J6m8Q==
   dependencies:
     "@mesonfi/aptos-wallet-adapter" "^1.0.2-rc.3"
     "@wallet-standard/core" "^1.0.3"
