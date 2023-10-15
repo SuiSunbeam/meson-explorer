@@ -83,6 +83,8 @@ export default function SwapRow({ data: raw, smMargin }) {
 
   const fromAddress = data.fromTo[0] || data.initiator
   const recipient = data.fromTo[1] || ''
+  const coreSymbol = presets.getCoreSymbol(to.network.id)
+
   return (
     <tr
       className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'
@@ -155,7 +157,22 @@ export default function SwapRow({ data: raw, smMargin }) {
             <TagNetworkToken responsive explorer={from.network.explorer} token={from.token} />
             <div className='hidden md:flex'>
               <div className='text-gray-500 mx-1 text-xs'>{'->'}</div>
-              <TagNetworkToken responsive explorer={to.network.explorer} token={to.token} />
+              <TagNetworkToken
+                iconOnly={swap.swapForCoreToken}
+                responsive explorer={to.network.explorer} token={to.token}
+              />
+              {
+                swap.swapForCoreToken &&
+                <TagNetworkToken
+                  className='ml-0.5'
+                  iconOnly
+                  explorer={to.network.explorer}
+                  token={{ symbol: coreSymbol }}
+                />
+              }
+            </div>
+            <div className='flex md:hidden text-gray-500 ml-1.5 text-xs'>
+              {swap.swapForCoreToken && '+🔥'}
             </div>
           </div>
         </div>
