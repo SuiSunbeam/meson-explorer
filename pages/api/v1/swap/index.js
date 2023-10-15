@@ -9,7 +9,9 @@ export default listHandler({
     if (roles?.some(r => ['root', 'admin'].includes(r)) || headerRoles.includes('data')) {
       delete query.hide
       const { category, from, to, token = '', failed } = req.query
-      if (category === 'api') {
+      if (category === 'with-gas') {
+        query.salt = { $regex : /^0x[0-9a-f][4c]/ }
+      } else if (category === 'api') {
         query.salt = { $regex : /^0x[d9]/ }
         query['fromTo.0'] = { $nin: ['0x666d6b8a44d226150ca9058beebafe0e3ac065a2', '0x4fc928e89435f13b3dbf49598f9ffe20c4439cad'] }
       } else if (category === 'auto') {
@@ -27,7 +29,7 @@ export default listHandler({
       } else if (category === 'contract') {
         query.fromContract = true
       } else if (category === 'campaign') {
-        query.salt = { $regex : /^0x[0-8a-f]{2}f/ }
+        query.salt = { $regex : /^0x[0-9a-f]{2}f/ }
       }
       if (from) {
         query.inChain = presets.getNetwork(from).shortSlip44
