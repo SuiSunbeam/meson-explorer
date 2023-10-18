@@ -9,6 +9,7 @@ import { XCircleIcon } from '@heroicons/react/solid'
 import { DocumentTextIcon } from '@heroicons/react/outline'
 import { ethers } from 'ethers'
 
+import { abbreviate } from 'lib/swap'
 import fetcher from 'lib/fetcher'
 import socket from 'lib/socket'
 import {
@@ -271,6 +272,7 @@ function SwapActionButton({ data, swap, status }) {
     return null
   }
 
+  const posted = data.events.find(e => e.name === 'POSTED')
   const directSwap = data.events.filter(e => e.name === 'DIRECT-SWAP').length
   const locks = data.events.filter(e => e.name === 'LOCKED').length
   const unlocks = data.events.filter(e => e.name === 'UNLOCKED').length
@@ -300,8 +302,8 @@ function SwapActionButton({ data, swap, status }) {
     case 'EXPIRED':
       if (!data.fromContract) {
         actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.withdraw(swap)}>Withdraw</Button>
-      } else {
-        actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.withdrawTo(swap, data.fromTo[0])}>Withdraw To</Button>
+      } else if (posted.signer) {
+        actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.withdrawTo(swap, posted.signer)}>Withdraw To {abbreviate(posted.signer, 4, 0)}</Button>
       }
       break;
     case 'RELEASING':
