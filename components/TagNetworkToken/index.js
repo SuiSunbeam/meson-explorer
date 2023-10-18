@@ -8,6 +8,7 @@ import bnb from '../TagNetwork/bnb.png'
 import usdc from './usdc.png'
 import usdt from './usdt.png'
 import busd from './busd.png'
+import cusd from './cusd.png'
 import dai from './dai.png'
 import pod from './pod.png'
 import uct from './uct.png'
@@ -25,6 +26,8 @@ function getTokenIcon(symbol) {
     return busd
   } else if (symbol.indexOf('DAI') > -1) {
     return dai
+  } else if (symbol.indexOf('cUSD') > -1) {
+    return cusd
   } else if (symbol.indexOf('USD') > -1) {
     return { component: <div className='w-full h-full rounded-full bg-primary flex items-center justify-center text-xs font-light text-white'>$</div> }
   } else if (symbol.indexOf('PoD') > -1) {
