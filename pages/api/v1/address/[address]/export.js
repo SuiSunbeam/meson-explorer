@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   
   const list = rawList.map(item => {
     const { encoded, initiator, created, events, srFee, lpFee, fromTo } = item
-    const swapId = getSwapId(encoded, initiator)
+    const swapId = getSwapId(encoded, initiator || fromTo[0])
     const { swap, from, to } = presets.parseInOutNetworkTokens(encoded)
     const status = getStatusFromEvents(events, swap.expireTs)
     const amount = ethers.utils.formatUnits(swap.amount, 6)
