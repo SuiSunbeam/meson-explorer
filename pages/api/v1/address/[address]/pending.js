@@ -12,20 +12,10 @@ export default async function handler(req, res) {
     disabled: { $ne: true }
   }
   
-  const rawList = await Swaps.find(query)
-    .select('encoded events initiator fromTo created released srFee lpFee inToken amount')
+  const list = await Swaps.find(query)
+    .select('encoded events initiator fromTo created released srFee lpFee')
     .sort({ created: -1 })
     .exec()
-  
-  const list = rawList.filter(item => {
-    if (item.inToken == 255 && item.amount > 10_000_000) {
-      return
-    }
-    const cloned = { ...item._doc }
-    delete cloned.inToken
-    delete cloned.amount
-    return cloned
-  }).filter(Boolean)
 
   res.json({ result: { total: list.length, list } })
 }
