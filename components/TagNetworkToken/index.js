@@ -12,6 +12,7 @@ import cusd from './cusd.png'
 import dai from './dai.png'
 import pod from './pod.png'
 import uct from './uct.png'
+import zbc from './zbc.png'
 
 function getTokenIcon(symbol) {
   if (symbol.indexOf('ETH') > -1) {
@@ -34,6 +35,8 @@ function getTokenIcon(symbol) {
     return pod
   } else if (symbol.indexOf('UCT') > -1) {
     return uct
+  } else if (symbol.indexOf('ZBC') > -1) {
+    return zbc
   } else {
     return null
   }
