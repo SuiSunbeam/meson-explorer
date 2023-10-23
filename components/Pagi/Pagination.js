@@ -1,13 +1,21 @@
+import React from 'react'
 import classnames from 'classnames'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid'
 
 import Button from '../Button'
 
 export default function Pagination({ size = 10, page, total, maxPage, onPageChange }) {
-  let pages = Math.ceil(total / size)
-  if (maxPage && pages > maxPage) {
-    pages = maxPage
-  }
+  const pages = React.useMemo(() => {
+    if (!total) {
+      return maxPage
+    }
+    const pages = Math.ceil(total / size)
+    if (maxPage && pages > maxPage) {
+      return maxPage
+    } else {
+      return pages
+    }
+  }, [total, size, maxPage])
   return (
     <div className='flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 sm:px-6'>
       <SmPagination page={page} pages={pages} onPageChange={onPageChange} />
@@ -43,6 +51,10 @@ function SmPagination ({ page, pages, onPageChange }) {
 }
 
 function PagiDescription ({ size, page, total, maxPage }) {
+  if (!total) {
+    return <div></div>
+  }
+
   const start = size * page + 1
   const end = Math.min(size * page + size, total)
   const displayTotal = (maxPage && (maxPage * size) < total) ? `${maxPage * size}+` : total

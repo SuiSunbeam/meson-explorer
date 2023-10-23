@@ -58,7 +58,7 @@ export default listHandler({
     if (to) {
       aggregator[0].$match.outChain = presets.getNetwork(to).shortSlip44
     }
-    return aggregator
+    return { aggregator, maxPage: 1 }
   },
   sort: { created: -1 },
   select: 'encoded events initiator fromTo created released srFee lpFee locks unlocks releases'

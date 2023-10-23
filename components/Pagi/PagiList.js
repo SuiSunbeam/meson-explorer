@@ -20,11 +20,12 @@ export default function PagiList({ queryUrl, fallback, redirectFallback = () => 
   } else if (!data) {
     return <LoadingScreen />
   } else {
-    const { total, list } = data
-    if (reducer) {
-      console.log(list.reduce(reducer, 0))
+    const { total, maxPage: mp } = data
+    const list = [...data.list]
+    if (reducer && list.length) {
+      list.unshift(list.reduce(reducer, null))
     }
-    if (page * pageSize > total) {
+    if (total && page * pageSize > total) {
       router.replace('/')
     }
     const onPageChange = page => router.push({ query: { ...router.query, page: page + 1 } })
@@ -32,7 +33,7 @@ export default function PagiList({ queryUrl, fallback, redirectFallback = () => 
     return (
       <>
         {React.cloneElement(children, { list })}
-        <Pagination size={pageSize} page={page} total={total} maxPage={maxPage} onPageChange={onPageChange} />
+        <Pagination size={pageSize} page={page} total={total} maxPage={mp || maxPage} onPageChange={onPageChange} />
       </>
     )
   }

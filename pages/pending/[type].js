@@ -1,9 +1,10 @@
 import React from 'react'
 import { useRouter } from 'next/router'
+import { Swap } from '@mesonfi/sdk'
 
 import PagiCard from 'components/Pagi/PagiCard'
 import SwapRow from 'components/SwapRow'
-import { presets } from 'lib/swap'
+import { Td } from 'components/Table'
 
 const titles = {
   bonded: 'Bonded Swaps',
@@ -74,7 +75,7 @@ export default function PendingSwapList() {
       queryUrl={queryUrl}
       fallback={`/pending/${type}`}
       pageSize={size}
-      reducer={(prev, item) => (BigInt(Math.round(prev * 1e6)) + BigInt(presets.parseInOutNetworkTokens(item.encoded).swap.amount)).toString() / 1e6}
+      reducer={(prev, item) => (BigInt(Math.round(prev * 1e6)) + BigInt(Swap.decode(item.encoded).amount)).toString() / 1e6}
       tableHeaders={[
         { name: 'swap id / time', width: '18%', className: 'hidden sm:table-cell' },
         { name: 'swap id', width: '18%', className: 'pl-4 sm:hidden' },
@@ -85,7 +86,20 @@ export default function PendingSwapList() {
         { name: 'fee', width: '9%', className: 'hidden md:table-cell' },
         { name: 'duration', width: '9%', className: 'hidden lg:table-cell' }
       ]}
-      Row={SwapRow}
+      Row={WrappedSwapRow}
     />
   )
+}
+
+function WrappedSwapRow (props) {
+  if (typeof props.data === 'number') {
+    return (
+      <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
+        <Td size='' colSpan='100%' className='pl-4 pr-3 sm:pl-6 py-2 text-sm'>
+          {props.data}
+        </Td>
+      </tr>
+    )
+  }
+  return SwapRow(props)
 }
