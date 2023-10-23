@@ -36,7 +36,7 @@ export function StatTableRow({ data, token }) {
   const avgSwapAmount = success ? valueInStr(Math.floor(volume / success), token) : ''
 
   return (
-    <tr className='odd:bg-white even:bg-gray-50'>
+    <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1 text-sm'>{date}</Td>
       <Td size='sm'><SwapCount count={count} success={success} /></Td>
       <Td size='sm'><SwapCount {...api} /></Td>

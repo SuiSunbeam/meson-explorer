@@ -51,7 +51,7 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
         <Navbar globalState={globalState} setGlobalState={setGlobalState}/>
         <div className='flex-1 overflow-hidden'>
           <div className='h-full overflow-auto'>
-            <div className='mx-auto max-w-7xl'>
+            <div className='mx-auto max-w-[1920px]'>
               <div className='px-2 py-2 sm:py-4 sm:px-4 lg:py-6 lg:px-8'>
                 <AppContext.Provider value={{ globalState, setGlobalState }}>
                   <Component {...pageProps} />

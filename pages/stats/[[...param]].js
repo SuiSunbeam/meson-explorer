@@ -9,7 +9,7 @@ import { getAllNetworks } from 'lib/swap'
 
 import { GeneralStats, StatTableRow } from './components'
 
-export default function StatsByChain() {
+export default function Stats() {
   const router = useRouter()
   const { token = '', param } = router.query
   const chain = param ? param[0] : 'all'
@@ -122,7 +122,7 @@ export default function StatsByChain() {
           onClick: () => updatePathname(t.key, type, token)
         }))}
         queryUrl={queryUrl}
-        fallback={`/stats`}
+        fallback='/stats'
         reducer={reducer}
         tableHeaders={[
           { name: 'Date', width: '10%' },
