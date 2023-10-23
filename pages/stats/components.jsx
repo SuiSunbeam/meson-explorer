@@ -57,7 +57,7 @@ export function StatTableRow({ data, token }) {
   )
 }
 
-function valueInStr (value = 0, symbol, k = false) {
+export function valueInStr (value = 0, symbol, k = false) {
   if (symbol === 'eth') {
     return `${fmt.format(ethers.utils.formatUnits(value, 6))}♢`
   } else if (symbol === 'bnb') {
