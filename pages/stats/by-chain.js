@@ -110,11 +110,15 @@ function StatsByChainCountTextCell ({ data = [] }) {
   return (
     <div className='w-10 flex flex-col gap-px'>
     {
-      data.map((d, i) => (
-        <div key={i} className={classnames('text-[9px] leading-[10px]', `text-${colors[d.tokenType]}`)}>
-          {d.success} / {d.count}
-        </div>
-      ))
+      data.map((d, i) => {
+        const fail = d.count - d.success
+        return (
+          <div key={i} className={classnames('flex justify-between text-[9px] leading-[10px]', `text-${colors[d.tokenType]}`)}>
+            <div>{d.success}</div>
+            {fail ? <div className='text-red-500'>{fail}</div> : ''}
+          </div>
+        )
+      })
     }
     </div>
   )
