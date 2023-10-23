@@ -61,7 +61,7 @@ export default listHandler({
           date: '$date',
           item: {
             chain: '$chain',
-            data: '$data',
+            data: { $sortArray: { input: '$data', sortBy: { tokenType: -1 } } },
           }
         }
       },
