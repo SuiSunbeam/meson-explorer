@@ -6,6 +6,9 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
     './lib/**/*.{js,ts,jsx,tsx}',
   ],
+  safelist: [
+    'bg-warning',
+  ],
   theme: {
     extend: {
       fontFamily: {
