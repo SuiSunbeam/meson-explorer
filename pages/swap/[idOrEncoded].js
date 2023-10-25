@@ -93,7 +93,7 @@ function CorrectSwap({ data: raw }) {
           updates.released = data.ts * 1000
         } else if (status === 'EXECUTED') {
           updates.executed = data.ts * 1000
-        } else if (data.recipient) {
+        } else if (!prev.fromTo[1] && data.recipient) {
           updates.fromTo = [prev.fromTo[0], data.recipient]
         }
       }
