@@ -1,6 +1,8 @@
+import { mergeDeep } from 'immutable'
+
 import { Swaps } from 'lib/db'
 import { listHandler } from 'lib/api'
-import { mergeDeep } from 'immutable'
+import { AUTO_ADDRESSES } from 'lib/const'
 
 export default listHandler({
   collection: Swaps,
@@ -79,10 +81,12 @@ export default listHandler({
         $match: {
           disabled: { $ne: true },
           created: { $gt: startDate, $lt: endDate },
-          $nor: [
-            { salt: { $regex : /^0x[d9]/ } },
-            { 'fromTo.0': { $in: ['0x666d6b8a44d226150ca9058beebafe0e3ac065a2', '0x4fc928e89435f13b3dbf49598f9ffe20c4439cad'] } },
-          ]
+          $nor: [{
+            $and: [
+              { salt: { $regex : /^0x[d9]/ } },
+              { 'fromTo.0': { $in: AUTO_ADDRESSES } },
+            ]
+          }]
         }
       },
       {

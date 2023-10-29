@@ -1,6 +1,7 @@
 import { Swaps } from 'lib/db'
 import { listHandler } from 'lib/api'
 import { presets } from 'lib/swap'
+import { AUTO_ADDRESSES } from 'lib/const'
 
 export default listHandler({
   collection: Swaps,
@@ -13,10 +14,10 @@ export default listHandler({
         query.salt = { $regex : /^0x[0-9a-f][4c]/ }
       } else if (category === 'api') {
         query.salt = { $regex : /^0x[d9]/ }
-        query['fromTo.0'] = { $nin: ['0x666d6b8a44d226150ca9058beebafe0e3ac065a2', '0x4fc928e89435f13b3dbf49598f9ffe20c4439cad'] }
+        query['fromTo.0'] = { $nin: AUTO_ADDRESSES }
       } else if (category === 'auto') {
         query.salt = { $regex : /^0x[d9]/ }
-        query['fromTo.0'] = { $in: ['0x666d6b8a44d226150ca9058beebafe0e3ac065a2', '0x4fc928e89435f13b3dbf49598f9ffe20c4439cad'] }
+        query['fromTo.0'] = { $in: AUTO_ADDRESSES }
       } else if (category === 'meson.to') {
         query.salt = { $regex : /^0x[ea62]/ }
       } else if (category?.startsWith('track:')) {

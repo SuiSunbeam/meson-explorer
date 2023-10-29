@@ -1,5 +1,6 @@
 import { Swaps } from 'lib/db'
 import { listHandler } from 'lib/api'
+import { AUTO_ADDRESSES } from 'lib/const'
 
 export default listHandler({
   collection: Swaps,
@@ -22,7 +23,7 @@ export default listHandler({
       {
         $match: {
           disabled: { $ne: true },
-          created: { $gt: startDate, $lt: endDate }
+          created: { $gt: startDate, $lt: endDate },
         }
       },
       {
@@ -36,11 +37,11 @@ export default listHandler({
           fromAddress: { $arrayElemAt: ['$fromTo', 0] },
           api: { $and: [
             { $in: [{ $substr: ['$salt', 2, 1 ] }, ['d', '9']] },
-            { $not: { $in: [{ $arrayElemAt: ['$fromTo', 0] }, ['0x666d6b8a44d226150ca9058beebafe0e3ac065a2', '0x4fc928e89435f13b3dbf49598f9ffe20c4439cad']] } }
+            { $not: { $in: [{ $arrayElemAt: ['$fromTo', 0] }, AUTO_ADDRESSES] } }
           ]},
           auto: { $and: [
             { $in: [{ $substr: ['$salt', 2, 1 ] }, ['d', '9']] },
-            { $in: [{ $arrayElemAt: ['$fromTo', 0] }, ['0x666d6b8a44d226150ca9058beebafe0e3ac065a2', '0x4fc928e89435f13b3dbf49598f9ffe20c4439cad']] }
+            { $in: [{ $arrayElemAt: ['$fromTo', 0] }, AUTO_ADDRESSES] }
           ]},
           m2: { $in: [{ $substr: ['$salt', 2, 1 ] }, ['e', 'a', '6', '2']] },
           a2: { $in: [{ $substr: ['$salt', 2, 1 ] }, ['e', 'a']] },
@@ -49,8 +50,8 @@ export default listHandler({
       {
         $group: {
           _id: '$date',
-          count: { $sum: 1 },
-          success: { $sum: { $cond: ['$success', 1, 0] } },
+          count: { $sum: { $cond: ['$auto', 0, 1] } },
+          success: { $sum: { $cond: [{ $and: [{ $not: '$auto' }, '$success'] }, 1, 0] } },
           api: { $sum: { $cond: ['$api', 1, 0] } },
           apiSuccess: { $sum: { $cond: [{ $and: ['$api', '$success'] }, 1, 0] } },
           auto: { $sum: { $cond: ['$auto', 1, 0] } },
@@ -88,7 +89,13 @@ export default listHandler({
         $or: [
           { inToken: { $lte: 64 } },
           { expireTs: { $lt: new Date(1691700000 * 1000) } }
-        ]
+        ],
+        $nor: [{
+          $and: [
+            { salt: { $regex : /^0x[d9]/ } },
+            { 'fromTo.0': { $in: AUTO_ADDRESSES } },
+          ]
+        }],
       }]
     } else if (token === 'eth') {
       aggregator[0].$match.inToken = { $gte: 252 }
