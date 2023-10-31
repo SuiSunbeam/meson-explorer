@@ -119,18 +119,17 @@ export default listHandler({
       },
     ]
 
-    const postProcessor = list => {
-      const result = list[0].from.map(item => {
-        const { _id, data } = item
-        const to = list[0].to.find(item => item._id === _id)
-        const fromFields = Object.fromEntries(data.map(({ chain, data }) => [chain, { from: data }]))
-        const toFields = Object.fromEntries(to.data.map(({ chain, data }) => [chain, { to: data }]))
-        const fields = mergeDeep(fromFields, toFields)
-        return { _id, ...fields }
-      })
-      return result
-    }
-
-    return { aggregator, postProcessor, maxPage }
-  }
+    return { aggregator, maxPage }
+  },
+  postProcessor: list => {
+    const result = list[0].from.map(item => {
+      const { _id, data } = item
+      const to = list[0].to.find(item => item._id === _id)
+      const fromFields = Object.fromEntries(data.map(({ chain, data }) => [chain, { from: data }]))
+      const toFields = Object.fromEntries(to.data.map(({ chain, data }) => [chain, { to: data }]))
+      const fields = mergeDeep(fromFields, toFields)
+      return { _id, ...fields }
+    })
+    return result
+  },
 })
