@@ -23,8 +23,7 @@ export default listHandler({
         amount: swap.amount / 1e6,
         from: { network: from.network.name, token: from.token.symbol },
         to: { network: to.network.name, token: to.token.symbol },
-        protocol_fee: item.srFee / 1e6,
-        gas_fee: item.lpFee / 1e6,
+        fee: { protocol: item.srFee / 1e6, gas: item.lpFee / 1e6 },
       }
     })
   },

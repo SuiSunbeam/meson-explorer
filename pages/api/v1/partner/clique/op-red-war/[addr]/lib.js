@@ -75,16 +75,16 @@ export async function fee(addr = '', query = {}) {
     },
     {
       $project: {
-        fee_eth: { protocal: { $divide: ['$ethSrFee', 1_000_000] }, gas: { $divide: ['$ethLpFee', 1_000_000] } },
-        fee_usdc: { protocal: { $divide: ['$usdcSrFee', 1_000_000] }, gas: { $divide: ['$usdcLpFee', 1_000_000] } },
-        fee_usdt: { protocal: { $divide: ['$usdtSrFee', 1_000_000] }, gas: { $divide: ['$usdtLpFee', 1_000_000] } },
+        fee_eth: { protocol: { $divide: ['$ethSrFee', 1_000_000] }, gas: { $divide: ['$ethLpFee', 1_000_000] } },
+        fee_usdc: { protocol: { $divide: ['$usdcSrFee', 1_000_000] }, gas: { $divide: ['$usdcLpFee', 1_000_000] } },
+        fee_usdt: { protocol: { $divide: ['$usdtSrFee', 1_000_000] }, gas: { $divide: ['$usdtLpFee', 1_000_000] } },
       }
     }
   ]
   const result = (await Swaps.aggregate(pipeline))[0] || {
-    fee_eth: { protocal: 0, gas: 0 },
-    fee_usdc: { protocal: 0, gas: 0 },
-    fee_usdt: { protocal: 0, gas: 0 },
+    fee_eth: { protocol: 0, gas: 0 },
+    fee_usdc: { protocol: 0, gas: 0 },
+    fee_usdt: { protocol: 0, gas: 0 },
   }
   delete result._id
 
