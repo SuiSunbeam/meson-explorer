@@ -313,12 +313,21 @@ function SwapActionButton({ data, swap, status }) {
     case 'RELEASING*':
       if (unlocks >= locks) {
         if (directSwap) {
-          actionButton = (
-            <>
-              <Button size='sm' color='info' rounded onClick={() => extensions.transfer(swap, initiator, recipient)}>Transfer</Button>
-              <Button size='sm' color='info' rounded onClick={() => extensions.directRelease(swap, data.releaseSignature, initiator, recipient)}>DirectRelease</Button>
-            </>
-          )
+          if (swap.expired) {
+            actionButton = (
+              <>
+                <Button size='sm' color='info' rounded onClick={() => extensions.transfer(swap, initiator, recipient)}>Transfer</Button>
+                <Button size='sm' color='info' rounded onClick={() => extensions.simpleRelease(swap, recipient)}>SimpleRelease</Button>
+              </>
+            ) 
+          } else {
+            actionButton = (
+              <>
+                <Button size='sm' color='info' rounded onClick={() => extensions.transfer(swap, initiator, recipient)}>Transfer</Button>
+                <Button size='sm' color='info' rounded onClick={() => extensions.directRelease(swap, data.releaseSignature, initiator, recipient)}>DirectRelease</Button>
+              </>
+            )
+          }
         } else {
           actionButton = (
             <>
