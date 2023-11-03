@@ -293,7 +293,7 @@ function SwapActionButton({ data, swap, status }) {
       actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.bond(swap, data.signature, initiator)}>Bond</Button>
       break;
     case 'BONDED':
-      actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.lock(swap, data.signature, initiator)}>Lock</Button>
+      actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.lock(swap, initiator)}>Lock</Button>
       break;
     case 'EXPIRED*':
     case 'CANCELLED*':
@@ -346,7 +346,7 @@ function SwapActionButton({ data, swap, status }) {
           actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.release(swap, data.releaseSignature, initiator, recipient)}>Release</Button>
         }
       } else if (!swap.expired) {
-        actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.lock(swap, data.signature, initiator)}>Lock</Button>
+        actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.lock(swap, initiator)}>Lock</Button>
       }
   }
 
