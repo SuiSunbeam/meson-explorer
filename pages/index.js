@@ -21,9 +21,9 @@ export default function SwapList() {
     { key: 'bnb', name: 'BNB', active: token === 'bnb', onClick: () => router.push({ query: { token: 'bnb', ...rest } }) },
     { key: 'with-gas', name: 'With Gas', active: category === 'with-gas', onClick: () => router.push({ query: { category: 'with-gas', ...rest } }) },
     { key: 'api', name: 'API', active: category === 'api', onClick: () => router.push({ query: { category: 'api', ...rest } }) },
-    { key: 'auto', name: 'Auto', active: category === 'auto', onClick: () => router.push({ query: { category: 'auto', ...rest } }) },
+    { key: 'contract', name: 'API (Contract)', active: category === 'contract', onClick: () => router.push({ query: { category: 'contract', ...rest } }) },
+    { key: 'auto', name: 'API (Auto)', active: category === 'auto', onClick: () => router.push({ query: { category: 'auto', ...rest } }) },
     { key: 'meson-to', name: 'meson.to', active: category === 'meson.to', onClick: () => router.push({ query: { category: 'meson.to', ...rest } }) },
-    { key: 'contract', name: 'From Contract', active: category === 'contract', onClick: () => router.push({ query: { category: 'contract', ...rest } }) },
     { key: 'campaign', name: 'Campaign', active: category === 'campaign', onClick: () => router.push({ query: { category: 'campaign', ...rest } }) },
   ]
 

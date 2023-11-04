@@ -44,7 +44,7 @@ export default listHandler({
             { $in: [{ $arrayElemAt: ['$fromTo', 0] }, AUTO_ADDRESSES] }
           ]},
           m2: { $in: [{ $substr: ['$salt', 2, 1 ] }, ['e', 'a', '6', '2']] },
-          a2: { $in: [{ $substr: ['$salt', 2, 1 ] }, ['e', 'a']] },
+          a2: { $in: [{ $substr: ['$salt', 2, 1 ] }, ['e', '6']] },
         }
       },
       {

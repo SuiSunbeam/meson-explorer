@@ -3,6 +3,7 @@ import classnames from 'classnames'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import debounce from 'lodash/debounce'
+import { DocumentTextIcon } from '@heroicons/react/outline'
 
 import socket from 'lib/socket'
 import {
@@ -123,14 +124,20 @@ export default function SwapRow({ data: raw, smMargin }) {
       </Td>
       <Td>
         <TagNetwork responsive network={from.network} address={fromAddress} />
-        <div className='text-normal hover:underline hover:text-primary hidden lg:inline-block'>
-          <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress)}</Link>
-        </div>
-        <div className='text-normal hover:underline hover:text-primary hidden sm:inline-block lg:hidden'>
-          <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress, 4)}</Link>
-        </div>
-        <div className='text-normal hover:underline hover:text-primary sm:hidden'>
-          <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress, 4, 0)}</Link>
+        <div className='flex flex-row items-center'>
+          {
+            data.fromContract && 
+            <DocumentTextIcon className='w-4 shrink-0 text-gray-500 mr-0.5' aria-hidden='true' />
+          }
+          <div className='text-normal hover:underline hover:text-primary hidden lg:inline-block'>
+            <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress)}</Link>
+          </div>
+          <div className='text-normal hover:underline hover:text-primary hidden sm:inline-block lg:hidden'>
+            <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress, 4)}</Link>
+          </div>
+          <div className='text-normal hover:underline hover:text-primary sm:hidden'>
+            <Link href={`/address/${fromAddress}`}>{abbreviate(fromAddress, 4, 0)}</Link>
+          </div>
         </div>
       </Td>
       <Td>

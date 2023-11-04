@@ -15,6 +15,9 @@ export default listHandler({
       } else if (category === 'api') {
         query.salt = { $regex : /^0x[d9]/ }
         query['fromTo.0'] = { $nin: AUTO_ADDRESSES }
+        query.fromContract = { $ne: true }
+      } else if (category === 'contract') {
+        query.fromContract = true
       } else if (category === 'auto') {
         query.salt = { $regex : /^0x[d9]/ }
         query['fromTo.0'] = { $in: AUTO_ADDRESSES }
@@ -27,8 +30,6 @@ export default listHandler({
           const regex = new RegExp(`^0x[0-9a-f]{3}${trackId}`)
           query.salt = { $regex: regex }
         }
-      } else if (category === 'contract') {
-        query.fromContract = true
       } else if (category === 'campaign') {
         query.salt = { $regex : /^0x[0-9a-f]{2}f/ }
       }
@@ -52,5 +53,5 @@ export default listHandler({
     return query
   },
   sort: { created: -1 },
-  select: 'encoded events initiator fromTo created released srFee lpFee'
+  select: 'encoded events initiator fromTo fromContract created released srFee lpFee'
 })
