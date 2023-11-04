@@ -42,7 +42,7 @@ export function StatTableRow({ data, token }) {
       <Td size='sm'><SwapCount {...api} /></Td>
       <Td size='sm'><SwapCount {...auto} /></Td>
       <Td size='sm'><SwapCount {...m2} /></Td>
-      <Td size='sm'><SwapCount {...a2} /></Td>
+      {/* <Td size='sm'><SwapCount {...a2} /></Td> */}
       <Td size='sm'>{addresses}</Td>
       {
         token &&

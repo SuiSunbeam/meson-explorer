@@ -44,7 +44,7 @@ export default listHandler({
             { $in: [{ $arrayElemAt: ['$fromTo', 0] }, AUTO_ADDRESSES] }
           ]},
           m2: { $in: [{ $substr: ['$salt', 2, 1 ] }, ['e', 'a', '6', '2']] },
-          a2: { $in: [{ $substr: ['$salt', 2, 1 ] }, ['e', '6']] },
+          // a2: { $in: [{ $substr: ['$salt', 2, 1 ] }, ['f', '9', '5', '1']] },
         }
       },
       {
@@ -58,8 +58,8 @@ export default listHandler({
           autoSuccess: { $sum: { $cond: [{ $and: ['$auto', '$success'] }, 1, 0] } },
           m2: { $sum: { $cond: ['$m2', 1, 0] } },
           m2Success: { $sum: { $cond: [{ $and: ['$m2', '$success'] }, 1, 0] } },
-          a2: { $sum: { $cond: ['$a2', 1, 0] } },
-          a2Success: { $sum: { $cond: [{ $and: ['$a2', '$success'] }, 1, 0] } },
+          // a2: { $sum: { $cond: ['$a2', 1, 0] } },
+          // a2Success: { $sum: { $cond: [{ $and: ['$a2', '$success'] }, 1, 0] } },
           volume: { $sum: { $cond: ['$success', '$amount', 0] } },
           srFee: { $sum: { $cond: ['$success', '$srFee', 0] } },
           lpFee: { $sum: { $cond: ['$success', '$lpFee', 0] } },
@@ -74,7 +74,7 @@ export default listHandler({
           api: { count: '$api', success: '$apiSuccess' },
           auto: { count: '$auto', success: '$autoSuccess' },
           m2: { count: '$m2', success: '$m2Success' },
-          a2: { count: '$a2', success: '$a2Success' },
+          // a2: { count: '$a2', success: '$a2Success' },
           volume: '$volume',
           srFee: '$srFee',
           lpFee: '$lpFee',

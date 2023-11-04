@@ -78,7 +78,7 @@ export default function Stats() {
       api: { count: (prev.api?.count || 0) + api.count, success: (prev.api?.success || 0) + api.success },
       auto: { count: (prev.auto?.count || 0) + auto.count, success: (prev.auto?.success || 0) + auto.success },
       m2: { count: (prev.m2?.count || 0) + m2.count, success: (prev.m2?.success || 0) + m2.success },
-      a2: { count: (prev.a2?.count || 0) + a2.count, success: (prev.a2?.success || 0) + a2.success },
+      // a2: { count: (prev.a2?.count || 0) + a2.count, success: (prev.a2?.success || 0) + a2.success },
       volume: (prev.volume || 0) + volume,
       srFee: (prev.srFee || 0) + srFee,
       lpFee: (prev.lpFee || 0) + lpFee,
@@ -130,7 +130,7 @@ export default function Stats() {
           { name: '# API swaps', width: '10%' },
           { name: '# Auto swaps', width: '10%' },
           { name: '# meson.to swaps', width: '10%' },
-          { name: '# alls.to swaps', width: '10%' },
+          // { name: '# alls.to swaps', width: '10%' },
           { name: 'Addrs', width: '8%' },
           ...(token && [
             { name: 'Volume', width: '12%' },
