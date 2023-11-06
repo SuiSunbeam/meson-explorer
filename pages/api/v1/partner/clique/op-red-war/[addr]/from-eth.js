@@ -1,7 +1,8 @@
-import { count } from './lib'
+import { count, getTimeQuery } from './lib'
 
 export default async function handler(req, res) {
-  const result = await count(req.query.addr, { inChain: '0x003c' })
+  const { addr, start, end } = req.query
+  const result = await count(addr, { inChain: '0x003c', ...getTimeQuery(start, end) })
 
   if (result) {
     res.json({ result })

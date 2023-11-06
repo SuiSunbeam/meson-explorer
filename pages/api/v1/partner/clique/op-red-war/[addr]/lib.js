@@ -1,5 +1,18 @@
 import { Swaps } from 'lib/db'
 
+export function getTimeQuery(start, end) {
+  const query = { created: {} }
+  if (Number(start)) {
+    query.created.$gt = new Date(Number(start) * 1000)
+  }
+  if (Number(end)) {
+    query.created.$lt = new Date(Number(end) * 1000)
+  }
+  if (query.created.$gt || query.created.$lt) {
+    return query
+  }
+}
+
 export async function count(addr = '', query = {}) {
   const pipeline = [
     {

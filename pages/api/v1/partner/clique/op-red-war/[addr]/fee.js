@@ -1,7 +1,8 @@
-import { fee } from './lib'
+import { fee, getTimeQuery } from './lib'
 
 export default async function handler(req, res) {
-  const result = await fee(req.query.addr)
+  const { addr, start, end } = req.query
+  const result = await fee(addr, getTimeQuery(start, end))
 
   if (result) {
     res.json({ result })
