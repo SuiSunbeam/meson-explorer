@@ -231,7 +231,7 @@ function LpContentRow ({ address, withSrFee, checkDifference, dealer, network, a
       })
   }, [mesonClient, address, nativeDecimals])
 
-  const alert = CORE_ALERT[network.id]
+  const alert = CORE_ALERT[network.id] || 0.01
   const tokens = [...network.tokens].sort((t1, t2) => Math.abs(64 - t2.tokenIndex) - Math.abs(64 - t1.tokenIndex))
   if (network.uctAddress) {
     tokens.push({ symbol: 'UCT', addr: network.uctAddress, decimals: 6, tokenIndex: 255, disabled: true })
