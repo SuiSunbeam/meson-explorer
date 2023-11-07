@@ -1,15 +1,18 @@
 import { Swaps } from 'lib/db'
 import { listHandler } from 'lib/api'
 import { presets } from 'lib/swap'
+import { getTimeQuery } from './lib'
 
 export default listHandler({
   collection: Swaps,
   getQuery: req => {
-    const query = {
+  const { addr = '', start, end } = req.query
+  const query = {
       disabled: { $ne: true },
       released: { $exists: true },
-      'fromTo.1': req.query.addr?.toLowerCase(),
+      'fromTo.1': addr.toLowerCase(),
       outChain: '0x0266',
+      ...getTimeQuery(start, end),
     }
     return query
   },
