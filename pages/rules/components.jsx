@@ -237,7 +237,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
 const fmt = Intl.NumberFormat()
 const fmt2 = Intl.NumberFormat('en', { maximumSignificantDigits: 4 })
 
-export function RowSwapRule ({ d, ethPrice, onOpenModal, hides = [] }) {
+export function RowSwapRule ({ d, prices, onOpenModal, hides = [] }) {
   const isETH = d.to.endsWith('ETH')
   const isBNB = d.to.endsWith('BNB')
   const isCore = isETH || isBNB
@@ -266,7 +266,7 @@ export function RowSwapRule ({ d, ethPrice, onOpenModal, hides = [] }) {
       {
         !hides.includes('gas') &&
         <Td size='sm'>
-          {d.fee?.map((item, i) => <GasCalculation key={i} {...item} isCore={isCore} ethPrice={ethPrice} gasPrice={d.gasPrice} gasPriceL0={d.gasPriceL0} />)}
+          {d.fee?.map((item, i) => <GasCalculation key={i} {...item} isCore={isCore} prices={prices} gasPrice={d.gasPrice} gasPriceL0={d.gasPriceL0} />)}
         </Td>
       }
       {
@@ -354,14 +354,15 @@ function FeeRule ({ min, base, gasFee, rate, isCore }) {
   )
 }
 
-function GasCalculation ({ gas, core, multiplier = 1, isCore, ethPrice, gasPrice, gasL0, gasPriceL0 }) {
+function GasCalculation ({ gas, core, multiplier = 1, isCore, prices, gasPrice, gasL0, gasPriceL0 }) {
+  console.log('GasCalculation', { gas, gasPrice })
   if (!(gas && gasPrice)) {
     return ''
   }
 
-  const corePrice = core === 'ETH' ? ethPrice : (core || 1)
+  const corePrice = core === 'ETH' ? prices.eth : (core || 1)
   const coreDisplay = core === 'ETH'
-    ? <>♢ <span className='text-xs text-gray-500'>(${ethPrice})</span></>
+    ? <>♢ <span className='text-xs text-gray-500'>(${prices.eth})</span></>
     : core && `$${core}`
 
   let gasUsed = gas * gasPrice

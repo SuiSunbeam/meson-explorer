@@ -17,7 +17,7 @@ const hides = ['factor', 'minimum', 'initiators']
 export default function RulesGas () {
   const router = useRouter()
 
-  const { data, error, mutate } = useSWR(`${RELAYERS[0]}/api/v1/rules/ethers:0x666d6b8a44d226150ca9058beebafe0e3ac065a2`, fetcher)
+  const { data, error, mutate } = useSWR(`${RELAYERS[0]}/api/v1/rules/all:gas`, fetcher)
   const [modalData, setModalData] = React.useState()
 
   let body = null
@@ -52,7 +52,7 @@ export default function RulesGas () {
         { name: 'mark', width: '5%' },
         { name: 'edit', width: '5%', className: 'text-right' },
       ]}>
-        {data.rules.filter(r => r.type === 'gas').map((d, i) => <RowSwapRule key={i} d={d} ethPrice={data.ethPrice} hides={hides} onOpenModal={setModalData} />)}
+        {data.rules.map((d, i) => <RowSwapRule key={i} d={d} prices={data.prices} hides={hides} onOpenModal={setModalData} />)}
       </Table>
     )
   }

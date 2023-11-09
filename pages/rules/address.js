@@ -9,14 +9,15 @@ import Table from 'components/Table'
 import Button from 'components/Button'
 
 import fetcher from 'lib/fetcher'
+import { RELAYERS } from 'lib/const'
 
 import { SwapRuleModal, RowSwapRule } from './components'
 
-const hides = ['minimum', 'premium', 'gas']
+const hides = ['minimum', 'premium']
 export default function RulesAddress () {
   const router = useRouter()
 
-  const { data, error, mutate } = useSWR('admin/rules?type=address', fetcher)
+  const { data, error, mutate } = useSWR(`${RELAYERS[0]}/api/v1/rules/all:address`, fetcher)
   const [modalData, setModalData] = React.useState()
 
   let body = null
@@ -28,14 +29,30 @@ export default function RulesAddress () {
     body = (
       <Table size='lg' headers={[
         { name: 'route / priority', width: '10%', className: 'pl-4 md:pl-6' },
-        { name: 'limit', width: '8%' },
-        { name: 'factor', width: '7%' },
-        { name: 'fee rule', width: '10%' },
-        { name: '', width: '0%' },
-        { name: 'initiators', width: '60%' },
+        { name: 'limit', width: '5%' },
+        { name: 'factor', width: '5%' },
+        { name: 'fee rule', width: '4%' },
+        { name: '', width: '1%' },
+        {
+          name: (
+            <div className='flex flex-row gap-2'>
+              <div className='flex-1 shrink-0'>gas fee</div>
+              <div>=</div>
+              <div className='flex-[1.2] shrink-0'>gas usage</div>
+              <div>×</div>
+              <div className='flex-[1.4] shrink-0'>gas price</div>
+              <div>×</div>
+              <div className='flex-1 shrink-0'>core</div>
+              <div>×</div>
+              <div className='flex-1 shrink-0'>multipier</div>
+            </div>
+          ),
+          width: '35%'
+        },
+        { name: 'initiators', width: '35%' },
         { name: 'edit', width: '5%', className: 'text-right' },
       ]}>
-        {data.map((d, i) => <RowSwapRule key={i} d={d} hides={hides} onOpenModal={setModalData} />)}
+        {data.rules.map((d, i) => <RowSwapRule key={i} d={d} prices={data.prices} hides={hides} onOpenModal={setModalData} />)}
       </Table>
     )
   }
