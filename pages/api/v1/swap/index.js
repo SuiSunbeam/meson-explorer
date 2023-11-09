@@ -1,7 +1,7 @@
 import { Swaps } from 'lib/db'
 import { listHandler } from 'lib/api'
 import { presets } from 'lib/swap'
-import { AUTO_ADDRESSES } from 'lib/const'
+import { SWAP_RES_FIELDS, AUTO_ADDRESSES } from 'lib/const'
 
 export default listHandler({
   collection: Swaps,
@@ -53,5 +53,5 @@ export default listHandler({
     return query
   },
   sort: { created: -1 },
-  select: 'encoded events initiator fromTo fromContract created released srFee lpFee'
+  select: SWAP_RES_FIELDS
 })

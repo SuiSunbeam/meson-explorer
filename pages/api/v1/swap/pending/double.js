@@ -1,6 +1,7 @@
 import { Swaps } from 'lib/db'
 import { listHandler } from 'lib/api'
 import { presets } from 'lib/swap'
+import { SWAP_RES_FIELDS } from 'lib/const'
 
 export default listHandler({
   collection: Swaps,
@@ -61,5 +62,5 @@ export default listHandler({
     return { aggregator, maxPage: 1 }
   },
   sort: { created: -1 },
-  select: 'encoded events initiator fromTo created released srFee lpFee locks unlocks releases'
+  select: `${SWAP_RES_FIELDS} locks unlocks releases`
 })

@@ -1,4 +1,5 @@
 import { Swaps } from 'lib/db'
+import { SWAP_RES_FIELDS } from 'lib/const'
 
 export default async function handler(req, res) {
   const address = req.query.address
@@ -13,7 +14,7 @@ export default async function handler(req, res) {
   }
   
   const list = await Swaps.find(query)
-    .select('encoded events initiator fromTo created released srFee lpFee')
+    .select(SWAP_RES_FIELDS)
     .sort({ created: -1 })
     .exec()
 
