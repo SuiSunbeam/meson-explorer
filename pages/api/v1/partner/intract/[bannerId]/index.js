@@ -11,7 +11,7 @@ function getBannerQuery (bannerId) {
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { address } = req.body
-    const bannerId = 'zkevm-10u'
+    const { bannerId } = req.query
     const banner = await Banners.findOne(getBannerQuery(bannerId))
       .sort({ priority: -1 })
       .select('metadata')
