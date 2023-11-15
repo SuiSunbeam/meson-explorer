@@ -4,7 +4,7 @@ import classnames from 'classnames'
 import { useSession } from 'next-auth/react'
 import { RefreshIcon } from '@heroicons/react/solid'
 import { BigNumber, ethers } from 'ethers'
-import { MesonClient } from '@mesonfi/sdk'
+import { MesonClient, adaptors } from '@mesonfi/sdk'
 
 import { Loading } from 'components/LoadingScreen'
 import ListRow, { ListRowWrapper } from 'components/ListRow'
@@ -58,12 +58,18 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
   }), [])
 
   const networkRows = React.useMemo(() => {
+    const isSolanaAddress = adaptors.isAddress('solana', address) 
     if (address) {
       return getAllNetworks()
-        .filter(n => (
-          (address.length === 66 && ['aptos', 'sui'].find(prefix => n.id.startsWith(prefix))) ||
-          (address.length === 42 && !['aptos', 'sui'].find(prefix => n.id.startsWith(prefix)))
-        ))
+        .filter(n => {
+          if (isSolanaAddress) {
+            return n.addressFormat === 'solana'
+          } else if (address.length === 66) {
+            return ['aptos', 'sui'].includes(n.addressFormat)
+          } else {
+            return !['aptos', 'sui'].includes(n.addressFormat)
+          }
+        })
         .map(n => <LpContentRow key={n.id} address={address} dealer={dealer} network={n} add={add} />)
     } else {
       const defaultAddress = addressByNetwork.default
