@@ -59,7 +59,7 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
 
   const networkRows = React.useMemo(() => {
     if (address) {
-      const isSolanaAddress = adaptors.isAddress('solana', address) 
+      const isSolanaAddress = adaptors.isAddress('solana', address)
       return getAllNetworks()
         .filter(n => {
           if (isSolanaAddress) {
@@ -67,7 +67,7 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
           } else if (address.length === 66) {
             return ['aptos', 'sui'].includes(n.addressFormat)
           } else {
-            return !['aptos', 'sui'].includes(n.addressFormat)
+            return ['ethers'].includes(n.addressFormat)
           }
         })
         .map(n => <LpContentRow key={n.id} address={address} dealer={dealer} network={n} add={add} />)
