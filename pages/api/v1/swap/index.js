@@ -7,20 +7,20 @@ export default listHandler({
   collection: Swaps,
   getQuery: (req, roles, headerRoles) => {
     const query = { disabled: { $ne: true }, hide: { $ne: true } }
-    if (roles?.some(r => ['root', 'admin'].includes(r)) || headerRoles.includes('data')) {
+    if (true || roles?.some(r => ['root', 'admin'].includes(r)) || headerRoles.includes('data')) {
       delete query.hide
       const { category, from, to, token = '', failed } = req.query
       if (category === 'with-gas') {
         query.salt = { $regex : /^0x[0-9a-f][4c]/ }
       } else if (category === 'api') {
         query.salt = { $regex : /^0x[d9]/ }
-        query['fromTo.0'] = { $nin: AUTO_ADDRESSES }
+        query.fromTo = { $nin: AUTO_ADDRESSES }
         query.fromContract = { $ne: true }
       } else if (category === 'contract') {
         query.fromContract = true
       } else if (category === 'auto') {
         query.salt = { $regex : /^0x[d9]/ }
-        query['fromTo.0'] = { $in: AUTO_ADDRESSES }
+        query.fromTo = { $in: AUTO_ADDRESSES }
       } else if (category === 'meson.to') {
         query.salt = { $regex : /^0x[ea62]/ }
       } else if (category?.startsWith('track:')) {

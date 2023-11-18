@@ -84,7 +84,7 @@ export default listHandler({
           $nor: [{
             $and: [
               { salt: { $regex : /^0x[d9]/ } },
-              { 'fromTo.0': { $in: AUTO_ADDRESSES } },
+              { fromTo: { $in: AUTO_ADDRESSES } },
             ]
           }]
         }

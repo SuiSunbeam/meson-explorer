@@ -37,11 +37,11 @@ export default listHandler({
           fromAddress: { $arrayElemAt: ['$fromTo', 0] },
           api: { $and: [
             { $in: [{ $substr: ['$salt', 2, 1 ] }, ['d', '9']] },
-            { $not: { $in: [{ $arrayElemAt: ['$fromTo', 0] }, AUTO_ADDRESSES] } }
+            { $not: { $anyElementTrue: { $setIntersection: ['$fromTo', AUTO_ADDRESSES] } } }
           ]},
           auto: { $and: [
             { $in: [{ $substr: ['$salt', 2, 1 ] }, ['d', '9']] },
-            { $in: [{ $arrayElemAt: ['$fromTo', 0] }, AUTO_ADDRESSES] }
+            { $anyElementTrue: { $setIntersection: ['$fromTo', AUTO_ADDRESSES] } },
           ]},
           m2: { $in: [{ $substr: ['$salt', 2, 1 ] }, ['e', 'a', '6', '2']] },
           // a2: { $in: [{ $substr: ['$salt', 2, 1 ] }, ['f', '9', '5', '1']] },
@@ -93,7 +93,7 @@ export default listHandler({
         $nor: [{
           $and: [
             { salt: { $regex : /^0x[d9]/ } },
-            { 'fromTo.0': { $in: AUTO_ADDRESSES } },
+            { fromTo: { $in: AUTO_ADDRESSES } },
           ]
         }],
       }]
