@@ -58,8 +58,8 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
   }), [])
 
   const networkRows = React.useMemo(() => {
-    const isSolanaAddress = adaptors.isAddress('solana', address) 
     if (address) {
+      const isSolanaAddress = adaptors.isAddress('solana', address) 
       return getAllNetworks()
         .filter(n => {
           if (isSolanaAddress) {
@@ -76,7 +76,7 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
       const keys = Object.keys(addressByNetwork)
       const networkRowsByType = Object.fromEntries(keys.map(k => [k, []]))
       networkRowsByType.default = []
-      getAllNetworks().forEach(n => {
+      getAllNetworks().filter(n => n.mesonAddress).forEach(n => {
         const matchKey = keys.find(k => n.id.startsWith(k))
         if (matchKey) {
           networkRowsByType[matchKey].push(

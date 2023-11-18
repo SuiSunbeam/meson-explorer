@@ -13,6 +13,7 @@ import dai from './dai.png'
 import pod from './pod.png'
 import uct from './uct.png'
 import zbc from './zbc.png'
+import eos from './eos.png'
 
 function getTokenIcon(symbol) {
   if (symbol.indexOf('ETH') > -1) {
@@ -37,6 +38,8 @@ function getTokenIcon(symbol) {
     return uct
   } else if (symbol.indexOf('ZBC') > -1) {
     return zbc
+  } else if (symbol.indexOf('EOS') > -1) {
+    return eos
   } else {
     return null
   }
