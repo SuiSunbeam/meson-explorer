@@ -15,6 +15,11 @@ export default async function handler(req, res) {
     const banner = await Banners.findOne(getBannerQuery(bannerId))
       .sort({ priority: -1 })
       .select('metadata')
+    
+    if (!banner) {
+      res.status(404).end()
+      return
+    }
 
     const result = !!banner.metadata.find(item => item.address === address.toLowerCase())
     res.json({ result })
