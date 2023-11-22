@@ -17,7 +17,7 @@ export default listHandler({
     return query
   },
   sort: { created: -1 },
-  select: '_id encoded amount inChain outChain inToken outToken srFee lpFee',
+  select: '_id encoded amount inChain outChain inToken outToken created srFee lpFee',
   postProcessor: list => {
     return list.map(item => {
       const { swap, from, to } = presets.parseInOutNetworkTokens(item.encoded)
@@ -27,6 +27,7 @@ export default listHandler({
         from: { network: from.network.name, token: from.token.symbol },
         to: { network: to.network.name, token: to.token.symbol },
         fee: { protocol: item.srFee / 1e6, gas: item.lpFee / 1e6 },
+        created: item.created,
       }
     })
   },
