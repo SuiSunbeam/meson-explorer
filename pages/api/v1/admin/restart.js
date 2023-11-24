@@ -23,12 +23,15 @@ export async function restartService(service) {
   const prefix = TESTNET ? 'meson-testnet' : 'meson'
   let url
   if (service === 'lp') {
-    url = `https://api.heroku.com/apps/${prefix}-lp/dynos`
+    return await _restart(`${prefix}-lp`)
   } else if (service === 'relayer') {
-    url = `https://api.heroku.com/apps/${prefix}-relayer/dynos`
-  } else {
-    return
+    _restart(`alls-to-relayer`)
+    return await _restart(`${prefix}-relayer`)
   }
+}
+
+async function _restart(dyno) {
+  const url = `https://api.heroku.com/apps/${dyno}/dynos`
   const response = await fetch(url, {
     method: 'DELETE',
     headers: {
