@@ -357,6 +357,7 @@ function FeeRule ({ min, base, gasFee, rate, isCore }) {
 const CoreSymbols = {
   ETH: '🔹',
   BNB: '🔸',
+  TRX: '🔻',
 }
 
 function GasCalculation ({ gas, core, multiplier = 1, isCore, prices, gasPrice, gasL0, gasPriceL0 }) {
@@ -368,7 +369,7 @@ function GasCalculation ({ gas, core, multiplier = 1, isCore, prices, gasPrice, 
   const price = prices[core?.toLowerCase?.()]
   const corePrice = price || core || 1
   const coreDisplay = price
-    ? <>{CoreSymbols[core]} <span className='text-xs text-gray-500'>(${price})</span></>
+    ? <>{CoreSymbols[core] || core} <span className='text-xs text-gray-500'>(${price})</span></>
     : core && `$${core}`
 
   let gasUsed = gas * gasPrice
