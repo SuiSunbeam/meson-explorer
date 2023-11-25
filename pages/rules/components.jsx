@@ -333,7 +333,7 @@ function FeeRule ({ min, base, gasFee, rate, isCore }) {
       rule.push(
         <div className='flex items-center -mr-3'>
           {ethers.utils.formatUnits(gasFee, 3)}
-          <span className='ml-0.5 text-[10px] text-gray-500'>× 10<sup>-3</sup> ♢</span>
+          <span className='ml-0.5 text-[10px] text-gray-500'>× 10<sup>-3</sup> 🔹</span>
         </div>
       )
     } else {
@@ -354,15 +354,21 @@ function FeeRule ({ min, base, gasFee, rate, isCore }) {
   )
 }
 
+const CoreSymbols = {
+  ETH: '🔹',
+  BNB: '🔸',
+}
+
 function GasCalculation ({ gas, core, multiplier = 1, isCore, prices, gasPrice, gasL0, gasPriceL0 }) {
   console.log('GasCalculation', { gas, gasPrice })
   if (!(gas && gasPrice)) {
     return ''
   }
 
-  const corePrice = core === 'ETH' ? prices.eth : (core || 1)
-  const coreDisplay = core === 'ETH'
-    ? <>♢ <span className='text-xs text-gray-500'>(${prices.eth})</span></>
+  const price = prices[core?.toLowerCase?.()]
+  const corePrice = price || core || 1
+  const coreDisplay = price
+    ? <>{CoreSymbols[core]} <span className='text-xs text-gray-500'>(${price})</span></>
     : core && `$${core}`
 
   let gasUsed = gas * gasPrice
@@ -373,7 +379,7 @@ function GasCalculation ({ gas, core, multiplier = 1, isCore, prices, gasPrice, 
   const gasFee = isCore
     ? <div className='flex items-center -ml-2'>
         {fmt.format(corePrice * gasUsed * (multiplier || 1) / 1e15)}
-        <span className='ml-0.5 text-[10px] text-gray-500'>× 10<sup>-3</sup> ♢</span>
+        <span className='ml-0.5 text-[10px] text-gray-500'>× 10<sup>-3</sup> 🔹</span>
       </div>
     : `$${fmt.format(corePrice * gasUsed * (multiplier || 1) / 1e18)}`
 

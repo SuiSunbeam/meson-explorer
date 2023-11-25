@@ -59,9 +59,9 @@ export function StatTableRow({ data, token }) {
 
 export function valueInStr (value = 0, symbol, k = false) {
   if (symbol === 'eth') {
-    return `${fmt.format(ethers.utils.formatUnits(value, 6))}♢`
+    return `${fmt.format(ethers.utils.formatUnits(value, 6))}🔹`
   } else if (symbol === 'bnb') {
-    return `${fmt.format(ethers.utils.formatUnits(value, 6))}`
+    return `${fmt.format(ethers.utils.formatUnits(value, 6))}🔸`
   }
   const amount = Math.floor(ethers.utils.formatUnits(value, 6))
   if (k && amount > 10000) {
