@@ -303,7 +303,12 @@ function SwapActionButton({ data, swap, status }) {
       if (!data.fromContract) {
         actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.withdraw(swap)}>Withdraw</Button>
       } else if (posted.signer) {
-        actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.withdrawTo(swap, posted.signer)}>Withdraw To {abbreviate(posted.signer, 4, 0)}</Button>
+        actionButton = (
+          <>
+            <Button size='sm' color='info' rounded onClick={() => extensions.withdrawTo(swap, posted.signer)}>Withdraw To {abbreviate(posted.signer, 4, 0)}</Button>
+            <Button size='sm' color='info' rounded onClick={() => extensions.simpleRelease(swap, recipient)}>SimpleRelease</Button>
+          </>
+        )
       }
       break;
     case 'RELEASING':
