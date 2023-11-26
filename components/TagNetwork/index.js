@@ -32,17 +32,18 @@ import opt from './opt.png'
 import polygon from './polygon.png'
 import scroll from './scroll.png'
 import sepolia from './sepolia.png'
-import skale from './skale.png'
 import skaleEuropa from './skale-europa.png'
 import skaleNebula from './skale-nebula.png'
 import solana from './solana.png'
 import sui from './sui.png'
 import taiko from './taiko.png'
 import tron from './tron.png'
+import viction from './viction.png'
+import x1 from './x1.png'
 import zkevm from './zkevm.png'
 import zksync from './zksync.png'
 
-const icons = { ancient8, aptos, arb, aurora, avax, base, beam, bnb, celo, cfx, cronos, eos, eth, goerli: eth, evmos, ftm, gnosis, kava, linea, manta, mnt, metis, movr, naut, one, opbnb: bnb, opt, polygon, scroll, sepolia, skale, 'skale-europa': skaleEuropa, 'skale-nebula': skaleNebula, solana, sui, taiko, tron, zkevm, zksync }
+const icons = { ancient8, aptos, arb, aurora, avax, base, beam, bnb, celo, cfx, cronos, eos, eth, goerli: eth, evmos, ftm, gnosis, kava, linea, manta, mnt, metis, movr, naut, one, opbnb: bnb, opt, polygon, scroll, sepolia, 'skale-europa': skaleEuropa, 'skale-nebula': skaleNebula, solana, sui, taiko, tron, viction, x1, zkevm, zksync }
 
 export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly, address, className }) {
   const iconId = network.id.replace(/-(testnet|sepolia|goerli)/, '')

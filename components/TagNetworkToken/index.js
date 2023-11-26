@@ -14,6 +14,7 @@ import pod from './pod.png'
 import uct from './uct.png'
 import zbc from './zbc.png'
 import eos from './eos.png'
+import sfuel from './skale.png'
 
 function getTokenIcon(symbol) {
   if (symbol.indexOf('ETH') > -1) {
@@ -40,6 +41,8 @@ function getTokenIcon(symbol) {
     return zbc
   } else if (symbol.indexOf('EOS') > -1) {
     return eos
+  } else if (symbol.indexOf('sFUEL') > -1) {
+    return sfuel
   } else {
     return null
   }
