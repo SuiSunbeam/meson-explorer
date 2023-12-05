@@ -19,8 +19,8 @@ export default listHandler({
   },
   sort: { created: -1 },
   select: '_id encoded amount inChain outChain inToken outToken created srFee lpFee',
-  postProcessor: list => {
-    const factor = recipient === '0x26d178ef81c097c5f8075239b78ba9b9aee0c404'
+  postProcessor: (list, req) => {
+    const factor = req.query.addr?.toLowerCase() === '0x26d178ef81c097c5f8075239b78ba9b9aee0c404'
       ? 1e5
       : 1e6
     return list.map(item => {
