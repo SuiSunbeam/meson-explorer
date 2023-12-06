@@ -350,7 +350,7 @@ function SwapActionButton({ data, swap, status }) {
         } else {
           actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.release(swap, data.releaseSignature, initiator, recipient)}>Release</Button>
         }
-      } else if (!swap.expired) {
+      } else if (!releases && !swap.expired) {
         actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.lock(swap, initiator)}>Lock</Button>
       }
   }
