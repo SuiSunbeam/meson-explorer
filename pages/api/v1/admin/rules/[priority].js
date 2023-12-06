@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     }
     if (!req.body.factor && req.body.factor !== 0) {
       delete update.$set.factor
-      update.$unset = { factor: true }
+      update.$unset = { ...update.$unset, factor: true }
     }
     const result = await Rules.findOneAndUpdate({ priority }, update, { new: true })
     if (result) {
