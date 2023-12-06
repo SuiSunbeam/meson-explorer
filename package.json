@@ -11,7 +11,7 @@
     "@headlessui/react": "^1.6.5",
     "@heroicons/react": "^1.0.6",
     "@mesonfi/dealer": "^0.13.0",
-    "@mesonfi/extensions": "^0.9.0",
+    "@mesonfi/extensions": "^0.14.0",
     "@mesonfi/presets": "^1.14.2",
     "@mesonfi/sdk": "^1.14.3",
     "@mesonfi/web3-jwt": "^0.6.0",
