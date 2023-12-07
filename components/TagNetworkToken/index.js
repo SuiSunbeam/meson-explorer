@@ -5,6 +5,7 @@ import { getExplorerTokenLink } from 'lib/swap'
 
 import eth from './eth.png'
 import bnb from '../TagNetwork/bnb.png'
+import sol from '../TagNetwork/solana.png'
 import usdc from './usdc.png'
 import usdt from './usdt.png'
 import busd from './busd.png'
@@ -22,6 +23,8 @@ function getTokenIcon(symbol) {
     return eth
   } else if (symbol.indexOf('BNB') > -1) {
     return bnb
+  } else if (symbol.indexOf('SOL') > -1) {
+    return sol
   } else if (symbol.indexOf('USDC') > -1 || symbol.indexOf('USDbC') > -1) {
     return usdc
   } else if (symbol.indexOf('USDT') > -1) {
