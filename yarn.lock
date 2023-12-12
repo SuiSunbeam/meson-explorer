@@ -589,14 +589,14 @@
   resolved "https://npm.pkg.github.com/download/@MesonFi/contract-types/1.13.0/ebf2261e358b179a75c84dfe6ef5c4051d9a4165#ebf2261e358b179a75c84dfe6ef5c4051d9a4165"
   integrity sha512-/o5nczohW2CW2MA2m+lA8SRzbEKu6ISk5x+32dz0Jvl/0etSOrm3os5A4fRkwGUlvc3GgTXrK4P9fPsALm40KQ==
 
-"@mesonfi/dealer@^0.13.0":
-  version "0.13.0"
-  resolved "https://npm.pkg.github.com/download/@mesonfi/dealer/0.13.0/0e465014119df5900b505d600eb91814f2a09810#0e465014119df5900b505d600eb91814f2a09810"
-  integrity sha512-Xwyzbk5t1508I/1U84Kqa6t+gHP59JlQM986uLBFA7BTru2BPJpUGk5AX5HwhylaB7JUEgFsKenGjb9/y1+fww==
+"@mesonfi/dealer@^0.15.0":
+  version "0.15.0"
+  resolved "https://npm.pkg.github.com/download/@mesonfi/dealer/0.15.0/278cca05e0bc57516b7cb7cdfd0f5b6d65000163#278cca05e0bc57516b7cb7cdfd0f5b6d65000163"
+  integrity sha512-nth9g4AnfcVhfC/Qujw0FBag8VBRfVgJKo3XC/GPWaxF/Py9hY/mnkgofAsNPGzbJSEwmOK/0Sgnu+wZKNAUTA==
   dependencies:
-    "@mesonfi/sdk" "^1.13.0"
+    "@mesonfi/sdk" "^1.15.2"
     cross-fetch "^3.1.5"
-    ethers "5.7.1"
+    ethers "5.7.2"
     lodash "^4.17.21"
 
 "@mesonfi/extensions@^0.14.0":
@@ -627,10 +627,10 @@
     lodash "^4.17.21"
     tronweb "5.2.0"
 
-"@mesonfi/sdk@^1.13.0", "@mesonfi/sdk@^1.15.0", "@mesonfi/sdk@^1.15.1":
-  version "1.15.1"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.15.1/2232c9470ae3d0e5f3d52a68024277169e4bd822#2232c9470ae3d0e5f3d52a68024277169e4bd822"
-  integrity sha512-rbZLUKk/tQIwA0nkmLI9K5owW7HPgLG3iahg9JXb7LcYQkZuJXGPItT2Lna6qGHnFC408RPXZlgNAoWvTb46sg==
+"@mesonfi/sdk@^1.15.0", "@mesonfi/sdk@^1.15.2":
+  version "1.15.2"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.15.2/ce41cb9fdbf6aebf2893c0e6d54e54abb9acc9ef#ce41cb9fdbf6aebf2893c0e6d54e54abb9acc9ef"
+  integrity sha512-JGM5KIUEHdfKeqv7YQG/VldRniwe+6xXs2sPaT7wWpByWKDTF9mvP8t0utG8u6+jVoZzXehsdbHPbE4vWot4+A==
   dependencies:
     "@mesonfi/contract-abis" "^1.13.0"
     "@mesonfi/contract-types" "^1.13.0"
@@ -3227,7 +3227,7 @@ eth-rpc-errors@^4.0.2:
   dependencies:
     fast-safe-stringify "^2.0.6"
 
-ethers@5.7.1, ethers@5.7.2, ethers@^5.7.2:
+ethers@5.7.2, ethers@^5.7.2:
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.2.tgz#3a7deeabbb8c030d4126b24f84e525466145872e"
   integrity sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==
