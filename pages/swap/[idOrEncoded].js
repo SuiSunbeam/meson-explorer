@@ -209,7 +209,7 @@ function CorrectSwap({ data: raw }) {
             </div>
             <div className={classnames('text-sm text-gray-500', srFee + lpFee + swap.amountToShare.toNumber() > 0 ? '' : 'hidden')}>
             {
-              authorized
+              authorized && swap.amountToShare.gt(0)
               ? `${ethers.utils.formatUnits(srFee, 6)} Service fee + ${ethers.utils.formatUnits(lpFee, 6)} LP fee + ${ethers.utils.formatUnits(swap.amountToShare.toNumber(), 6)} Share fee`
               : `${ethers.utils.formatUnits(srFee, 6)} Service fee + ${ethers.utils.formatUnits(lpFee + swap.amountToShare.toNumber(), 6)} LP fee`
             }
