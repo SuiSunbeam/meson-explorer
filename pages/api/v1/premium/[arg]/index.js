@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     // Claim a premium lite
     try {
-      const result = await post(req.query.arg)
+      const result = await post(req.query)
       res.json({ result })
     } catch (e) {
       res.status(400).json({ error: { code: -32602, message: `Failed to claim premium: ${e.message}` } })
@@ -51,7 +51,7 @@ async function getPremium(addressWithFormat, txs = false) {
   return { ...acc.toJSON(), records }
 }
 
-async function post(_addressWithFormat) {
+async function post({ arg: _addressWithFormat, extend }) {
   let [format, address] = _addressWithFormat.split(':')
   if (format === 'ethers') {
     address = address.toLowerCase()
@@ -68,7 +68,8 @@ async function post(_addressWithFormat) {
     premiumAccount = { ...acc.toJSON(), records: [] }
   }
 
-  if (premiumAccount.records.length) {
+  const lastPremium = premiumAccount.records.slice(-1)[0]
+  if (lastPremium && !extend) {
     return premiumAccount
   }
 
@@ -85,8 +86,13 @@ async function post(_addressWithFormat) {
   //   throw new Error('Not eligible to claim Meson Premium')
   // }
 
-  const since = new Date()
-  since.setUTCHours(0, 0, 0, 0)
+  let since
+  if (lastPremium) {
+    since = new Date((lastPremium.until + 1) * 1000)
+  } else {
+    since = new Date()
+    since.setUTCHours(0, 0, 0, 0)
+  }
   const until = since.valueOf() + 7 * 86400_000 - 1000
   const record = await PremiumRecords.create({
     _id: `${premiumAccount._id}:${until / 1000}`,
