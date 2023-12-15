@@ -293,6 +293,10 @@ function SwapActionButton({ data, swap, status }) {
   let actionButton = null
   switch (status) {
     case 'REQUESTING':
+      if (directSwap) {
+        actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.directExecute(swap, data.releaseSignature, initiator, recipient)}>DirectExecute</Button>
+      }
+      break
     case 'POSTED':
       actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.bond(swap, data.signature, initiator)}>Bond</Button>
       break;
