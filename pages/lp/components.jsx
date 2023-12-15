@@ -25,7 +25,7 @@ const CORE_ALERT = {
   opt: 0.05,
   aurora: 0.00001,
   cfx: 0.01,
-  avax: 0.01,
+  avax: 0.1,
   ftm: 1,
   tron: 50,
   one: 10,
