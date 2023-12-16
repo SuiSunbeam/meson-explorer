@@ -85,6 +85,7 @@ export default function SwapRow({ data: raw, smMargin }) {
   const fromAddress = data.fromTo[0] || data.initiator
   const recipient = data.fromTo[1] || ''
   const coreSymbol = presets.getCoreSymbol(to.network.id)
+  const totalFee = swap.amountToShare.add((raw.srFee || 0) + (raw.lpFee || 0)).toNumber()
 
   return (
     <tr
@@ -186,7 +187,7 @@ export default function SwapRow({ data: raw, smMargin }) {
         {
           !CancelledStatus.includes(status) &&
           <div className='md:hidden text-xs text-gray-500'>
-            Fee: <AmountDisplay size='xs' value={(raw.srFee || 0) + (raw.lpFee || 0)} />
+            Fee: <AmountDisplay size='xs' value={totalFee} />
           </div>
         }
       </Td>
@@ -194,7 +195,7 @@ export default function SwapRow({ data: raw, smMargin }) {
       {
         !CancelledStatus.includes(status) &&
         <div className='flex items-center lg:flex-col lg:items-start'>
-          <div className='mr-1'><AmountDisplay value={(raw.srFee || 0) + (raw.lpFee || 0)} /></div>
+          <div className='mr-1'><AmountDisplay value={totalFee} /></div>
           <TagNetworkToken responsive explorer={to.network.explorer} token={to.token} />
         </div>
       }

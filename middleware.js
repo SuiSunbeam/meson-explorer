@@ -17,7 +17,11 @@ const getApiAccessRoles = pathname => {
     pathname.startsWith('/api/v1/stats')
   ) {
     return ['root', 'admin']
-  } 
+  } else if (
+    pathname.startsWith('/api/v1/swap/share-with')
+  ) {
+    return ['root', 'admin', 'lp']
+  }
 }
 
 const getPageAccessRoles = pathname => {
@@ -38,7 +42,8 @@ const getPageAccessRoles = pathname => {
   ) {
     return ['root', 'admin', 'operator']
   } else if (
-    pathname.startsWith('/pool')
+    pathname.startsWith('/pool') ||
+    pathname.startsWith('/swap/share-with')
   ) {
     return ['root', 'admin', 'lp']
   }
