@@ -6,6 +6,7 @@ import { ethers } from 'ethers'
 
 import PagiCard from 'components/Pagi/PagiCard'
 import SwapRow from 'components/SwapRow'
+import Button from 'components/Button'
 
 export default function SwapList() {
   const router = useRouter()
@@ -16,7 +17,7 @@ export default function SwapList() {
 
   const { page: _, category, token, ...rest } = router.query
   const tabs = !authorized ? undefined : [
-    { key: 'all', name: 'All', active: !category && !token, onClick: () => router.push('') },
+    { key: 'all', name: 'All', active: !category && !token, onClick: () => router.push({ query: rest }) },
     { key: 'eth', name: 'ETH', active: token === 'eth', onClick: () => router.push({ query: { token: 'eth', ...rest } }) },
     { key: 'bnb', name: 'BNB', active: token === 'bnb', onClick: () => router.push({ query: { token: 'bnb', ...rest } }) },
     { key: 'with-gas', name: 'With Gas', active: category === 'with-gas', onClick: () => router.push({ query: { category: 'with-gas', ...rest } }) },
@@ -26,6 +27,16 @@ export default function SwapList() {
     { key: 'meson-to', name: 'meson.to', active: category === 'meson.to', onClick: () => router.push({ query: { category: 'meson.to', ...rest } }) },
     { key: 'campaign', name: 'Campaign', active: category === 'campaign', onClick: () => router.push({ query: { category: 'campaign', ...rest } }) },
   ]
+
+  const toggleFailed = React.useCallback(() => {
+    const query = router.query
+    if (query.failed) {
+      delete query.failed
+    } else {
+      query.failed = 'true'
+    }
+    router.push({ query })
+  }, [router])
 
   const queryUrlParamList = []
   if (category) {
@@ -80,6 +91,9 @@ export default function SwapList() {
       </div>
       <PagiCard
         title='Latest Swaps'
+        badge={authorized &&
+          <Button size='sm' rounded color={rest.failed && 'error'} onClick={toggleFailed}>Failed</Button>
+        }
         tabs={tabs}
         queryUrl={queryUrl}
         fallback='/'
