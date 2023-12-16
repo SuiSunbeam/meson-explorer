@@ -37,6 +37,10 @@ const getPageAccessRoles = pathname => {
     pathname.startsWith('/lp')
   ) {
     return ['root', 'admin', 'operator']
+  } else if (
+    pathname.startsWith('/pool')
+  ) {
+    return ['root', 'admin', 'lp']
   }
 }
 

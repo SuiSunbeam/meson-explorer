@@ -34,7 +34,7 @@ const CORE_ALERT = {
   zksync: 0.05,
 }
 
-export function LpContent ({ address, addressByNetwork, dealer }) {
+export function LpContent ({ address, addressByNetwork, dealer, withSrFee = true, noColor }) {
   const { data: session } = useSession()
   const checkDifference = !address && session?.user?.roles?.some(r => ['root'].includes(r))
 
@@ -70,7 +70,7 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
             return ['ethers'].includes(n.addressFormat)
           }
         })
-        .map(n => <LpContentRow key={n.id} address={address} dealer={dealer} network={n} add={add} />)
+        .map(n => <LpContentRow key={n.id} address={address} dealer={dealer} network={n} noColor={noColor} add={add} />)
     } else {
       const defaultAddress = addressByNetwork.default
       const keys = Object.keys(addressByNetwork)
@@ -80,11 +80,11 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
         const matchKey = keys.find(k => n.id.startsWith(k))
         if (matchKey) {
           networkRowsByType[matchKey].push(
-            <LpContentRow key={n.id} address={addressByNetwork[matchKey]} withSrFee checkDifference={checkDifference} dealer={dealer} network={n} add={add} />
+            <LpContentRow key={n.id} address={addressByNetwork[matchKey]} withSrFee={withSrFee} checkDifference={checkDifference} dealer={dealer} network={n} noColor={noColor} add={add} />
           )
-        } else {
+        } else if (defaultAddress) {
           networkRowsByType.default.push(
-            <LpContentRow key={n.id} address={defaultAddress} withSrFee checkDifference={checkDifference} dealer={dealer} network={n} add={add} />
+            <LpContentRow key={n.id} address={defaultAddress} withSrFee={withSrFee} checkDifference={checkDifference} dealer={dealer} network={n} noColor={noColor} add={add} />
           )
         }
       })
@@ -92,7 +92,7 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
         .map(k => [
           <ListRowWrapper key={k} size='xs'>
             <div className='text-gray-500'>
-              <div className='font-medium text-sm'>{k[0].toUpperCase()}{k.substring(1)}</div>
+              {/* <div className='font-medium text-sm'>{k[0].toUpperCase()}{k.substring(1)}</div> */}
               <div className='truncate text-sm'>{addressByNetwork[k]}</div>
             </div>
           </ListRowWrapper>,
@@ -100,7 +100,7 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
         ])
         .flat()
     }
-  }, [address, addressByNetwork, checkDifference, dealer, add])
+  }, [address, addressByNetwork, withSrFee, checkDifference, dealer, noColor, add])
 
   return (
     <dl className={!address && (checkDifference ? 'min-w-[600px]' : 'min-w-[440px]')}>
@@ -164,7 +164,7 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
               </div>
             </div>
             {
-              !address &&
+              !address && withSrFee &&
               <div className='flex flex-1 flex-col'>
                 <div className='text-xs font-medium text-gray-500 uppercase'>Fee Collected</div>
                 <div className='flex items-center'>
@@ -212,7 +212,7 @@ export function LpContent ({ address, addressByNetwork, dealer }) {
   )
 }
 
-function LpContentRow ({ address, withSrFee, checkDifference, dealer, network, add }) {
+function LpContentRow ({ address, withSrFee, checkDifference, dealer, network, noColor, add }) {
   const [core, setCore] = React.useState(<Loading />)
 
   const mesonClient = React.useMemo(() => {
@@ -279,10 +279,10 @@ function LpContentRow ({ address, withSrFee, checkDifference, dealer, network, a
           </div>
           <div className={classnames(
             'flex ml-7 mt-0.5 text-xs font-mono',
-            core <= alert && 'bg-red-500 text-white',
-            core > alert && core <= alert * 3 && 'text-red-500',
-            core > alert * 3 && core <= alert * 10 && 'text-warning',
-            core > alert * 10 && core <= alert * 20 && 'text-indigo-500',
+            !noColor && core <= alert && 'bg-red-500 text-white',
+            !noColor && core > alert && core <= alert * 3 && 'text-red-500',
+            !noColor && core > alert * 3 && core <= alert * 10 && 'text-warning',
+            !noColor && core > alert * 10 && core <= alert * 20 && 'text-indigo-500',
           )}>
             {core}
             <div className='ml-1'>{network.nativeCurrency?.symbol || 'ETH'}</div>
@@ -299,6 +299,7 @@ function LpContentRow ({ address, withSrFee, checkDifference, dealer, network, a
           checkDifference={checkDifference}
           token={t}
           explorer={network.explorer}
+          noColor={noColor}
           add={add}
         />
       ))}
@@ -306,7 +307,7 @@ function LpContentRow ({ address, withSrFee, checkDifference, dealer, network, a
   )
 }
 
-function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token, explorer, add }) {
+function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token, explorer, noColor, add }) {
   const [deposit, setDeposit] = React.useState()
   const [balance, setBalance] = React.useState()
   const [srFeeCollected, setSrFeeCollected] = React.useState()
@@ -394,7 +395,7 @@ function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token,
         )}>
           <NumberDisplay
             value={deposit && ethers.utils.formatUnits(deposit, 6)}
-            className={getDepositAmountClassName(token, deposit)}
+            className={getDepositAmountClassName(token, deposit, noColor)}
           />
           <TagNetworkToken explorer={explorer} token={token} iconOnly />
         </div>
@@ -459,22 +460,22 @@ function getAmountClassName (token, amount) {
   }
 }
 
-function getDepositAmountClassName (token, deposit) {
+function getDepositAmountClassName (token, deposit, noColor) {
   if (token.disabled) {
     return 'text-gray-300'
   } else if (token.tokenIndex >= 191) {
     return classnames(
-      deposit?.lte(1e6) && 'bg-red-500 text-white',
-      deposit?.gt(1e6) && deposit?.lte(5e6) && 'text-red-500',
-      deposit?.gt(5e6) && deposit?.lte(10e6) && 'text-warning',
-      deposit?.gt(10e6) && deposit?.lte(20e6) && 'text-indigo-500'
+      !noColor && deposit?.lte(1e6) && 'bg-red-500 text-white',
+      !noColor && deposit?.gt(1e6) && deposit?.lte(5e6) && 'text-red-500',
+      !noColor && deposit?.gt(5e6) && deposit?.lte(10e6) && 'text-warning',
+      !noColor && deposit?.gt(10e6) && deposit?.lte(20e6) && 'text-indigo-500'
     )
   } else {
     return classnames(
-      deposit?.lte(1000e6) && 'bg-red-500 text-white',
-      deposit?.gt(1000e6) && deposit?.lte(5000e6) && 'text-red-500',
-      deposit?.gt(5000e6) && deposit?.lte(10000e6) && 'text-warning',
-      deposit?.gt(10000e6) && deposit?.lte(20000e6) && 'text-indigo-500'
+      !noColor && deposit?.lte(1000e6) && 'bg-red-500 text-white',
+      !noColor && deposit?.gt(1000e6) && deposit?.lte(5000e6) && 'text-red-500',
+      !noColor && deposit?.gt(5000e6) && deposit?.lte(10000e6) && 'text-warning',
+      !noColor && deposit?.gt(10000e6) && deposit?.lte(20000e6) && 'text-indigo-500'
     )
   }
 }
