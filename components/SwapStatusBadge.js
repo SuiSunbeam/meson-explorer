@@ -21,6 +21,7 @@ function badgeType(status) {
     case 'UNLOCKED':
     case 'RELEASING':
     case 'RELEASING*':
+    case 'RELEASING...':
       return 'info'
     case 'REQUESTING':
     case 'POSTED':
