@@ -14,7 +14,7 @@ export default function LpPage() {
   const router = useRouter()
   const { address } = router.query
 
-  const dealer = useDealer()
+  const { dealer } = useDealer()
 
   let body = <CardBody><LoadingScreen /></CardBody>
   if (address && dealer) {

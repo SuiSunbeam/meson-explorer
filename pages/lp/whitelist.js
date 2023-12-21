@@ -36,7 +36,7 @@ export default function LpWhitelist() {
 
   const { data, mutate } = useSWR(`admin/whitelist`, fetcher)
   const [modalData, setModalData] = React.useState()
-  const dealer = useDealer()
+  const { dealer } = useDealer()
 
   const podContract = React.useMemo(() => {
     if (dealer) {

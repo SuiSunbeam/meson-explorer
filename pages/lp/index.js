@@ -14,7 +14,7 @@ import { LpContent } from './components'
 
 export default function LpPage() {
   const router = useRouter()
-  const dealer = useDealer()
+  const { dealer } = useDealer()
 
   let body = <CardBody><LoadingScreen /></CardBody>
   if (dealer) {

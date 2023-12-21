@@ -23,6 +23,7 @@ import {
   getExplorerTxLink
 } from 'lib/swap'
 import extensions from 'lib/extensions'
+import useDealer from 'lib/useDealer'
 
 import LoadingScreen from 'components/LoadingScreen'
 import Card, { CardTitle, CardBody } from 'components/Card'
@@ -272,6 +273,9 @@ function CorrectSwap({ data: raw }) {
 }
 
 function SwapActionButton({ data, swap, status }) {
+  const { rpcs } = useDealer()
+  extensions.rpcs = rpcs
+
   if (!data) {
     return null
   }

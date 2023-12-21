@@ -21,7 +21,7 @@ export default function PoolPage() {
   const poolIndex = Number(router.query.poolIndex)
   const [addressByNetwork, setAddressByNetwork] = React.useState(null)
 
-  const dealer = useDealer()
+  const { dealer } = useDealer()
   React.useEffect(() => {
     if (!dealer) {
       return
