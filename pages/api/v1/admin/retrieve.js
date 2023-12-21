@@ -5,21 +5,6 @@ import { RELAYERS } from 'lib/const'
 const query = (addr, page = 1, pageSize = 100) => `?module=account&action=txlist&address=${addr}&startblock=0&endblock=99999999&page=${page}&offset=${pageSize}&sort=desc`
 
 const API_HOSTS = {
-  eth: 'https://api.etherscan.io/api',
-  bnb: 'https://api.bscscan.com/api',
-  polygon: 'https://api.polygonscan.com/api',
-  arb: 'https://api.arbiscan.io/api',
-  opt: 'https://api-optimistic.etherscan.io/api',
-  avax: 'https://api.snowtrace.io/api',
-  ftm: 'https://api.ftmscan.com/api',
-  aurora: 'https://explorer.mainnet.aurora.dev/api',
-  cfx: 'https://evmapi.confluxscan.net/api',
-  movr: 'https://api-moonriver.moonscan.io/api',
-  beam: 'https://api-moonbeam.moonscan.io/api',
-  zksync: 'https://zksync2-mainnet-explorer.zksync.io/transactions',
-  zkevm: 'https://api-zkevm.polygonscan.com/api',
-  base: 'https://api.basescan.org/api',
-  celo: 'https://api.celoscan.io/api',
   aptos: 'https://indexer.mainnet.aptoslabs.com/v1/graphql',
   sui: 'https://explorer-rpc.mainnet.sui.io/',
 }
@@ -54,14 +39,8 @@ async function post(req, res) {
   }
   const host = API_HOSTS[networkId]
   if (!host) {
-    res.status(404).send()
-    return
-  }
-
-  if (networkId === 'zksync') {
-    const txs = await retrieveZksync(network.mesonAddress, page, size)
-    await Promise.all(txs.map(hash => postTx(networkId, hash)))
-    res.json({ result: txs })
+    await fetch(`${RELAYERS[0]}/refresh/${networkId}`, { method: 'POST' })
+    res.json({ result: true })
     return
   }
 
@@ -86,17 +65,6 @@ async function postTx(networkId, hash) {
     body: JSON.stringify({ networkId, hash })
   })
   return await response.json()
-}
-
-async function retrieveZksync(address, page, size) {
-  const query = `?limit=${size}&direction=older&contractAddress=${address}&offset=${(page - 1) * size}`
-  const url = API_HOSTS.zksync + query
-  const response = await fetch(url)
-  const json = await response.json()
-  const txs = json.list
-    .map(tx => tx.transactionHash)
-
-  return txs
 }
 
 async function retrieveAptos(page, size) {
