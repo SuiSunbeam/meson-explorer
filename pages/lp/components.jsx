@@ -32,6 +32,7 @@ const CORE_ALERT = {
   movr: 0.05,
   beam: 0.1,
   zksync: 0.05,
+  zkfair: 5,
 }
 
 export function LpContent ({ address, addressByNetwork, dealer, withSrFee = true, noColor }) {
