@@ -302,7 +302,11 @@ function SwapActionButton({ data, swap, status }) {
       }
       break
     case 'POSTED':
-      actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.bond(swap, data.signature, initiator)}>Bond</Button>
+      if (data.fromContract) {
+        actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.execute(swap, data.releaseSignature, recipient)}>Execute</Button>
+      } else {
+        actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.bond(swap, data.signature, initiator)}>Bond</Button>
+      }
       break;
     case 'BONDED':
       actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.lock(swap, initiator)}>Lock</Button>
