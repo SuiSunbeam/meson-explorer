@@ -229,9 +229,11 @@ function LpContentRow ({ address, withSrFee, checkDifference, dealer, network, n
         ethersProvider: mesonClient.provider,
         tryAggregate: true,
       }
-      if (['cfx', 'naut', 'zkfair'].includes(network.id)) {
+      if (['naut', 'zkfair'].includes(network.id)) {
         // TODO
         return { mesonClient }
+      } else if (network.id.startsWith('cfx')) {
+        multicallOption.multicallCustomContractAddress = '0xEFf0078910f638cd81996cc117bccD3eDf2B072F'
       } else if (network.id !== 'zksync') {
         multicallOption.multicallCustomContractAddress = '0xcA11bde05977b3631167028862bE2a173976CA11'
       }
