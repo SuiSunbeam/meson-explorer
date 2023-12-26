@@ -2,7 +2,7 @@ import classnames from 'classnames'
 
 import { Loading } from 'components/LoadingScreen'
 
-export default function NumberDisplay ({ value, decimals = 6, length = 6, className }) {
+export default function NumberDisplay ({ value, symbol = '', decimals = 6, length = 6, className }) {
   const width = (length + decimals + (decimals && 1)) * 8.5
 
   if (!value) {
@@ -13,9 +13,10 @@ export default function NumberDisplay ({ value, decimals = 6, length = 6, classN
   return (
     <pre className={classnames('shrink-0 text-sm font-mono mr-1', className)} style={{ width }}>
       <span>{i.padStart(length, ' ')}</span>
-      <span className='opacity-40'>
+      <span className={!symbol && 'opacity-40'}>
         {decimals > 0 ? '.' : ''}{d.padEnd(decimals, '0').substring(0, decimals)}
       </span>
+      {symbol && <span className='inline-block ml-1'>{symbol}</span>}
     </pre>
   )
 }

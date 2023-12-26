@@ -4,9 +4,10 @@ import classnames from 'classnames'
 import { useSession } from 'next-auth/react'
 import { RefreshIcon } from '@heroicons/react/solid'
 import { BigNumber, ethers } from 'ethers'
+import { Multicall } from 'ethereum-multicall'
 import { MesonClient, adaptors } from '@mesonfi/sdk'
+import { Meson, ERC20 } from '@mesonfi/contract-abis'
 
-import { Loading } from 'components/LoadingScreen'
 import ListRow, { ListRowWrapper } from 'components/ListRow'
 import TagNetwork from 'components/TagNetwork'
 import TagNetworkToken from 'components/TagNetworkToken'
@@ -214,13 +215,30 @@ export function LpContent ({ address, addressByNetwork, dealer, withSrFee = true
 }
 
 function LpContentRow ({ address, withSrFee, checkDifference, dealer, network, noColor, add }) {
-  const [core, setCore] = React.useState(<Loading />)
+  const [core, setCore] = React.useState()
 
-  const mesonClient = React.useMemo(() => {
-    return dealer._createMesonClient({
+  const { mesonClient, multicall } = React.useMemo(() => {
+    const mesonClient = dealer._createMesonClient({
       id: network.id,
       url: network.url.replace('${INFURA_API_KEY}', process.env.NEXT_PUBLIC_INFURA_PROJECT_ID)
     })
+
+    let multicall
+    if (network.addressFormat === 'ethers') {
+      const multicallOption = {
+        ethersProvider: mesonClient.provider,
+        tryAggregate: true,
+      }
+      if (['cfx', 'naut', 'zkfair'].includes(network.id)) {
+        // TODO
+        return { mesonClient }
+      } else if (network.id !== 'zksync') {
+        multicallOption.multicallCustomContractAddress = '0xcA11bde05977b3631167028862bE2a173976CA11'
+      }
+      multicall = new Multicall(multicallOption)
+    }
+
+    return { mesonClient, multicall }
   }, [dealer, network])
 
   const nativeDecimals = network.nativeCurrency?.decimals || 18
@@ -229,16 +247,11 @@ function LpContentRow ({ address, withSrFee, checkDifference, dealer, network, n
       return
     }
     mesonClient.getBalance(address)
+      .then(v => setCore(v.div(10 ** (nativeDecimals - 6))))
       .catch(err => console.error(err))
-      .then(v => {
-        if (v) {
-          const [i, d] = ethers.utils.formatUnits(v, nativeDecimals).split('.')
-          setCore(`${i}.${d.substring(0, 6)}`)
-        }
-      })
   }, [mesonClient, address, nativeDecimals])
 
-  const alert = CORE_ALERT[network.id] || 0.01
+  const alert = (CORE_ALERT[network.id] || 0.01) * 1e6
   const tokens = [...network.tokens].sort((t1, t2) => Math.abs(64 - t2.tokenIndex) - Math.abs(64 - t1.tokenIndex))
   if (network.uctAddress) {
     tokens.push({ symbol: 'UCT', addr: network.uctAddress, decimals: 6, tokenIndex: 255, disabled: true })
@@ -278,41 +291,58 @@ function LpContentRow ({ address, withSrFee, checkDifference, dealer, network, n
             </ExternalLink>
             {retrieveButton}
           </div>
-          <div className={classnames(
-            'flex ml-7 mt-0.5 text-xs font-mono',
-            !noColor && core <= alert && 'bg-red-500 text-white',
-            !noColor && core > alert && core <= alert * 3 && 'text-red-500',
-            !noColor && core > alert * 3 && core <= alert * 10 && 'text-warning',
-            !noColor && core > alert * 10 && core <= alert * 20 && 'text-indigo-500',
-          )}>
-            {core}
-            <div className='ml-1'>{network.nativeCurrency?.symbol || 'ETH'}</div>
-          </div>
+          <NumberDisplay
+            value={core && ethers.utils.formatUnits(core, 6)}
+            length={3}
+            symbol={network.nativeCurrency?.symbol || 'ETH'}
+            className={classnames(
+              'flex ml-7 mt-0.5 text-xs font-mono',
+              !noColor && core?.lte(alert) && 'bg-red-500 text-white',
+              !noColor && core?.gt(alert) && core?.lte(alert * 3) && 'text-red-500',
+              !noColor && core?.gt(alert * 3) && core?.lte(alert * 10) && 'text-warning',
+              !noColor && core?.gt(alert * 10) && core?.lte(alert * 20) && 'text-indigo-500',
+            )}
+          />
         </div>
       }
     >
-      {tokens.map(t => (
-        <TokenAmount
-          key={t.addr}
-          address={address}
-          mesonClient={mesonClient}
-          withSrFee={withSrFee}
-          checkDifference={checkDifference}
-          token={t}
-          explorer={network.explorer}
-          noColor={noColor}
-          add={add}
-        />
-      ))}
+      <TokenAmountRows 
+        address={address}
+        mesonClient={mesonClient}
+        multicall={multicall}
+        core={core}
+        withSrFee={withSrFee}
+        checkDifference={checkDifference}
+        tokens={tokens}
+        explorer={network.explorer}
+        noColor={noColor}
+        add={add}
+      />
     </ListRow>
   )
 }
 
-function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token, explorer, noColor, add }) {
-  const [deposit, setDeposit] = React.useState()
-  const [balance, setBalance] = React.useState()
-  const [srFeeCollected, setSrFeeCollected] = React.useState()
-  const [inContractDiff, setInContractDiff] = React.useState()
+function TokenAmountRows ({ address, mesonClient, multicall, core, checkDifference, withSrFee, tokens, explorer, noColor, add }) {
+  const [deposit, setDeposit] = React.useState({})
+  const [balance, setBalance] = React.useState({})
+  const [srFeeCollected, setSrFeeCollected] = React.useState({})
+  const [inContractDiff, setInContractDiff] = React.useState({})
+
+  React.useEffect(() => {
+    if (!address || !core) {
+      return
+    }
+
+    (async function () {
+      await mesonClient.ready({ from: address }).catch(() => {})
+      const token = mesonClient._tokens.find(token => Number(token.addr) === 1)
+      if (token) {
+        const tokenType = MesonClient.tokenType(token.tokenIndex)
+        add.toBalance(core, tokenType)
+        setBalance(v => ({ ...v, [token.tokenIndex]: core }))
+      }
+    })()
+  }, [address, mesonClient, core, add])
 
   React.useEffect(() => {
     if (!address) {
@@ -321,67 +351,174 @@ function TokenAmount ({ address, mesonClient, checkDifference, withSrFee, token,
 
     (async function () {
       await mesonClient.ready({ from: address }).catch(() => {})
-
-      const tokenType = MesonClient.tokenType(token.tokenIndex)
-
-      const deposit = await mesonClient.getBalanceInPool(address, token.tokenIndex).catch(() => {})
-      if (deposit) {
-        if (token.tokenIndex !== 32) {
-          add.toDeposit(deposit.value, tokenType)
-        }
-        setDeposit(deposit.value)
-      }
       
-      if (token.symbol !== 'UCT') {
-        const tokenBalance = await mesonClient.getTokenBalance(address, token.tokenIndex).catch(() => {})
-        if (tokenBalance) {
-          if (token.tokenIndex !== 32) {
+      if (multicall) {
+        const { results: { meson, ...tokens } } = await multicall.call([
+          {
+            reference: 'meson',
+            contractAddress: mesonClient.address,
+            abi: Meson.abi,
+            calls: mesonClient._tokens.map(token => ([
+              { reference: token.tokenIndex, methodName: 'poolTokenBalance', methodParameters: [token.addr, address] },
+              { reference: token.tokenIndex, methodName: 'serviceFeeCollected', methodParameters: [token.tokenIndex] },
+            ])).flat()
+          },
+          ...mesonClient._tokens.filter(token => !mesonClient.isCoreToken(token.tokenIndex)).map(token => ({
+            reference: token.tokenIndex,
+            contractAddress: token.addr,
+            abi: ERC20.abi,
+            calls: [
+              { reference: 'decimals', methodName: 'decimals', methodParameters: [] },
+              { reference: 'balanceOf', methodName: 'balanceOf', methodParameters: [address] },
+              { reference: 'balanceOfMeson', methodName: 'balanceOf', methodParameters: [mesonClient.address] },
+            ],
+          }))
+        ])
+
+        const depositPlusSrFee = {}
+        meson.callsReturnContext.forEach(result => {
+          const tokenIndex = result.reference
+          const tokenType = MesonClient.tokenType(tokenIndex)
+          const value = BigNumber.from(result.returnValues[0].hex)
+          if (result.methodName === 'poolTokenBalance') {
+            if (tokenIndex !== 32) {
+              add.toDeposit(value, tokenType)
+            }
+            setDeposit(v => ({ ...v, [tokenIndex]: value }))
+            depositPlusSrFee[tokenIndex] = value
+          } else if (result.methodName === 'serviceFeeCollected') {
+            if (tokenIndex !== 32) {
+              add.toSrFee(value, tokenType)
+            }
+            setSrFeeCollected(v => ({ ...v, [tokenIndex]: value }))
+            depositPlusSrFee[tokenIndex] = depositPlusSrFee[tokenIndex].add(value)
+          }
+        })
+        mesonClient._tokens.forEach(async token => {
+          const tokenIndex = token.tokenIndex
+          const tokenType = MesonClient.tokenType(tokenIndex)
+          let decimals, balance, balanceOfMeson
+
+          if (mesonClient.isCoreToken(token.tokenIndex)) {
+            balanceOfMeson = (await mesonClient.inContractTokenBalance(tokenIndex)).value
+          } else {
+            tokens[tokenIndex].callsReturnContext.forEach(result => {
+              const returnValue = result.returnValues[0]
+              if (result.reference === 'decimals') {
+                decimals = returnValue 
+              } else if (result.reference === 'balanceOf') {
+                balance = BigNumber.from(returnValue.hex)
+              } else if (result.reference === 'balanceOfMeson') {
+                balanceOfMeson = BigNumber.from(returnValue.hex)
+              }
+            })
+            balance = balance.div(10 ** (decimals - 6))
+            balanceOfMeson = balanceOfMeson.div(10 ** (decimals - 6))
+            if (tokenIndex !== 32) {
+              add.toBalance(balance, tokenType)
+            }
+            setBalance(v => ({ ...v, [tokenIndex]: balance }))
+          }
+          
+          const inContractDiff = balanceOfMeson.sub(depositPlusSrFee[tokenIndex])
+          if (tokenIndex !== 32) {
+            add.toInContractDiff(inContractDiff, tokenType)
+          }
+          setInContractDiff(v => ({ ...v, [tokenIndex]: inContractDiff }))
+        })
+        return
+      }
+
+      mesonClient._tokens.forEach(async token => {
+        const tokenIndex = token.tokenIndex
+        const tokenType = MesonClient.tokenType(tokenIndex, true)
+        const doNotAdd = tokenType === 'pod' || (tokenIndex === 255 && Number(token.addr) !== 1)
+
+        const deposit = await mesonClient.getBalanceInPool(address, tokenIndex).catch(() => {})
+        if (deposit) {
+          if (!doNotAdd) {
+            add.toDeposit(deposit.value, tokenType)
+          }
+          setDeposit(v => ({ ...v, [tokenIndex]: deposit.value }))
+        }
+        
+        if (!doNotAdd) {
+          const tokenBalance = await mesonClient.getTokenBalance(address, tokenIndex).catch(() => {})
+          if (tokenBalance) {
             add.toBalance(tokenBalance.value, tokenType)
+            setBalance(v => ({ ...v, [tokenIndex]: tokenBalance.value }))
           }
-          setBalance(tokenBalance.value)
+        } else {
+          setBalance(v => ({ ...v, [tokenIndex]: BigNumber.from(0) }))
         }
-      } else {
-        setBalance(BigNumber.from(0))
-      }
-      
-      if (withSrFee) {
-        const srFee = await mesonClient.serviceFeeCollected(token.tokenIndex, { from: address }).catch(() => {})
-        if (srFee) {
-          if (token.tokenIndex !== 32) {
-            add.toSrFee(srFee.value, tokenType)
+        
+        if (withSrFee) {
+          const srFee = await mesonClient.serviceFeeCollected(tokenIndex, { from: address }).catch(() => {})
+          if (srFee) {
+            if (!doNotAdd) {
+              add.toSrFee(srFee.value, tokenType)
+            }
+            setSrFeeCollected(v => ({ ...v, [tokenIndex]: srFee.value }))
           }
-          setSrFeeCollected(srFee.value)
         }
-      }
-    })()
-  }, [address]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  React.useEffect(() => {
-    if (!checkDifference || !address || !deposit || !srFeeCollected) {
-      return
-    }
-    (async () => {
-      const tokenType = MesonClient.tokenType(token.tokenIndex)
-      if (address.length === 66) {
-        const diff = await mesonClient.pendingTokenBalance(token.tokenIndex).catch(() => {})
-        if (diff) {
-          if (token.tokenIndex !== 32) {
-            add.toInContractDiff(diff.value, tokenType)
+        if (address.length === 66) {
+          const diff = await mesonClient.pendingTokenBalance(tokenIndex).catch(() => {})
+          if (diff) {
+            if (!doNotAdd) {
+              add.toInContractDiff(diff.value, tokenType)
+            }
+            setInContractDiff(v => ({ ...v, [tokenIndex]: diff.value }))
           }
-          setInContractDiff(diff.value)
         }
-      } else {
-        const inContractBalance = await mesonClient.inContractTokenBalance(token.tokenIndex, { from: address }).catch(() => {})
-        if (inContractBalance) {
-          const diff = inContractBalance.value.sub(deposit).sub(srFeeCollected)
-          if (token.tokenIndex !== 32) {
-            add.toInContractDiff(diff, tokenType)
-          }
-          setInContractDiff(diff)
-        }
-      }
+      })
     })()
-  }, [address, checkDifference, deposit, srFeeCollected]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [address, mesonClient, multicall, add, withSrFee])
+
+  return tokens.map(t => (
+    <TokenAmount
+      key={t.addr}
+      withSrFee={withSrFee}
+      checkDifference={checkDifference}
+      token={t}
+      explorer={explorer}
+      noColor={noColor}
+      deposit={deposit[t.tokenIndex]}
+      balance={balance[t.tokenIndex]}
+      srFeeCollected={srFeeCollected[t.tokenIndex]}
+      inContractDiff={inContractDiff[t.tokenIndex]}
+    />
+  ))
+}
+
+function TokenAmount ({ withSrFee, checkDifference, token, explorer, noColor, deposit, balance, srFeeCollected, inContractDiff }) {
+
+  // React.useEffect(() => {
+  //   if (!checkDifference || !address || !deposit || !srFeeCollected) {
+  //     return
+  //   }
+  //   (async () => {
+  //     const tokenType = MesonClient.tokenType(token.tokenIndex)
+  //     if (address.length === 66) {
+  //       const diff = await mesonClient.pendingTokenBalance(token.tokenIndex).catch(() => {})
+  //       if (diff) {
+  //         if (token.tokenIndex !== 32) {
+  //           add.toInContractDiff(diff.value, tokenType)
+  //         }
+  //         setInContractDiff(diff.value)
+  //       }
+  //     } else {
+  //       const inContractBalance = await mesonClient.inContractTokenBalance(token.tokenIndex, { from: address }).catch(() => {})
+  //       if (inContractBalance) {
+  //         const diff = inContractBalance.value.sub(deposit).sub(srFeeCollected)
+  //         if (token.tokenIndex !== 32) {
+  //           add.toInContractDiff(diff, tokenType)
+  //         }
+  //         setInContractDiff(diff)
+  //       }
+  //     }
+  //   })()
+  // }, [address, checkDifference, deposit, srFeeCollected]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (token.symbol === 'UCT' && !deposit) {
     return null
