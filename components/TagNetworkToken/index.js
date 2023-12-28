@@ -3,6 +3,7 @@ import Image from 'next/image'
 
 import { getExplorerTokenLink } from 'lib/swap'
 
+import btc from './btc.png'
 import eth from './eth.png'
 import bnb from '../TagNetwork/bnb.png'
 import sol from '../TagNetwork/solana.png'
@@ -20,7 +21,9 @@ import eos from './eos.png'
 import sfuel from './skale.png'
 
 function getTokenIcon(symbol) {
-  if (symbol.indexOf('ETH') > -1) {
+  if (symbol.indexOf('BTC') > -1) {
+    return btc
+  } else if (symbol.indexOf('ETH') > -1) {
     return eth
   } else if (symbol.indexOf('BNB') > -1) {
     return bnb
