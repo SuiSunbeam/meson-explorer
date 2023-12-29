@@ -2,7 +2,8 @@ import React from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { SearchIcon } from '@heroicons/react/outline'
-import { ethers } from 'ethers'
+
+import fetcher from 'lib/fetcher'
 
 import PagiCard from 'components/Pagi/PagiCard'
 import SwapRow from 'components/SwapRow'
@@ -64,19 +65,16 @@ export default function SwapList() {
           <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
             <SearchIcon className='text-gray-500 sm:text-sm w-4'/>
           </div>
-          <form onSubmit={evt => {
+          <form onSubmit={async evt => {
             evt.preventDefault()
-            let searchValue = search.trim()
-            if (ethers.utils.isAddress(searchValue)) {
-              searchValue = searchValue.toLowerCase()
-            }
-            if (!searchValue) {
-              return
-            }
-            if (searchValue.length === 66) {
-              router.push(`/swap/${searchValue}`)
-            } else {
-              router.push(`/address/${searchValue}`)
+            let q = search.trim()
+
+            const result = await fetcher(`search?q=${q}`)
+            
+            if (result.swapId) {
+              router.push(`/swap/${result.swapId}`)
+            } else if (result.address) {
+              router.push(`/address/${result.address}`)
             }
           }}>
             <input
