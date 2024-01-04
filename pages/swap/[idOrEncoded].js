@@ -75,6 +75,7 @@ function CorrectSwap({ data: raw }) {
   const { data: session } = useSession()
   const isRoot = session?.user?.roles?.some(r => r === 'root')
   const authorized = session?.user?.roles?.some(r => ['root', 'admin'].includes(r))
+  const role = isRoot ? 'root' : authorized ? 'admin' : ''
 
   const [data, setData] = React.useState(raw)
   React.useEffect(() => { setData(raw) }, [raw])
@@ -263,7 +264,7 @@ function CorrectSwap({ data: raw }) {
           </div>
         )}
         subtitle={StatusDesc[status?.replace('*', '')]}
-        right={authorized && <SwapActionButton data={data} swap={swap} status={status} from={from} to={to} />}
+        right={<SwapActionButton role={role} data={data} swap={swap} status={status} />}
       />
       <CardBody border={!data}>
         {body}
@@ -272,7 +273,7 @@ function CorrectSwap({ data: raw }) {
   )
 }
 
-function SwapActionButton({ data, swap, status }) {
+function SwapActionButton({ role, data, swap, status }) {
   const { rpcs } = useDealer()
   extensions.rpcs = rpcs
 
@@ -294,81 +295,68 @@ function SwapActionButton({ data, swap, status }) {
   const initiator = data.initiator || data.fromTo[0]
   const recipient = data.fromTo[1]
 
+  const btnBond = role && <Button size='sm' color='info' rounded onClick={() => extensions.bond(swap, data.signature, initiator)}>Bond</Button>
+  const btnLock = role && <Button size='sm' color='info' rounded onClick={() => extensions.lock(swap, initiator)}>Lock</Button>
+  const btnUnlock = role && <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, initiator)}>Unlock</Button>
+  const btnExecute = role && <Button size='sm' color='info' rounded onClick={() => extensions.execute(swap, data.releaseSignature, recipient)}>Execute</Button>
+  const btnDirectExecute = role && <Button size='sm' color='info' rounded onClick={() => extensions.directExecute(swap, data.releaseSignature, initiator, recipient)}>DirectExecute</Button>
+  const btnRelease = role && <Button size='sm' color='info' rounded onClick={() => extensions.release(swap, data.releaseSignature, initiator, recipient)}>Release</Button>
+  const btnDirectRelease = role && <Button size='sm' color='info' rounded onClick={() => extensions.directRelease(swap, data.releaseSignature, initiator, recipient)}>DirectRelease</Button>
+  const btnSimpleRelease = role === 'root' && <Button size='sm' color='info' rounded onClick={() => extensions.simpleRelease(swap, recipient)}>SimpleRelease</Button>
+  const btnTransfer = role === 'root' && <Button size='sm' color='info' rounded onClick={() => extensions.transfer(swap, initiator, recipient)}>Transfer</Button>
+  const btnWithdraw = <Button size='sm' color='info' rounded onClick={() => extensions.withdraw(swap)}>Withdraw</Button>
+  const btnWithdrawTo = role === 'root' && <Button size='sm' color='info' rounded onClick={() => extensions.withdrawTo(swap, posted.signer)}>Withdraw To {abbreviate(posted?.signer, 4, 0)}</Button>
+  const btnManualWithdraw = role === 'root' && <Button size='sm' color='info' rounded onClick={() => extensions.manualWithdraw(swap, initiator, data.fromTo[0])}>ManualWithdraw</Button>
+
   let actionButton = null
   switch (status) {
     case 'REQUESTING':
       if (directSwap) {
-        actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.directExecute(swap, data.releaseSignature, initiator, recipient)}>DirectExecute</Button>
+        actionButton = btnDirectExecute
       }
       break
     case 'POSTED':
-      if (data.fromContract) {
-        actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.execute(swap, data.releaseSignature, recipient)}>Execute</Button>
-      } else {
-        actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.bond(swap, data.signature, initiator)}>Bond</Button>
-      }
+      actionButton = data.fromContract ? btnExecute : btnBond
       break;
     case 'BONDED':
-      actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.lock(swap, initiator)}>Lock</Button>
+      actionButton = btnLock
       break;
     case 'EXPIRED*':
     case 'CANCELLED*':
-      actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, initiator)}>Unlock</Button>
+      actionButton = btnUnlock
       break;
     case 'EXPIRED':
       if (!data.fromContract) {
-        actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.withdraw(swap)}>Withdraw</Button>
+        actionButton = btnWithdraw
       } else if (posted.signer) {
-        actionButton = (
-          <>
-            <Button size='sm' color='info' rounded onClick={() => extensions.withdrawTo(swap, posted.signer)}>Withdraw To {abbreviate(posted.signer, 4, 0)}</Button>
-            <Button size='sm' color='info' rounded onClick={() => extensions.simpleRelease(swap, recipient)}>SimpleRelease</Button>
-          </>
-        )
+        actionButton = <>{btnWithdrawTo}{btnSimpleRelease}</>
       }
       break;
     case 'RELEASING':
+      actionButton = btnRelease
+      break
     case 'RELEASED':
-      actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.execute(swap, data.releaseSignature, recipient)}>Execute</Button>
-      break;
+      actionButton = btnExecute
+      break
     case 'RELEASING*':
     case 'RELEASING...':
       if (unlocks >= locks) {
         if (directSwap) {
-          if (swap.expired) {
-            actionButton = (
-              <>
-                <Button size='sm' color='info' rounded onClick={() => extensions.transfer(swap, initiator, recipient)}>Transfer</Button>
-                <Button size='sm' color='info' rounded onClick={() => extensions.simpleRelease(swap, recipient)}>SimpleRelease</Button>
-              </>
-            ) 
-          } else {
-            actionButton = (
-              <>
-                <Button size='sm' color='info' rounded onClick={() => extensions.transfer(swap, initiator, recipient)}>Transfer</Button>
-                <Button size='sm' color='info' rounded onClick={() => extensions.directRelease(swap, data.releaseSignature, initiator, recipient)}>DirectRelease</Button>
-              </>
-            )
-          }
+          actionButton = role === 'root' && <>{btnTransfer}{swap.expired ? btnSimpleRelease : btnDirectRelease}</>
         } else {
-          actionButton = (
-            <>
-              <Button size='sm' color='info' rounded onClick={() => extensions.manualWithdraw(swap, initiator, data.fromTo[0])}>ManualWithdraw</Button>
-              <Button size='sm' color='info' rounded onClick={() => extensions.simpleRelease(swap, recipient)}>SimpleRelease</Button>
-            </>
-          )
+          actionButton = <>{btnManualWithdraw}{btnSimpleRelease}</>
         }
         break
       }
     default:
       if (locks > releases + unlocks) {
         if (swap.expired) {
-          actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, initiator)}>Unlock</Button>
-        } else {
-          actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.release(swap, data.releaseSignature, initiator, recipient)}>Release</Button>
+          actionButton = btnUnlock
+        } else if (data.releaseSignature) {
+          actionButton = btnRelease
         }
       } else if (!releases && !swap.expired) {
-        actionButton = <Button size='sm' color='info' rounded onClick={() => extensions.lock(swap, initiator)}>Lock</Button>
+        actionButton = btnLock
       }
   }
 
