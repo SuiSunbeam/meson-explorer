@@ -20,6 +20,7 @@ export default function SwapList() {
   const tabs = !authorized ? undefined : [
     { key: 'all', name: 'All', active: !category && !token, onClick: () => router.push({ query: rest }) },
     { key: 'eth', name: 'ETH', active: token === 'eth', onClick: () => router.push({ query: { token: 'eth', ...rest } }) },
+    { key: 'btc', name: 'BTC', active: token === 'btc', onClick: () => router.push({ query: { token: 'btc', ...rest } }) },
     { key: 'bnb', name: 'BNB', active: token === 'bnb', onClick: () => router.push({ query: { token: 'bnb', ...rest } }) },
     { key: 'with-gas', name: 'With Gas', active: category === 'with-gas', onClick: () => router.push({ query: { category: 'with-gas', ...rest } }) },
     { key: 'api', name: 'API', active: category === 'api', onClick: () => router.push({ query: { category: 'api', ...rest } }) },
