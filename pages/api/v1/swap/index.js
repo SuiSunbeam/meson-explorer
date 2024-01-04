@@ -46,6 +46,9 @@ export default listHandler({
       if (token.toLowerCase() === 'bnb') {
         query.inToken = { $gte: 248, $lt: 252 }
       }
+      if (token.toLowerCase() === 'btc') {
+        query.inToken = { $gte: 240, $lt: 244 }
+      }
       if (failed) {
         query['events.name'] = { $ne: 'RELEASED' }
       }
