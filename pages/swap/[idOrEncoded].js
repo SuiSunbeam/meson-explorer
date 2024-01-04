@@ -119,7 +119,7 @@ function CorrectSwap({ data: raw }) {
   let body
   const { swap, from, to } = React.useMemo(() => presets.parseInOutNetworkTokens(data?.encoded), [data?.encoded])
 
-  const status = getStatusFromEvents(data?.events, swap?.expireTs, data.tempAt)
+  const status = getStatusFromEvents(data?.events, swap?.expireTs, data?.tempAt)
 
   if (!data) {
     body = <LoadingScreen />
