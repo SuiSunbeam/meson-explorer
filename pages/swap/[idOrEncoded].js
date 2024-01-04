@@ -37,6 +37,7 @@ import TagNetworkToken from 'components/TagNetworkToken'
 
 
 const StatusDesc = {
+  PENDING: `A swap initiated but not processed yet`,
   RELEASING: `Releasing fund to recipient...`,
   DROPPED: `Swap not processed by Meson. Fund still in user's address.`,
   EXPIRED: `Swap didn't finish within valid time. Need to withdraw fund.`,
@@ -118,7 +119,7 @@ function CorrectSwap({ data: raw }) {
   let body
   const { swap, from, to } = React.useMemo(() => presets.parseInOutNetworkTokens(data?.encoded), [data?.encoded])
 
-  const status = getStatusFromEvents(data?.events, swap?.expireTs)
+  const status = getStatusFromEvents(data?.events, swap?.expireTs, data.tempAt)
 
   if (!data) {
     body = <LoadingScreen />
@@ -257,7 +258,7 @@ function CorrectSwap({ data: raw }) {
         title='Swap'
         badge={(
           <div className='flex flex-row items-center'>
-            <SwapStatusBadge events={data?.events} expireTs={swap?.expireTs} />
+            <SwapStatusBadge status={status} />
             {authorized && data?.hide && <Badge className='ml-2'>HIDE</Badge>}
             {isRoot && data?.modified && <Badge type='warning' className='ml-2'>MODIFIED</Badge>}
             {isRoot && data?.errorConfirmed && <Badge type='warning' className='ml-2'>ERROR CONFIRMED</Badge>}

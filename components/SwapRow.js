@@ -111,12 +111,12 @@ export default function SwapRow({ data: raw, smMargin }) {
           {new Date(data.created).toLocaleString()}
         </div>
         <div className='sm:hidden scale-75 origin-left'>
-          <SwapStatusBadge events={data.events} expireTs={swap.expireTs} className='text-xs' />
+          <SwapStatusBadge status={status} className='text-xs' />
         </div>
       </Td>
       <Td className='hidden sm:table-cell'>
         <div className='flex items-center'>
-          <SwapStatusBadge events={data.events} expireTs={swap.expireTs} />
+          <SwapStatusBadge status={status} />
           {
             data.locks &&
             <span className='text-xs text-gray-500 ml-2'>{data.releases},{data.unlocks} / {data.locks}</span>
