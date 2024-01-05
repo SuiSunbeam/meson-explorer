@@ -41,7 +41,7 @@ function getTokenIcon(symbol) {
     return cusd
   } else if (symbol.indexOf('CUSD') > -1) {
     return tomo_cusd
-  } else if (symbol.indexOf('USD') > -1) {
+  } else if (symbol.indexOf('USD') > -1 || symbol.indexOf('STABLECOINS') > -1) {
     return { component: <div className='w-full h-full rounded-full bg-primary flex items-center justify-center text-xs font-light text-white'>$</div> }
   } else if (symbol.indexOf('PoD') > -1) {
     return pod

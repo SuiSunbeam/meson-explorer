@@ -104,83 +104,32 @@ export function LpContent ({ address, addressByNetwork, dealer, withSrFee = true
     }
   }, [address, addressByNetwork, withSrFee, checkDifference, dealer, noColor, add])
 
+  const tokens = ['eth', 'btc', 'bnb', 'stablecoins']
+
   return (
     <dl className={!address && (checkDifference ? 'min-w-[600px]' : 'min-w-[440px]')}>
       <ListRowWrapper size='sm'>
         <dt className='flex-1'>
           <div className='flex flex-1 flex-col'>
             <div className='text-xs font-medium text-gray-500 uppercase'>Total</div>
-            <div className='flex items-center'>
-              <NumberDisplay
-                className='font-bold'
-                value={ethers.utils.formatUnits(BigNumber.from(totalDeposit.eth || 0).add(totalBalance.eth || 0).add(totalSrFeeCollected.eth || 0), 6)}
-              />
-              <TagNetworkToken token={{ symbol: 'ETH' }} iconOnly />
-            </div>
-            <div className='flex items-center'>
-              <NumberDisplay
-                className='font-bold'
-                value={ethers.utils.formatUnits(BigNumber.from(totalDeposit.bnb || 0).add(totalBalance.bnb || 0).add(totalSrFeeCollected.bnb || 0), 6)}
-              />
-              <TagNetworkToken token={{ symbol: 'BNB' }} iconOnly />
-            </div>
-            <div className='flex items-center'>
-              <NumberDisplay
-                className='font-bold'
-                value={ethers.utils.formatUnits(BigNumber.from(totalDeposit.stablecoins || 0).add(totalBalance.stablecoins || 0).add(totalSrFeeCollected.stablecoins || 0), 6)}
-              />
-              <TagNetworkToken token={{ symbol: 'USD' }} iconOnly />
-            </div>
+            {tokens.map(t => <TokenTotalAmountSum key={t} totalDeposit={totalDeposit} totalBalance={totalBalance} totalSrFeeCollected={totalSrFeeCollected} token={t} />)}
           </div>
         </dt>
         <dd className='md:flex-[2] mt-1 md:mt-0 md:min-w-[540px]'>
           <div className='flex items-center'>
             <div className='flex flex-1 flex-col'>
               <div className='text-xs font-medium text-gray-500 uppercase'>Pool Balance</div>
-              <div className='flex items-center'>
-                <NumberDisplay value={ethers.utils.formatUnits(BigNumber.from(totalDeposit.eth || 0), 6)} />
-                <TagNetworkToken token={{ symbol: 'ETH' }} iconOnly />
-              </div>
-              <div className='flex items-center'>
-                <NumberDisplay value={ethers.utils.formatUnits(BigNumber.from(totalDeposit.bnb || 0), 6)} />
-                <TagNetworkToken token={{ symbol: 'BNB' }} iconOnly />
-              </div>
-              <div className='flex items-center'>
-                <NumberDisplay value={ethers.utils.formatUnits(BigNumber.from(totalDeposit.stablecoins || 0), 6)} />
-                <TagNetworkToken token={{ symbol: 'USD' }} iconOnly />
-              </div>
+              {tokens.map(t => <TokenAmountSum key={t} data={totalDeposit} token={t} />)}
             </div>
             <div className='flex flex-1 flex-col'>
               <div className='text-xs font-medium text-gray-500 uppercase'>Balance</div>
-              <div className='flex items-center'>
-                <NumberDisplay value={ethers.utils.formatUnits(BigNumber.from(totalBalance.eth || 0), 6)} />
-                <TagNetworkToken token={{ symbol: 'ETH' }} iconOnly />
-              </div>
-              <div className='flex items-center'>
-                <NumberDisplay value={ethers.utils.formatUnits(BigNumber.from(totalBalance.bnb || 0), 6)} />
-                <TagNetworkToken token={{ symbol: 'BNB' }} iconOnly />
-              </div>
-              <div className='flex items-center'>
-                <NumberDisplay value={ethers.utils.formatUnits(BigNumber.from(totalBalance.stablecoins || 0), 6)} />
-                <TagNetworkToken token={{ symbol: 'USD' }} iconOnly />
-              </div>
+              {tokens.map(t => <TokenAmountSum key={t} data={totalBalance} token={t} />)}
             </div>
             {
               !address && withSrFee &&
               <div className='flex flex-1 flex-col'>
                 <div className='text-xs font-medium text-gray-500 uppercase'>Fee Collected</div>
-                <div className='flex items-center'>
-                  <NumberDisplay value={ethers.utils.formatUnits(BigNumber.from(totalSrFeeCollected.eth || 0), 6)} />
-                  <TagNetworkToken token={{ symbol: 'ETH' }} iconOnly />
-                </div>
-                <div className='flex items-center'>
-                  <NumberDisplay value={ethers.utils.formatUnits(BigNumber.from(totalSrFeeCollected.bnb || 0), 6)} />
-                  <TagNetworkToken token={{ symbol: 'BNB' }} iconOnly />
-                </div>
-                <div className='flex items-center'>
-                  <NumberDisplay value={ethers.utils.formatUnits(BigNumber.from(totalSrFeeCollected.stablecoins || 0), 6)} />
-                  <TagNetworkToken token={{ symbol: 'USD' }} iconOnly />
-                </div>
+                {tokens.map(t => <TokenAmountSum key={t} data={totalSrFeeCollected} token={t} />)}
               </div>
             }
             {
@@ -188,21 +137,7 @@ export function LpContent ({ address, addressByNetwork, dealer, withSrFee = true
               <>
                 <div className='flex flex-1 flex-col min-w-[142.5px]'>
                   <div className='text-xs font-medium text-gray-500 uppercase'>Difference</div>
-                  <div className='flex items-center'>
-                    <div className='ml-1 text-sm font-mono'>+</div>
-                    <NumberDisplay value={ethers.utils.formatUnits(BigNumber.from(totalInContractDiff.eth || 0), 6)} />
-                    <TagNetworkToken token={{ symbol: 'ETH' }} iconOnly />
-                  </div>
-                  <div className='flex items-center'>
-                    <div className='ml-1 text-sm font-mono'>+</div>
-                    <NumberDisplay value={ethers.utils.formatUnits(BigNumber.from(totalInContractDiff.bnb || 0), 6)} />
-                    <TagNetworkToken token={{ symbol: 'BNB' }} iconOnly />
-                  </div>
-                  <div className='flex items-center'>
-                    <div className='ml-1 text-sm font-mono'>+</div>
-                    <NumberDisplay value={ethers.utils.formatUnits(BigNumber.from(totalInContractDiff.stablecoins || 0), 6)} />
-                    <TagNetworkToken token={{ symbol: 'USD' }} iconOnly />
-                  </div>
+                  {tokens.map(t => <TokenAmountSum key={t} plus data={totalInContractDiff} token={t} />)}
                 </div>
               </>
             }
@@ -211,6 +146,28 @@ export function LpContent ({ address, addressByNetwork, dealer, withSrFee = true
       </ListRowWrapper>
       {networkRows}
     </dl>
+  )
+}
+
+function TokenTotalAmountSum ({ totalDeposit, totalBalance, totalSrFeeCollected, token }) {
+  return (
+    <div className='flex items-center'>
+      <NumberDisplay
+        className='font-bold'
+        value={ethers.utils.formatUnits(BigNumber.from(totalDeposit[token] || 0).add(totalBalance[token] || 0).add(totalSrFeeCollected[token] || 0), 6)}
+      />
+      <TagNetworkToken token={{ symbol: token.toUpperCase() }} iconOnly />
+    </div>
+  )
+}
+
+function TokenAmountSum ({ data, token, plus }) {
+  return (
+    <div className='flex items-center'>
+      {plus && <div className='ml-1 text-sm font-mono'>+</div>}
+      <NumberDisplay value={ethers.utils.formatUnits(BigNumber.from(data[token] || 0), 6)} />
+      <TagNetworkToken token={{ symbol: token.toUpperCase() }} iconOnly />
+    </div>
   )
 }
 
