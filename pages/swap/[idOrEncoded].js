@@ -342,10 +342,10 @@ function SwapActionButton({ role, data, swap, status }) {
     case 'RELEASING*':
     case 'RELEASING...':
       if (unlocks >= locks) {
-        if (directSwap) {
-          actionButton = role === 'root' && <>{btnTransfer}{swap.expired ? btnSimpleRelease : btnDirectRelease}</>
-        } else {
+        if (!directSwap) {
           actionButton = <>{btnManualWithdraw}{btnSimpleRelease}</>
+        } else if (role === 'root') {
+          actionButton = <>{swap.inToken === 32 ? btnTransfer : btnManualWithdraw}{swap.expired ? btnSimpleRelease : btnDirectRelease}</>
         }
         break
       }
