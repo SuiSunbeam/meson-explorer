@@ -320,7 +320,7 @@ function SwapActionButton({ role, data, swap, status }) {
       actionButton = data.fromContract ? btnExecute : btnBond
       break;
     case 'BONDED':
-      actionButton = btnLock
+      actionButton = data.releaseSignature ? btnExecute : btnLock
       break;
     case 'EXPIRED*':
     case 'CANCELLED*':
