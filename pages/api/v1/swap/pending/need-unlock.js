@@ -9,8 +9,8 @@ export default listHandler({
   getQuery: req => {
     const { from, to } = req.query
     const query = {
-      $and: [{ 'events.name': 'RELEASED' }, { 'events.name': { $ne: 'UNLOCKED' } }],
       released: { $exists: false },
+      $and: [{ 'events.name': 'LOCKED' }, { 'events.name': { $ne: 'UNLOCKED' } }],
       errorConfirmed: { $ne: true },
       modified: { $ne: true },
       disabled: { $exists: false }
@@ -24,5 +24,6 @@ export default listHandler({
     return query
   },
   sort: { created: -1 },
+  hint: { released: 1 },
   select: SWAP_RES_FIELDS
 })

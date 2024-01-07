@@ -9,6 +9,7 @@ export default listHandler({
   getQuery: req => {
     const { from, to } = req.query
     const query = {
+      executed: { $exists: false },
       'events.name': { $in: ['BONDED', 'POSTED'], $nin: ['EXECUTED', 'CANCELLED'] },
       errorConfirmed: { $ne: true },
       modified: { $ne: true },
@@ -23,5 +24,6 @@ export default listHandler({
     return query
   },
   sort: { created: -1 },
+  hint: { executed: 1 },
   select: SWAP_RES_FIELDS
 })
