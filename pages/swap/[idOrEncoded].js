@@ -327,7 +327,9 @@ function SwapActionButton({ role, data, swap, status }) {
       actionButton = btnUnlock
       break;
     case 'EXPIRED':
-      if (!data.fromContract) {
+      if (data.releaseSignature) {
+        actionButton = <>{btnExecute}{btnSimpleRelease}</>
+      } else if (!data.fromContract) {
         actionButton = btnWithdraw
       } else if (posted.signer) {
         actionButton = <>{btnWithdrawTo}{btnSimpleRelease}</>
