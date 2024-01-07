@@ -31,6 +31,10 @@ export default function AddressSwapList() {
     window.open(`/api/v1/address/${address}/export`, '_blank')
   }, [address])
 
+  if (!address) {
+    return null
+  }
+
   return (
     <PagiCard
       title='Swaps for Address'
