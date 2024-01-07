@@ -347,7 +347,11 @@ function SwapActionButton({ role, data, swap, status }) {
         if (!directSwap) {
           actionButton = <>{btnManualWithdraw}{btnSimpleRelease}</>
         } else if (role === 'root') {
-          actionButton = <>{swap.inToken === 32 ? btnTransfer : btnManualWithdraw}{swap.expired ? btnSimpleRelease : btnDirectRelease}</>
+          if (swap.inToken === 32) {
+            actionButton = btnTransfer
+          } else {
+            actionButton = <>{btnManualWithdraw}{swap.expired ? btnSimpleRelease : btnDirectRelease}</>
+          }
         }
         break
       }
