@@ -27,7 +27,7 @@ export default function PaidPremiumList() {
           </div>
         </div>
       } 
-      queryUrl={`admin/premium/${addr}`}
+      queryUrl={addr && `admin/premium/${addr}`}
       fallback={`/premium/${addr}`}
       tableHeaders={[
         { name: 'address / period', width: '20%' },

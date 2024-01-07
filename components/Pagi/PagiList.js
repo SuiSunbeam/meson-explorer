@@ -9,7 +9,7 @@ import Pagination from './Pagination'
 
 export default function PagiList({ queryUrl, fallback, redirectFallback = () => false, reducer, pageSize = 10, maxPage, children }) {
   const router = useRouter()
-  const { data, error, page } = usePagination(queryUrl, router.query.page, pageSize)
+  const { data, total, error, page } = usePagination(queryUrl, router.query.page, pageSize, { fetchTotal: !maxPage })
 
   if (Number.isNaN(page) || redirectFallback(error, page)) {
     router.replace(fallback)
@@ -20,7 +20,7 @@ export default function PagiList({ queryUrl, fallback, redirectFallback = () => 
   } else if (!data) {
     return <LoadingScreen />
   } else {
-    const { total, maxPage: mp } = data
+    const { maxPage: mp } = data
     const list = [...data.list]
     if (reducer && list.length) {
       list.unshift(list.reduce(reducer, null))
@@ -33,7 +33,7 @@ export default function PagiList({ queryUrl, fallback, redirectFallback = () => 
     return (
       <>
         {React.cloneElement(children, { list })}
-        <Pagination size={pageSize} page={page} total={total} maxPage={mp || maxPage} onPageChange={onPageChange} />
+        <Pagination size={pageSize} page={page} currentSize={list.length} total={total} maxPage={mp || maxPage} onPageChange={onPageChange} />
       </>
     )
   }

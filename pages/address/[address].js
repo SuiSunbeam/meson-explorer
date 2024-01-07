@@ -31,16 +31,12 @@ export default function AddressSwapList() {
     window.open(`/api/v1/address/${address}/export`, '_blank')
   }, [address])
 
-  if (!address) {
-    return null
-  }
-
   return (
     <PagiCard
       title='Swaps for Address'
       right={authorized && <Button rounded size='sm' color='info' onClick={exportSwaps}>Export</Button>}
       subtitle={<div className='flex items-center'>{premiumBadge}{address}</div>}
-      queryUrl={`address/${address}/swap`}
+      queryUrl={address && `address/${address}/swap`}
       fallback={`/address/${address}`}
       tableHeaders={[
         { name: 'swap id / time', width: '18%', className: 'hidden sm:table-cell' },

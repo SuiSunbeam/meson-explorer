@@ -19,7 +19,7 @@ export default function AddressSwapList() {
       title={`Fee Shared Swaps`}
       subtitle={`Shared with Pool ${poolIndex}`}
       right={<Button rounded size='sm' color='info' onClick={exportSwaps}>Export</Button>}
-      queryUrl={`swap/share-with/${poolIndex}`}
+      queryUrl={poolIndex && `swap/share-with/${poolIndex}`}
       fallback={`/swap/share-with/${poolIndex}`}
       tableHeaders={[
         { name: 'swap id / time', width: '18%', className: 'hidden sm:table-cell' },

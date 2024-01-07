@@ -1,13 +1,15 @@
 import React from 'react'
 import classnames from 'classnames'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid'
+import { Loading } from 'components/LoadingScreen'
 
 import Button from '../Button'
 
-export default function Pagination({ size = 10, page, total, maxPage, onPageChange }) {
+export default function Pagination({ size, page, currentSize, total, maxPage, onPageChange }) {
+  const hasMore = currentSize >= size
   const pages = React.useMemo(() => {
     if (!total) {
-      return maxPage
+      return maxPage || page + (hasMore ? 2 : 1)
     }
     const pages = Math.ceil(total / size)
     if (maxPage && pages > maxPage) {
@@ -15,13 +17,14 @@ export default function Pagination({ size = 10, page, total, maxPage, onPageChan
     } else {
       return pages
     }
-  }, [total, size, maxPage])
+  }, [total, size, page, hasMore, maxPage])
+  const loading = !total && !maxPage && pages > page + 1
   return (
     <div className='flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 sm:px-6'>
       <SmPagination page={page} pages={pages} onPageChange={onPageChange} />
       <div className='hidden sm:flex-1 sm:flex sm:items-center sm:justify-between'>
-        <PagiDescription size={size} page={page} total={total} maxPage={maxPage} />
-        <PagiButtonsWithChevron page={page} pages={pages} onPageChange={onPageChange} />
+        <PagiDescription size={size} page={page} currentSize={currentSize} total={total} maxPage={maxPage} />
+        <PagiButtonsWithChevron page={page} pages={pages} loading={loading} onPageChange={onPageChange} />
       </div>
     </div>
   )
@@ -50,22 +53,27 @@ function SmPagination ({ page, pages, onPageChange }) {
   )
 }
 
-function PagiDescription ({ size, page, total, maxPage }) {
+function PagiDescription ({ size, page, currentSize, total, maxPage }) {
+  const start = size * page + 1
+  const end = size * page + currentSize
+  const desc = <>Showing <span className='font-medium'>{start}</span> to <span className='font-medium'>{end}</span></>
   if (!total) {
-    return <div></div>
+    return (
+      <div className='text-sm text-gray-500'>
+        {desc}
+      </div>
+    )
   }
 
-  const start = size * page + 1
-  const end = Math.min(size * page + size, total)
   const displayTotal = (maxPage && (maxPage * size) < total) ? `${maxPage * size}+` : total
   return (
     <div className='text-sm text-gray-500'>
-      Showing <span className='font-medium'>{start}</span> to <span className='font-medium'>{end}</span> of <span className='font-medium'>{displayTotal}</span> results
+      {desc} of <span className='font-medium'>{displayTotal}</span> results
     </div>
   )
 }
 
-function PagiButtonsWithChevron ({ page, pages, onPageChange }) {
+function PagiButtonsWithChevron ({ page, pages, loading, onPageChange }) {
   return (
     <div>
       <nav className='relative z-0 inline-flex -space-x-px rounded-md shadow-sm' aria-label='Pagination'>
@@ -78,6 +86,7 @@ function PagiButtonsWithChevron ({ page, pages, onPageChange }) {
           <ChevronLeftIcon className='w-5 h-5' aria-hidden='true' />
         </Button>
         <PagiButtons page={page} pages={pages} onPageChange={onPageChange} />
+        {loading && <PagiLoading />}
         <Button
           className='px-2 text-gray-500 rounded-r-md'
           disabled={page >= pages - 1}
@@ -120,6 +129,14 @@ function PagiEtc () {
   return (
     <span className='relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300'>
       ...
+    </span>
+  )
+}
+
+function PagiLoading () {
+  return (
+    <span className='relative inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300'>
+      <Loading />
     </span>
   )
 }
