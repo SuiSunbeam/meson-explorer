@@ -1,7 +1,7 @@
 import { Banners } from 'lib/db'
 
 function getBannerQuery (bannerId) {
-  const query = { disabled: { $ne: true } }
+  const query = { disabled: { $exists: false } }
   if (bannerId) {
     query._id = bannerId
   }

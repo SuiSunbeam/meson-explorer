@@ -13,7 +13,7 @@ export default async function handler(req, res) {
 }
 
 async function getRecentFailRate() {
-  const query = { disabled: { $ne: true } }
+  const query = { disabled: { $exists: false } }
   const list = await Swaps.find(query)
     .select('events created released')
     .sort({ created: -1 })

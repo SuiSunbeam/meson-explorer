@@ -6,7 +6,7 @@ import { SWAP_RES_FIELDS, AUTO_ADDRESSES } from 'lib/const'
 export default listHandler({
   collection: Swaps,
   getQuery: (req, roles, headerRoles) => {
-    const query = { disabled: { $ne: true }, hide: { $ne: true } }
+    const query = { disabled: { $exists: false }, hide: { $ne: true } }
     if (true || roles?.some(r => ['root', 'admin'].includes(r)) || headerRoles.includes('data')) {
       delete query.hide
       const { category, from, to, token = '', failed } = req.query

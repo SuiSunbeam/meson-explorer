@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   }
 
   const { address } = req.query
-  const query = { fromTo: address, disabled: { $ne: true } }
+  const query = { fromTo: address, disabled: { $exists: false } }
   const rawList = await Swaps.find(query)
     .select('encoded events fromTo created srFee lpFee')
     .sort({ created: 1 })

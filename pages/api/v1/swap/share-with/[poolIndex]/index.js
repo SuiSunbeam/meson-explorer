@@ -6,7 +6,7 @@ import { SWAP_RES_FIELDS } from 'lib/const'
 export default listHandler({
   collection: Swaps,
   getQuery: (req, roles, headerRoles) => {
-    const query = { shareIndex: req.query.poolIndex, disabled: { $ne: true } }
+    const query = { shareIndex: req.query.poolIndex, disabled: { $exists: false } }
     if (roles?.some(r => ['root', 'admin'].includes(r)) || headerRoles.includes('data')) {
       const { from, to } = req.query
       if (from) {

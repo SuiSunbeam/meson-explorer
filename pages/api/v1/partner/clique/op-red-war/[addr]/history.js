@@ -9,7 +9,7 @@ export default listHandler({
   const { addr = '', start, end } = req.query
   const recipient = addr.toLowerCase()
   const query = {
-      disabled: { $ne: true },
+      disabled: { $exists: false },
       released: { $exists: true },
       'fromTo.1': recipient,
       outChain: '0x0266',

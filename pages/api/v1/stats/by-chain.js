@@ -79,7 +79,7 @@ export default listHandler({
     const aggregator = [
       {
         $match: {
-          disabled: { $ne: true },
+          disabled: { $exists: false },
           created: { $gt: startDate, $lt: endDate },
           $nor: [{
             $and: [

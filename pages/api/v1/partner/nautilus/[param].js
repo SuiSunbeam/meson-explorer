@@ -30,7 +30,7 @@ export default listHandler({
     const aggregator = [
       {
         $match: {
-          disabled: { $ne: true },
+          disabled: { $exists: false },
           released: { $exists: true },
           ...matchChain,
           // created: { $gt: startDate, $lt: endDate },

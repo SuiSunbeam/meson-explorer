@@ -18,7 +18,7 @@ export async function count(addr = '', query = {}) {
   const pipeline = [
     {
       $match: {
-        disabled: { $ne: true },
+        disabled: { $exists: false },
         released: { $exists: true },
         'fromTo.1': recipient,
         outChain: '0x0266',
@@ -70,7 +70,7 @@ export async function fee(addr = '', query = {}) {
   const pipeline = [
     {
       $match: {
-        disabled: { $ne: true },
+        disabled: { $exists: false },
         released: { $exists: true },
         'fromTo.1': recipient,
         outChain: '0x0266',

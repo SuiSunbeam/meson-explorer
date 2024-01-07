@@ -6,7 +6,7 @@ import { presets, getStatusFromEvents } from 'lib/swap'
 
 export default async function handler(req, res) {
   const { poolIndex } = req.query
-  const query = { shareIndex: poolIndex, disabled: { $ne: true } }
+  const query = { shareIndex: poolIndex, disabled: { $exists: false } }
   const rawList = await Swaps.find(query)
     .select('encoded events fromTo created srFee lpFee')
     .sort({ created: 1 })

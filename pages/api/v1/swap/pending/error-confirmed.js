@@ -10,7 +10,7 @@ export default listHandler({
     const { from, to } = req.query
     const query = {
       errorConfirmed: true,
-      disabled: { $ne: true }
+      disabled: { $exists: false }
     }
     if (from) {
       query.inChain = presets.getNetwork(from).shortSlip44

@@ -13,7 +13,7 @@ export default listHandler({
         $match: {
           errorConfirmed: { $ne: true },
           modified: { $ne: true },
-          disabled: { $ne: true }
+          disabled: { $exists: false }
         }
       },
       {

@@ -12,7 +12,7 @@ export default listHandler({
       'events.name': { $in: ['BONDED', 'POSTED'], $nin: ['EXECUTED', 'CANCELLED'] },
       errorConfirmed: { $ne: true },
       modified: { $ne: true },
-      disabled: { $ne: true }
+      disabled: { $exists: false }
     }
     if (from) {
       query.inChain = presets.getNetwork(from).shortSlip44

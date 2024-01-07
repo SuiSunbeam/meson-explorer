@@ -10,7 +10,7 @@ export default async function handler(req, res) {
       { updated: { $gt: since } },
       { 'events.name': { $eq: 'BONDED', $nin: ['RELEASED', 'CANCELLED'] } },
     ],
-    disabled: { $ne: true }
+    disabled: { $exists: false }
   }
   
   const list = await Swaps.find(query)
