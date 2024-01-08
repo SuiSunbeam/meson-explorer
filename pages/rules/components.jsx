@@ -23,6 +23,7 @@ const tokens = [
   { id: '*', name: 'Any Token' },
   { id: 'x', name: 'Different' },
   { id: 'ETH', name: 'ETH', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'ETH' }} /> },
+  { id: 'BTC', name: 'BTC', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'BTC' }} /> },
   { id: 'BNB', name: 'BNB', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'BNB' }} /> },
   { id: 'USDC', name: 'USDC', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'USDC' }} /> },
   { id: 'USDT', name: 'USDT', icon: <TagNetworkToken iconOnly size='md' token={{ symbol: 'USDT' }} /> },
@@ -239,8 +240,9 @@ const fmt2 = Intl.NumberFormat('en', { maximumSignificantDigits: 4 })
 
 export function RowSwapRule ({ d, prices, onOpenModal, hides = [] }) {
   const isETH = d.to.endsWith('ETH')
+  const isBTC = d.to.endsWith('BTC')
   const isBNB = d.to.endsWith('BNB')
-  const isCore = isETH || isBNB
+  const nonStablecoin = isETH || isBTC || isBNB
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1'>
@@ -253,20 +255,20 @@ export function RowSwapRule ({ d, prices, onOpenModal, hides = [] }) {
           #{d.priority}
         </div>
       </Td>
-      <Td size='sm'>{d.limit && (isCore ? d.limit : `${fmt.format(d.limit / 1000)}k`)}</Td>
+      <Td size='sm'>{d.limit && (nonStablecoin ? d.limit : `${fmt.format(d.limit / 1000)}k`)}</Td>
       {!hides.includes('factor') && <Td size='sm'>{d.factor}</Td>}
-      {!hides.includes('minimum') && <Td size='sm'>{d.minimum && `${isCore ? '' : '$'}${ethers.utils.formatUnits(d.minimum, 6)}`}</Td>}
+      {!hides.includes('minimum') && <Td size='sm'>{d.minimum && `${nonStablecoin ? '' : '$'}${ethers.utils.formatUnits(d.minimum, 6)}`}</Td>}
       {
         !hides.includes('rules') &&
         <>
-          <Td size='sm'>{d.fee?.map((item, i) => <FeeRule key={i} {...item} isCore={isCore} />)}</Td>
+          <Td size='sm'>{d.fee?.map((item, i) => <FeeRule key={i} {...item} nonStablecoin={nonStablecoin} />)}</Td>
           <Td size='sm'></Td>
         </>
       }
       {
         !hides.includes('gas') &&
         <Td size='sm'>
-          {d.fee?.map((item, i) => <GasCalculation key={i} {...item} isCore={isCore} prices={prices} gasPrice={d.gasPrice} gasPriceL0={d.gasPriceL0} />)}
+          {d.fee?.map((item, i) => <GasCalculation key={i} {...item} nonStablecoin={nonStablecoin} prices={prices} gasPrice={d.gasPrice} gasPriceL0={d.gasPriceL0} />)}
         </Td>
       }
       {
@@ -316,7 +318,7 @@ function SwapRuleRouteKey ({ routeKey = '' }) {
   )
 }
 
-function FeeRule ({ min, base, gasFee, rate, isCore }) {
+function FeeRule ({ min, base, gasFee, rate, nonStablecoin }) {
   let minStr = min
   if (min > 1000) {
     minStr = (min / 1000) + 'k'
@@ -326,10 +328,10 @@ function FeeRule ({ min, base, gasFee, rate, isCore }) {
 
   const rule = []
   if (base) {
-    rule.push(`${isCore ? '' : '$'}${ethers.utils.formatUnits(base, 6)}`)
+    rule.push(`${nonStablecoin ? '' : '$'}${ethers.utils.formatUnits(base, 6)}`)
   }
   if (gasFee) {
-    if (isCore) {
+    if (nonStablecoin) {
       rule.push(
         <div className='flex items-center -mr-3'>
           {ethers.utils.formatUnits(gasFee, 3)}
@@ -360,7 +362,7 @@ const CoreSymbols = {
   TRX: '🔻',
 }
 
-function GasCalculation ({ gas, core, multiplier = 1, isCore, prices, gasPrice, gasL0, gasPriceL0 }) {
+function GasCalculation ({ gas, core, multiplier = 1, nonStablecoin, prices, gasPrice, gasL0, gasPriceL0 }) {
   console.log('GasCalculation', { gas, gasPrice })
   if (!(gas && gasPrice)) {
     return ''
@@ -377,7 +379,7 @@ function GasCalculation ({ gas, core, multiplier = 1, isCore, prices, gasPrice, 
     gasUsed += gasL0 * gasPriceL0
   }
 
-  const gasFee = isCore
+  const gasFee = nonStablecoin
     ? <div className='flex items-center -ml-2'>
         {fmt.format(corePrice * gasUsed * (multiplier || 1) / 1e15)}
         <span className='ml-0.5 text-[10px] text-gray-500'>× 10<sup>-3</sup> 🔹</span>
@@ -407,7 +409,7 @@ function GasCalculation ({ gas, core, multiplier = 1, isCore, prices, gasPrice, 
           </div>
           {gasL0 && gasPriceL0 && <div className='text-2xl font-extralight text-gray-300 ml-2'>)</div>}
         </div>
-        <div className={classnames('text-xs', isCore ? 'text-transparent' : 'text-gray-500')}>×</div>
+        <div className={classnames('text-xs', nonStablecoin ? 'text-transparent' : 'text-gray-500')}>×</div>
         <div className='flex-1 shrink-0'>{coreDisplay}</div>
         <div className={classnames('text-xs', multiplier === 1 ? 'text-transparent' : 'text-gray-500')}>×</div>
         <div className='flex-1 shrink-0'>{multiplier !== 1 && multiplier}</div>
