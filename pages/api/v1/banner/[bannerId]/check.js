@@ -1,7 +1,7 @@
 import { Banners } from 'lib/db'
 
 function getBannerQuery (bannerId) {
-  const query = { disabled: { $exists: false } }
+  const query = { disabled: { $ne: true } }
   if (bannerId) {
     query._id = bannerId
   }
@@ -17,12 +17,14 @@ export default async function handler(req, res) {
 
 async function get(req, res) {
   const { bannerId, address = '' } = req.query
+  console.log(getBannerQuery(bannerId))
   const banner = await Banners.findOne(getBannerQuery(bannerId))
     .sort({ priority: -1 })
     .select('metadata')
 
   if (!banner) {
     res.json({ error: { code: 404, message: 'Not found' } })
+    return
   }
 
   if (banner.metadata.find(item => item.address === address.toLowerCase() )) {
