@@ -5,7 +5,6 @@ import { SWAP_RES_FIELDS } from 'lib/const'
 
 export default listHandler({
   collection: Swaps,
-  maxPageSize: 100,
   getAggregator: req => {
     const { from, to } = req.query
     const aggregator = [

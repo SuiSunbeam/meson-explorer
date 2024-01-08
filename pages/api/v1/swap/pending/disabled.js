@@ -5,7 +5,6 @@ import { SWAP_RES_FIELDS } from 'lib/const'
 
 export default listHandler({
   collection: Swaps,
-  maxPageSize: 100,
   getQuery: req => {
     const { from, to } = req.query
     const query = { disabled: true }

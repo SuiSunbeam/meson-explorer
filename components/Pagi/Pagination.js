@@ -1,9 +1,12 @@
 import React from 'react'
 import classnames from 'classnames'
+import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid'
 import { Loading } from 'components/LoadingScreen'
 
 import Button from '../Button'
+import ButtonGroup from '../ButtonGroup'
 
 export default function Pagination({ size, page, currentSize, total, maxPage, onPageChange }) {
   const hasMore = currentSize >= size
@@ -23,7 +26,10 @@ export default function Pagination({ size, page, currentSize, total, maxPage, on
     <div className='flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 sm:px-6'>
       <SmPagination page={page} pages={pages} total={total} onPageChange={onPageChange} />
       <div className='hidden sm:flex-1 sm:flex sm:items-center sm:justify-between'>
-        <PagiDescription size={size} page={page} currentSize={currentSize} total={total} maxPage={maxPage} />
+        <div className='flex flex-row items-center gap-4'>
+          <PagiDescription size={size} page={page} currentSize={currentSize} total={total} maxPage={maxPage} />
+          <PagiSizeSelection size={size} />
+        </div>
         <PagiButtonsWithChevron page={page} pages={pages} loading={loading} onPageChange={onPageChange} />
       </div>
     </div>
@@ -35,6 +41,7 @@ function SmPagination ({ page, pages, total, onPageChange }) {
     <div className='flex-1 flex justify-between items-center sm:hidden'>
       <Button
         rounded
+        size='sm'
         disabled={page <= 0}
         onClick={() => onPageChange(page - 1)}
       >
@@ -43,6 +50,7 @@ function SmPagination ({ page, pages, total, onPageChange }) {
       <div className='text-sm text-gray-500'>Page {page+1}{total ? `/${pages}` : ''}</div>
       <Button
         rounded
+        size='sm'
         disabled={page >= pages - 1}
         className='ml-3'
         onClick={() => onPageChange(page + 1)}
@@ -73,12 +81,40 @@ function PagiDescription ({ size, page, currentSize, total, maxPage }) {
   )
 }
 
+function PagiSizeSelection ({ size }) {
+  const router = useRouter()
+  const { data: session } = useSession()
+  const authorized = session?.user?.roles?.some(r => ['root', 'admin'].includes(r))
+
+  const onSize = React.useCallback(size => {
+    const query = router.query
+    query.size = Number(size)
+    if (query.size === 10) {
+      delete query.size
+    }
+    router.push({ query })
+  }, [router])
+
+  if (!authorized) {
+    return null
+  }
+  return (
+    <ButtonGroup
+      size='sm'
+      active={size.toString()}
+      buttons={[{ key: '10', text: 10 }, { key: '50', text: 50 }, { key: '100', text: 100 }]}
+      onChange={onSize}
+    />
+  )
+}
+
 function PagiButtonsWithChevron ({ page, pages, loading, onPageChange }) {
   return (
     <div>
       <nav className='relative z-0 inline-flex -space-x-px rounded-md shadow-sm' aria-label='Pagination'>
         <Button
-          className='px-2 text-gray-500 rounded-l-md'
+          size='sm'
+          className='px-1.5 text-gray-500 rounded-l-md'
           disabled={page <= 0}
           onClick={() => onPageChange(page - 1)}
         >
@@ -88,7 +124,8 @@ function PagiButtonsWithChevron ({ page, pages, loading, onPageChange }) {
         <PagiButtons page={page} pages={pages} onPageChange={onPageChange} />
         {loading && <PagiLoading />}
         <Button
-          className='px-2 text-gray-500 rounded-r-md'
+          size='sm'
+          className='px-1.5 text-gray-500 rounded-r-md'
           disabled={page >= pages - 1}
           onClick={() => onPageChange(page + 1)}
         >
@@ -127,7 +164,7 @@ function PagiButtons ({ page, pages, onPageChange }) {
 
 function PagiEtc () {
   return (
-    <span className='relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300'>
+    <span className='relative inline-flex items-center px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300'>
       ...
     </span>
   )
@@ -135,7 +172,7 @@ function PagiEtc () {
 
 function PagiLoading () {
   return (
-    <span className='relative inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300'>
+    <span className='relative inline-flex items-center px-2.5 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300'>
       <Loading />
     </span>
   )
@@ -145,6 +182,7 @@ function PagiButton ({ active, mdHidden, page, onPageChange }) {
   return (
     <Button
       active={active}
+      size='sm'
       className={classnames(
         'text-gray-500',
         mdHidden && 'hidden md:inline-flex relative'
