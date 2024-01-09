@@ -303,7 +303,7 @@ function SwapActionButton({ role, data, swap, status }) {
   const btnDirectExecute = role && <Button size='sm' color='info' rounded onClick={() => extensions.directExecute(swap, data.releaseSignature, initiator, recipient)}>DirectExecute</Button>
   const btnRelease = role && <Button size='sm' color='info' rounded onClick={() => extensions.release(swap, data.releaseSignature, initiator, recipient)}>Release</Button>
   const btnDirectRelease = role && <Button size='sm' color='info' rounded onClick={() => extensions.directRelease(swap, data.releaseSignature, initiator, recipient)}>DirectRelease</Button>
-  const btnSimpleRelease = role === 'root' && <Button size='sm' color='info' rounded onClick={() => extensions.simpleRelease(swap, recipient)}>SimpleRelease</Button>
+  const btnSimpleRelease = role === 'root' && <Button size='sm' color='info' rounded onClick={() => extensions.simpleRelease(swap, initiator, recipient)}>SimpleRelease</Button>
   const btnTransfer = role === 'root' && <Button size='sm' color='info' rounded onClick={() => extensions.transfer(swap, initiator, recipient)}>Transfer</Button>
   const btnWithdraw = <Button size='sm' color='info' rounded onClick={() => extensions.withdraw(swap)}>Withdraw</Button>
   const btnWithdrawTo = role === 'root' && <Button size='sm' color='info' rounded onClick={() => extensions.withdrawTo(swap, posted.signer)}>Withdraw To {abbreviate(posted?.signer, 4, 0)}</Button>
