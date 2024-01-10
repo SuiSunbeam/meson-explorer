@@ -142,6 +142,7 @@ function CorrectSwap({ data: raw }) {
     const feeSide = swap.deprecatedEncoding ? from : to
     body = (
       <dl>
+        {isRoot && <OnChainStatus data={data} from={from} to={to} />}
         <ListRow title='Swap ID'>
           <div className='break-all'>{data._id}</div>
         </ListRow>
@@ -249,7 +250,6 @@ function CorrectSwap({ data: raw }) {
             </ul>
           </ListRow>
         }
-        {isRoot && <OnChainStatus data={data} from={from} to={to} />}
       </dl>
     )
   }
