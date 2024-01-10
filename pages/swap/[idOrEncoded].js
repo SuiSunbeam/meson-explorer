@@ -34,6 +34,7 @@ import ListRow from 'components/ListRow'
 import ExternalLink from 'components/ExternalLink'
 import TagNetwork from 'components/TagNetwork'
 import TagNetworkToken from 'components/TagNetworkToken'
+import { Loading } from 'components/LoadingScreen'
 
 
 const StatusDesc = {
@@ -456,6 +457,12 @@ function SwapTimes({ data, swap }) {
   )
 }
 
+const lockStatus = {
+  0: '⚪️',
+  1: '🟠',
+  4: '🟢',
+  9: '🟠',
+}
 function OnChainStatus({ data, from, to }) {
   const { dealer } = useDealer()
   const [posted, setPosted] = React.useState()
@@ -474,10 +481,15 @@ function OnChainStatus({ data, from, to }) {
   if (!data) {
     return null
   }
+  const { exist, initiator, poolOwner } = posted || {}
+  const { status, poolOwner: lockedPool } = locked || {}
+  const executed = exist && !initiator
   return (
     <ListRow title='On-chain Status'>
-      <div>Posted: {JSON.stringify(posted)}</div>
-      <div>Locked: {JSON.stringify(locked)}</div>
+      <div className='flex flex-row items-center gap-1'>
+        <div>{posted ? [executed ? '🟢' : exist ? '🟠' : '⚪️', abbreviate(poolOwner, 4, 0)].join(' ') :  <Loading />}</div>
+        <div>{locked ? [lockStatus[status], abbreviate(lockedPool, 4, 0)].join(' '): <Loading />}</div>
+      </div>
     </ListRow>
   )
 }
