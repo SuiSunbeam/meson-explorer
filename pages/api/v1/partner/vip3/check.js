@@ -7,16 +7,26 @@ import hashes from './hashes.json'
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     const list = []
-    list.push(['Swap ID', 'Status', 'From Address', 'TX Hash', 'Network', 'Amount', 'Service Fee'])
+    list.push(['Swap ID', 'Status', 'From Address', 'TX Hash', 'Network', 'Amount', 'Service Fee', 'Fee Unit'])
 
-    const swaps = (await Swaps.find({ 'events.hash': { $in: hashes.map(x => x[4]) } })).map(swap => swap._doc)
+    const swaps = (await Swaps.find({ 'events.hash': { $in: hashes } })).map(swap => swap._doc)
     for (let hash of hashes) {
-      const swap = swaps.find(s => !!s.events.find(e => e.hash === hash[4]))
+      const swap = swaps.find(s => !!s.events.find(e => e.hash === hash))
+      if (!swap) {
+        list.push(['', '', '', hash])
+        continue
+      }
       const status = getStatusFromEvents(swap.events, swap.expireTs)
-      const { from } = presets.parseInOutNetworkTokens(swap.encoded)
+      const { from, to } = presets.parseInOutNetworkTokens(swap.encoded)
       const fromAddr = swap.events.find(e => e.name === 'POSTED')?.signer || swap.fromTo[0]
-
-      list.push([swap._id, status, fromAddr, hash[4], from.network.name, utils.formatUnits(swap.amount, 6), utils.formatUnits(swap.srFee, 6)])
+      let feeUnit = ''
+      if (Number(swap.srFee) > 0) {
+        feeUnit = presets.getTokenCategory(to.network.id, to.token.tokenIndex)
+        if (feeUnit.includes('usd')) {
+          feeUnit = 'usd'
+        }
+      }
+      list.push([swap._id, status, fromAddr, hash, from.network.name, utils.formatUnits(swap.amount, 6), utils.formatUnits(swap.srFee, 6), feeUnit])
     }
 
     const csv = stringify(list)
