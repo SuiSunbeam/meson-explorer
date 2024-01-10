@@ -248,6 +248,7 @@ function CorrectSwap({ data: raw }) {
             </ul>
           </ListRow>
         }
+        {isRoot && <OnChainStatus data={data} from={from} to={to} />}
       </dl>
     )
   }
@@ -451,6 +452,32 @@ function SwapTimes({ data, swap }) {
   return (
     <ListRow title={swap.expired ? 'Expired at' : 'Will expire at'}>
       {new Date(swap.expireTs * 1000).toLocaleString()}
+    </ListRow>
+  )
+}
+
+function OnChainStatus({ data, from, to }) {
+  const { dealer } = useDealer()
+  const [posted, setPosted] = React.useState()
+  const [locked, setLocked] = React.useState()
+
+  React.useEffect(() => {
+    if (!dealer || !data || !from.network.id || !to.network.id) {
+      return
+    }
+    const fromClient = dealer._createMesonClient(from.network)
+    const toClient = dealer._createMesonClient(to.network)
+    fromClient._getPostedSwap(data.encoded, { from: data.initiator }).then(setPosted)
+    toClient._getLockedSwap(data.encoded, data.initiator, { from: data.initiator }).then(setLocked)
+  }, [dealer, data, from.network, to.network])
+
+  if (!data) {
+    return null
+  }
+  return (
+    <ListRow title='On-chain Status'>
+      <div>Posted: {JSON.stringify(posted)}</div>
+      <div>Locked: {JSON.stringify(locked)}</div>
     </ListRow>
   )
 }
