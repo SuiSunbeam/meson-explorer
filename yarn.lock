@@ -613,10 +613,10 @@
     eventemitter3 "^4.0.7"
     lodash "^4.17.21"
 
-"@mesonfi/presets@^1.15.7":
-  version "1.15.7"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.15.7/626f9e5f14ba433fd584cdf12a97f68085733c28#626f9e5f14ba433fd584cdf12a97f68085733c28"
-  integrity sha512-mqaNy2CWMRdJbzYpOhWXWBEJYy9PEhODCA59ajdsZU4QoOyoLqWqP4bR4R+a9jLszSqXrgiaRdPb4/iPad6nHA==
+"@mesonfi/presets@^1.15.8":
+  version "1.15.8"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.15.8/6a2441073c56c2ebe6be4369e0b879e5c9c81245#6a2441073c56c2ebe6be4369e0b879e5c9c81245"
+  integrity sha512-VyIJMRZx7rEyzY2+YAQpzkOuljm+nm1oRplYVIwREk2G7E82JF+D4gc8FrVUNHRCMDIBZHFO7dqdflQDYqCbXA==
   dependencies:
     "@mesonfi/contract-abis" "^1.13.0"
     "@mesonfi/sdk" "^1.15.7"
@@ -627,10 +627,10 @@
     lodash "^4.17.21"
     tronweb "5.2.0"
 
-"@mesonfi/sdk@^1.15.2", "@mesonfi/sdk@^1.15.7":
-  version "1.15.7"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.15.7/6a158ba328f7eec7d700c5c88e8c72eedb08f830#6a158ba328f7eec7d700c5c88e8c72eedb08f830"
-  integrity sha512-c47dnlyJInNs38St8rWyAoxL3REFNswIs5leutxcTwraI0QaFfsJvjxkvFTYyvceaeIqRokmqHGNOe2MgIZEzQ==
+"@mesonfi/sdk@^1.15.2", "@mesonfi/sdk@^1.15.7", "@mesonfi/sdk@^1.15.8":
+  version "1.15.8"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.15.8/d17778156c0101c9b72876ffccd3532beff647d3#d17778156c0101c9b72876ffccd3532beff647d3"
+  integrity sha512-o/qbbe7GSRElBHJ+RKtkI+JjNquiEsM/3GKct8F4k/uVLvej7B0I4Gy/E6iAiEeI3b5oJXU3Ddn2m6e91ZiO/g==
   dependencies:
     "@mesonfi/contract-abis" "^1.13.0"
     "@mesonfi/contract-types" "^1.13.0"
