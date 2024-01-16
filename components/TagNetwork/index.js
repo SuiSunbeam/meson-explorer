@@ -25,6 +25,7 @@ import gnosis from './gnosis.png'
 import kava from './kava.png'
 import linea from './linea.png'
 import manta from './manta.png'
+import merlin from './merlin.png'
 import metis from './metis.png'
 import mnt from './mnt.png'
 import movr from './movr.png'
@@ -37,6 +38,7 @@ import sepolia from './sepolia.png'
 import skaleEuropa from './skale-europa.png'
 import skaleNebula from './skale-nebula.png'
 import solana from './solana.png'
+import starknet from './starknet.png'
 import sui from './sui.png'
 import taiko from './taiko.png'
 import tron from './tron.png'
@@ -46,7 +48,7 @@ import zkevm from './zkevm.png'
 import zkfair from './zkfair.png'
 import zksync from './zksync.png'
 
-const icons = { ancient8, aptos, arb, aurora, avax, b2, base, beam, bevm, bnb, celo, cfx, cronos, eos, eth, goerli: eth, evmos, ftm, gnosis, kava, linea, manta, mnt, metis, movr, naut, one, opbnb: bnb, opt, polygon, scroll, sepolia, 'skale-europa': skaleEuropa, 'skale-nebula': skaleNebula, solana, sui, taiko, tron, viction, x1, zkevm, zkfair, zksync }
+const icons = { ancient8, aptos, arb, aurora, avax, b2, base, beam, bevm, bnb, celo, cfx, cronos, eos, eth, goerli: eth, evmos, ftm, gnosis, kava, linea, manta, merlin, metis, mnt, movr, naut, one, opbnb: bnb, opt, polygon, scroll, sepolia, 'skale-europa': skaleEuropa, 'skale-nebula': skaleNebula, solana, starknet, sui, taiko, tron, viction, x1, zkevm, zkfair, zksync }
 
 export default function TagNetwork ({ responsive, size = 'sm', network, iconOnly, address, className }) {
   const iconId = network.id.replace(/-(testnet|sepolia|goerli)/, '')
