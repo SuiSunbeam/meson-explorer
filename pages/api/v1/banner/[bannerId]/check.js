@@ -17,10 +17,25 @@ export default async function handler(req, res) {
 
 async function get(req, res) {
   const { bannerId, address = '' } = req.query
-  console.log(getBannerQuery(bannerId))
   const banner = await Banners.findOne(getBannerQuery(bannerId))
     .sort({ priority: -1 })
     .select('metadata')
+
+  // ad hoc
+  if (bannerId === 'bevm-odyssey') {
+    if (!banner) {
+      res.status(404).send()
+      return
+    }
+
+    const match = banner.metadata.find(item => item.address === address.toLowerCase() )
+    if (match) {
+      res.json({ uniqueId: match.swapId || match.address })
+    } else {
+      res.status(404).send()
+    }
+    return
+  }
 
   if (!banner) {
     res.json({ error: { code: 404, message: 'Not found' } })
