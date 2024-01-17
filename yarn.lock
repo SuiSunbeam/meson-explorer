@@ -589,12 +589,12 @@
   resolved "https://npm.pkg.github.com/download/@MesonFi/contract-types/1.13.0/ebf2261e358b179a75c84dfe6ef5c4051d9a4165#ebf2261e358b179a75c84dfe6ef5c4051d9a4165"
   integrity sha512-/o5nczohW2CW2MA2m+lA8SRzbEKu6ISk5x+32dz0Jvl/0etSOrm3os5A4fRkwGUlvc3GgTXrK4P9fPsALm40KQ==
 
-"@mesonfi/dealer@^0.15.0":
-  version "0.15.0"
-  resolved "https://npm.pkg.github.com/download/@mesonfi/dealer/0.15.0/278cca05e0bc57516b7cb7cdfd0f5b6d65000163#278cca05e0bc57516b7cb7cdfd0f5b6d65000163"
-  integrity sha512-nth9g4AnfcVhfC/Qujw0FBag8VBRfVgJKo3XC/GPWaxF/Py9hY/mnkgofAsNPGzbJSEwmOK/0Sgnu+wZKNAUTA==
+"@mesonfi/dealer@^0.15.3":
+  version "0.15.3"
+  resolved "https://npm.pkg.github.com/download/@mesonfi/dealer/0.15.3/4385a07bcbf0a3c88ccf9bd528a509c74e9a9494#4385a07bcbf0a3c88ccf9bd528a509c74e9a9494"
+  integrity sha512-fToratsu+g0TC5AdEx5jwb82s892MkYHDafwkLeA4h5qLhPUSUp4TphKI/8wO049aVTZ7MDTRHU/vEZj2UKduw==
   dependencies:
-    "@mesonfi/sdk" "^1.15.2"
+    "@mesonfi/sdk" "^1.15.3"
     cross-fetch "^3.1.5"
     ethers "5.7.2"
     lodash "^4.17.21"
@@ -627,7 +627,7 @@
     lodash "^4.17.21"
     tronweb "5.2.0"
 
-"@mesonfi/sdk@^1.15.2", "@mesonfi/sdk@^1.15.7", "@mesonfi/sdk@^1.15.8":
+"@mesonfi/sdk@^1.15.3", "@mesonfi/sdk@^1.15.7", "@mesonfi/sdk@^1.15.8":
   version "1.15.8"
   resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.15.8/d17778156c0101c9b72876ffccd3532beff647d3#d17778156c0101c9b72876ffccd3532beff647d3"
   integrity sha512-o/qbbe7GSRElBHJ+RKtkI+JjNquiEsM/3GKct8F4k/uVLvej7B0I4Gy/E6iAiEeI3b5oJXU3Ddn2m6e91ZiO/g==
