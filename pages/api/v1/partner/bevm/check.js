@@ -12,7 +12,7 @@ async function get(req, res) {
   const banner = await Banners.findById('bevm-odyssey').select('metadata')
 
   if (!banner) {
-    res.status(404)
+    res.status(404).send()
     return
   }
 
@@ -20,6 +20,6 @@ async function get(req, res) {
   if (match) {
     res.json({ uniqueId: match.swapId || match.address })
   } else {
-    res.status(404)
+    res.status(404).send()
   }
 }
