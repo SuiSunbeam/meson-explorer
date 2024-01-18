@@ -615,8 +615,8 @@
 
 "@mesonfi/presets@^1.16.2":
   version "1.16.2"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.16.2/b16e1c89aca3cf5db151cee855298439282ee2a0#b16e1c89aca3cf5db151cee855298439282ee2a0"
-  integrity sha512-6lhGypmKrFmqD1Lq5J98EASDjYMAWF7haq/RlCorfgb78xhO9QYKlj8/iJABFs8jnXdLVGyG+oywS+5H9mBaTw==
+  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.16.2/6477c16c813df5f63d86284ca3359c9cddf501d2#6477c16c813df5f63d86284ca3359c9cddf501d2"
+  integrity sha512-0olOiq4sADleOqDdIyfTisvQ1oklKK4znUZCY15QREHaPoLEub5dUeCgf+tNYhcj/nLD6MwJvMPVFPnVgpVkag==
   dependencies:
     "@mesonfi/contract-abis" "^1.13.0"
     "@mesonfi/sdk" "^1.16.2"
