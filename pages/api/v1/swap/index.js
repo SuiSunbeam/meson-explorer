@@ -51,6 +51,9 @@ export default listHandler({
       }
       if (failed) {
         query['events.name'] = { $ne: 'RELEASED' }
+        if (category === 'api') {
+          delete query.disabled
+        }
       }
     }
     return query
