@@ -9,12 +9,15 @@ export default listHandler({
     const query = { fromTo: req.query.address, disabled: { $exists: false } }
     if (roles?.some(r => ['root', 'admin'].includes(r)) || headerRoles.includes('data')) {
       delete query.disabled
-      const { from, to } = req.query
+      const { from, to, failed } = req.query
       if (from) {
         query.inChain = presets.getNetwork(from).shortSlip44
       }
       if (to) {
         query.outChain = presets.getNetwork(to).shortSlip44
+      }
+      if (failed) {
+        query['events.name'] = { $ne: 'RELEASED' }
       }
     }
     return query

@@ -90,9 +90,7 @@ export default function SwapList() {
       </div>
       <PagiCard
         title='Latest Swaps'
-        badge={authorized &&
-          <Button size='sm' rounded color={rest.failed && 'error'} onClick={toggleFailed}>Failed</Button>
-        }
+        badge={authorized && <Button size='sm' rounded color={rest.failed && 'error'} onClick={toggleFailed}>Failed</Button>}
         tabs={tabs}
         queryUrl={queryUrl}
         fallback='/'
