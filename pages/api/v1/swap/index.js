@@ -7,7 +7,7 @@ export default listHandler({
   collection: Swaps,
   getQuery: (req, roles, headerRoles) => {
     const query = { disabled: { $exists: false }, hide: { $ne: true } }
-    if (true || roles?.some(r => ['root', 'admin'].includes(r)) || headerRoles.includes('data')) {
+    if (roles?.some(r => ['root', 'admin'].includes(r)) || headerRoles.includes('data')) {
       delete query.hide
       const { category, from, to, token = '', failed } = req.query
       if (category === 'with-gas') {
