@@ -45,7 +45,7 @@ const getPageAccessRoles = pathname => {
     pathname.startsWith('/pool') ||
     pathname.startsWith('/swap/share-with')
   ) {
-    return ['root', 'admin', 'lp']
+    return ['root', 'admin', 'lp:65537']
   }
 }
 
