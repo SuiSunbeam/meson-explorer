@@ -45,7 +45,7 @@ const getPageAccessRoles = pathname => {
     pathname.startsWith('/pool') ||
     pathname.startsWith('/swap/share-with')
   ) {
-    return ['root', 'admin', 'lp:65537']
+    return ['root', 'admin', 'lp:']
   }
 }
 
@@ -73,7 +73,7 @@ export const middleware = withAuth(
       if (pageRoles) {
         if (!token) {
           return NextResponse.redirect(new URL('/', req.url))
-        } else if (!pageRoles.some(r => roles.includes(r))) {
+        } else if (!pageRoles.some(pr => roles.find(r => r === pr || r.startsWith(pr)))) {
           return NextResponse.rewrite(new URL('/unauthorized', req.url))
         }
       }
