@@ -105,10 +105,11 @@ export default function Navbar({ globalState, setGlobalState }) {
 function Profile ({ globalState, setGlobalState }) {
   const router = useRouter()
   const { data: session } = useSession()
-  const isRoot = session?.user?.roles?.includes('root')
-  const isAdmin = session?.user?.roles?.includes('admin')
-  const isOperator = session?.user?.roles?.includes('operator')
-  const [isLp, poolIndex] = session?.user?.roles?.find(r => r.startsWith('lp:'))?.split(':')
+  const roles = session?.user?.roles || []
+  const isRoot = roles.includes('root')
+  const isAdmin = roles.includes('admin')
+  const isOperator = roles.includes('operator')
+  const [isLp, poolIndex = ''] = roles.find(r => r.startsWith('lp:'))?.split(':') || []
 
   const [show, setShow] = React.useState(false)
   const [extList, setExtList] = React.useState([])
