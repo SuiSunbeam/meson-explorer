@@ -108,6 +108,7 @@ function Profile ({ globalState, setGlobalState }) {
   const isRoot = session?.user?.roles?.includes('root')
   const isAdmin = session?.user?.roles?.includes('admin')
   const isOperator = session?.user?.roles?.includes('operator')
+  const [isLp, poolIndex] = session?.user?.roles?.find(r => r.startsWith('lp:'))?.split(':')
 
   const [show, setShow] = React.useState(false)
   const [extList, setExtList] = React.useState([])
@@ -347,6 +348,22 @@ function Profile ({ globalState, setGlobalState }) {
                   onClick={() => router.push('/stats-alls-to')}
                 >
                   AllsTo
+                </div>
+              </Menu.Item>
+            </div>
+          }
+          {
+            isLp &&
+            <div className='py-1'>
+              <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
+                Liquidity Pool
+              </div>
+              <Menu.Item>
+                <div
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => router.push(`/pool/${poolIndex}`)}
+                >
+                  Pool {poolIndex}
                 </div>
               </Menu.Item>
             </div>
