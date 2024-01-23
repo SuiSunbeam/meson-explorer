@@ -17,7 +17,7 @@ export default function AddressSwapList() {
   return (
     <PagiCard
       title={`Fee Shared Swaps`}
-      subtitle={`Shared with Pool ${poolIndex}`}
+      subtitle={poolIndex && `Shared with Pool ${poolIndex}`}
       right={<Button rounded size='sm' color='info' onClick={exportSwaps}>Export</Button>}
       queryUrl={poolIndex && `swap/share-with/${poolIndex}`}
       fallback={`/swap/share-with/${poolIndex}`}
