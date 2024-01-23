@@ -369,6 +369,22 @@ function Profile ({ globalState, setGlobalState }) {
               </Menu.Item>
             </div>
           }
+          {
+            isLp &&
+            <div className='py-1'>
+              <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
+                Fee Sharing
+              </div>
+              <Menu.Item>
+                <div
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => router.push(`/swap/share-with/${poolIndex}`)}
+                >
+                  Fee Shared Swaps
+                </div>
+              </Menu.Item>
+            </div>
+          }
         </Menu.Items>
       </Float>
     </Menu>
