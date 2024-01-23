@@ -13,7 +13,7 @@ import { LpContent } from '../lp/components'
 
 const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
 const NETWORKS = [
-  'eth', 'bnb', 'polygon', 'arb', 'opt', 'avax', 'ftm', 'tron', 'cfx'
+  'eth', 'bnb', 'polygon', 'arb', 'opt', 'avax', 'ftm', 'zksync', 'tron', 'cfx'
 ]
 
 export default function PoolPage() {
