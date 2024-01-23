@@ -112,7 +112,7 @@ export function LpContent ({ address, addressByNetwork, dealer, withSrFee = true
         <dt className='flex-1'>
           <div className='flex flex-1 flex-col'>
             <div className='text-xs font-medium text-gray-500 uppercase'>Total</div>
-            {tokens.map(t => <TokenTotalAmountSum key={t} totalDeposit={totalDeposit} totalBalance={totalBalance} totalSrFeeCollected={totalSrFeeCollected} token={t} />)}
+            {tokens.map(t => <TokenTotalAmountSum key={t} totalDeposit={totalDeposit} totalBalance={totalBalance} totalSrFeeCollected={withSrFee && totalSrFeeCollected} token={t} />)}
           </div>
         </dt>
         <dd className='md:flex-[2] mt-1 md:mt-0 md:min-w-[540px]'>
@@ -154,7 +154,7 @@ function TokenTotalAmountSum ({ totalDeposit, totalBalance, totalSrFeeCollected,
     <div className='flex items-center'>
       <NumberDisplay
         className='font-bold'
-        value={ethers.utils.formatUnits(BigNumber.from(totalDeposit[token] || 0).add(totalBalance[token] || 0).add(totalSrFeeCollected[token] || 0), 6)}
+        value={ethers.utils.formatUnits(BigNumber.from(totalDeposit[token] || 0).add(totalBalance[token] || 0).add(totalSrFeeCollected?.[token] || 0), 6)}
       />
       <TagNetworkToken token={{ symbol: token.toUpperCase() }} iconOnly />
     </div>
