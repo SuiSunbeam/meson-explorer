@@ -1,6 +1,5 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import { useSession } from 'next-auth/react'
 
 import PagiCard from 'components/Pagi/PagiCard'
 import SwapRow from 'components/SwapRow'
@@ -18,7 +17,7 @@ export default function AddressSwapList() {
     <PagiCard
       title={`Fee Shared Swaps`}
       subtitle={poolIndex && `Shared with Pool ${poolIndex}`}
-      right={<Button rounded size='sm' color='info' onClick={exportSwaps}>Export</Button>}
+      right={poolIndex && <Button rounded size='sm' color='info' onClick={exportSwaps}>Export</Button>}
       queryUrl={poolIndex && `swap/share-with/${poolIndex}`}
       fallback={`/swap/share-with/${poolIndex}`}
       tableHeaders={[
