@@ -18,12 +18,12 @@ const NETWORKS = [
 
 export default function PoolPage() {
   const router = useRouter()
-  const poolIndex = Number(router.query.poolIndex)
+  const poolIndex = Number(router.query.poolIndex) || ''
   const [addressByNetwork, setAddressByNetwork] = React.useState(null)
 
   const { dealer } = useDealer()
   React.useEffect(() => {
-    if (!dealer) {
+    if (!dealer || !poolIndex) {
       return
     }
     Promise.all(getAllNetworks().filter(n => NETWORKS.includes(n.id)).map(async network => {
@@ -53,7 +53,7 @@ export default function PoolPage() {
     <Card>
       <CardTitle
         title='Liquidity Pool'
-        subtitle={`Pool Index: ${poolIndex}`}
+        subtitle={poolIndex && `Pool Index: ${poolIndex}`}
       />
       {body}
     </Card>
