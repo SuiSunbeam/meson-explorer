@@ -299,7 +299,7 @@ function Profile ({ globalState, setGlobalState }) {
               <Menu.Item>
                 <div
                   className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                  onClick={() => router.push('/stats')}
+                  onClick={() => router.push('/stats/daily')}
                 >
                   Daily Swaps
                 </div>
@@ -307,7 +307,7 @@ function Profile ({ globalState, setGlobalState }) {
               <Menu.Item>
                 <div
                   className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                  onClick={() => router.push('/stats/by-chain')}
+                  onClick={() => router.push('/stats/daily/by-chain')}
                 >
                   Daily Swaps by Chain
                 </div>

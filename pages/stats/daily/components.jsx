@@ -3,10 +3,9 @@ import useSWR from 'swr'
 import { ethers } from 'ethers'
 
 import fetcher from 'lib/fetcher'
+import { formatDuration } from 'lib/swap'
 import { StatCard } from 'components/Card'
 import { Td } from 'components/Table'
-
-import { formatDuration } from 'lib/swap'
 
 const fmt = Intl.NumberFormat()
 
