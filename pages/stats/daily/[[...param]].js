@@ -29,7 +29,7 @@ export default function DailyStats() {
 
   React.useEffect(() => {
     if (param && !shortCoinType) {
-      router.replace('/stats')
+      router.replace('/stats/daily')
     } else if (!['from', 'to', 'both'].includes(type)) {
       // router.replace(`/stats/${key}`)
     }
@@ -50,7 +50,7 @@ export default function DailyStats() {
   }, [chain, shortCoinType, type, token])
 
   const updatePathname = React.useCallback((chain, type, token) => {
-    let pathname = `/stats`
+    let pathname = `/stats/daily`
     if (chain && chain !== 'all') {
       pathname += `/${chain}`
       if (type !== 'both') {
