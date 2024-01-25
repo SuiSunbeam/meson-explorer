@@ -36,7 +36,7 @@ export default function Stats() {
   })
 
   const queryUrl = React.useMemo(() => {
-    let queryUrl = 'stats'
+    let queryUrl = 'stats/daily'
     if (chain !== 'all') {
       queryUrl += `/${shortCoinType}`
       if (type !== 'both') {
@@ -122,7 +122,7 @@ export default function Stats() {
           onClick: () => updatePathname(t.key, type, token)
         }))}
         queryUrl={queryUrl}
-        fallback='/stats'
+        fallback='/stats/daily'
         reducer={reducer}
         tableHeaders={[
           { name: 'Date', width: '10%' },

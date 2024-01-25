@@ -28,8 +28,8 @@ export default function StatsByChain() {
   return (
     <PagiCard
       title='Daily Swaps by Chain'
-      queryUrl='/stats/by-chain'
-      fallback='/stats/by-chain'
+      queryUrl='/stats/daily/by-chain'
+      fallback='/stats/daily/by-chain'
       right={
         <ButtonGroup
           size='sm'
