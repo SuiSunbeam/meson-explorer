@@ -9,7 +9,7 @@ import { getAllNetworks } from 'lib/swap'
 
 import { GeneralStats, StatTableRow } from './components'
 
-export default function Stats() {
+export default function DailyStats() {
   const router = useRouter()
   const { token = '', param } = router.query
   const chain = param ? param[0] : 'all'

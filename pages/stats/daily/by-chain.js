@@ -13,7 +13,7 @@ import { valueInStr } from './components'
 
 const networks = getAllNetworks()
 
-export default function StatsByChain() {
+export default function DailyStatsByChain() {
   const [view, setView] = React.useState('swaps-graph')
 
   const headers = React.useMemo(() => {
