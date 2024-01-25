@@ -12,7 +12,7 @@ import { LpContent } from '../components'
 
 export default function LpPage() {
   const router = useRouter()
-  const { address } = router.query
+  const { address = '' } = router.query
 
   const { dealer } = useDealer()
 
@@ -28,8 +28,8 @@ export default function LpPage() {
   return (
     <Card>
       <CardTitle
-        title='Liquidity Provider'
-        subtitle={address}
+        title='Liquidity Pool'
+        subtitle={address && `For pool owner ${address}`}
         tabs={[
           { key: 'general', name: 'General', onClick: () => router.push(`/lp`) },
           ...EXTRA_LPS.map(lp => ({

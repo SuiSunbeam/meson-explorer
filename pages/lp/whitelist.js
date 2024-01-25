@@ -121,7 +121,7 @@ export default function LpWhitelist() {
   return (
     <Card>
       <CardTitle
-        title='Liquidity Provider'
+        title='LP Whitelist'
         subtitle='Addresses allowed to join liquidity providing'
         tabs={[
           { key: 'general', name: 'General', onClick: () => router.push(`/lp`) },

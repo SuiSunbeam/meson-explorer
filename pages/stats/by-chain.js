@@ -27,7 +27,7 @@ export default function StatsByChain() {
 
   return (
     <PagiCard
-      title='Stats for Swaps by Chain'
+      title='Daily Swaps by Chain'
       queryUrl='/stats/by-chain'
       fallback='/stats/by-chain'
       right={

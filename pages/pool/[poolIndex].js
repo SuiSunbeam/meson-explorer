@@ -52,8 +52,8 @@ export default function PoolPage() {
   return (
     <Card>
       <CardTitle
-        title='Liquidity Pool'
-        subtitle={poolIndex && `Pool Index: ${poolIndex}`}
+        title='Pool Balances'
+        subtitle={poolIndex && `For liquidity pool ${poolIndex}`}
       />
       {body}
     </Card>

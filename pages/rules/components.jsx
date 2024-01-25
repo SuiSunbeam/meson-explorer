@@ -357,6 +357,7 @@ function FeeRule ({ min, base, gasFee, rate, nonStablecoin }) {
 }
 
 const CoreSymbols = {
+  BTC: '🟡',
   ETH: '🔹',
   BNB: '🔸',
   TRX: '🔻',

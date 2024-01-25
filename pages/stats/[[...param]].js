@@ -90,7 +90,7 @@ export default function Stats() {
     <>
       <GeneralStats />
       <PagiCard
-        title='Stats for Swaps'
+        title='Daily Swaps'
         badge={shortCoinType &&
           <ButtonGroup
             size='sm'
