@@ -13,17 +13,17 @@ import { LpContent } from '../lp/components'
 
 const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
 const NETWORKS = [
-  'eth', 'bnb', 'polygon', 'arb', 'opt', 'tron', 'cfx'
+  'eth', 'bnb', 'polygon', 'arb', 'opt', 'avax', 'ftm', 'zksync', 'tron', 'cfx'
 ]
 
 export default function PoolPage() {
   const router = useRouter()
-  const poolIndex = Number(router.query.poolIndex)
+  const poolIndex = Number(router.query.poolIndex) || ''
   const [addressByNetwork, setAddressByNetwork] = React.useState(null)
 
   const { dealer } = useDealer()
   React.useEffect(() => {
-    if (!dealer) {
+    if (!dealer || !poolIndex) {
       return
     }
     Promise.all(getAllNetworks().filter(n => NETWORKS.includes(n.id)).map(async network => {
@@ -52,8 +52,8 @@ export default function PoolPage() {
   return (
     <Card>
       <CardTitle
-        title='Liquidity Pool'
-        subtitle={`Pool Index: ${poolIndex}`}
+        title='Pool Balances'
+        subtitle={poolIndex && `For liquidity pool ${poolIndex}`}
       />
       {body}
     </Card>

@@ -60,7 +60,7 @@ export default function RulesGas () {
   return (
     <Card>
       <CardTitle
-        title='Swap Rules'
+        title='Fee Rules'
         right={<Button size='sm' color='primary' rounded onClick={() => setModalData({})}>New Rule</Button>}
         tabs={[
           { key: 'gas', name: 'Gas', active: true },

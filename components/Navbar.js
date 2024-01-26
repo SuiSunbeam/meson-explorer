@@ -105,9 +105,11 @@ export default function Navbar({ globalState, setGlobalState }) {
 function Profile ({ globalState, setGlobalState }) {
   const router = useRouter()
   const { data: session } = useSession()
-  const isRoot = session?.user?.roles?.includes('root')
-  const isAdmin = session?.user?.roles?.includes('admin')
-  const isOperator = session?.user?.roles?.includes('operator')
+  const roles = session?.user?.roles || []
+  const isRoot = roles.includes('root')
+  const isAdmin = roles.includes('admin')
+  const isOperator = roles.includes('operator')
+  const [isLp, poolIndex = ''] = roles.find(r => r.startsWith('lp:'))?.split(':') || []
 
   const [show, setShow] = React.useState(false)
   const [extList, setExtList] = React.useState([])
@@ -195,7 +197,7 @@ function Profile ({ globalState, setGlobalState }) {
               </div>
             </Menu.Item>
           </div>
-          <div className='py-1'>
+          {/* <div className='py-1'>
           {
             account?.sub
             ? <>
@@ -226,19 +228,40 @@ function Profile ({ globalState, setGlobalState }) {
                 ))}
               </>
           }
-          </div>
+          </div> */}
           {
             isRoot &&
             <div className='py-1'>
-              <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
-                Root
-              </div>
               <Menu.Item>
                 <div
                   className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
                   onClick={() => router.push('/pending/bonded')}
                 >
                   Pending Swaps
+                </div>
+              </Menu.Item>
+            </div>
+          }
+          {
+            (isRoot || isAdmin || isOperator) &&
+            <div className='py-1'>
+              <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
+                Settings
+              </div>
+              <Menu.Item>
+                <div
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => router.push('/lp')}
+                >
+                  Liquidity Pools
+                </div>
+              </Menu.Item>
+              <Menu.Item>
+                <div
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => router.push('/rules/gas')}
+                >
+                  Fee Rules
                 </div>
               </Menu.Item>
             </div>
@@ -268,25 +291,49 @@ function Profile ({ globalState, setGlobalState }) {
             </div>
           }
           {
-            (isRoot || isAdmin || isOperator) &&
+            (isRoot || isAdmin) &&
             <div className='py-1'>
               <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
-                Settings
+                Statistics
               </div>
               <Menu.Item>
                 <div
                   className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                  onClick={() => router.push('/lp')}
+                  onClick={() => router.push('/stats/daily')}
                 >
-                  Liquidity Providers
+                  Daily Swaps
                 </div>
               </Menu.Item>
               <Menu.Item>
                 <div
                   className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                  onClick={() => router.push('/rules/gas')}
+                  onClick={() => router.push('/stats/daily/by-chain')}
                 >
-                  Swap Rules
+                  Daily Swaps by Chain
+                </div>
+              </Menu.Item>
+              <Menu.Item>
+                <div
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => router.push('/stats/monthly')}
+                >
+                  Monthly Stats
+                </div>
+              </Menu.Item>
+              <Menu.Item>
+                <div
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => router.push('/stats-share')}
+                >
+                  Posters
+                </div>
+              </Menu.Item>
+              <Menu.Item>
+                <div
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => router.push('/stats-alls-to')}
+                >
+                  AllsTo
                 </div>
               </Menu.Item>
             </div>
@@ -312,41 +359,25 @@ function Profile ({ globalState, setGlobalState }) {
             </div>
           }
           {
-            (isRoot || isAdmin) &&
+            isLp &&
             <div className='py-1'>
               <div className='flex items-center px-4 pt-1.5 pb-1 text-xs text-gray-500'>
-                Stats
+                Liquidity Pool {poolIndex}
               </div>
               <Menu.Item>
                 <div
                   className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                  onClick={() => router.push('/stats')}
+                  onClick={() => router.push(`/pool/${poolIndex}`)}
                 >
-                  Swaps
+                  Pool Balances
                 </div>
               </Menu.Item>
               <Menu.Item>
                 <div
                   className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                  onClick={() => router.push('/stats/by-chain')}
+                  onClick={() => router.push(`/swap/share-with/${poolIndex}`)}
                 >
-                  Swaps by Chain
-                </div>
-              </Menu.Item>
-              <Menu.Item>
-                <div
-                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                  onClick={() => router.push('/stats-share')}
-                >
-                  Posters
-                </div>
-              </Menu.Item>
-              <Menu.Item>
-                <div
-                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                  onClick={() => router.push('/stats-alls-to')}
-                >
-                  AllsTo
+                  Fee Shared Swaps
                 </div>
               </Menu.Item>
             </div>

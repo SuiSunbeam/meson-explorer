@@ -9,7 +9,7 @@ import { getAllNetworks } from 'lib/swap'
 
 import { GeneralStats, StatTableRow } from './components'
 
-export default function Stats() {
+export default function DailyStats() {
   const router = useRouter()
   const { token = '', param } = router.query
   const chain = param ? param[0] : 'all'
@@ -29,14 +29,14 @@ export default function Stats() {
 
   React.useEffect(() => {
     if (param && !shortCoinType) {
-      router.replace('/stats')
+      router.replace('/stats/daily')
     } else if (!['from', 'to', 'both'].includes(type)) {
       // router.replace(`/stats/${key}`)
     }
   })
 
   const queryUrl = React.useMemo(() => {
-    let queryUrl = 'stats'
+    let queryUrl = 'stats/daily'
     if (chain !== 'all') {
       queryUrl += `/${shortCoinType}`
       if (type !== 'both') {
@@ -50,7 +50,7 @@ export default function Stats() {
   }, [chain, shortCoinType, type, token])
 
   const updatePathname = React.useCallback((chain, type, token) => {
-    let pathname = `/stats`
+    let pathname = `/stats/daily`
     if (chain && chain !== 'all') {
       pathname += `/${chain}`
       if (type !== 'both') {
@@ -90,7 +90,7 @@ export default function Stats() {
     <>
       <GeneralStats />
       <PagiCard
-        title='Stats for Swaps'
+        title='Daily Swaps'
         badge={shortCoinType &&
           <ButtonGroup
             size='sm'
@@ -122,7 +122,7 @@ export default function Stats() {
           onClick: () => updatePathname(t.key, type, token)
         }))}
         queryUrl={queryUrl}
-        fallback='/stats'
+        fallback='/stats/daily'
         reducer={reducer}
         tableHeaders={[
           { name: 'Date', width: '10%' },

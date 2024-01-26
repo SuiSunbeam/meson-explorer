@@ -20,7 +20,7 @@ const getApiAccessRoles = pathname => {
   } else if (
     pathname.startsWith('/api/v1/swap/share-with')
   ) {
-    return ['root', 'admin', 'lp']
+    return ['root', 'admin', 'lp:']
   }
 }
 
@@ -45,7 +45,7 @@ const getPageAccessRoles = pathname => {
     pathname.startsWith('/pool') ||
     pathname.startsWith('/swap/share-with')
   ) {
-    return ['root', 'admin', 'lp']
+    return ['root', 'admin', 'lp:']
   }
 }
 
@@ -65,7 +65,7 @@ export const middleware = withAuth(
 
     if (pathname.startsWith('/api/v1')) {
       const apiRoles = getApiAccessRoles(pathname)
-      if (apiRoles && !apiRoles.some(r => roles.includes(r))) {
+      if (apiRoles && !apiRoles.some(ar => roles.find(r => r === ar || r.startsWith(ar)))) {
         return NextResponse.rewrite(new URL('/api/401', req.url))
       }
     } else {
@@ -73,7 +73,7 @@ export const middleware = withAuth(
       if (pageRoles) {
         if (!token) {
           return NextResponse.redirect(new URL('/', req.url))
-        } else if (!pageRoles.some(r => roles.includes(r))) {
+        } else if (!pageRoles.some(pr => roles.find(r => r === pr || r.startsWith(pr)))) {
           return NextResponse.rewrite(new URL('/unauthorized', req.url))
         }
       }

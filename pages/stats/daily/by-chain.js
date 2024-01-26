@@ -13,7 +13,7 @@ import { valueInStr } from './components'
 
 const networks = getAllNetworks()
 
-export default function StatsByChain() {
+export default function DailyStatsByChain() {
   const [view, setView] = React.useState('swaps-graph')
 
   const headers = React.useMemo(() => {
@@ -27,9 +27,9 @@ export default function StatsByChain() {
 
   return (
     <PagiCard
-      title='Stats for Swaps by Chain'
-      queryUrl='/stats/by-chain'
-      fallback='/stats/by-chain'
+      title='Daily Swaps by Chain'
+      queryUrl='/stats/daily/by-chain'
+      fallback='/stats/daily/by-chain'
       right={
         <ButtonGroup
           size='sm'

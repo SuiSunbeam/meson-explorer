@@ -75,8 +75,10 @@ export default function SwapDetail() {
 
 function CorrectSwap({ data: raw }) {
   const { data: session } = useSession()
-  const isRoot = session?.user?.roles?.some(r => r === 'root')
-  const authorized = session?.user?.roles?.some(r => ['root', 'admin'].includes(r))
+  const roles = session?.user?.roles || []
+  const isRoot = roles.some(r => r === 'root')
+  const authorized = roles.some(r => ['root', 'admin'].includes(r))
+  const [isLp, poolIndex = ''] = roles.find(r => r.startsWith('lp:'))?.split(':') || []
   const role = isRoot ? 'root' : authorized ? 'admin' : ''
 
   const [data, setData] = React.useState(raw)
@@ -214,7 +216,7 @@ function CorrectSwap({ data: raw }) {
             </div>
             <div className={classnames('text-sm text-gray-500', srFee + lpFee + swap.amountToShare.toNumber() > 0 ? '' : 'hidden')}>
             {
-              authorized && swap.amountToShare.gt(0)
+              (authorized || isLp) && swap.amountToShare.gt(0)
               ? `${ethers.utils.formatUnits(srFee, 6)} Service fee + ${ethers.utils.formatUnits(lpFee, 6)} LP fee + ${ethers.utils.formatUnits(swap.amountToShare.toNumber(), 6)} Share fee`
               : `${ethers.utils.formatUnits(srFee, 6)} Service fee + ${ethers.utils.formatUnits(lpFee + swap.amountToShare.toNumber(), 6)} LP fee`
             }
@@ -333,7 +335,7 @@ function SwapActionButton({ role, data, swap, status }) {
         actionButton = <>{btnExecute}{btnSimpleRelease}</>
       } else if (!data.fromContract) {
         actionButton = btnWithdraw
-      } else if (posted.signer) {
+      } else if (posted?.signer) {
         actionButton = <>{btnWithdrawTo}{btnSimpleRelease}</>
       }
       break;

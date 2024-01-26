@@ -12,7 +12,7 @@ import Badge from 'components/Badge'
 
 export default function AddressSwapList() {
   const router = useRouter()
-  const address = router.query.address
+  const { address, ...rest } = router.query
 
   const { data: session } = useSession()
   const roles = session?.user?.roles || []
@@ -27,6 +27,24 @@ export default function AddressSwapList() {
     premiumBadge = <Badge type={valid ? 'warning' : 'default'} className='mr-1' onClick={() => router.push(`/premium/${address}`)}>PREMIUM</Badge>
   }
 
+  const toggleFailed = React.useCallback(() => {
+    const query = router.query
+    if (query.failed) {
+      delete query.failed
+    } else {
+      query.failed = 'true'
+    }
+    router.push({ query })
+  }, [router])
+
+  let queryUrl
+  if (address) {
+    queryUrl = `address/${address}/swap`
+    if (rest.failed) {
+      queryUrl += '?failed=true'
+    }
+  }
+
   const exportSwaps = React.useCallback(() => {
     window.open(`/api/v1/address/${address}/export`, '_blank')
   }, [address])
@@ -34,9 +52,10 @@ export default function AddressSwapList() {
   return (
     <PagiCard
       title='Swaps for Address'
+      badge={authorized && <Button size='sm' rounded color={rest.failed && 'error'} onClick={toggleFailed}>Failed</Button>}
       right={authorized && <Button rounded size='sm' color='info' onClick={exportSwaps}>Export</Button>}
       subtitle={<div className='flex items-center'>{premiumBadge}{address}</div>}
-      queryUrl={address && `address/${address}/swap`}
+      queryUrl={queryUrl}
       fallback={`/address/${address}`}
       tableHeaders={[
         { name: 'swap id / time', width: '18%', className: 'hidden sm:table-cell' },

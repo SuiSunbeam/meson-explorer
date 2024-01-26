@@ -3,13 +3,13 @@ import Table from 'components/Table'
 
 import PagiList from './PagiList'
 
-export default function PagiCard({ title, badge, subtitle, right, tabs, tableHeaders, Row, ...props }) {
+export default function PagiCard({ title, badge, subtitle, right, tabs, tableHeaders, className, Row, ...props }) {
   return (
     <Card>
       <CardTitle title={title} badge={badge} subtitle={subtitle} right={right} tabs={tabs} />
       <CardBody>
         <PagiList {...props}>
-          <Table size='lg' headers={tableHeaders}>
+          <Table size='lg' headers={tableHeaders} className={className}>
             {list => list.map(row => <Row key={row._id} data={row} />)}
           </Table>
         </PagiList>
