@@ -335,7 +335,7 @@ function SwapActionButton({ role, data, swap, status }) {
         actionButton = <>{btnExecute}{btnSimpleRelease}</>
       } else if (!data.fromContract) {
         actionButton = btnWithdraw
-      } else if (posted.signer) {
+      } else if (posted?.signer) {
         actionButton = <>{btnWithdrawTo}{btnSimpleRelease}</>
       }
       break;
