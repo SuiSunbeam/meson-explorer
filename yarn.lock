@@ -613,13 +613,13 @@
     eventemitter3 "^4.0.7"
     lodash "^4.17.21"
 
-"@mesonfi/presets@^1.16.2":
-  version "1.16.2"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.16.2/6477c16c813df5f63d86284ca3359c9cddf501d2#6477c16c813df5f63d86284ca3359c9cddf501d2"
-  integrity sha512-0olOiq4sADleOqDdIyfTisvQ1oklKK4znUZCY15QREHaPoLEub5dUeCgf+tNYhcj/nLD6MwJvMPVFPnVgpVkag==
+"@mesonfi/presets@^1.16.4":
+  version "1.16.4"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/presets/1.16.4/d58e8b9b430beefc2785382550570d33c5a10a69#d58e8b9b430beefc2785382550570d33c5a10a69"
+  integrity sha512-zZ4aju1Tmn6Yk7g97qUMKl9QZc7qioaXcj/2VrvMxcYHBIvExiMLtmR/NDdlUVIhBRk0KM+CUpGRbUvoSBQHyQ==
   dependencies:
     "@mesonfi/contract-abis" "^1.13.0"
-    "@mesonfi/sdk" "^1.16.2"
+    "@mesonfi/sdk" "^1.16.4"
     "@mysten/sui.js" "0.33.0"
     "@solana/web3.js" "1.87.5"
     aptos "1.3.16"
@@ -628,10 +628,10 @@
     starknet "^5.24.3"
     tronweb "5.2.0"
 
-"@mesonfi/sdk@^1.15.3", "@mesonfi/sdk@^1.16.2":
-  version "1.16.2"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.16.2/7148b28e95a92a3524f95b9cb9092266803c86cd#7148b28e95a92a3524f95b9cb9092266803c86cd"
-  integrity sha512-dDukNeHBFukKM+KFCCVRAnPcDzYpU/QXQmfFBXxehfYodgiUde3WLY9m7T9xtcZXWi69Hu8PlyV/M5Igl0I2nQ==
+"@mesonfi/sdk@^1.15.3", "@mesonfi/sdk@^1.16.4":
+  version "1.16.4"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.16.4/977c92ea6b45507a61289b7c1eebfc0f4eb6ecf5#977c92ea6b45507a61289b7c1eebfc0f4eb6ecf5"
+  integrity sha512-5wvzdEeL9/gRhsIv1bnFkJpJbUoyLGy7jYYoMjlQfKSVAaq6eudUwIxtAQHpXfPmLCOq3JSfHbCg9VDyUbQExA==
   dependencies:
     "@mesonfi/contract-abis" "^1.13.0"
     "@mesonfi/contract-types" "^1.13.0"

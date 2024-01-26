@@ -335,7 +335,7 @@ function TokenAmountRows ({ address, mesonClient, multicall, core, checkDifferen
         ])
 
         const depositPlusSrFee = {}
-        meson.callsReturnContext.forEach(result => {
+        meson?.callsReturnContext.forEach(result => {
           const tokenIndex = result.reference
           const tokenType = MesonClient.tokenType(tokenIndex)
           const value = BigNumber.from(result.returnValues[0].hex)
