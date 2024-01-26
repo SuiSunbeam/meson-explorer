@@ -39,9 +39,7 @@ function RelayerStatus ({ relayerUrl }) {
   const { data, error } = useSWR(`${relayerUrl}/status`, fetcher, { refreshInterval: 5_000 })
 
   if (error) {
-    return (
-      <div className='py-6 px-4 sm:px-6 text-red-400'>{error.message}</div>
-    )
+    return <div className='py-6 px-4 sm:px-6 text-red-400'>{error.message}</div>
   } else if (!data) {
     return <LoadingScreen />
   } else {

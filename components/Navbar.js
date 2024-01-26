@@ -312,17 +312,14 @@ function Profile ({ globalState, setGlobalState }) {
                   Daily Swaps by Chain
                 </div>
               </Menu.Item>
-              {
-                isRoot &&
-                <Menu.Item>
-                  <div
-                    className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                    onClick={() => router.push('/stats/monthly')}
-                  >
-                    Monthly Stats
-                  </div>
-                </Menu.Item>
-              }
+              <Menu.Item>
+                <div
+                  className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => router.push('/stats/monthly')}
+                >
+                  Monthly Stats
+                </div>
+              </Menu.Item>
               <Menu.Item>
                 <div
                   className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'

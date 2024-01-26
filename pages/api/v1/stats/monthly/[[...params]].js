@@ -5,7 +5,7 @@ import { AUTO_ADDRESSES } from 'lib/const'
 export default listHandler({
   collection: Swaps,
   getAggregator: async req => {
-    const { token, params = [] } = req.query
+    const { params = [] } = req.query
     const [chain, type] = params
 
     const aggregator = [
@@ -90,19 +90,6 @@ export default listHandler({
       },
       { $sort: { _id: -1 } }
     ]
-    if (token === 'usd') {
-      aggregator[0].$match.$and = [{
-        $or: [
-          { inToken: { $lte: 64 } },
-          { expireTs: { $lt: new Date(1691700000 * 1000) } }
-        ],
-      }]
-    } else if (token === 'eth') {
-      aggregator[0].$match.inToken = { $gte: 252 }
-      aggregator[0].$match.expireTs = { $gt: new Date(1691700000 * 1000) }
-    } else if (token === 'bnb') {
-      aggregator[0].$match.inToken = { $gte: 248, $lt: 252 }
-    }
     if (chain) {
       if (type === 'from') {
         aggregator[0].$match.inChain = chain
@@ -112,7 +99,6 @@ export default listHandler({
         aggregator[0].$match.$or = [{ outChain: chain }, { inChain: chain }]
       }
     }
-
     return { aggregator }
   }
 })
