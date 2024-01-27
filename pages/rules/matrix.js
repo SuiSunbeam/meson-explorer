@@ -24,7 +24,7 @@ export default function RulesMatrix () {
   const router = useRouter()
 
   const networks = getAllNetworks()
-  const { data, error, mutate } = useSWR('admin/rules?type=token', fetcher)
+  const { data, error, mutate } = useSWR('admin/rules?type=network', fetcher)
   const [modalData, setModalData] = React.useState()
 
   let body = null
@@ -146,21 +146,27 @@ function RowSwapRule ({ network, rules, onOpenModal }) {
 }
 
 function RuleItem ({ rule, onOpenModal }) {
-  const commonClassname = 'flex flex-row flex-[6] shrink-0 leading-4 hover:text-primary hover:underline cursor-pointer'
+  const commonClassname = 'group flex flex-row flex-[6] shrink-0 leading-4 hover:text-primary hover:underline cursor-pointer'
 
   if (!rule || !(rule.factor || rule.minimum || rule.limit)) {
     return (
-      <div className={classnames(commonClassname, 'text-gray-300')}>
-        add rule
+      <div className={classnames(commonClassname, 'text-gray-200')}>
+        (add rule)
       </div>
     )
   }
 
   return (
     <div className={commonClassname} onClick={() => onOpenModal(rule)}>
-      <div className='flex-1 shrink-0'>{rule.factor}</div>
-      <div className='flex-1 shrink-0'>{rule.minimum && utils.formatUnits(rule.minimum, 6)}</div>
-      <div className='flex-1 shrink-0'>{rule.limit}</div>
+      <div className={classnames('flex-1 shrink-0 group-hover:text-primary', rule.factor === 1 && 'text-gray-500')}>
+        {rule.factor && `${(10000 - rule.factor * 10000)/10}${rule.factor < 1 ? '‰' : ''}`}
+      </div>
+      <div className='flex-1 shrink-0'>
+        {rule.minimum && utils.formatUnits(rule.minimum, 6)}
+      </div>
+      <div className={classnames('flex-1 shrink-0 group-hover:text-primary', rule.limit === 0 && 'text-red-500')}>
+        {rule.limit}
+      </div>
     </div>
   )
 }
