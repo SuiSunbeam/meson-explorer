@@ -392,17 +392,28 @@ export function GasCalculation ({ gas, core, multiplier = 1, noIcon, nonStableco
     gasUsed += gasL0 * gasPriceL0
   }
 
+  const feeValue = corePrice * gasUsed * (multiplier || 1) / (nonStablecoin ? 1e15 : 1e18)
   const gasFee = nonStablecoin
-    ? <div className='flex items-center -ml-2'>
-        {fmt.format(corePrice * gasUsed * (multiplier || 1) / 1e15)}
-        <span className='ml-0.5 text-[10px] text-gray-500'>× 10<sup>-3</sup>{noIcon ? '' : ' 🔹'}</span>
+    ? <div className='flex items-center'>
+        {fmt.format(feeValue)}
+        <span className='ml-0.5 text-[10px] opacity-50'>× 10<sup>-3</sup>{noIcon ? '' : ' 🔹'}</span>
       </div>
-    : `$${fmt.format(corePrice * gasUsed * (multiplier || 1) / 1e18)}`
+    : <div className='ml-1'>${fmt.format(feeValue)}</div>
 
   return (
     <div className='flex-1'>
       <div className='flex flex-row items-center gap-2'>
-        <div className='flex-1 shrink-0'>{gasFee}</div>
+        <div
+          className={classnames(
+            'flex-1 shrink-0 -ml-2',
+            feeValue >= 10 && 'bg-red-500 !text-white group-hover:opacity-50',
+            feeValue >= 2 && feeValue < 10 && 'bg-warning !text-white group-hover:opacity-50',
+            feeValue >= 0.5 && feeValue < 2 && 'bg-indigo-300 !text-white group-hover:opacity-50',
+            feeValue >= 0.1 && feeValue < 0.5 && 'text-indigo-500',
+          )}
+        >
+          {gasFee}
+        </div>
         <div className='text-xs text-gray-500'>=</div>
         <div className='flex-[1.2] shrink-0 flex flex-row items-center'>
           {gasL0 && gasPriceL0 && <div className='text-2xl font-extralight text-gray-300 mr-1'>(</div>}

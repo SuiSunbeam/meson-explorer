@@ -48,9 +48,11 @@ export default function RulesNetwork () {
           name: (
             <div className='flex flex-row min-w-[240px]'>
               <div className='w-10 shrink-0'>from</div>
-              <div className='flex-1 shrink-0 font-normal text-gray-300'>factor</div>
-              <div className='flex-1 shrink-0 font-normal text-gray-300'>min</div>
-              <div className='flex-1 shrink-0 font-normal text-gray-300'>limit</div>
+              <div className='flex flex-row items-center flex-1 gap-1'>
+                <div className='flex-1 shrink-0 font-normal text-gray-300'>factor</div>
+                <div className='flex-1 shrink-0 font-normal text-gray-300'>min</div>
+                <div className='flex-1 shrink-0 font-normal text-gray-300'>limit</div>
+              </div>
             </div>
           ),
           width: '25%'
@@ -59,9 +61,11 @@ export default function RulesNetwork () {
           name: (
             <div className='flex flex-row min-w-[240px]'>
               <div className='w-10 shrink-0'>to</div>
-              <div className='flex-1 shrink-0 font-normal text-gray-300'>factor</div>
-              <div className='flex-1 shrink-0 font-normal text-gray-300'>min</div>
-              <div className='flex-1 shrink-0 font-normal text-gray-300'>limit</div>
+              <div className='flex flex-row items-center flex-1 gap-1'>
+                <div className='flex-1 shrink-0 font-normal text-gray-300'>factor</div>
+                <div className='flex-1 shrink-0 font-normal text-gray-300'>min</div>
+                <div className='flex-1 shrink-0 font-normal text-gray-300'>limit</div>
+              </div>
             </div>
           ),
           width: '25%'
@@ -70,7 +74,7 @@ export default function RulesNetwork () {
           name: (
             <div className='flex flex-row items-center min-w-[480px]'>
               <div className='w-10 shrink-0'><div className='block w-20'>gas fee</div></div>
-              <div className='flex flex-row items-center flex-[10] gap-2 font-normal text-gray-300'>
+              <div className='flex flex-row items-center flex-1 gap-2 font-normal text-gray-300'>
                 <div className='flex-1 shrink-0'></div>
                 <div>=</div>
                 <div className='flex-[1.2] shrink-0'>gas usage</div>
@@ -218,7 +222,7 @@ function getRule(rules, condition) {
 }
 
 function NetworkRuleItem ({ rule, onOpenModal }) {
-  const commonClassname = 'group flex flex-row flex-1 shrink-0 leading-4 hover:text-primary hover:underline cursor-pointer'
+  const commonClassname = 'group flex flex-row flex-1 shrink-0 gap-1 leading-4 hover:text-primary hover:underline cursor-pointer'
   if (!rule?._id) {
     return (
       <div
@@ -232,13 +236,20 @@ function NetworkRuleItem ({ rule, onOpenModal }) {
 
   return (
     <div className={commonClassname} onClick={() => onOpenModal(rule)}>
-      <div className={classnames('flex-1 shrink-0 group-hover:text-primary', rule.factor === 1 && 'text-gray-500')}>
+      <div className={classnames(
+        'flex-1 shrink-0 group-hover:text-primary',
+        rule.factor === 1 && 'text-gray-500',
+        rule.factor > 0.995 && rule.factor <= 0.998 && 'text-indigo-500',
+        rule.factor > 0.99 && rule.factor <= 0.995 && 'bg-indigo-300 !text-white group-hover:opacity-50',
+        rule.factor > 0.9 && rule.factor <= 0.99 && 'bg-warning !text-white group-hover:opacity-50',
+        rule.factor && rule.factor <= 0.9 && 'bg-red-500 !text-white group-hover:opacity-50',
+      )}>
         {rule.factor && `${(10000 - rule.factor * 10000)/10}${rule.factor < 1 ? '‰' : ''}`}
       </div>
       <div className='flex-1 shrink-0'>
         {rule.minimum && utils.formatUnits(rule.minimum, 6)}
       </div>
-      <div className={classnames('flex-1 shrink-0 group-hover:text-primary', rule.limit === 0 && 'text-red-500')}>
+      <div className={classnames('flex-1 shrink-0 group-hover:text-primary', rule.limit === 0 && 'bg-red-500 !text-white group-hover:opacity-50')}>
         {rule.limit}
       </div>
     </div>
