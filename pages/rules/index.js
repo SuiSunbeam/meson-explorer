@@ -10,34 +10,38 @@ import { MesonClient } from '@mesonfi/sdk'
 import LoadingScreen from 'components/LoadingScreen'
 import Card, { CardTitle, CardBody } from 'components/Card'
 import Table, { Td } from 'components/Table'
-import Button from 'components/Button'
 import TagNetwork from 'components/TagNetwork'
 import TagNetworkToken from 'components/TagNetworkToken'
 
 import fetcher from 'lib/fetcher'
 import { getAllNetworks } from 'lib/swap'
+import { RELAYERS } from 'lib/const'
 
-import { SwapRuleModal } from './components'
+import { SwapRuleModal, GasCalculation } from './components'
 
-const hides = ['rules', 'gas', 'initiators', 'marks']
-export default function RulesMatrix () {
+export default function RulesNetwork () {
   const router = useRouter()
 
   const networks = getAllNetworks()
   const { data, error, mutate } = useSWR('admin/rules?type=network', fetcher)
+  const { data: gasData, error: gasError, mutate: gasMutate } = useSWR(`${RELAYERS[0]}/api/v1/rules/all:gas`, fetcher)
+
   const [modalData, setModalData] = React.useState()
+  const [gasModalData, setGasModalData] = React.useState()
 
   let body = null
   if (error) {
     body = <div className='py-6 px-4 sm:px-6 text-red-400'>{error.message}</div>
-  } else if (!data) {
+  } else if (gasError) {
+    body = <div className='py-6 px-4 sm:px-6 text-red-400'>{gasError.message}</div>
+  } else if (!data || !gasData) {
     body = <LoadingScreen />
   } else {
     body = (
       <Table size='lg' headers={[
         {
-          name: <div className='hidden md:block'>network</div>,
-          width: '5%',
+          name: '',
+          width: '2%',
           className: 'pl-4 md:pl-6'
         },
         {
@@ -49,7 +53,7 @@ export default function RulesMatrix () {
               <div className='flex-[2] shrink-0 font-normal text-gray-300'>limit</div>
             </div>
           ),
-          width: '30%'
+          width: '25%'
         },
         {
           name: (
@@ -60,11 +64,42 @@ export default function RulesMatrix () {
               <div className='flex-[2] shrink-0 font-normal text-gray-300'>limit</div>
             </div>
           ),
-          width: '30%'
+          width: '25%'
         },
-        { name: 'gas', width: '35%' },
+        {
+          name: (
+            <div className='flex flex-row min-w-[480px]'>
+              <div className='flex-1 shrink-0'>gas</div>
+              <div className='flex flex-row flex-[10] gap-2'>
+                <div className='flex-1 shrink-0'>gas fee</div>
+                <div>=</div>
+                <div className='flex-[1.2] shrink-0'>gas use</div>
+                <div>×</div>
+                <div className='flex-[1.4] shrink-0'>gas price</div>
+                <div>×</div>
+                <div className='flex-1 shrink-0'>core</div>
+                <div>×</div>
+                <div className='flex-1 shrink-0'>multi</div>
+              </div>
+            </div>
+          ),
+          width: '48%'
+        },
       ]}>
-        {networks.map((n, i) => <RowSwapRule key={i} network={n} index={i} rules={data} onOpenModal={setModalData} />)}
+      {
+        networks.map((n, i) => (
+          <RowSwapRule
+            key={i}
+            network={n}
+            index={i}
+            rules={data}
+            gasRules={gasData.rules}
+            prices={gasData.prices}
+            onOpenModal={setModalData}
+            onOpenGasModal={setGasModalData}
+          />
+        ))
+      }
       </Table>
     )
   }
@@ -83,11 +118,20 @@ export default function RulesMatrix () {
       <CardBody>{body}</CardBody>
       <SwapRuleModal
         type='network'
-        hides={hides}
+        hides={['rules', 'gas', 'initiators', 'marks']}
         data={modalData}
         onClose={refresh => {
           setModalData()
           refresh && mutate()
+        }}
+      />
+      <SwapRuleModal
+        type='gas'
+        hides={['factor', 'minimum', 'initiators']}
+        data={gasModalData}
+        onClose={refresh => {
+          setGasModalData()
+          refresh && gasMutate()
         }}
       />
     </Card>
@@ -95,7 +139,7 @@ export default function RulesMatrix () {
 }
 
 const tokens = ['stablecoins', 'eth', 'btc', 'bnb']
-function RowSwapRule ({ network, index, rules, onOpenModal }) {
+function RowSwapRule ({ network, index, rules, gasRules, prices, onOpenModal, onOpenGasModal }) {
   const tokensForNetwork = React.useMemo(() => {
     const ts = network.tokens.map(t => MesonClient.tokenType(t.tokenIndex))
     return tokens.filter(t => ts.includes(t))
@@ -117,11 +161,18 @@ function RowSwapRule ({ network, index, rules, onOpenModal }) {
     return { stablecoins, eth, btc, bnb }
   }, [network, index, rules])
 
+  const gasRule = React.useMemo(() => {
+    const stablecoins = getRule(gasRules, { to: network.id, from: '*', priority: 500 + index * 10 })
+    const eth = getRule(gasRules, { to: `${network.id}:ETH`, from: '*:ETH', priority: 500 + index * 10 + 1 })
+    const btc = getRule(gasRules, { to: `${network.id}:BTC`, from: '*:BTC', priority: 500 + index * 10 + 2 })
+    const bnb = getRule(gasRules, { to: `${network.id}:BNB`, from: '*:BNB', priority: 500 + index * 10 + 3 })
+    return { stablecoins, eth, btc, bnb }
+  }, [network, index, gasRules])
+
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1'>
-        <div className='block md:hidden'><TagNetwork size='md' iconOnly network={network} /></div>
-        <div className='hidden md:block'><TagNetwork size='md' network={network} /></div>
+        <TagNetwork size='md' iconOnly network={network} />
       </Td>
       <Td size='sm'>
         <div className='flex flex-col gap-1'>
@@ -130,7 +181,7 @@ function RowSwapRule ({ network, index, rules, onOpenModal }) {
               <div className='flex-1 shrink-0'>
                 <TagNetworkToken token={{ symbol: t.toUpperCase() }} iconOnly />
               </div>
-              <RuleItem rule={fromRule[t]} onOpenModal={onOpenModal} />
+              <NetworkRuleItem rule={fromRule[t]} onOpenModal={onOpenModal} />
             </div>
           ))}
         </div>
@@ -142,7 +193,7 @@ function RowSwapRule ({ network, index, rules, onOpenModal }) {
               <div className='flex-1 shrink-0'>
                 <TagNetworkToken token={{ symbol: t.toUpperCase() }} iconOnly />
               </div>
-              <RuleItem rule={toRule[t]} onOpenModal={onOpenModal} />
+              <NetworkRuleItem rule={toRule[t]} onOpenModal={onOpenModal} />
             </div>
           ))}
         </div>
@@ -154,6 +205,7 @@ function RowSwapRule ({ network, index, rules, onOpenModal }) {
               <div className='flex-1 shrink-0'>
                 <TagNetworkToken token={{ symbol: t.toUpperCase() }} iconOnly />
               </div>
+              <GasRuleItem rule={gasRule[t]} prices={prices} onOpenModal={onOpenGasModal} />
             </div>
           ))}
         </div>
@@ -166,10 +218,9 @@ function getRule(rules, condition) {
   return rules.find(r => r.from === condition.from && r.to === condition.to) || condition
 }
 
-function RuleItem ({ rule, onOpenModal }) {
+function NetworkRuleItem ({ rule, onOpenModal }) {
   const commonClassname = 'group flex flex-row flex-[6] shrink-0 leading-4 hover:text-primary hover:underline cursor-pointer'
-
-  if (!rule || !(rule.factor || rule.minimum || rule.limit)) {
+  if (!rule?._id) {
     return (
       <div
         className={classnames(commonClassname, 'text-gray-200')}
@@ -191,6 +242,31 @@ function RuleItem ({ rule, onOpenModal }) {
       <div className={classnames('flex-1 shrink-0 group-hover:text-primary', rule.limit === 0 && 'text-red-500')}>
         {rule.limit}
       </div>
+    </div>
+  )
+}
+
+function GasRuleItem ({ rule, prices, onOpenModal }) {
+  const commonClassname = 'group flex flex-row flex-[10] shrink-0 leading-4 hover:text-primary hover:underline cursor-pointer'
+  if (!rule?.fee) {
+    return (
+      <div
+        className={classnames(commonClassname, 'text-gray-200')}
+        onClick={() => onOpenModal({ ...rule, create: !rule })}
+      >
+        (add rule)
+      </div>
+    )
+  }
+
+  const isETH = rule.to.endsWith('ETH')
+  const isBTC = rule.to.endsWith('BTC')
+  const isBNB = rule.to.endsWith('BNB')
+  const nonStablecoin = isETH || isBTC || isBNB
+
+  return (
+    <div className={commonClassname} onClick={() => onOpenModal(rule)}>
+      {rule.fee.map((item, i) => <GasCalculation key={i} {...item} noIcon nonStablecoin={nonStablecoin} prices={prices} gasPrice={rule.gasPrice} gasPriceL0={rule.gasPriceL0} />)}
     </div>
   )
 }

@@ -367,8 +367,7 @@ const CoreSymbols = {
   TRX: '🔻',
 }
 
-function GasCalculation ({ gas, core, multiplier = 1, nonStablecoin, prices, gasPrice, gasL0, gasPriceL0 }) {
-  console.log('GasCalculation', { gas, gasPrice })
+export function GasCalculation ({ gas, core, multiplier = 1, noIcon, nonStablecoin, prices, gasPrice, gasL0, gasPriceL0 }) {
   if (!(gas && gasPrice)) {
     return ''
   }
@@ -387,12 +386,12 @@ function GasCalculation ({ gas, core, multiplier = 1, nonStablecoin, prices, gas
   const gasFee = nonStablecoin
     ? <div className='flex items-center -ml-2'>
         {fmt.format(corePrice * gasUsed * (multiplier || 1) / 1e15)}
-        <span className='ml-0.5 text-[10px] text-gray-500'>× 10<sup>-3</sup> 🔹</span>
+        <span className='ml-0.5 text-[10px] text-gray-500'>× 10<sup>-3</sup>{noIcon ? '' : ' 🔹'}</span>
       </div>
     : `$${fmt.format(corePrice * gasUsed * (multiplier || 1) / 1e18)}`
 
   return (
-    <div>
+    <div className='flex-1'>
       <div className='flex flex-row items-center gap-2'>
         <div className='flex-1 shrink-0'>{gasFee}</div>
         <div className='text-xs text-gray-500'>=</div>
