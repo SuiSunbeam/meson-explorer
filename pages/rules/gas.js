@@ -65,7 +65,8 @@ export default function RulesGas () {
         tabs={[
           { key: 'gas', name: 'Gas', active: true },
           { key: 'token', name: 'Token', onClick: () => router.push(`/rules/token`) },
-          { key: 'address', name: 'Address', onClick: () => router.push(`/rules/address`) }
+          { key: 'address', name: 'Address', onClick: () => router.push(`/rules/address`) },
+          { key: 'matrix', name: 'Matrix', onClick: () => router.push(`/rules/matrix`) }
         ]}
       />
       <CardBody>{body}</CardBody>
