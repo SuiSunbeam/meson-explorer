@@ -47,10 +47,10 @@ export default function RulesNetwork () {
         {
           name: (
             <div className='flex flex-row min-w-[240px]'>
-              <div className='flex-1 shrink-0'>from</div>
-              <div className='flex-[2] shrink-0 font-normal text-gray-300'>factor</div>
-              <div className='flex-[2] shrink-0 font-normal text-gray-300'>min</div>
-              <div className='flex-[2] shrink-0 font-normal text-gray-300'>limit</div>
+              <div className='w-10 shrink-0'>from</div>
+              <div className='flex-1 shrink-0 font-normal text-gray-300'>factor</div>
+              <div className='flex-1 shrink-0 font-normal text-gray-300'>min</div>
+              <div className='flex-1 shrink-0 font-normal text-gray-300'>limit</div>
             </div>
           ),
           width: '25%'
@@ -58,18 +58,18 @@ export default function RulesNetwork () {
         {
           name: (
             <div className='flex flex-row min-w-[240px]'>
-              <div className='flex-1 shrink-0'>to</div>
-              <div className='flex-[2] shrink-0 font-normal text-gray-300'>factor</div>
-              <div className='flex-[2] shrink-0 font-normal text-gray-300'>min</div>
-              <div className='flex-[2] shrink-0 font-normal text-gray-300'>limit</div>
+              <div className='w-10 shrink-0'>to</div>
+              <div className='flex-1 shrink-0 font-normal text-gray-300'>factor</div>
+              <div className='flex-1 shrink-0 font-normal text-gray-300'>min</div>
+              <div className='flex-1 shrink-0 font-normal text-gray-300'>limit</div>
             </div>
           ),
           width: '25%'
         },
         {
           name: (
-            <div className='flex flex-row min-w-[480px]'>
-              <div className='flex-1 shrink-0'>gas fee</div>
+            <div className='flex flex-row items-center min-w-[480px]'>
+              <div className='w-10 shrink-0'><div className='block w-20'>gas fee</div></div>
               <div className='flex flex-row items-center flex-[10] gap-2 font-normal text-gray-300'>
                 <div className='flex-1 shrink-0'></div>
                 <div>=</div>
@@ -177,7 +177,7 @@ function RowSwapRule ({ network, rules, gasRules, prices, onOpenModal, onOpenGas
         <div className='flex flex-col gap-1'>
           {tokensForNetwork.map(t => (
             <div key={t} className='flex flex-row items-center'>
-              <div className='flex-1 shrink-0'>
+              <div className='w-10 shrink-0'>
                 <TagNetworkToken token={{ symbol: t.toUpperCase() }} iconOnly />
               </div>
               <NetworkRuleItem rule={fromRule[t]} onOpenModal={onOpenModal} />
@@ -189,7 +189,7 @@ function RowSwapRule ({ network, rules, gasRules, prices, onOpenModal, onOpenGas
         <div className='flex flex-col gap-1'>
           {tokensForNetwork.map(t => (
             <div key={t} className='flex flex-row items-center'>
-              <div className='flex-1 shrink-0'>
+              <div className='w-10 shrink-0'>
                 <TagNetworkToken token={{ symbol: t.toUpperCase() }} iconOnly />
               </div>
               <NetworkRuleItem rule={toRule[t]} onOpenModal={onOpenModal} />
@@ -201,7 +201,7 @@ function RowSwapRule ({ network, rules, gasRules, prices, onOpenModal, onOpenGas
         <div className='flex flex-col gap-1'>
           {tokensForNetwork.map(t => (
             <div key={t} className='flex flex-row items-center'>
-              <div className='flex-1 shrink-0'>
+              <div className='w-10 shrink-0'>
                 <TagNetworkToken token={{ symbol: t.toUpperCase() }} iconOnly />
               </div>
               <GasRuleItem rule={gasRule[t]} prices={prices} onOpenModal={onOpenGasModal} />
@@ -218,7 +218,7 @@ function getRule(rules, condition) {
 }
 
 function NetworkRuleItem ({ rule, onOpenModal }) {
-  const commonClassname = 'group flex flex-row flex-[6] shrink-0 leading-4 hover:text-primary hover:underline cursor-pointer'
+  const commonClassname = 'group flex flex-row flex-1 shrink-0 leading-4 hover:text-primary hover:underline cursor-pointer'
   if (!rule?._id) {
     return (
       <div
