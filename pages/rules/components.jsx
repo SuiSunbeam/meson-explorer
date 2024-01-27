@@ -94,13 +94,15 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
     if (create) {
       await fetcher.post(`admin/rules`, dataToSave)
     } else {
-      await fetcher.put(`admin/rules/${data.priority}`, dataToSave)
+      const id = data._id || `${dataToSave.from}>${dataToSave.to}`
+      await fetcher.put(`admin/rules/${id}`, dataToSave)
     }
     onClose(true)
   }
 
   const onDelete = async () => {
-    await fetcher.delete(`admin/rules/${data.priority}`)
+    const id = data._id || `${data.from}>${data.to}`
+    await fetcher.delete(`admin/rules/${id}`)
     onClose(true)
   }
 
@@ -121,7 +123,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
               options={chains}
               value={fromChain}
               onChange={setFromChain}
-              disabled={type === 'network'}
+              disabled={type === 'network' || type === 'gas'}
             />
             <Select
               className='w-5/12'
@@ -130,7 +132,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
               options={tokens}
               value={fromToken}
               onChange={setFromToken}
-              disabled={type === 'network'}
+              disabled={type === 'network' || type === 'gas'}
             />
           </div>
         </div>
@@ -145,7 +147,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
               options={chains}
               value={toChain}
               onChange={setToChain}
-              disabled={type === 'network'}
+              disabled={type === 'network' || type === 'gas'}
             />
             <Select
               className='w-5/12'
@@ -154,27 +156,34 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
               options={tokens}
               value={toToken}
               onChange={setToToken}
-              disabled={type === 'network'}
+              disabled={type === 'network' || type === 'gas'}
             />
           </div>
         </div>
 
-        <Input
-          className='col-span-3'
-          id='priority'
-          label='Priority'
-          type='number'
-          value={priority}
-          onChange={setPriority}
-        />
-        <Input
-          className='col-span-3'
-          id='limit'
-          label='Limit'
-          type='number'
-          value={limit}
-          onChange={setLimit}
-        />
+        {
+          !hides.includes('priority') &&
+          <Input
+            className='col-span-3'
+            id='priority'
+            label='Priority'
+            type='number'
+            value={priority}
+            onChange={setPriority}
+            disabled={type === 'network' || type === 'gas'}
+          />
+        }
+        {
+          !hides.includes('limit') &&
+          <Input
+            className='col-span-3'
+            id='limit'
+            label='Limit'
+            type='number'
+            value={limit}
+            onChange={setLimit}
+          />
+        }
         {
           !hides.includes('factor') &&
           <Input

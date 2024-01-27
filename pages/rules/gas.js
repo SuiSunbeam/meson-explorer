@@ -17,7 +17,7 @@ const hides = ['factor', 'minimum', 'initiators']
 export default function RulesGas () {
   const router = useRouter()
 
-  const { data, error, mutate } = useSWR(`${RELAYERS[0]}/api/v1/rules/all:gas`, fetcher)
+  const { data, error, mutate } = useSWR(`${RELAYERS[0]}/api/v1/rules/all:gas-extra`, fetcher)
   const [modalData, setModalData] = React.useState()
 
   let body = null
@@ -71,7 +71,7 @@ export default function RulesGas () {
       />
       <CardBody>{body}</CardBody>
       <SwapRuleModal
-        type='gas'
+        type='gas-extra'
         hides={hides}
         data={modalData}
         onClose={refresh => {

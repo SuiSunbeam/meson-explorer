@@ -1,7 +1,14 @@
 import { Rules } from 'lib/db'
 
 export default async function handler(req, res) {
-  const { priority } = req.query
+  const { id } = req.query
+  let query
+  if (id.includes('>')) {
+    const [from, to] = id.split('>')
+    query = { from, to }
+  } else {
+    query = { _id: id }
+  }
   if (req.method === 'PUT') {
     const update = { $set: req.body }
     if (!req.body.limit && req.body.limit !== 0) {
@@ -12,7 +19,7 @@ export default async function handler(req, res) {
       delete update.$set.factor
       update.$unset = { ...update.$unset, factor: true }
     }
-    const result = await Rules.findOneAndUpdate({ priority }, update, { new: true })
+    const result = await Rules.findOneAndUpdate(query, update, { new: true })
     if (result) {
       res.json({ result })
     } else {
@@ -20,7 +27,7 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'DELETE') {
     try {
-      const result = await Rules.deleteOne({ priority })
+      const result = await Rules.deleteOne(query)
       res.json({ result })
     } catch (e) {
       console.warn(e)

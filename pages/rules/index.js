@@ -91,7 +91,6 @@ export default function RulesNetwork () {
           <RowSwapRule
             key={i}
             network={n}
-            index={i}
             rules={data}
             gasRules={gasData.rules}
             prices={gasData.prices}
@@ -118,7 +117,7 @@ export default function RulesNetwork () {
       <CardBody>{body}</CardBody>
       <SwapRuleModal
         type='network'
-        hides={['rules', 'gas', 'initiators', 'marks']}
+        hides={['priority', 'rules', 'gas', 'initiators', 'marks']}
         data={modalData}
         onClose={refresh => {
           setModalData()
@@ -127,7 +126,7 @@ export default function RulesNetwork () {
       />
       <SwapRuleModal
         type='gas'
-        hides={['factor', 'minimum', 'initiators']}
+        hides={['priority', 'limit', 'factor', 'minimum', 'initiators', 'marks']}
         data={gasModalData}
         onClose={refresh => {
           setGasModalData()
@@ -139,35 +138,35 @@ export default function RulesNetwork () {
 }
 
 const tokens = ['stablecoins', 'eth', 'btc', 'bnb']
-function RowSwapRule ({ network, index, rules, gasRules, prices, onOpenModal, onOpenGasModal }) {
+function RowSwapRule ({ network, rules, gasRules, prices, onOpenModal, onOpenGasModal }) {
   const tokensForNetwork = React.useMemo(() => {
     const ts = network.tokens.map(t => MesonClient.tokenType(t.tokenIndex))
     return tokens.filter(t => ts.includes(t))
   }, [network])
 
   const fromRule = React.useMemo(() => {
-    const stablecoins = getRule(rules, { from: network.id, to: '*', priority: 1000 + index * 10 })
-    const eth = getRule(rules, { from: `${network.id}:ETH`, to: '*:ETH', priority: 1000 + index * 10 + 1 })
-    const btc = getRule(rules, { from: `${network.id}:BTC`, to: '*:BTC', priority: 1000 + index * 10 + 2 })
-    const bnb = getRule(rules, { from: `${network.id}:BNB`, to: '*:BNB', priority: 1000 + index * 10 + 3 })
+    const stablecoins = getRule(rules, { from: network.id, to: '*', priority: 20 })
+    const eth = getRule(rules, { from: `${network.id}:ETH`, to: '*:ETH', priority: 20 })
+    const btc = getRule(rules, { from: `${network.id}:BTC`, to: '*:BTC', priority: 20 })
+    const bnb = getRule(rules, { from: `${network.id}:BNB`, to: '*:BNB', priority: 20 })
     return { stablecoins, eth, btc, bnb }
-  }, [network, index, rules])
+  }, [network, rules])
 
   const toRule = React.useMemo(() => {
-    const stablecoins = getRule(rules, { to: network.id, from: '*', priority: 1000 + index * 10 + 5 })
-    const eth = getRule(rules, { to: `${network.id}:ETH`, from: '*:ETH', priority: 1000 + index * 10 + 6 })
-    const btc = getRule(rules, { to: `${network.id}:BTC`, from: '*:BTC', priority: 1000 + index * 10 + 7 })
-    const bnb = getRule(rules, { to: `${network.id}:BNB`, from: '*:BNB', priority: 1000 + index * 10 + 8 })
+    const stablecoins = getRule(rules, { to: network.id, from: '*', priority: 20 })
+    const eth = getRule(rules, { to: `${network.id}:ETH`, from: '*:ETH', priority: 20 })
+    const btc = getRule(rules, { to: `${network.id}:BTC`, from: '*:BTC', priority: 20 })
+    const bnb = getRule(rules, { to: `${network.id}:BNB`, from: '*:BNB', priority: 20 })
     return { stablecoins, eth, btc, bnb }
-  }, [network, index, rules])
+  }, [network, rules])
 
   const gasRule = React.useMemo(() => {
-    const stablecoins = getRule(gasRules, { to: network.id, from: '*', priority: 500 + index * 10 })
-    const eth = getRule(gasRules, { to: `${network.id}:ETH`, from: '*:ETH', priority: 500 + index * 10 + 1 })
-    const btc = getRule(gasRules, { to: `${network.id}:BTC`, from: '*:BTC', priority: 500 + index * 10 + 2 })
-    const bnb = getRule(gasRules, { to: `${network.id}:BNB`, from: '*:BNB', priority: 500 + index * 10 + 3 })
+    const stablecoins = getRule(gasRules, { to: network.id, from: '*', priority: 10 })
+    const eth = getRule(gasRules, { to: `${network.id}:ETH`, from: '*:ETH', priority: 10 })
+    const btc = getRule(gasRules, { to: `${network.id}:BTC`, from: '*:BTC', priority: 10 })
+    const bnb = getRule(gasRules, { to: `${network.id}:BNB`, from: '*:BNB', priority: 10 })
     return { stablecoins, eth, btc, bnb }
-  }, [network, index, gasRules])
+  }, [network, gasRules])
 
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
