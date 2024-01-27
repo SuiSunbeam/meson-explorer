@@ -70,7 +70,7 @@ export default function RulesNetwork () {
           name: (
             <div className='flex flex-row min-w-[480px]'>
               <div className='flex-1 shrink-0'>gas fee</div>
-              <div className='flex flex-row flex-[10] gap-2 font-normal text-gray-300'>
+              <div className='flex flex-row items-center flex-[10] gap-2 font-normal text-gray-300'>
                 <div className='flex-1 shrink-0'></div>
                 <div>=</div>
                 <div className='flex-[1.2] shrink-0'>gas usage</div>
