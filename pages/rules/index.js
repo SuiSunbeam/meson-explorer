@@ -35,10 +35,14 @@ export default function RulesMatrix () {
   } else {
     body = (
       <Table size='lg' headers={[
-        { name: 'network', width: '10%', className: 'pl-4 md:pl-6' },
+        {
+          name: <div className='hidden md:block'>network</div>,
+          width: '5%',
+          className: 'pl-4 md:pl-6'
+        },
         {
           name: (
-            <div className='flex flex-row'>
+            <div className='flex flex-row min-w-[240px]'>
               <div className='flex-1 shrink-0'>from</div>
               <div className='flex-[2] shrink-0 font-normal text-gray-300'>factor</div>
               <div className='flex-[2] shrink-0 font-normal text-gray-300'>min</div>
@@ -49,7 +53,7 @@ export default function RulesMatrix () {
         },
         {
           name: (
-            <div className='flex flex-row'>
+            <div className='flex flex-row min-w-[240px]'>
               <div className='flex-1 shrink-0'>to</div>
               <div className='flex-[2] shrink-0 font-normal text-gray-300'>factor</div>
               <div className='flex-[2] shrink-0 font-normal text-gray-300'>min</div>
@@ -58,7 +62,7 @@ export default function RulesMatrix () {
           ),
           width: '30%'
         },
-        { name: 'gas', width: '30%' },
+        { name: 'gas', width: '35%' },
       ]}>
         {networks.map((n, i) => <RowSwapRule key={i} network={n} index={i} rules={data} onOpenModal={setModalData} />)}
       </Table>
@@ -70,10 +74,10 @@ export default function RulesMatrix () {
       <CardTitle
         title='Fee Rules'
         tabs={[
+          { key: 'network', name: 'Network', active: true },
           { key: 'gas', name: 'Gas', onClick: () => router.push(`/rules/gas`) },
           { key: 'token', name: 'Token', onClick: () => router.push(`/rules/token`) },
           { key: 'address', name: 'Address', onClick: () => router.push(`/rules/address`) },
-          { key: 'matrix', name: 'Matrix', active: true },
         ]}
       />
       <CardBody>{body}</CardBody>
@@ -116,7 +120,8 @@ function RowSwapRule ({ network, index, rules, onOpenModal }) {
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1'>
-        <TagNetwork size='md' network={network} />
+        <div className='block md:hidden'><TagNetwork size='md' iconOnly network={network} /></div>
+        <div className='hidden md:block'><TagNetwork size='md' network={network} /></div>
       </Td>
       <Td size='sm'>
         <div className='flex flex-col gap-1'>

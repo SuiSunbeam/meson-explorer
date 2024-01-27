@@ -259,7 +259,7 @@ function Profile ({ globalState, setGlobalState }) {
               <Menu.Item>
                 <div
                   className='block px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-                  onClick={() => router.push('/rules/gas')}
+                  onClick={() => router.push('/rules')}
                 >
                   Fee Rules
                 </div>

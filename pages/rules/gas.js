@@ -63,10 +63,10 @@ export default function RulesGas () {
         title='Fee Rules'
         right={<Button size='sm' color='primary' rounded onClick={() => setModalData({})}>New Rule</Button>}
         tabs={[
+          { key: 'network', name: 'Network', onClick: () => router.push(`/rules`) },
           { key: 'gas', name: 'Gas', active: true },
           { key: 'token', name: 'Token', onClick: () => router.push(`/rules/token`) },
           { key: 'address', name: 'Address', onClick: () => router.push(`/rules/address`) },
-          { key: 'matrix', name: 'Matrix', onClick: () => router.push(`/rules/matrix`) }
         ]}
       />
       <CardBody>{body}</CardBody>
