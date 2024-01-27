@@ -19,7 +19,7 @@ import { getAllNetworks } from 'lib/swap'
 
 import { SwapRuleModal } from './components'
 
-const hides = ['rules', 'gas', 'initiators']
+const hides = ['rules', 'gas', 'initiators', 'marks']
 export default function RulesMatrix () {
   const router = useRouter()
 
@@ -35,31 +35,32 @@ export default function RulesMatrix () {
   } else {
     body = (
       <Table size='lg' headers={[
-        { name: 'network', width: '20%', className: 'pl-4 md:pl-6' },
+        { name: 'network', width: '10%', className: 'pl-4 md:pl-6' },
         {
           name: (
             <div className='flex flex-row'>
               <div className='flex-1 shrink-0'>from</div>
-              <div className='flex-[2] shrink-0'>factor</div>
-              <div className='flex-[2] shrink-0'>min</div>
-              <div className='flex-[2] shrink-0'>limit</div>
+              <div className='flex-[2] shrink-0 font-normal text-gray-300'>factor</div>
+              <div className='flex-[2] shrink-0 font-normal text-gray-300'>min</div>
+              <div className='flex-[2] shrink-0 font-normal text-gray-300'>limit</div>
             </div>
           ),
-          width: '40%'
+          width: '30%'
         },
         {
           name: (
             <div className='flex flex-row'>
               <div className='flex-1 shrink-0'>to</div>
-              <div className='flex-[2] shrink-0'>factor</div>
-              <div className='flex-[2] shrink-0'>min</div>
-              <div className='flex-[2] shrink-0'>limit</div>
+              <div className='flex-[2] shrink-0 font-normal text-gray-300'>factor</div>
+              <div className='flex-[2] shrink-0 font-normal text-gray-300'>min</div>
+              <div className='flex-[2] shrink-0 font-normal text-gray-300'>limit</div>
             </div>
           ),
-          width: '40%'
-        }
+          width: '30%'
+        },
+        { name: 'gas', width: '30%' },
       ]}>
-        {networks.map((n, i) => <RowSwapRule key={i} network={n} rules={data} onOpenModal={setModalData} />)}
+        {networks.map((n, i) => <RowSwapRule key={i} network={n} index={i} rules={data} onOpenModal={setModalData} />)}
       </Table>
     )
   }
@@ -77,7 +78,7 @@ export default function RulesMatrix () {
       />
       <CardBody>{body}</CardBody>
       <SwapRuleModal
-        type='token'
+        type='network'
         hides={hides}
         data={modalData}
         onClose={refresh => {
@@ -90,27 +91,27 @@ export default function RulesMatrix () {
 }
 
 const tokens = ['stablecoins', 'eth', 'btc', 'bnb']
-function RowSwapRule ({ network, rules, onOpenModal }) {
+function RowSwapRule ({ network, index, rules, onOpenModal }) {
   const tokensForNetwork = React.useMemo(() => {
     const ts = network.tokens.map(t => MesonClient.tokenType(t.tokenIndex))
     return tokens.filter(t => ts.includes(t))
   }, [network])
 
   const fromRule = React.useMemo(() => {
-    const stablecoins = rules.find(r => r.from === network.id && r.to === '*')
-    const eth = rules.find(r => r.from === `${network.id}:ETH` && r.to === '*:ETH')
-    const btc = rules.find(r => r.from === `${network.id}:BTC` && r.to === '*:BTC')
-    const bnb = rules.find(r => r.from === `${network.id}:BNB` && r.to === '*:BNB')
+    const stablecoins = getRule(rules, { from: network.id, to: '*', priority: 1000 + index * 10 })
+    const eth = getRule(rules, { from: `${network.id}:ETH`, to: '*:ETH', priority: 1000 + index * 10 + 1 })
+    const btc = getRule(rules, { from: `${network.id}:BTC`, to: '*:BTC', priority: 1000 + index * 10 + 2 })
+    const bnb = getRule(rules, { from: `${network.id}:BNB`, to: '*:BNB', priority: 1000 + index * 10 + 3 })
     return { stablecoins, eth, btc, bnb }
-  }, [network, rules])
+  }, [network, index, rules])
 
   const toRule = React.useMemo(() => {
-    const stablecoins = rules.find(r => r.to === network.id && r.from === '*')
-    const eth = rules.find(r => r.to === `${network.id}:ETH` && r.from === '*:ETH')
-    const btc = rules.find(r => r.to === `${network.id}:BTC` && r.from === '*:BTC')
-    const bnb = rules.find(r => r.to === `${network.id}:BNB` && r.from === '*:BNB')
+    const stablecoins = getRule(rules, { to: network.id, from: '*', priority: 1000 + index * 10 + 5 })
+    const eth = getRule(rules, { to: `${network.id}:ETH`, from: '*:ETH', priority: 1000 + index * 10 + 6 })
+    const btc = getRule(rules, { to: `${network.id}:BTC`, from: '*:BTC', priority: 1000 + index * 10 + 7 })
+    const bnb = getRule(rules, { to: `${network.id}:BNB`, from: '*:BNB', priority: 1000 + index * 10 + 8 })
     return { stablecoins, eth, btc, bnb }
-  }, [network, rules])
+  }, [network, index, rules])
 
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
@@ -141,8 +142,23 @@ function RowSwapRule ({ network, rules, onOpenModal }) {
           ))}
         </div>
       </Td>
+      <Td size='sm'>
+        <div className='flex flex-col gap-1'>
+          {tokensForNetwork.map(t => (
+            <div key={t} className='flex flex-row items-center'>
+              <div className='flex-1 shrink-0'>
+                <TagNetworkToken token={{ symbol: t.toUpperCase() }} iconOnly />
+              </div>
+            </div>
+          ))}
+        </div>
+      </Td>
     </tr>
   )
+}
+
+function getRule(rules, condition) {
+  return rules.find(r => r.from === condition.from && r.to === condition.to) || condition
 }
 
 function RuleItem ({ rule, onOpenModal }) {
@@ -150,7 +166,10 @@ function RuleItem ({ rule, onOpenModal }) {
 
   if (!rule || !(rule.factor || rule.minimum || rule.limit)) {
     return (
-      <div className={classnames(commonClassname, 'text-gray-200')}>
+      <div
+        className={classnames(commonClassname, 'text-gray-200')}
+        onClick={() => onOpenModal({ ...rule, create: true })}
+      >
         (add rule)
       </div>
     )

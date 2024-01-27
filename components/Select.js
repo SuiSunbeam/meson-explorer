@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 
-export default function Select({ label, className, options, value, noBorder, noIcon, onChange }) {
+export default function Select({ label, className, options, value, noBorder, noIcon, onChange, disabled }) {
   const selected = options.find(item => item.id === value) || options[0]
 
   return (
@@ -32,7 +32,7 @@ export default function Select({ label, className, options, value, noBorder, noI
               </Listbox.Button>
 
               <Transition
-                show={open}
+                show={!disabled && open}
                 as={React.Fragment}
                 leave='transition ease-in duration-100'
                 leaveFrom='opacity-100'

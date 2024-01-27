@@ -52,7 +52,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
 
   React.useEffect(() => {
     if (data) {
-      setCreate(!Object.keys(data).length)
+      setCreate(data.create || !Object.keys(data).length)
 
       const [fromChain, fromToken = '*'] = (data.from || '').split(':')
       setFromChain(fromChain || '*')
@@ -121,6 +121,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
               options={chains}
               value={fromChain}
               onChange={setFromChain}
+              disabled={type === 'network'}
             />
             <Select
               className='w-5/12'
@@ -129,6 +130,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
               options={tokens}
               value={fromToken}
               onChange={setFromToken}
+              disabled={type === 'network'}
             />
           </div>
         </div>
@@ -143,6 +145,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
               options={chains}
               value={toChain}
               onChange={setToChain}
+              disabled={type === 'network'}
             />
             <Select
               className='w-5/12'
@@ -151,6 +154,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
               options={tokens}
               value={toToken}
               onChange={setToToken}
+              disabled={type === 'network'}
             />
           </div>
         </div>
@@ -216,7 +220,7 @@ export function SwapRuleModal ({ hides, type, data, onClose }) {
           />
         }
         {
-          hides.includes('initiators') &&
+          hides.includes('initiators') && !hides.includes('marks') &&
           <Input
             className='col-span-6'
             id='mark'
