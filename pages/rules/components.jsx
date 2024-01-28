@@ -384,7 +384,7 @@ export function GasCalculation ({ gas, core, multiplier = 1, noIcon, nonStableco
   const price = prices[core?.toLowerCase?.()]
   const corePrice = price || core || 1
   const coreDisplay = price
-    ? <>{CoreSymbols[core] || core} <span className='text-xs text-gray-500'>(${price})</span></>
+    ? <div className='h-4 leading-4'>{CoreSymbols[core] || core} <span className='text-xs text-gray-500'>(${price})</span></div>
     : core && `$${core}`
 
   let gasUsed = gas * gasPrice
@@ -414,7 +414,7 @@ export function GasCalculation ({ gas, core, multiplier = 1, noIcon, nonStableco
         >
           {gasFee}
         </div>
-        <div className='text-xs text-gray-500'>=</div>
+        <div className='text-xs text-gray-500 leading-4'>=</div>
         <div className='flex-[1.2] shrink-0 flex flex-row items-center'>
           {gasL0 && gasPriceL0 && <div className='text-2xl font-extralight text-gray-300 mr-1'>(</div>}
           <div>
@@ -422,9 +422,9 @@ export function GasCalculation ({ gas, core, multiplier = 1, noIcon, nonStableco
             {gasL0 && gasPriceL0 && <div>{fmt.format(gasL0 / 1000)}k</div>}
           </div>
         </div>
-        <div className='flex flex-col text-xs text-gray-500 items-center'>
-          <div className='leading-5'>×</div>
-          {gasL0 && gasPriceL0 && <div className='leading-5'>×</div>}
+        <div className='flex flex-col text-xs text-gray-500 items-center leading-4'>
+          <div className='leading-4'>×</div>
+          {gasL0 && gasPriceL0 && <div className='leading-4'>×</div>}
         </div>
         <div className='flex-[1.4] shrink-0 flex flex-row items-center'>
           <div>
@@ -433,9 +433,9 @@ export function GasCalculation ({ gas, core, multiplier = 1, noIcon, nonStableco
           </div>
           {gasL0 && gasPriceL0 && <div className='text-2xl font-extralight text-gray-300 ml-2'>)</div>}
         </div>
-        <div className={classnames('text-xs', nonStablecoin ? 'text-transparent' : 'text-gray-500')}>×</div>
+        <div className={classnames('text-xs leading-4', nonStablecoin ? 'text-transparent' : 'text-gray-500')}>×</div>
         <div className='flex-1 shrink-0'>{coreDisplay}</div>
-        <div className={classnames('text-xs', multiplier === 1 ? 'text-transparent' : 'text-gray-500')}>×</div>
+        <div className={classnames('text-xs leading-4', multiplier === 1 ? 'text-transparent' : 'text-gray-500')}>×</div>
         <div className='flex-1 shrink-0'>{multiplier !== 1 && multiplier}</div>
       </div>
     </div>
