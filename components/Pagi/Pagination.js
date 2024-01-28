@@ -8,7 +8,7 @@ import { Loading } from 'components/LoadingScreen'
 import Button from '../Button'
 import ButtonGroup from '../ButtonGroup'
 
-export default function Pagination({ size, page, currentSize, total, maxPage, onPageChange }) {
+export default function Pagination({ size, page, noSize, currentSize, total, maxPage, onPageChange }) {
   const hasMore = currentSize >= size
   const pages = React.useMemo(() => {
     if (!total) {
@@ -28,7 +28,7 @@ export default function Pagination({ size, page, currentSize, total, maxPage, on
       <div className='hidden sm:flex-1 sm:flex sm:items-center sm:justify-between'>
         <div className='flex flex-row items-center gap-4'>
           <PagiDescription size={size} page={page} currentSize={currentSize} total={total} maxPage={maxPage} />
-          <PagiSizeSelection size={size} />
+          <PagiSizeSelection size={size} noSize={noSize} />
         </div>
         <PagiButtonsWithChevron page={page} pages={pages} loading={loading} onPageChange={onPageChange} />
       </div>
@@ -81,7 +81,7 @@ function PagiDescription ({ size, page, currentSize, total, maxPage }) {
   )
 }
 
-function PagiSizeSelection ({ size }) {
+function PagiSizeSelection ({ size, noSize }) {
   const router = useRouter()
   const { data: session } = useSession()
   const authorized = session?.user?.roles?.some(r => ['root', 'admin'].includes(r))
@@ -95,7 +95,7 @@ function PagiSizeSelection ({ size }) {
     router.push({ query })
   }, [router])
 
-  if (!authorized) {
+  if (!authorized || noSize) {
     return null
   }
   return (

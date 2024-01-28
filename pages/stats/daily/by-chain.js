@@ -28,8 +28,6 @@ export default function DailyStatsByChain() {
   return (
     <PagiCard
       title='Daily Swaps by Chain'
-      queryUrl='/stats/daily/by-chain'
-      fallback='/stats/daily/by-chain'
       right={
         <ButtonGroup
           size='sm'
@@ -43,6 +41,9 @@ export default function DailyStatsByChain() {
           onChange={view => setView(view)}
         />
       }
+      queryUrl='/stats/daily/by-chain'
+      fallback='/stats/daily/by-chain'
+      noSize
       tableHeaders={headers}
       Row={StatByChainRowByView}
     />

@@ -124,6 +124,7 @@ export default function DailyStats() {
         queryUrl={queryUrl}
         fallback='/stats/daily'
         reducer={reducer}
+        noSize
         tableHeaders={[
           { name: 'Date', width: '10%' },
           { name: '# success / total', width: '15%' },

@@ -7,7 +7,7 @@ import LoadingScreen from 'components/LoadingScreen'
 
 import Pagination from './Pagination'
 
-export default function PagiList({ queryUrl, fallback, reducer, maxPage, children }) {
+export default function PagiList({ queryUrl, fallback, reducer, noSize, maxPage, children }) {
   const router = useRouter()
   const { data, total, error, page, size } = usePagination(queryUrl, router.query, { fetchTotal: !maxPage })
 
@@ -46,7 +46,7 @@ export default function PagiList({ queryUrl, fallback, reducer, maxPage, childre
     return (
       <>
         {React.cloneElement(children, { list })}
-        <Pagination page={page} size={size} currentSize={list.length} total={total} maxPage={mp || maxPage} onPageChange={onPageChange} />
+        <Pagination page={page} size={size} noSize={noSize} currentSize={list.length} total={total} maxPage={mp || maxPage} onPageChange={onPageChange} />
       </>
     )
   }
