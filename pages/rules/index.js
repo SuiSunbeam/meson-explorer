@@ -75,13 +75,13 @@ export default function RulesNetwork () {
             <div className='flex flex-row items-center min-w-[480px]'>
               <div className='w-10 shrink-0'><div className='block w-20'>gas fee</div></div>
               <div className='flex flex-row items-center flex-1 gap-2 font-normal text-gray-300'>
-                <div className='flex-1 shrink-0'></div>
+                <div className='flex-[1.5] shrink-0'></div>
                 <div>=</div>
-                <div className='flex-[1.2] shrink-0'>gas usage</div>
+                <div className='flex-[1.2] shrink-0'>gas</div>
                 <div>×</div>
-                <div className='flex-[1.4] shrink-0'>gas price</div>
+                <div className='flex-[2.5] shrink-0'>gas price</div>
                 <div>×</div>
-                <div className='flex-1 shrink-0'>core</div>
+                <div className='flex-[2] shrink-0'>token</div>
                 <div>×</div>
                 <div className='flex-1 shrink-0'>multi</div>
               </div>

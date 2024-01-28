@@ -35,15 +35,15 @@ export default function RulesGas () {
         {
           name: (
             <div className='flex flex-row gap-2'>
-              <div className='flex-1 shrink-0'>gas fee</div>
+              <div className='flex-[1.5] shrink-0'>gas fee</div>
               <div>=</div>
-              <div className='flex-[1.2] shrink-0'>gas usage</div>
+              <div className='flex-[1.2] shrink-0'>gas</div>
               <div>×</div>
-              <div className='flex-[1.4] shrink-0'>gas price</div>
+              <div className='flex-[2.5] shrink-0'>gas price</div>
               <div>×</div>
-              <div className='flex-1 shrink-0'>core</div>
+              <div className='flex-[2] shrink-0'>token</div>
               <div>×</div>
-              <div className='flex-1 shrink-0'>multipier</div>
+              <div className='flex-1 shrink-0'>multi</div>
             </div>
           ),
           width: '60%'

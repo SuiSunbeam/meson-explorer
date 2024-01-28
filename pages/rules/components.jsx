@@ -376,23 +376,39 @@ const CoreSymbols = {
   TRX: '🔻',
 }
 
-export function GasCalculation ({ gas, core, multiplier = 1, noIcon, nonStablecoin, prices, gasPrice, gasL0, gasPriceL0 }) {
+export function GasCalculation ({ gas, core, token, multiplier = 1, noIcon, nonStablecoin, prices, gasPrice, gasL0, gasPriceL0 }) {
   if (!(gas && gasPrice)) {
     return ''
   }
 
   const price = prices[core?.toLowerCase?.()]
+  const tokenPrice = prices[token?.toLowerCase?.()] || 1
   const corePrice = price || core || 1
-  const coreDisplay = price
-    ? <div className='h-4 leading-4'>{CoreSymbols[core] || core} <span className='text-xs text-gray-500'>(${price})</span></div>
-    : core && `$${core}`
+  let coreDisplay = null
+  if (!price) {
+    if (core) {
+      coreDisplay = `$${core}`
+    }
+  } else if (tokenPrice !== 1) {
+    coreDisplay = (
+      <div className='h-4 leading-4 text-xs'>
+        {CoreSymbols[core] || core}/ {CoreSymbols[token]} <span className='text-gray-500'>(${tokenPrice})</span>
+      </div>
+    )
+  } else {
+    coreDisplay = (
+      <div className='h-4 leading-4'>
+        {CoreSymbols[core] || core} <span className='text-xs text-gray-500'>(${price})</span>
+      </div>
+    )
+  }
 
   let gasUsed = gas * gasPrice
   if (gasL0 && gasPriceL0) {
     gasUsed += gasL0 * gasPriceL0
   }
 
-  const feeValue = corePrice * gasUsed * (multiplier || 1) / (nonStablecoin ? 1e15 : 1e18)
+  const feeValue = corePrice * gasUsed * (multiplier || 1) / (nonStablecoin ? 1e15 : 1e18) / tokenPrice
   const gasFee = nonStablecoin
     ? <div className='flex items-center'>
         {fmt.format(feeValue)}
@@ -403,16 +419,18 @@ export function GasCalculation ({ gas, core, multiplier = 1, noIcon, nonStableco
   return (
     <div className='flex-1'>
       <div className='flex flex-row items-center gap-2'>
-        <div
-          className={classnames(
-            'flex-1 shrink-0 -ml-2',
-            feeValue >= 10 && 'bg-red-500 !text-white group-hover:opacity-50',
-            feeValue >= 2 && feeValue < 10 && 'bg-warning !text-white group-hover:opacity-50',
-            feeValue >= 0.5 && feeValue < 2 && 'bg-indigo-300 !text-white group-hover:opacity-50',
-            feeValue >= 0.1 && feeValue < 0.5 && 'text-indigo-500',
-          )}
-        >
-          {gasFee}
+        <div className='flex-[1.5] shrink-0'>
+          <div
+            className={classnames(
+              '-ml-2',
+              feeValue >= 10 && 'bg-red-500 !text-white group-hover:opacity-50',
+              feeValue >= 2 && feeValue < 10 && 'bg-warning !text-white group-hover:opacity-50',
+              feeValue >= 0.5 && feeValue < 2 && 'bg-indigo-300 !text-white group-hover:opacity-50',
+              feeValue >= 0.1 && feeValue < 0.5 && 'text-indigo-500',
+            )}
+          >
+            {gasFee}
+          </div>
         </div>
         <div className='text-xs text-gray-500 leading-4'>=</div>
         <div className='flex-[1.2] shrink-0 flex flex-row items-center'>
@@ -426,15 +444,15 @@ export function GasCalculation ({ gas, core, multiplier = 1, noIcon, nonStableco
           <div className='leading-4'>×</div>
           {gasL0 && gasPriceL0 && <div className='leading-4'>×</div>}
         </div>
-        <div className='flex-[1.4] shrink-0 flex flex-row items-center'>
+        <div className='flex-[2.5] shrink-0 flex flex-row items-center'>
           <div>
             <div>{fmt2.format(gasPrice / 1e9)} Gwei</div>
             {gasL0 && gasPriceL0 && <div>{fmt2.format(gasPriceL0 / 1e9)} Gwei</div>}
           </div>
           {gasL0 && gasPriceL0 && <div className='text-2xl font-extralight text-gray-300 ml-2'>)</div>}
         </div>
-        <div className={classnames('text-xs leading-4', nonStablecoin ? 'text-transparent' : 'text-gray-500')}>×</div>
-        <div className='flex-1 shrink-0'>{coreDisplay}</div>
+        <div className={classnames('text-xs leading-4', corePrice !== 1 ? 'text-gray-500' : 'text-transparent')}>×</div>
+        <div className='flex-[2] shrink-0 overflow-hidden'>{coreDisplay}</div>
         <div className={classnames('text-xs leading-4', multiplier === 1 ? 'text-transparent' : 'text-gray-500')}>×</div>
         <div className='flex-1 shrink-0'>{multiplier !== 1 && multiplier}</div>
       </div>
