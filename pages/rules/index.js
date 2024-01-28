@@ -262,7 +262,7 @@ function GasRuleItem ({ rule, prices, onOpenModal }) {
     return (
       <div
         className={classnames(commonClassname, 'text-gray-200')}
-        onClick={() => onOpenModal({ ...rule, create: !rule })}
+        onClick={() => onOpenModal({ ...rule, create: !rule.fee })}
       >
         (add rule)
       </div>

@@ -6,6 +6,9 @@ export default async function handler(req, res) {
   if (id.includes('>')) {
     const [from, to] = id.split('>')
     query = { from, to }
+    if (req.body.priority) {
+      query.priority = req.body.priority
+    }
   } else {
     query = { _id: id }
   }
