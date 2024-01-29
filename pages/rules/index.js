@@ -223,11 +223,11 @@ function getRule(rules, condition) {
 
 function NetworkRuleItem ({ rule, onOpenModal }) {
   const commonClassname = 'group flex flex-row flex-1 shrink-0 gap-1 leading-4 hover:text-primary hover:underline cursor-pointer'
-  if (!rule?._id) {
+  if (!rule?._id || !(rule.factor && rule.minimum && rule.limit)) {
     return (
       <div
         className={classnames(commonClassname, 'text-gray-200')}
-        onClick={() => onOpenModal({ ...rule, create: true })}
+        onClick={() => onOpenModal({ ...rule, create: !rule._id })}
       >
         (add rule)
       </div>
