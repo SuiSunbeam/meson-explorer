@@ -186,7 +186,7 @@ function LpContentRow ({ address, withSrFee, checkDifference, dealer, network, n
         ethersProvider: mesonClient.provider,
         tryAggregate: true,
       }
-      if (['naut', 'bevm', 'zkfair', 'map', 'viction-testnet', 'taiko-testnet', 'b2-testnet', 'merlin-testnet'].includes(network.id)) {
+      if (['naut', 'bevm', 'zkfair', 'map', 'ancient8', 'viction-testnet', 'taiko-testnet', 'b2-testnet', 'merlin-testnet'].includes(network.id)) {
         // TODO
         return { mesonClient }
       } else if (network.id.startsWith('cfx')) {
