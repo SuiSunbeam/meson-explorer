@@ -301,7 +301,7 @@ function SwapActionButton({ role, data, swap, status }) {
   const recipient = data.fromTo[1]
 
   const btnBond = role && <Button size='sm' color='info' rounded onClick={() => extensions.bond(swap, data.signature, initiator)}>Bond</Button>
-  const btnLock = role && <Button size='sm' color='info' rounded onClick={() => extensions.lock(swap, initiator)}>Lock</Button>
+  const btnLock = role && <Button size='sm' color='info' rounded onClick={() => extensions.lock(swap, initiator, recipient)}>Lock</Button>
   const btnUnlock = role && <Button size='sm' color='info' rounded onClick={() => extensions.unlock(swap, initiator)}>Unlock</Button>
   const btnExecute = role && <Button size='sm' color='info' rounded onClick={() => extensions.execute(swap, data.releaseSignature, recipient)}>Execute</Button>
   const btnDirectExecute = role && <Button size='sm' color='info' rounded onClick={() => extensions.directExecute(swap, data.releaseSignature, initiator, recipient)}>DirectExecute</Button>
