@@ -111,6 +111,7 @@ export default function DailyStats() {
               { key: '', text: `All` },
               { key: 'usd', text: `Stablecoins` },
               { key: 'eth', text: `ETH` },
+              { key: 'btc', text: `BTC` },
               { key: 'bnb', text: `BNB` },
             ]}
             onChange={token => updatePathname(chain, type, token)}

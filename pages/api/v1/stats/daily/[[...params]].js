@@ -100,6 +100,8 @@ export default listHandler({
     } else if (token === 'eth') {
       aggregator[0].$match.inToken = { $gte: 252 }
       aggregator[0].$match.expireTs = { $gt: new Date(1691700000 * 1000) }
+    } else if (token === 'btc') {
+      aggregator[0].$match.inToken = { $gte: 240, $lt: 244 }
     } else if (token === 'bnb') {
       aggregator[0].$match.inToken = { $gte: 248, $lt: 252 }
     }
