@@ -25,7 +25,9 @@ export async function restartService(service) {
   if (service === 'lp') {
     return await _restart(`${prefix}-lp`)
   } else if (service === 'relayer') {
-    _restart(`meson-relayer-listener`)
+    if (!TESTNET) {
+      _restart(`meson-relayer-listener`)
+    }
     return await _restart(`${prefix}-relayer`)
   }
 }
