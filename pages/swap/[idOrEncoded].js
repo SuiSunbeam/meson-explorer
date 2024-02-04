@@ -9,11 +9,11 @@ import { XCircleIcon } from '@heroicons/react/solid'
 import { DocumentTextIcon } from '@heroicons/react/outline'
 import { ethers } from 'ethers'
 
-import { abbreviate } from 'lib/swap'
 import fetcher from 'lib/fetcher'
 import socket from 'lib/socket'
 import {
   presets,
+  abbreviate,
   sortEvents,
   FailedStatus,
   CancelledStatus,
@@ -178,21 +178,19 @@ function CorrectSwap({ data: raw }) {
           </div>
         </ListRow>
         <ListRow title='Amount'>
-          <div className={classnames(
+          {
+            Number(inAmount) > 0 &&
+            <div className={classnames(
               'w-fit relative flex items-center',
               CancelledStatus.includes(status) && 'opacity-30 before:block before:absolute before:w-full before:h-0.5 before:bg-black before:z-10'
             )}>
-            <div className='mr-1'>{inAmount}</div>
-            <TagNetworkToken explorer={from.network.explorer} token={from.token} className={CancelledStatus.includes(status) && 'text-black'}/>
-            {
-              !FailedStatus.includes(status) &&
-              <>
-                <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
-                <div className='mr-1'>{outAmount}</div>
-                <TagNetworkToken explorer={to.network.explorer} token={to.token} />
-              </>
-            }
-          </div>
+              <div className='mr-1'>{inAmount}</div>
+              <TagNetworkToken explorer={from.network.explorer} token={from.token} className={CancelledStatus.includes(status) && 'text-black'}/>
+              <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
+              <div className='mr-1'>{outAmount}</div>
+              <TagNetworkToken explorer={to.network.explorer} token={to.token} />
+            </div>
+          }
           {
             coreTokenAmount > 0 &&
             <div className={classnames(
