@@ -628,10 +628,10 @@
     starknet "^5.24.3"
     tronweb "5.2.0"
 
-"@mesonfi/sdk@^1.15.3", "@mesonfi/sdk@^1.16.6":
-  version "1.16.6"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.16.6/18b3fedf4c7c5e531baeface62742b84a08dab97#18b3fedf4c7c5e531baeface62742b84a08dab97"
-  integrity sha512-Q89IyYOR8vkN9e464RZY7k0LRuOpczkTT7MrijJo0i824eBhMtrRSg4i2s/yxUlVmNcYponFbddZip4a4+izRA==
+"@mesonfi/sdk@^1.15.3", "@mesonfi/sdk@^1.16.6", "@mesonfi/sdk@^1.16.7":
+  version "1.16.7"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.16.7/9d6815fcaef2aa855376ff8caf0bccf92485c182#9d6815fcaef2aa855376ff8caf0bccf92485c182"
+  integrity sha512-mfWJ9VK/KYhPEDG+X+4cnGz2whrGFGI3fHx+nARD5MjFRfH3nuh6dXLQ080ZHCwUdlH4Wn44KDSNgR36EyhvSQ==
   dependencies:
     "@mesonfi/contract-abis" "^1.13.0"
     "@mesonfi/contract-types" "^1.13.0"

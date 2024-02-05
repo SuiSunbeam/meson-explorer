@@ -141,7 +141,7 @@ function CorrectSwap({ data: raw }) {
       inAmount = ethers.utils.formatUnits(swap.amount.add(swap.fee), swap._isUCT() ? 4 : 6)
       outAmount = ethers.utils.formatUnits(swap.amount, 6)
     }
-    const feeSide = swap.deprecatedEncoding ? from : to
+    const feeSide = (swap.deprecatedEncoding || to.token.fake) ? from : to
     body = (
       <dl>
         {isRoot && <OnChainStatus data={data} from={from} to={to} />}
@@ -188,7 +188,7 @@ function CorrectSwap({ data: raw }) {
               <TagNetworkToken explorer={from.network.explorer} token={from.token} className={CancelledStatus.includes(status) && 'text-black'}/>
               <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
               <div className='mr-1'>{outAmount}</div>
-              <TagNetworkToken explorer={to.network.explorer} token={to.token} />
+              {!to.token.fake && <TagNetworkToken explorer={to.network.explorer} token={to.token} />}
             </div>
           }
           {
