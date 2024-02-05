@@ -166,10 +166,13 @@ export default function SwapRow({ data: raw, smMargin }) {
             <TagNetworkToken responsive explorer={from.network.explorer} token={from.token} />
             <div className='hidden md:flex'>
               <div className='text-gray-500 mx-1 text-xs'>{'->'}</div>
-              <TagNetworkToken
-                iconOnly={swap.swapForCoreToken}
-                responsive explorer={to.network.explorer} token={to.token}
-              />
+              {
+                !to.token.fake &&
+                <TagNetworkToken
+                  iconOnly={swap.swapForCoreToken}
+                  responsive explorer={to.network.explorer} token={to.token}
+                />
+              }
               {
                 swap.swapForCoreToken &&
                 <TagNetworkToken
@@ -180,9 +183,12 @@ export default function SwapRow({ data: raw, smMargin }) {
                 />
               }
             </div>
-            <div className='flex md:hidden text-gray-500 ml-1.5 text-xs'>
-              {swap.swapForCoreToken && '+🔥'}
-            </div>
+            {
+              swap.swapForCoreToken && !to.token.fake &&
+              <div className='flex md:hidden text-gray-500 ml-1.5 text-xs'>
+                +🔥
+              </div>
+            }
           </div>
         </div>
         {
