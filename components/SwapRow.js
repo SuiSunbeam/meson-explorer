@@ -86,6 +86,7 @@ export default function SwapRow({ data: raw, smMargin }) {
   const recipient = data.fromTo[1] || ''
   const coreSymbol = presets.getCoreSymbol(to.network.id)
   const totalFee = swap.amountToShare.add((raw.srFee || 0) + (raw.lpFee || 0)).toNumber()
+  const feeSide = (swap.deprecatedEncoding || to.token.fake) ? from : to
 
   return (
     <tr
@@ -196,7 +197,7 @@ export default function SwapRow({ data: raw, smMargin }) {
         !CancelledStatus.includes(status) &&
         <div className='flex items-center lg:flex-col lg:items-start'>
           <div className='mr-1'><AmountDisplay value={totalFee} /></div>
-          <TagNetworkToken responsive explorer={to.network.explorer} token={to.token} />
+          <TagNetworkToken responsive explorer={feeSide.network.explorer} token={feeSide.token} />
         </div>
       }
       </Td>
