@@ -28,7 +28,7 @@ export default function DailyStatsByChain() {
 
   const headers = React.useMemo(() => {
     const headers = networks.map(n => ({ name: <TagNetwork size='md' network={n} iconOnly /> }))
-    if (view === 'volume') {
+    if (['swaps', 'fees', 'volume'].includes(view)) {
       headers.unshift({ name: 'Total' })
     }
     headers.unshift({ name: 'Date' })
@@ -65,15 +65,39 @@ export default function DailyStatsByChain() {
 
 function StatByChainRow ({ data, view = 'swaps' }) {
   const { _id: date, ...rest } = data
-  const tds = networks.map(n => {
-    const d = rest[n.shortSlip44]
+  const total = Object.values(rest).reduce((x, y) => {
+    const tokens = ['stablecoins', 'eth', 'btc', 'bnb']
+    return {
+      from: tokens.map(t => ({
+        tokenType: t,
+        count: (x?.from?.find(item => item.tokenType === t)?.count || 0) + (y?.from?.find(item => item.tokenType === t)?.count || 0),
+        success: (x?.from?.find(item => item.tokenType === t)?.success || 0) + (y?.from?.find(item => item.tokenType === t)?.success || 0),
+        volume: (x?.from?.find(item => item.tokenType === t)?.volume || 0) + (y?.from?.find(item => item.tokenType === t)?.volume || 0),
+        lpFee: (x?.from?.find(item => item.tokenType === t)?.lpFee || 0) + (y?.from?.find(item => item.tokenType === t)?.lpFee || 0),
+        srFee: (x?.from?.find(item => item.tokenType === t)?.srFee || 0) + (y?.from?.find(item => item.tokenType === t)?.srFee || 0),
+      })),
+      to: tokens.map(t => ({
+        tokenType: t,
+        count: (x?.to?.find(item => item.tokenType === t)?.count || 0) + (y?.to?.find(item => item.tokenType === t)?.count || 0),
+        success: (x?.to?.find(item => item.tokenType === t)?.success || 0) + (y?.to?.find(item => item.tokenType === t)?.success || 0),
+        volume: (x?.to?.find(item => item.tokenType === t)?.volume || 0) + (y?.to?.find(item => item.tokenType === t)?.volume || 0),
+        lpFee: (x?.to?.find(item => item.tokenType === t)?.lpFee || 0) + (y?.to?.find(item => item.tokenType === t)?.lpFee || 0),
+        srFee: (x?.to?.find(item => item.tokenType === t)?.srFee || 0) + (y?.to?.find(item => item.tokenType === t)?.srFee || 0),
+      })),
+    }
+  })
+  const rows = networks.map(n => rest[n.shortSlip44])
+  if (['swaps', 'fees', 'volume'].includes(view)) {
+    rows.unshift(total)
+  }
 
+  const tds = rows.map((d, index) => {
     let content = null
     if (!d) {
       content = ''
     } else if (view === 'swaps') {
       content = (
-        <div className='w-10'>
+        <div className={index ? 'w-10' : 'w-14'}>
           <StatsByChainCountTextCell data={d.from} />
           <div className='w-full my-px h-px bg-gray-500' />
           <StatsByChainCountTextCell data={d.to} />
@@ -89,7 +113,7 @@ function StatByChainRow ({ data, view = 'swaps' }) {
       )
     } else if (view === 'fees') {
       content = (
-        <div className='w-10'>
+        <div className={index ? 'w-10' : 'w-14'}>
           <StatsByChainFeesTextCell data={d.from} />
           <div className='w-full my-px h-px bg-gray-500' />
           <StatsByChainFeesTextCell data={d.to} />
@@ -105,39 +129,16 @@ function StatByChainRow ({ data, view = 'swaps' }) {
       )
     } else if (view === 'volume') {
       content = (
-        <div className='w-12'>
+        <div className={index ? 'w-12' : 'w-16'}>
           <StatsByChainVolumeCell data={d.from} />
           <div className='w-full my-0.5 h-px bg-gray-500' />
           <StatsByChainVolumeCell data={d.to} />
         </div>
       )
     }
-    return <Td key={n.id} size='narrow'>{content}</Td>
+    return <Td key={`col-${index}`} size='narrow'>{content}</Td>
   })
-  if (view === 'volume') {
-    const total = Object.values(rest).reduce((x, y) => {
-      const tokens = ['stablecoins', 'eth', 'btc', 'bnb']
-      return {
-        from: tokens.map(t => ({
-          tokenType: t,
-          volume: (x?.from?.find(item => item.tokenType === t)?.volume || 0) + (y?.from?.find(item => item.tokenType === t)?.volume || 0)
-        })),
-        to: tokens.map(t => ({
-          tokenType: t,
-          volume: (x?.to?.find(item => item.tokenType === t)?.volume || 0) + (y?.to?.find(item => item.tokenType === t)?.volume || 0)
-        })),
-      }
-    })
-    tds.unshift(
-      <Td size='narrow'>
-        <div className='w-12'>
-          <StatsByChainVolumeCell data={total.from} />
-          <div className='w-full my-0.5 h-px bg-gray-500' />
-          <StatsByChainVolumeCell data={total.to} />
-        </div>
-      </Td>
-    )
-  }
+
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1 text-sm'>{date}</Td>
@@ -155,7 +156,7 @@ const colors = {
 
 function StatsByChainCountTextCell ({ data = [] }) {
   return (
-    <div className='w-10 flex flex-col gap-px'>
+    <div className='w-full flex flex-col gap-px'>
     {
       data.map((d, i) => {
         const fail = d.count - d.success

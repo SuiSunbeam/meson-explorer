@@ -8,7 +8,8 @@ module.exports = {
   ],
   safelist: [
     'bg-warning',
-    'bg-yellow-400'
+    'bg-yellow-400',
+    'text-yellow-400'
   ],
   theme: {
     extend: {
