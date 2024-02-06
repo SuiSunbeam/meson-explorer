@@ -3,11 +3,15 @@ import { mergeDeep } from 'immutable'
 import { Swaps } from 'lib/db'
 import { listHandler } from 'lib/api'
 import { AUTO_ADDRESSES } from 'lib/const'
+import { presets } from 'lib/swap'
 
 export default listHandler({
   collection: Swaps,
   getAggregator: async req => {
     const page = Number(req.query.page) || 0
+    const { from, to } = req.query
+    const inChain = from && presets.getNetwork(from)?.shortSlip44
+    const outChain = to && presets.getNetwork(to)?.shortSlip44
 
     const now = new Date()
     const y = now.getUTCFullYear()
@@ -104,10 +108,16 @@ export default listHandler({
             { $and: [{ $gte: ['$inToken', 248] }, { $lt: ['$inToken', 252] }] },
             'bnb',
             { $cond: [
-              { $and: [{ $gte: ['$inToken', 252] }, { $gt: ['$expireTs', new Date(1691700000 * 1000)] }] },
-              'eth',
-              'stablecoins'
-            ] }
+              { $and: [{ $gte: ['$inToken', 240] }, { $lt: ['$inToken', 244] }] },
+              'btc',
+              {
+                $cond: [
+                  { $and: [{ $gte: ['$inToken', 252] }, { $gt: ['$expireTs', new Date(1691700000 * 1000)] }] },
+                  'eth',
+                  'stablecoins'
+                ]
+              }
+            ]}
           ]}
         }
       },
@@ -118,6 +128,12 @@ export default listHandler({
         },
       },
     ]
+    if (inChain) {
+      aggregator[0].$match.inChain = inChain
+    }
+    if (outChain) {
+      aggregator[0].$match.outChain = outChain
+    }
 
     return { aggregator, maxPage }
   },

@@ -1,6 +1,6 @@
 import React from 'react'
 import classnames from 'classnames'
-import { ethers } from 'ethers'
+import { useRouter } from 'next/router'
 
 import PagiCard from 'components/Pagi/PagiCard'
 import ButtonGroup from 'components/ButtonGroup'
@@ -14,14 +14,26 @@ import { valueInStr } from './components'
 const networks = getAllNetworks()
 
 export default function DailyStatsByChain() {
+  const router = useRouter()
   const [view, setView] = React.useState('swaps-graph')
+  const { from, to } = router.query
+
+  const queryUrl = React.useMemo(() => {
+    let queryUrl = '/stats/daily/by-chain'
+    if (from || to) {
+      queryUrl += `?from=${from || ''}&to=${to || ''}`
+    }
+    return queryUrl
+  }, [from, to])
 
   const headers = React.useMemo(() => {
-    return [
-      { name: 'Date' },
-      ...networks.map(n => ({ name: <TagNetwork size='md' network={n} iconOnly /> }))
-    ]
-  }, [])
+    const headers = networks.map(n => ({ name: <TagNetwork size='md' network={n} iconOnly /> }))
+    if (view === 'volume') {
+      headers.unshift({ name: 'Total' })
+    }
+    headers.unshift({ name: 'Date' })
+    return headers
+  }, [view])
   
   const StatByChainRowByView = React.useCallback(({ data }) => StatByChainRow({ data, view }), [view])
 
@@ -37,12 +49,13 @@ export default function DailyStatsByChain() {
             { key: 'swaps', text: `#Swaps` },
             { key: 'fees-graph', text: `Fees (graph)` },
             { key: 'fees', text: `Fees ` },
+            { key: 'volume', text: `Volume ` },
           ]}
           onChange={view => setView(view)}
         />
       }
-      queryUrl='/stats/daily/by-chain'
-      fallback='/stats/daily/by-chain'
+      queryUrl={queryUrl}
+      fallback={queryUrl}
       noSize
       tableHeaders={headers}
       Row={StatByChainRowByView}
@@ -90,9 +103,41 @@ function StatByChainRow ({ data, view = 'swaps' }) {
           <StatsByChainFeesLinesCell data={d.to} />
         </div>
       )
+    } else if (view === 'volume') {
+      content = (
+        <div className='w-12'>
+          <StatsByChainVolumeCell data={d.from} />
+          <div className='w-full my-0.5 h-px bg-gray-500' />
+          <StatsByChainVolumeCell data={d.to} />
+        </div>
+      )
     }
     return <Td key={n.id} size='narrow'>{content}</Td>
   })
+  if (view === 'volume') {
+    const total = Object.values(rest).reduce((x, y) => {
+      const tokens = ['stablecoins', 'eth', 'btc', 'bnb']
+      return {
+        from: tokens.map(t => ({
+          tokenType: t,
+          volume: (x?.from?.find(item => item.tokenType === t)?.volume || 0) + (y?.from?.find(item => item.tokenType === t)?.volume || 0)
+        })),
+        to: tokens.map(t => ({
+          tokenType: t,
+          volume: (x?.to?.find(item => item.tokenType === t)?.volume || 0) + (y?.to?.find(item => item.tokenType === t)?.volume || 0)
+        })),
+      }
+    })
+    tds.unshift(
+      <Td size='narrow'>
+        <div className='w-12'>
+          <StatsByChainVolumeCell data={total.from} />
+          <div className='w-full my-0.5 h-px bg-gray-500' />
+          <StatsByChainVolumeCell data={total.to} />
+        </div>
+      </Td>
+    )
+  }
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
       <Td size='' className='pl-4 pr-3 sm:pl-6 py-1 text-sm'>{date}</Td>
@@ -104,7 +149,8 @@ function StatByChainRow ({ data, view = 'swaps' }) {
 const colors = {
   stablecoins: 'primary',
   eth: 'indigo-500',
-  bnb: 'warning'
+  btc: 'warning',
+  bnb: 'yellow-400'
 }
 
 function StatsByChainCountTextCell ({ data = [] }) {
@@ -153,13 +199,27 @@ function StatsByChainFeesLinesCell ({ data = [] }) {
     {
       data.map((d, i) => {
         let value = (d.lpFee + d.srFee) / 1e6
-        if (['eth', 'bnb'].includes(d.tokenType)) {
+        if (['eth', 'btc', 'bnb'].includes(d.tokenType)) {
           value = value * 1000
         } else {
           value = value
         }
         return <Lines key={i} value={value} bg={`bg-${colors[d.tokenType]}`} />
       })
+    }
+    </div>
+  )
+}
+
+function StatsByChainVolumeCell ({ data = [] }) {
+  return (
+    <div className='w-10 flex flex-col gap-px'>
+    {
+      data.filter(d => d.volume > 0).map((d, i) => (
+        <div key={i} className={classnames('text-[10px] leading-[10px]', `text-${colors[d.tokenType]}`)}>
+          {valueInStr(d.volume, d.tokenType)}
+        </div>
+      ))
     }
     </div>
   )
