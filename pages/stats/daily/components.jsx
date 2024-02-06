@@ -65,7 +65,7 @@ export function valueInStr (value = 0, symbol, k = false) {
     return `${fmt.format(ethers.utils.formatUnits(value, 6))}🔸`
   }
   const amount = Math.floor(ethers.utils.formatUnits(value, 6))
-  if (k && amount > 10000) {
+  if (k && amount > 100000) {
     return `$${Math.floor(amount / 1000)}k`
   }
   return `$${fmt.format(amount)}`
