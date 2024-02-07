@@ -65,7 +65,7 @@ export function valueInStr (value = 0, symbol, k = false) {
     return `${fmt.format(ethers.utils.formatUnits(value, 6))}🔸`
   }
   const amount = Math.floor(ethers.utils.formatUnits(value, 6))
-  if (k && amount > 100000) {
+  if (k && amount > 10000) {
     return `$${Math.floor(amount / 1000)}k`
   }
   return `$${fmt.format(amount)}`
@@ -75,7 +75,7 @@ function SwapCount({ count, success }) {
   if (!count) {
     return null
   }
-  const countStr = count > 10000 ? Math.floor(count / 1000) + 'k' : count
-  const successStr = success > 10000 ? Math.floor(success / 1000) + 'k' : success
+  const countStr = count > 100000 ? Math.floor(count / 1000) + 'k' : count
+  const successStr = success > 100000 ? Math.floor(success / 1000) + 'k' : success
   return <>{successStr} <span className='text-gray-500'>/</span> {countStr} <span className='text-gray-500 text-sm'>({Math.floor(success / count * 1000) / 10}%)</span></>
 }
