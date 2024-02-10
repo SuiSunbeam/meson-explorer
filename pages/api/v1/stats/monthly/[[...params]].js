@@ -1,4 +1,4 @@
-import { Swaps } from 'lib/db'
+import { Swaps, StatMonthly } from 'lib/db'
 import { listHandler } from 'lib/api'
 import { AUTO_ADDRESSES } from 'lib/const'
 
@@ -8,7 +8,17 @@ export default listHandler({
     const { params = [] } = req.query
     const [chain, type] = params
 
+    const now = new Date()
+    const y = now.getUTCFullYear()
+    const m = now.getUTCMonth()
+    const startDate = new Date(Date.UTC(y, m - 1, 1))
+
     const aggregator = [
+      {
+        $match: {
+          created: { $gt: startDate },
+        }
+      },
       {
         $project: {
           success: { $in: ['RELEASED', '$events.name'] },
@@ -77,14 +87,18 @@ export default listHandler({
           api: '$api',
           auto: '$auto',
           m2: '$m2',
-          vol_usd: '$vol_usd',
-          fee_usd: '$fee_usd',
-          vol_btc: '$vol_btc',
-          fee_btc: '$fee_btc',
-          vol_eth: '$vol_eth',
-          fee_eth: '$fee_eth',
-          vol_bnb: '$vol_bnb',
-          fee_bnb: '$fee_bnb',
+          vol: {
+            usd: '$vol_usd',
+            eth: '$vol_eth',
+            btc: '$vol_btc',
+            bnb: '$vol_bnb',
+          },
+          fee: {
+            usd: '$fee_usd',
+            eth: '$fee_eth',
+            btc: '$fee_btc',
+            bnb: '$fee_bnb',
+          },
           addresses: { $size: '$addresses' },
         }
       },
@@ -100,5 +114,11 @@ export default listHandler({
       }
     }
     return { aggregator }
+  },
+  postProcessor: async (list, req) => {
+    await Promise.all(
+      list.map(item => StatMonthly.findByIdAndUpdate(item._id, item, { upsert: true }))
+    )
+    return await StatMonthly.find().sort({ _id: -1 })
   }
 })

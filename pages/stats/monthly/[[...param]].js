@@ -71,21 +71,25 @@ export default function MonthlyStats() {
     body = <LoadingScreen />
   } else {
     const total = data.list.reduce((prev = {}, item) => {
-      const { count, api, auto, m2, vol_usd, fee_usd, vol_btc, fee_btc, vol_eth, fee_eth, vol_bnb, fee_bnb } = item
+      const { count, api, auto, m2, vol = {}, fee = {}, vol_btc, fee_btc, vol_eth, fee_eth, vol_bnb, fee_bnb } = item
       return {
         _id: 'Total',
         count: (prev.count || 0) + count,
         api: (prev.api || 0) + api,
         auto: (prev.auto || 0) + auto,
         m2: (prev.m2 || 0) + m2,
-        vol_usd: (prev.vol_usd || 0) + vol_usd,
-        fee_usd: (prev.fee_usd || 0) + fee_usd,
-        vol_btc: (prev.vol_btc || 0) + vol_btc,
-        fee_btc: (prev.fee_btc || 0) + fee_btc,
-        vol_eth: (prev.vol_eth || 0) + vol_eth,
-        fee_eth: (prev.fee_eth || 0) + fee_eth,
-        vol_bnb: (prev.vol_bnb || 0) + vol_bnb,
-        fee_bnb: (prev.fee_bnb || 0) + fee_bnb,
+        vol: {
+          usd: (prev.vol?.usd || 0) + (vol.usd || 0),
+          eth: (prev.vol?.eth || 0) + (vol.eth || 0),
+          btc: (prev.vol?.btc || 0) + (vol.btc || 0),
+          bnb: (prev.vol?.bnb || 0) + (vol.bnb || 0),
+        },
+        fee: {
+          usd: (prev.fee?.usd || 0) + (fee.usd || 0),
+          eth: (prev.fee?.eth || 0) + (fee.eth || 0),
+          btc: (prev.fee?.btc || 0) + (fee.btc || 0),
+          bnb: (prev.fee?.bnb || 0) + (fee.bnb || 0),
+        },
       }
     })
     body = (

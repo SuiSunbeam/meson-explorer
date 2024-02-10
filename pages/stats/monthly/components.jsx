@@ -6,7 +6,7 @@ import { Td } from 'components/Table'
 const fmt = Intl.NumberFormat()
 
 export function StatTableRow({ data }) {
-  const { _id: date, count, api, auto, m2, vol_usd, fee_usd, vol_btc, fee_btc, vol_eth, fee_eth, vol_bnb, fee_bnb, addresses } = data
+  const { _id: date, count, api, auto, m2, vol = {}, fee = {}, addresses } = data
 
   return (
     <tr className='odd:bg-white even:bg-gray-50 hover:bg-primary-50'>
@@ -15,14 +15,14 @@ export function StatTableRow({ data }) {
       <Td size='xs' className='font-mono text-right'>{fmt.format(api)}</Td>
       <Td size='xs' className='font-mono text-right'>{fmt.format(auto)}</Td>
       <Td size='xs' className='font-mono text-right'>{fmt.format(m2)}</Td>
-      <Td size='xs' className='font-mono text-right'>{formatVol(vol_usd)}</Td>
-      <Td size='xs' className='font-mono text-right'>{formatVol(fee_usd)}</Td>
-      <Td size='xs' className='font-mono text-right'>{formatVol(vol_btc, 'btc')}</Td>
-      <Td size='xs' className='font-mono text-right'>{formatVol(fee_btc, 'btc')}</Td>
-      <Td size='xs' className='font-mono text-right'>{formatVol(vol_eth, 'eth')}</Td>
-      <Td size='xs' className='font-mono text-right'>{formatVol(fee_eth, 'eth')}</Td>
-      <Td size='xs' className='font-mono text-right'>{formatVol(vol_bnb, 'bnb')}</Td>
-      <Td size='xs' className='font-mono text-right'>{formatVol(fee_bnb, 'bnb')}</Td>
+      <Td size='xs' className='font-mono text-right'>{formatVol(vol.usd)}</Td>
+      <Td size='xs' className='font-mono text-right'>{formatVol(fee.usd)}</Td>
+      <Td size='xs' className='font-mono text-right'>{formatVol(vol.btc, 'btc')}</Td>
+      <Td size='xs' className='font-mono text-right'>{formatVol(fee.btc, 'btc')}</Td>
+      <Td size='xs' className='font-mono text-right'>{formatVol(vol.eth, 'eth')}</Td>
+      <Td size='xs' className='font-mono text-right'>{formatVol(fee.eth, 'eth')}</Td>
+      <Td size='xs' className='font-mono text-right'>{formatVol(vol.bnb, 'bnb')}</Td>
+      <Td size='xs' className='font-mono text-right'>{formatVol(fee.bnb, 'bnb')}</Td>
       <Td size='xs' className='pr-4 sm:pr-6 font-mono text-right'>{addresses && fmt.format(addresses)}</Td>
     </tr>
   )
