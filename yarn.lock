@@ -579,10 +579,10 @@
     js-sha3 "^0.8.0"
     msafe-iframe "^1.0.8"
 
-"@mesonfi/contract-abis@^1.13.0":
-  version "1.13.0"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/contract-abis/1.13.0/c1d5ea7ddd8e2298698db45984319ebb1d2b3926#c1d5ea7ddd8e2298698db45984319ebb1d2b3926"
-  integrity sha512-Z+74CCbvGUGNJX18pQi9lfWv0PGCjQ3oGw1H0Nxr1JlW9bZvpVZWAFTLDd1E7UKK5Mk3YQnpKlSIcewvPJYnng==
+"@mesonfi/contract-abis@^1.13.0", "@mesonfi/contract-abis@^1.16.0":
+  version "1.16.0"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/contract-abis/1.16.0/799581f453ae4baf70086204e116d1fbebf31999#799581f453ae4baf70086204e116d1fbebf31999"
+  integrity sha512-ATRDKBLESI2x2CBOa15Zpn5D+pn2sjJUFx/rWhOzez13aHc1fkCQhmSZouhPs5SwgvIWNIFOWANfegYQs1iSUw==
 
 "@mesonfi/contract-types@^1.13.0":
   version "1.13.0"
