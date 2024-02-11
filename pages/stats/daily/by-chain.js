@@ -251,8 +251,8 @@ function Line ({ value, bg, rate, children }) {
         )}
         style={{ width: `${value / 2.5}px` }}
       >
-        <div className='text-xs ml-1 text-white'>{children}</div>
         <div className='absolute top-0 right-0 h-full bg-red-500' style={{ width: `${rate * 100}%` }} />
+        <div className='z-10 text-xs ml-1 text-white'>{children}</div>
       </div>
     </div>
   )
