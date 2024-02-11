@@ -199,13 +199,16 @@ function StatsByChainFeesLinesCell ({ data = [] }) {
     <div className='w-10 flex flex-col gap-px'>
     {
       data.map((d, i) => {
-        let value = (d.lpFee + d.srFee) / 1e6
+        let display = (d.lpFee + d.srFee) / 1e6
+        let value
         if (['eth', 'btc', 'bnb'].includes(d.tokenType)) {
-          value = value * 1000
+          value = display * 1000
+          display = display.toFixed(3)
         } else {
-          value = value
+          value = display
+          display = Math.round(display)
         }
-        return <Lines key={i} value={value} bg={`bg-${colors[d.tokenType]}`} />
+        return <Lines key={i} value={value} display={display} bg={`bg-${colors[d.tokenType]}`} />
       })
     }
     </div>
@@ -226,16 +229,30 @@ function StatsByChainVolumeCell ({ data = [] }) {
   )
 }
 
-function Lines ({ value, bg, rate = 0 }) {
+function Lines ({ value, display, bg, rate = 0 }) {
   const lines = Array(Math.ceil(value / 100)).fill(0)
-  return lines.map((_, i) => <Line key={`line-${i}`} value={value - 100 * i} bg={bg} rate={rate} />)
+  if (lines.length < 5) {
+    return lines.map((_, i) => <Line key={`line-${i}`} value={value - 100 * i} bg={bg} rate={rate} />)
+  }
+  return <Line value={value} bg={bg} rate={rate}>{display || value}</Line>
 }
 
-function Line ({ value, bg, rate }) {
+function Line ({ value, bg, rate, children }) {
   return (
     <div className='w-10 overflow-hidden bg-gray-100'>
-      <div className={classnames('h-1.5 max-w-full', bg)} style={{ width: `${value / 2.5}px` }}>
-        <div className='h-full bg-red-500 float-right' style={{ width: `${rate * 100}%` }} />
+      <div
+        className={classnames(
+          'relative flex items-center max-w-full',
+          !children && 'h-1.5',
+          children && value < 1000 && 'h-4',
+          children && value >= 1000 && value < 3000 && 'h-6',
+          children && value >= 3000 && 'h-10',
+          bg
+        )}
+        style={{ width: `${value / 2.5}px` }}
+      >
+        <div className='text-xs ml-1 text-white'>{children}</div>
+        <div className='absolute top-0 right-0 h-full bg-red-500' style={{ width: `${rate * 100}%` }} />
       </div>
     </div>
   )
