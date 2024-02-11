@@ -60,7 +60,7 @@ export function valueInStr (value = 0, symbol, k = false) {
   if (symbol === 'eth') {
     return `${fmt.format(ethers.utils.formatUnits(value, 6))}🔹`
   } else if (symbol === 'btc') {
-    return <div className='inline-flex items-center'>{fmt.format(ethers.utils.formatUnits(value, 6))}<span className='text-[80%] ml-0.5'>🟡</span></div>
+    return <div className='inline-flex items-center'>{fmt.format(ethers.utils.formatUnits(value, 6))}<span className='text-[80%] ml-0.5'>🫓</span></div>
   } else if (symbol === 'bnb') {
     return `${fmt.format(ethers.utils.formatUnits(value, 6))}🔸`
   }
