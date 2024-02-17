@@ -171,15 +171,17 @@ export default function SwapRow({ data: raw, smMargin }) {
               {
                 !to.token.fake && outAmount > 0 &&
                 <TagNetworkToken
+                  responsive
                   iconOnly={swap.swapForCoreToken}
-                  responsive explorer={to.network.explorer} token={to.token}
+                  explorer={to.network.explorer} token={to.token}
                 />
               }
               {
                 swap.swapForCoreToken &&
                 <TagNetworkToken
                   className='ml-0.5'
-                  iconOnly
+                  responsive
+                  iconOnly={!to.token.fake && outAmount > 0}
                   explorer={to.network.explorer}
                   token={{ symbol: coreSymbol }}
                 />
