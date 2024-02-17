@@ -628,12 +628,12 @@
     starknet "^5.24.3"
     tronweb "5.2.0"
 
-"@mesonfi/sdk@^1.15.3", "@mesonfi/sdk@^1.16.6", "@mesonfi/sdk@^1.16.8":
-  version "1.16.8"
-  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.16.8/265018a3fec694b533d72e97f67c31475eefdfc7#265018a3fec694b533d72e97f67c31475eefdfc7"
-  integrity sha512-iHpDSSNJajsAGOyPJSIv4GFUj901CSdGvWYXjvkTaMg9FLhp6kQXixm+757EoOrcMliMcNegpSZVouiepvP1tw==
+"@mesonfi/sdk@^1.15.3", "@mesonfi/sdk@^1.16.10", "@mesonfi/sdk@^1.16.6":
+  version "1.16.10"
+  resolved "https://npm.pkg.github.com/download/@MesonFi/sdk/1.16.10/e46e69055b6b9a396439e29a5ac77c69e92e1925#e46e69055b6b9a396439e29a5ac77c69e92e1925"
+  integrity sha512-7fNPLDaw/+vJiUXlrCRxhO7u8rQa7eflPMOGdS2r6XlajVsOtJFr/60X5F09OaN7Uy96hnz05R74chxqMiYmNg==
   dependencies:
-    "@mesonfi/contract-abis" "^1.13.0"
+    "@mesonfi/contract-abis" "^1.16.0"
     "@mesonfi/contract-types" "^1.13.0"
     "@mysten/sui.js" "0.33.0"
     "@solana/spl-token" "0.3.8"
