@@ -2,6 +2,7 @@ import React from 'react'
 import classnames from 'classnames'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { ethers } from 'ethers'
 import debounce from 'lodash/debounce'
 import { DocumentTextIcon } from '@heroicons/react/outline'
 
@@ -86,7 +87,8 @@ export default function SwapRow({ data: raw, smMargin }) {
   const recipient = data.fromTo[1] || ''
   const coreSymbol = presets.getCoreSymbol(to.network.id)
   const totalFee = swap.amountToShare.add((raw.srFee || 0) + (raw.lpFee || 0)).toNumber()
-  const feeSide = (swap.deprecatedEncoding || to.token.fake) ? from : to
+  const outAmount = ethers.utils.formatUnits(swap.amount.sub(swap.amountForCoreToken).sub(totalFee), 6)
+  const feeSide = (swap.deprecatedEncoding || to.token.fake || outAmount == 0) ? from : to
 
   return (
     <tr
@@ -167,7 +169,7 @@ export default function SwapRow({ data: raw, smMargin }) {
             <div className='hidden md:flex'>
               <div className='text-gray-500 mx-1 text-xs'>{'->'}</div>
               {
-                !to.token.fake &&
+                !to.token.fake && outAmount > 0 &&
                 <TagNetworkToken
                   iconOnly={swap.swapForCoreToken}
                   responsive explorer={to.network.explorer} token={to.token}
@@ -184,7 +186,7 @@ export default function SwapRow({ data: raw, smMargin }) {
               }
             </div>
             {
-              swap.swapForCoreToken && !to.token.fake &&
+              swap.swapForCoreToken && !to.token.fake && outAmount > 0 &&
               <div className='flex md:hidden text-gray-500 ml-1.5 text-xs'>
                 +🔥
               </div>

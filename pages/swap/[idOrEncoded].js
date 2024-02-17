@@ -4,10 +4,10 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import useSWR from 'swr'
+import { ethers } from 'ethers'
 
 import { XCircleIcon } from '@heroicons/react/solid'
 import { DocumentTextIcon } from '@heroicons/react/outline'
-import { ethers } from 'ethers'
 
 import fetcher from 'lib/fetcher'
 import socket from 'lib/socket'
@@ -141,7 +141,7 @@ function CorrectSwap({ data: raw }) {
       inAmount = ethers.utils.formatUnits(swap.amount.add(swap.fee), swap._isUCT() ? 4 : 6)
       outAmount = ethers.utils.formatUnits(swap.amount, 6)
     }
-    const feeSide = (swap.deprecatedEncoding || to.token.fake) ? from : to
+    const feeSide = (swap.deprecatedEncoding || to.token.fake || outAmount == 0) ? from : to
     body = (
       <dl>
         {isRoot && <OnChainStatus data={data} from={from} to={to} />}
@@ -188,7 +188,7 @@ function CorrectSwap({ data: raw }) {
               <TagNetworkToken explorer={from.network.explorer} token={from.token} className={CancelledStatus.includes(status) && 'text-black'}/>
               <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
               <div className='mr-1'>{outAmount}</div>
-              {!to.token.fake && <TagNetworkToken explorer={to.network.explorer} token={to.token} />}
+              {!to.token.fake && outAmount > 0 && <TagNetworkToken explorer={to.network.explorer} token={to.token} />}
             </div>
           }
           {
