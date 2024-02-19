@@ -315,7 +315,7 @@ function EncodedSplitted({ swap }) {
         </span>
         <span className='group inline-block relative ml-1 text-gray-500 cursor-pointer hover:underline'>
           {encoded.substring(44, 54)}
-          <span className='hidden group-hover:block absolute bottom-6 left-0 w-28 bg-white border rounded-lg px-2 py-1 text-black text-sm'>
+          <span className='hidden group-hover:block absolute bottom-6 left-0 whitespace-nowrap bg-white border rounded-lg px-2 py-1 text-black text-sm'>
             {new Date(parseInt('0x' + encoded.substring(44, 54)) * 1000).toLocaleString()}
           </span>
         </span>
