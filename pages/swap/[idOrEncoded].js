@@ -191,11 +191,12 @@ function CorrectSwap({ data: raw }) {
               'w-fit relative flex items-center',
               CancelledStatus.includes(status) && 'opacity-30 before:block before:absolute before:w-full before:h-0.5 before:bg-black before:z-10'
             )}>
+              {outAmount < 0 && <FailedIcon />}
               <div className='mr-1'>{inAmount}</div>
               <TagNetworkToken explorer={from.network.explorer} token={from.token} className={CancelledStatus.includes(status) && 'text-black'}/>
               <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
               <div className='mr-1'>{outAmount}</div>
-              {!to.token.fake && outAmount > 0 && <TagNetworkToken explorer={to.network.explorer} token={to.token} />}
+              {!to.token.fake && outAmount != 0 && <TagNetworkToken explorer={to.network.explorer} token={to.token} />}
             </div>
           }
           {
