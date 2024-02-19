@@ -149,7 +149,7 @@ function CorrectSwap({ data: raw }) {
           <div className='break-all'>{data._id}</div>
         </ListRow>
         <ListRow title='Encoded As'>
-          {authorized ? <EncodedSplitted encoded={data.encoded} /> : <div className='break-all'>{data.encoded}</div>}
+          {authorized ? <EncodedSplitted swap={swap} /> : <div className='break-all'>{data.encoded}</div>}
           {!swap.version && <div className='text-sm text-gray-500'>v0 encoding</div>}
           {authorized && <SwapSaltBadges swap={swap} />}
         </ListRow>
@@ -276,20 +276,49 @@ function CorrectSwap({ data: raw }) {
   )
 }
 
-function EncodedSplitted({ encoded }) {
+function EncodedSplitted({ swap }) {
+  const encoded = swap.encoded
+  const splitPos = swap._splitPos + 12
   return (
     <div>
       <span>
         <span className='text-gray-500'>{encoded.substring(0, 4)}</span>
-        <span className='ml-1'>{encoded.substring(4, 14)}</span>
-        <span className='ml-1 text-gray-500'>{encoded.substring(14, 18)}</span>
+        <span className='group inline-block relative ml-1 cursor-pointer hover:underline'>
+          {encoded.substring(4, 14)}
+          <span className='hidden group-hover:block absolute bottom-6 bg-white border rounded-lg px-2 py-1'>
+            {parseInt('0x' + encoded.substring(4, 14)) / 1e6}
+          </span>
+        </span>
+        <span className='ml-1 text-gray-500 cursor-pointer hover:underline'>
+          {encoded.substring(14, 18)}
+        </span>
         <span className='ml-1'>
-          <span className=''>{encoded.substring(18, 22)}</span>
-          <span className=''>{encoded.substring(22, 26)}</span>
+          <span className='group inline-block relative cursor-pointer hover:underline'>
+            {encoded.substring(18, splitPos)}
+            <span className='hidden group-hover:block absolute bottom-6 bg-white border rounded-lg px-2 py-1'>
+              {parseInt('0x' + encoded.substring(18, splitPos))}
+            </span>
+          </span>
+          <span className='group inline-block relative cursor-pointer hover:underline'>
+            {encoded.substring(splitPos, 26)}
+            <span className='hidden group-hover:block absolute bottom-6 bg-white border rounded-lg px-2 py-1'>
+              {parseInt('0x' + encoded.substring(splitPos, 26))}
+            </span>
+          </span>
           <span className='text-gray-500'>{encoded.substring(26, 34)}</span>
         </span>
-        <span className='ml-1'>{encoded.substring(34, 44)}</span>
-        <span className='ml-1 text-gray-500'>{encoded.substring(44, 54)}</span>
+        <span className='group inline-block relative ml-1 cursor-pointer hover:underline'>
+          {encoded.substring(34, 44)}
+          <span className='hidden group-hover:block absolute bottom-6 bg-white border rounded-lg px-2 py-1'>
+            {parseInt('0x' + encoded.substring(34, 44)) / 1e6}
+          </span>
+        </span>
+        <span className='group inline-block relative ml-1 text-gray-500 cursor-pointer hover:underline'>
+          {encoded.substring(44, 54)}
+          <span className='hidden group-hover:block absolute bottom-6 left-0 w-28 bg-white border rounded-lg px-2 py-1 text-black text-sm'>
+            {new Date(parseInt('0x' + encoded.substring(44, 54)) * 1000).toLocaleString()}
+          </span>
+        </span>
         <span className='ml-1'>{encoded.substring(54, 58)}</span>
         <span className='ml-1'>{encoded.substring(58, 60)}</span>
         <span className='ml-1 text-gray-500'>{encoded.substring(60, 64)}</span>
