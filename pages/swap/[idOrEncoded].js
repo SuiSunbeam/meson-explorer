@@ -149,7 +149,7 @@ function CorrectSwap({ data: raw }) {
           <div className='break-all'>{data._id}</div>
         </ListRow>
         <ListRow title='Encoded As'>
-          <div className='break-all'>{data.encoded}</div>
+          {authorized ? <EncodedSplitted encoded={data.encoded} /> : <div className='break-all'>{data.encoded}</div>}
           {!swap.version && <div className='text-sm text-gray-500'>v0 encoding</div>}
           {authorized && <SwapSaltBadges swap={swap} />}
         </ListRow>
@@ -273,6 +273,60 @@ function CorrectSwap({ data: raw }) {
         {body}
       </CardBody>
     </Card>
+  )
+}
+
+function EncodedSplitted({ encoded }) {
+  return (
+    <div>
+      <span>
+        <span>{encoded.substring(0, 4)}</span>
+        <span className='ml-1'>{encoded.substring(4, 14)}</span>
+        <span className='ml-1'>{encoded.substring(14, 34)}</span>
+        <span className='ml-1'>{encoded.substring(34, 44)}</span>
+        <span className='ml-1'>{encoded.substring(44, 54)}</span>
+        <span className='ml-1'>{encoded.substring(54, 58)}</span>
+        <span className='ml-1'>{encoded.substring(58, 60)}</span>
+        <span className='ml-1'>{encoded.substring(60, 64)}</span>
+        <span className='ml-1'>{encoded.substring(64)}</span>
+      </span>
+      <div className='-mt-0.5 flex h-5 text-gray-500 overflow-hidden'>
+        <div className='relative'>
+          <div className='opacity-0'>{encoded.substring(0, 4)}</div>
+          <div className='absolute inset-0 text-xs'>ver.</div>
+        </div>
+        <div className='ml-1 relative'>
+          <div className='opacity-0'>{encoded.substring(4, 14)}</div>
+          <div className='absolute inset-0 text-xs'>amount</div>
+        </div>
+        <div className='ml-1 relative'>
+          <div className='opacity-0'>{encoded.substring(14, 34)}</div>
+          <div className='absolute inset-0 text-xs'>salt</div>
+        </div>
+        <div className='ml-1 relative'>
+          <div className='opacity-0'>{encoded.substring(34, 44)}</div>
+          <div className='absolute inset-0 text-xs'>fee</div>
+        </div>
+        <div className='ml-1 relative'>
+          <div className='opacity-0'>{encoded.substring(44, 54)}</div>
+          <div className='absolute inset-0 text-xs'>expire ts</div>
+        </div>
+        <div className='ml-1 relative'>
+          <div className='opacity-0'>{encoded.substring(54, 58)}</div>
+          <div className='absolute inset-0 text-xs'>out</div>
+        </div>
+        <div className='ml-1 relative'>
+          <div className='opacity-0'>{encoded.substring(58, 60)}</div>
+        </div>
+        <div className='ml-1 relative'>
+          <div className='opacity-0'>{encoded.substring(60, 64)}</div>
+          <div className='absolute inset-0 text-xs'>in</div>
+        </div>
+        <div className='ml-1 relative'>
+          <div className='opacity-0'>{encoded.substring(64)}</div>
+        </div>
+      </div>
+    </div>
   )
 }
 
