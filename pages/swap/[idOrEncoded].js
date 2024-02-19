@@ -133,8 +133,15 @@ function CorrectSwap({ data: raw }) {
     const recipient = data.fromTo[1] || ''
     const { srFee = 0, lpFee = 0 } = data
 
-    let inAmount = ethers.utils.formatUnits(swap.amount.sub(swap.amountForCoreToken), swap._isUCT() ? 4 : 6)
-    let outAmount = ethers.utils.formatUnits(swap.amount.sub(swap.amountForCoreToken).sub(srFee + lpFee).sub(swap.amountToShare), 6)
+    let swapCoreError = false
+    let amountWithoutCoreToken = swap.amount.sub(swap.amountForCoreToken)
+    if (amountWithoutCoreToken.lt(0)) {
+      swapCoreError = true
+      amountWithoutCoreToken = swap.amount
+    }
+
+    let inAmount = ethers.utils.formatUnits(amountWithoutCoreToken, swap._isUCT() ? 4 : 6)
+    let outAmount = ethers.utils.formatUnits(amountWithoutCoreToken.sub(srFee + lpFee).sub(swap.amountToShare), 6)
     const coreTokenAmount = ethers.utils.formatUnits(swap.coreTokenAmount, 6)
     const coreSymbol = presets.getCoreSymbol(to.network.id)
     if (swap.deprecatedEncoding) {
@@ -197,6 +204,7 @@ function CorrectSwap({ data: raw }) {
               'w-fit relative flex items-center',
               CancelledStatus.includes(status) && 'opacity-30 before:block before:absolute before:w-full before:h-0.5 before:bg-black before:z-10'
             )}>
+              {swapCoreError && <FailedIcon />}
               <div className='mr-1'>{ethers.utils.formatUnits(swap.amountForCoreToken, 6)}</div>
               <TagNetworkToken explorer={from.network.explorer} token={from.token} className={CancelledStatus.includes(status) && 'text-black'}/>
               <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
