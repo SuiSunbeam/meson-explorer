@@ -289,7 +289,7 @@ function EncodedSplitted({ swap }) {
   const splitPos = swap._splitPos + 12
   return (
     <div>
-      <span>
+      <span className='whitespace-nowrap'>
         <span className='text-gray-500'>{encoded.substring(0, 4)}</span>
         <span className='group inline-block relative ml-1 cursor-pointer hover:underline'>
           {encoded.substring(4, 14)}
@@ -332,7 +332,7 @@ function EncodedSplitted({ swap }) {
         <span className='ml-1 text-gray-500'>{encoded.substring(60, 64)}</span>
         <span className='ml-1 text-gray-500'>{encoded.substring(64)}</span>
       </span>
-      <div className='-mt-0.5 flex h-5 text-gray-500 overflow-hidden'>
+      <div className='-mt-0.5 flex h-5 text-gray-500 whitespace-nowrap overflow-hidden'>
         <div className='relative'>
           <div className='opacity-0'>{encoded.substring(0, 4)}</div>
           <div className='absolute inset-0 mx-auto w-fit text-[8px] uppercase'>version</div>
