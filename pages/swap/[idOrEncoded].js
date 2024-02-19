@@ -280,47 +280,56 @@ function EncodedSplitted({ encoded }) {
   return (
     <div>
       <span>
-        <span>{encoded.substring(0, 4)}</span>
+        <span className='text-gray-500'>{encoded.substring(0, 4)}</span>
         <span className='ml-1'>{encoded.substring(4, 14)}</span>
-        <span className='ml-1'>{encoded.substring(14, 34)}</span>
+        <span className='ml-1 text-gray-500'>{encoded.substring(14, 18)}</span>
+        <span className='ml-1'>
+          <span className=''>{encoded.substring(18, 22)}</span>
+          <span className=''>{encoded.substring(22, 26)}</span>
+          <span className='text-gray-500'>{encoded.substring(26, 34)}</span>
+        </span>
         <span className='ml-1'>{encoded.substring(34, 44)}</span>
-        <span className='ml-1'>{encoded.substring(44, 54)}</span>
+        <span className='ml-1 text-gray-500'>{encoded.substring(44, 54)}</span>
         <span className='ml-1'>{encoded.substring(54, 58)}</span>
         <span className='ml-1'>{encoded.substring(58, 60)}</span>
-        <span className='ml-1'>{encoded.substring(60, 64)}</span>
-        <span className='ml-1'>{encoded.substring(64)}</span>
+        <span className='ml-1 text-gray-500'>{encoded.substring(60, 64)}</span>
+        <span className='ml-1 text-gray-500'>{encoded.substring(64)}</span>
       </span>
       <div className='-mt-0.5 flex h-5 text-gray-500 overflow-hidden'>
         <div className='relative'>
           <div className='opacity-0'>{encoded.substring(0, 4)}</div>
-          <div className='absolute inset-0 text-xs'>ver.</div>
+          <div className='absolute inset-0 mx-auto w-fit text-[8px] uppercase'>version</div>
         </div>
         <div className='ml-1 relative'>
           <div className='opacity-0'>{encoded.substring(4, 14)}</div>
-          <div className='absolute inset-0 text-xs'>amount</div>
+          <div className='absolute inset-0 mx-auto w-fit text-[8px] uppercase'>amount</div>
         </div>
         <div className='ml-1 relative'>
-          <div className='opacity-0'>{encoded.substring(14, 34)}</div>
-          <div className='absolute inset-0 text-xs'>salt</div>
+          <div className='opacity-0'>{encoded.substring(14, 18)}</div>
+          <div className='absolute inset-0 mx-auto w-fit text-[8px] uppercase'>header</div>
+        </div>
+        <div className='ml-1 relative'>
+          <div className='opacity-0'>{encoded.substring(18, 34)}</div>
+          <div className='absolute inset-0 mx-auto w-fit text-[8px] uppercase'>salt data</div>
         </div>
         <div className='ml-1 relative'>
           <div className='opacity-0'>{encoded.substring(34, 44)}</div>
-          <div className='absolute inset-0 text-xs'>fee</div>
+          <div className='absolute inset-0 mx-auto w-fit text-[8px] uppercase'>lp fee</div>
         </div>
         <div className='ml-1 relative'>
           <div className='opacity-0'>{encoded.substring(44, 54)}</div>
-          <div className='absolute inset-0 text-xs'>expire ts</div>
+          <div className='absolute inset-0 mx-auto w-fit text-[8px] uppercase'>expire ts</div>
         </div>
         <div className='ml-1 relative'>
           <div className='opacity-0'>{encoded.substring(54, 58)}</div>
-          <div className='absolute inset-0 text-xs'>out</div>
+          <div className='absolute inset-0 mx-auto w-fit text-[8px] uppercase'>out</div>
         </div>
         <div className='ml-1 relative'>
           <div className='opacity-0'>{encoded.substring(58, 60)}</div>
         </div>
         <div className='ml-1 relative'>
           <div className='opacity-0'>{encoded.substring(60, 64)}</div>
-          <div className='absolute inset-0 text-xs'>in</div>
+          <div className='absolute inset-0 mx-auto w-fit text-[8px] uppercase'>in</div>
         </div>
         <div className='ml-1 relative'>
           <div className='opacity-0'>{encoded.substring(64)}</div>

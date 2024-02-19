@@ -26,7 +26,7 @@ export default function Select({ label, className, options, value, noBorder, noI
                 {
                   !noIcon &&
                   <span className='ml-2 absolute inset-y-0 right-0 flex items-center pr-1 pointer-events-none'>
-                    <SelectorIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
+                    <SelectorIcon className='h-5 w-5 text-gray-500' aria-hidden='true' />
                   </span>
                 }
               </Listbox.Button>
