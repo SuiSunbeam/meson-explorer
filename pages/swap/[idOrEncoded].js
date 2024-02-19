@@ -196,7 +196,7 @@ function CorrectSwap({ data: raw }) {
               <TagNetworkToken explorer={from.network.explorer} token={from.token} className={CancelledStatus.includes(status) && 'text-black'}/>
               <div className='text-sm text-gray-500 mx-1'>{'->'}</div>
               <div className='mr-1'>{outAmount}</div>
-              {!to.token.fake && outAmount != 0 && <TagNetworkToken explorer={to.network.explorer} token={to.token} />}
+              {!to.token.fake && outAmount != 0 && <TagNetworkToken explorer={to.network.explorer} token={to.token} className={CancelledStatus.includes(status) && 'text-black'} />}
             </div>
           }
           {
